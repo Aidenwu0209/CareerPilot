@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
 const stages = [
@@ -37,15 +37,12 @@ const stages = [
   }
 ];
 
-export default function WorkspacePage({
-  searchParams
-}: {
-  searchParams: { query?: string; resume?: string };
-}) {
+export default function WorkspacePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isDirty, setIsDirty] = useState(false);
-  const [query, setQuery] = useState(searchParams.query || "前端开发工程师");
-  const [resume, setResume] = useState(searchParams.resume || "未上传简历");
+  const [query, setQuery] = useState(searchParams.get("query") || "前端开发工程师");
+  const [resume, setResume] = useState(searchParams.get("resume") || "未上传简历");
   const pendingNavigationRef = useRef<string | null>(null);
 
   useEffect(() => {
