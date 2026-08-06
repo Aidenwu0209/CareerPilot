@@ -18,33 +18,6 @@ Build professional resumes with drag-and-drop editing, real-time AI optimization
 
 ---
 
-## Community
-
-Join our groups for discussion and support:
-
-[![Linux.do](https://img.shields.io/badge/Linux.do-Community-blue)](https://linux.do/)
-
-
-## Recent Updates
-
-### v0.3.4 · Brand Color System & Theme Switching
-- Introduced semantic `--brand-*` CSS tokens; replaced hardcoded `pink-*` across 60+ files
-- New brand switcher in the user menu with three presets: **Mint** (default), **Blue**, **Pink**
-- SSR-safe anti-flicker hydration; legacy values auto-migrated via `localStorage`
-- Added a Mint resume preset to the theme editor
-- Export pipelines (PDF / HTML / DOCX) now read from `src/lib/brand-constants.ts`
-
-### v0.3.3 · Mobile Experience & Interview Report Stability
-- Mobile-friendly template preview and bottom action bars for preview/share pages
-- Fixed mobile scroll: canvas/preview roots use `h-full` instead of `flex-1`
-- Improved stability of interview report generation
-
-### v0.3.2 · Runtime Environment Variables
-- Removed all `NEXT_PUBLIC_*` build-time variables in favor of runtime env
-
-### v0.3.1 · Auth Runtime Flag
-- Changed `NEXT_PUBLIC_AUTH_ENABLED` to runtime `AUTH_ENABLED`
-
 ## Screenshots
 
 | Template Gallery | Resume Editor |
@@ -82,14 +55,6 @@ Join our groups for discussion and support:
 | Interview List | Interview Report |
 |:---:|:---:|
 | ![Interview List](images/面试列表.png) | ![Interview Report](images/面试报告.png) |
-
-## Deployment Video
-
-Watch the full deployment walkthrough on Bilibili:
-
-[![Deployment Video](https://i0.hdslb.com/bfs/archive/deployment-preview.jpg)](https://www.bilibili.com/video/BV1h7wQzSEYe/)
-
-> [Watch on Bilibili →](https://www.bilibili.com/video/BV1h7wQzSEYe/)
 
 ## Features
 
@@ -247,6 +212,7 @@ docker run -d -p 3000:3000 \
 #### Installation
 
 ```bash
+git clone https://github.com/Aidenwu0209/careerpilot.git
 cd careerpilot
 
 pnpm install

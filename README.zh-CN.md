@@ -18,42 +18,6 @@
 
 ---
 
-## 交流群
-
-扫码加入交流群，获取使用帮助与最新动态：
-
-[![Linux.do](https://img.shields.io/badge/Linux.do-社区-blue)](https://linux.do/)
-
-
-加入飞书群
-
-![lark-chat](images/lark.png)
-
-
----
-
-## 最近更新
-
-### v0.3.4 · 主题色系统与配色切换
-- 引入语义化 `--brand-*` CSS token，下线全站 60+ 文件硬编码 `pink-*`
-- 用户菜单新增主题色切换器，三套预设：**薄荷**（默认）、**经典蓝**、**玫粉**
-- SSR 安全的防闪烁初始化；老版本 `localStorage` 值自动迁移
-- 简历主题编辑器新增「薄荷」预设
-- 导出通道（PDF / HTML / DOCX）统一读取 `src/lib/brand-constants.ts`
-
-### v0.3.3 · 移动端体验 & 面试报告稳定性
-- 模板预览及预览/分享页新增移动端底部操作栏
-- 修复移动端滚动：画布/预览根节点改用 `h-full`
-- 面试报告生成稳定性提升
-
-### v0.3.2 · 运行时环境变量
-- 移除所有 `NEXT_PUBLIC_*` 构建时变量，改为运行时读取
-
-### v0.3.1 · 认证运行时开关
-- `NEXT_PUBLIC_AUTH_ENABLED` 改为运行时变量 `AUTH_ENABLED`
-
----
-
 ## 截图展示
 
 | 模板画廊 | 简历编辑器 |
@@ -91,14 +55,6 @@
 | 面试列表 | 面试报告 |
 |:---:|:---:|
 | ![面试列表](images/面试列表.png) | ![面试报告](images/面试报告.png) |
-
-## 部署视频
-
-在 Bilibili 观看完整部署教程：
-
-[![部署视频](https://i0.hdslb.com/bfs/archive/deployment-preview.jpg)](https://www.bilibili.com/video/BV1h7wQzSEYe/)
-
-> [前往 Bilibili 观看 →](https://www.bilibili.com/video/BV1h7wQzSEYe/)
 
 ## 功能特性
 
@@ -256,6 +212,7 @@ docker run -d -p 3000:3000 \
 #### 安装
 
 ```bash
+git clone https://github.com/Aidenwu0209/careerpilot.git
 cd careerpilot
 
 pnpm install
