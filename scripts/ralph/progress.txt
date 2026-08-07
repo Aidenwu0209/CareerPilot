@@ -24,6 +24,8 @@
 - NextAuth v5 `encode()` from `next-auth/jwt` can create session tokens manually: `encode({ token, secret, maxAge, salt })` — salt must match the cookie name (`authjs.session-token` or `__Secure-authjs.session-token` in production)
 - Mail adapter pattern: `MailAdapter` interface with `TestMailAdapter` (in-memory, has `getLastCode(email)`), `ConsoleMailAdapter` (dev logging), `SmtpMailAdapter` (production, uses nodemailer dynamically); `getMailAdapter()` selects based on `NODE_ENV` and `SMTP_HOST`
 - Session claims refresh: `src/lib/auth/session-claims.ts` provides `refreshUserClaims(userId)` (fetches platformRole + status from DB) and `shouldRefresh(lastRefreshAt)` (60s staleness check); JWT callback calls these periodically; sensitive ops should use `resolveUser()` which always reads from DB
+- Middleware API auth: `src/middleware.ts` enforces session-cookie presence for ALL `/api/*` routes except `PUBLIC_API_PREFIXES` (`/api/auth`, `/api/health`, `/api/share`); returns `401 { error: 'AUTH_REQUIRED' }` for missing cookie
+- Route inventory test at `src/app/api/route-inventory.test.ts` auto-discovers all API route.ts files and classifies them against `PUBLIC_API_PREFIXES` — new unclassified routes are visible in test output
 
 ---
 
@@ -321,4 +323,27 @@
   - When testing `resolveContextForUser`, must pass a FRESH user object after DB updates — the function uses the passed object, not a re-fetch
   - Tests must mock `./helpers` to avoid pulling in `next-auth` → `next/server` import chain that fails in vitest
   - Future stories (US-017 enforcement, US-029/030 org APIs) will consume `RequestContext` for authorization decisions
+---
+
+## 2026-08-08 06:01 - US-016
+- Established private API default authentication with public whitelist
+- Modified: `src/middleware.ts` (added `/api/:path*` to matcher, API auth enforcement with public whitelist, return 401 AUTH_REQUIRED), `src/lib/auth/helpers.ts` (production rejects x-fingerprint, `getUserIdFromRequest` returns null in prod)
+- New files: `src/middleware.test.ts` (17 tests), `src/lib/auth/helpers.test.ts` (8 tests), `src/app/api/route-inventory.test.ts` (4 tests)
+- Public API whitelist: `/api/auth/*` (NextAuth callbacks + OTP), `/api/health`, `/api/share/:token` — all other API routes require session cookie
+- Middleware now runs for ALL `/api/*` routes (previously skipped entirely); non-public API routes without session cookie get `401 { error: 'AUTH_REQUIRED' }`
+- `resolveUser()` in production never calls `upsertByFingerprint` — the fingerprint path is dev-only
+- `getUserIdFromRequest()` returns null in production — x-fingerprint header is structurally ignored
+- Route inventory test scans all route.ts files under src/app/api and classifies each as public or private, printing a table for review
+- AC coverage: public whitelist (5 tests), 401 for private routes (7 tests), forged x-fingerprint rejected (3 tests), page auth redirects (3 tests), production fingerprint hardening (8 tests), route inventory (4 tests)
+- Typecheck passes, tests pass (362/362), lint clean on new/changed files
+- **未来迭代的学习：**
+  - Next.js middleware matcher `config.matcher` controls which routes run the middleware — adding `/api/:path*` is required to enforce API-level auth in middleware
+  - The middleware has two distinct concerns: API auth (cookie presence check, returns JSON 401) and page auth (redirects to login). Split logic with `pathname.startsWith('/api/')` check
+  - `PUBLIC_API_PREFIXES` in middleware.ts is the single source of truth for public API routes — the route inventory test mirrors it and will flag any route that doesn't match
+  - The `PUBLIC_PAGE_PATHS` list no longer includes `/share` — share pages are handled via the public API endpoint `/api/share/:token`, not via middleware page redirects
+  - For testing middleware: mock `next-intl/middleware` and `@/i18n/routing` to avoid pulling in the full i18n stack; use `NextRequest` constructor directly with `req.cookies.set()` for session simulation
+  - JSDoc comments containing `**/` (e.g., "all files under dir/**/route.ts") will prematurely close the comment — use different phrasing
+  - The `resolveUser(fingerprint)` function has two branches: `config.auth.enabled` (session-based, prod) and fingerprint-based (dev). In production, the fingerprint branch is now dead code (`isProduction || !fingerprint → return null`)
+  - Future stories (US-017 status guard, US-018-019 ownership) will add checks INSIDE route handlers, layered on top of the middleware session-cookie gate
+  - `readdirSync(dir, { withFileTypes: true })` returns `Dirent[]` (not `string[]`) — must import `type Dirent` from `'fs'` for TypeScript
 ---

@@ -3,6 +3,8 @@ import { config } from '@/lib/config';
 import { dbReady } from '@/lib/db';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export async function getCurrentUserId(): Promise<string | null> {
   if (config.auth.enabled) {
     const session = await auth();
@@ -31,10 +33,14 @@ export async function resolveUser(fingerprint?: string | null) {
     return user;
   }
 
-  if (!fingerprint) return null;
+  // Fingerprint-based auth is dev-only.
+  // In production, never create or resolve users from x-fingerprint header.
+  if (isProduction || !fingerprint) return null;
   return userRepository.upsertByFingerprint(fingerprint);
 }
 
 export function getUserIdFromRequest(request: Request): string | null {
+  // In production, the x-fingerprint header is never trusted for auth.
+  if (isProduction) return null;
   return request.headers.get('x-fingerprint') || null;
 }
