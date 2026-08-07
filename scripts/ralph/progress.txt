@@ -434,5 +434,26 @@
   - `Response.json()` (Fetch API) and `NextResponse.json()` can be mixed in the same route — NextResponse extends Response, so both work as return values
 ---
 
+## 2026-08-08 06:49 - US-021
+- Implemented shared input limits module protecting against oversized requests across all high-cost routes
+- New files: `src/lib/validation/input-limits.ts` (shared constants + validation functions), `src/lib/validation/input-limits.test.ts` (68 tests)
+- Modified routes: `src/app/api/ai/chat/route.ts` (message count + per-message length validation, shared MAX_AI_STEPS), `src/app/api/resume/parse/route.ts` (PDF page count limit, shared MIME/size constants), `src/app/api/linkedin-photo/route.ts` (base64 image size+MIME validation, prompt length limits), `src/app/api/interview/route.ts` (interviewer array length, JD/title length limits)
+- Modified schemas: `cover-letter-schema.ts` (.max on jobDescription), `jd-analysis-schema.ts` (.max on jobDescription), `generate-resume-schema.ts` (.max on jobTitle, experience, skills array, industry), `translate-schema.ts` (.max on sectionIds array), `grammar-check-schema.ts` (.max on sectionIds array)
+- Shared constants: MAX_IMAGE_SIZE (5MB), MAX_FILE_SIZE (10MB), MAX_PDF_PAGES (30), MAX_CLIENT_MESSAGES (100), MAX_MESSAGE_LENGTH (20000), MAX_AI_STEPS (25), MAX_PROMPT_LENGTH (10000), MAX_SHORT_TEXT_LENGTH (500), MAX_JSON_BODY_BYTES (256KB), MAX_ARRAY_LENGTH (50)
+- Validation functions: validateMimeType, validateFileSize, validateBase64Image, validatePromptLength, validateChatMessages, sanitizedError
+- 68 new tests: constants sanity (4), validateMimeType (8), validateFileSize (7), validateBase64Image (9), validatePromptLength (7), validateChatMessages (10), sanitizedError (5), Zod schema integration (8), repeatable boundary tests (10)
+- AC coverage: shared validation (AC1), AI chat hard limits on messages+steps (AC2), early 4xx return before provider calls (AC3), boundary/over-limit/forged MIME repeatable (AC4), sanitized error responses without uploaded content/stack traces (AC5)
+- Typecheck passes, tests pass (522/522), lint clean on new files (3 pre-existing `any` errors in chat/route.ts unchanged from US-018)
+- **未来迭代的学习：**
+  - `src/lib/validation/input-limits.ts` is the single source of truth for all input limits — future routes should import constants and validators from here, never redeclare magic numbers
+  - TypeScript discriminated unions (`{ ok: true } | { ok: false; error: string }`) cannot be narrowed through `expect()` calls in tests — use a helper like `errMsg(result)` with a type cast
+  - Zod `.max()` on schema fields is the first line of defense for JSON body routes (cover-letter, jd-analysis, generate-resume, translate, grammar-check) — it rejects oversized inputs at the parse step before any auth or business logic
+  - For file upload routes, MIME whitelist + size check must happen BEFORE `file.arrayBuffer()` is read — otherwise the memory is already allocated
+  - Base64 decoded size estimation: `Math.floor((b64length * 3) / 4)` gives approximate byte count without actually decoding — fast and sufficient for size limits
+  - PDF page count limit prevents memory exhaustion from `pdfPagesToImages()` which renders each page to a PNG at 2x scale — a 1000-page PDF would create gigabytes of PNG data
+  - `sanitizedError()` returns a plain `Response` (not `NextResponse`) to avoid importing Next.js server utilities in the validation module — keeps it framework-agnostic
+  - The AI chat route previously used inline `stepCountIs(25)` — now uses shared `MAX_AI_STEPS` constant; this ensures the step limit can never diverge between routes
+---
+
 
 
