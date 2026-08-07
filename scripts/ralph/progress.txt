@@ -5,7 +5,10 @@
 - In production (`NODE_ENV=production`): DB init rejects instead of catching errors; auto-seed is skipped entirely
 - `dbReady` export in `src/lib/db/index.ts` is a Promise — await it in readiness checks
 - Health endpoint at `src/app/api/health/route.ts` returns 200/503 based on `dbReady` status
+- SQLiteAdapter runs migrations in the constructor (sync), PostgreSQLAdapter runs migrations in initialize() (async) — both fail-closed in prod
 - Quality commands: `pnpm type-check`, `pnpm test`, `pnpm lint` — but if `node_modules/.bin` is missing, run via `node node_modules/.pnpm/<pkg>/node_modules/<pkg>/<entry>`
+- `process.env.NODE_ENV` is read-only in TypeScript types — use `Object.assign(process.env, { NODE_ENV: ... })` in tests
+- `vi.hoisted()` is required for mock functions referenced inside `vi.mock()` factories
 - Many pre-existing `@typescript-eslint/no-explicit-any` errors throughout the codebase — not introduced by new changes
 
 ---
@@ -21,4 +24,18 @@
   - Pre-existing `any` lint errors exist in DB adapters and many API routes — don't try to fix them in unrelated stories
   - Next.js instrumentation hook is the canonical place for startup-time validation
   - `AI_CREDENTIAL_MASTER_KEY` is a new env var that will be needed by future stories about provider credential encryption (US-032)
+---
+
+## 2026-08-08 02:02 - US-002
+- Added automated test coverage for DB initialization fail-closed behavior (3 required paths)
+- New files: `src/lib/db/adapters/postgresql.test.ts`, `src/lib/db/adapters/sqlite.test.ts`, `src/app/api/health/route.test.ts`
+- 18 new tests covering: migration failure (prod rejects, dev catches), empty prod startup (no seed), dev seed (demo user when empty), idempotency (no re-seed), health endpoint (200 ready / 503 not ready / no secret leakage)
+- No code changes needed — US-001 already implemented the fail-closed behavior; US-002 validates it
+- Typecheck passes, tests pass (61/61), lint clean on new files
+- **未来迭代的学习：**
+  - `process.env.NODE_ENV` is typed read-only — use `Object.assign(process.env, { NODE_ENV: ... })` in tests
+  - `vi.hoisted()` is required to share mock functions between `vi.mock()` factories and test code
+  - Mocking `better-sqlite3` requires a function declaration (not arrow function) because the adapter calls `new Database(path)`
+  - For dynamic mock switching in route tests, use `vi.resetModules()` + `vi.doMock()` + dynamic `import()`
+  - SQLiteAdapter migrations run in constructor (sync), PostgreSQLAdapter migrations run in `initialize()` (async) — test accordingly
 ---
