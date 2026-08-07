@@ -15,6 +15,8 @@
 - Vitest binary location: `node_modules/.pnpm/vitest@4.1.8_@opentelemetry_cf5557e02b4b3a36d0231881803c600e/node_modules/vitest/dist/cli.js`
 - Drizzle-kit binary location: `node_modules/.pnpm/drizzle-kit@0.31.9/node_modules/drizzle-kit/bin.cjs`
 - TypeScript binary location: `node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc`
+- PGlite (`@electric-sql/pglite`) provides real PostgreSQL 18.3 via WASM — use `drizzle-orm/pglite` driver + migrator for integration tests without Docker/server; startup takes ~3-4s per instance, use `vi.setConfig({ testTimeout: 30000 })`
+- PGlite query typing: `pg.query<T>` infers T as `unknown` without explicit annotation — always pass type parameter or use a typed helper
 
 ---
 
@@ -187,4 +189,29 @@
   - `legal_consents` maintains full history by design: each new consent version creates a new row, never updates existing ones — enforced by immutability triggers
   - PG immutability uses `CREATE OR REPLACE FUNCTION` + separate `CREATE TRIGGER` statements, each separated by `--> statement-breakpoint`
   - `legal_consents.version` is a text column (e.g. '2026-01-01-v1') not an integer — legal document versions follow semantic versioning with dates, not sequential numbers
+---
+
+## 2026-08-08 04:33 - US-010
+- Verified full PostgreSQL migration install, legacy upgrade, idempotent startup, migration failure resilience, and real PG enforcement using PGlite (PostgreSQL 18.3 WASM)
+- New files: `src/lib/db/pg-migrations.test.ts` (16 real PostgreSQL integration tests)
+- Modified: `package.json` (added `@electric-sql/pglite` devDependency)
+- Installed `@electric-sql/pglite` manually via npm pack + copy to node_modules (pnpm install was too slow on Windows)
+- 16 new tests covering all 5 acceptance criteria:
+  - AC1 (fresh install): 4 tests — all 11 migrations apply from zero, 25 tables created, platform_role/status columns present, 13+ FK constraints in place
+  - AC2 (legacy upgrade): 1 comprehensive test — manually applies migrations 0000-0003, inserts 13 entity types (users, resumes, sections, chats, shares, interviews, reports, grammar, JD, auth_accounts), then upgrades with remaining migrations — all counts and ownership preserved
+  - AC3 (idempotent startup): 1 test — runs migrations twice, inserts org/membership/account/transaction data between runs, verifies zero duplicates
+  - AC4 (migration failure): 2 tests — failed DDL statement after full migration leaves data readable; failed mid-upgrade ALTER before remaining migrations preserves legacy data through upgrade
+  - AC5 (real PostgreSQL): 5 tests — confirms PGlite IS real PostgreSQL (not SQLite/mock), validates PL/pgSQL functions, triggers, CHECK constraints, immutability triggers, FK enforcement all work on real PG engine
+  - Schema completeness: 3 tests — migration files match journal, 12 unique constraints verified, 13+ indexes verified
+- Typecheck passes, tests pass (236/236), lint clean on new files
+- **未来迭代的学习：**
+  - PGlite (`@electric-sql/pglite`) is real PostgreSQL 18.3 compiled to WASM — it IS PostgreSQL, not a mock. It runs in-process via Node.js without requiring Docker or a separate server. This satisfies "real PostgreSQL in CI" requirements.
+  - PGlite startup takes ~3-4s per instance on this machine (WASM compilation). Use `vi.setConfig({ testTimeout: 30000 })` at the file level to avoid timeout issues.
+  - PGlite's `query<T>()` returns `Results<T>` but TypeScript infers T as `unknown` when no explicit type parameter is provided. Always provide explicit type parameters: `pg.query<{cnt: number}>('SELECT ...')` or use a typed helper function.
+  - `vi.setConfig({ testTimeout: ... })` is the vitest API for per-file timeout configuration — more targeted than vitest.config.ts changes
+  - Drizzle migration tracking: PG stores entries in `drizzle."__drizzle_migrations"` (note: `drizzle` schema, not `public`). Each entry has `id` (SERIAL), `hash` (SHA-256 of SQL file), `created_at` (bigint timestamp from journal).
+  - To simulate legacy database upgrade: manually apply early migration SQL files via `pg.exec()`, set up drizzle tracking entries with correct hashes, insert data, then run `migrate()` which applies only remaining migrations
+  - Manual npm pack + copy is a viable fallback when `pnpm install` is slow/stuck on Windows: `npm pack <pkg>` → `tar xzf` → `cp -r` to `node_modules/<scope>/<pkg>`
+  - The migration SQL uses `--> statement-breakpoint` as statement separator — when applying manually, split on this marker and execute each statement separately
+  - All migrations are additive (CREATE TABLE, ALTER TABLE ADD COLUMN, ADD CONSTRAINT, CREATE INDEX, CREATE TRIGGER) — none are destructive, which makes upgrade tests straightforward
 ---
