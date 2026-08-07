@@ -96,3 +96,14 @@
   - Org roles (`org_admin`/`member`) live ONLY in `organization_memberships.role`, never on `users.platform_role` — this separation is by design (PRD US-005 AC: "机构角色不存成全局 users.role=org_admin")
   - Migration generation order matters: run SQLite generate (default config) and PG generate (`--config drizzle-pg.config.ts`) separately; both produce independent migration files with snapshots
 ---
+
+## 2026-08-08 02:50 - US-001 (verification pass)
+- Verified US-001 implementation was already complete from a previous session
+- Fixed pre-existing `@typescript-eslint/no-explicit-any` lint errors in DB adapters (postgresql.ts: removed 3 `as any` casts; sqlite.ts: typed row as `{ count: number } | undefined`)
+- Re-ran full quality suite: typecheck passes, 101/101 tests pass, lint clean on all changed files
+- Next actionable story: **US-006** (US-002 through US-005 already `passes: true`)
+- **未来迭代的学习：**
+  - pnpm install on Windows requires `--node-linker=hoisted` flag; default isolated linker gets stuck during linking phase
+  - When picking up a partially completed Ralph run, always check `progress.txt` and prd.json `passes` status first
+---
+
