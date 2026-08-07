@@ -280,3 +280,24 @@
   - Session.user now has `platformRole` and `status` as non-optional fields with fallback defaults (`?? 'user'` / `?? 'active'`) so TypeScript consumers don't need null checks
   - The `session` callback must use `token.platformRole ?? 'user'` (not just `token.platformRole`) because tokens created before US-013 won't have these fields — graceful degradation for existing sessions
 ---
+
+## 2026-08-08 05:46 - US-014
+- Implemented super admin bootstrap mechanism via explicit env var configuration
+- New files: `src/lib/bootstrap/super-admin.ts` (bootstrap service), `src/lib/bootstrap/super-admin.test.ts` (16 tests)
+- Modified: `src/instrumentation.ts` (calls bootstrapSuperAdmin after DB ready), `.env.example` (added BOOTSTRAP_SUPER_ADMIN_EMAIL)
+- Bootstrap flow: reads `BOOTSTRAP_SUPER_ADMIN_EMAIL` env var → finds user by email → promotes to super_admin if not already → creates immutable audit event for both success and failure
+- AC1: only explicitly configured email gets super_admin; first registered user stays 'user'
+- AC2: idempotent — second run detects already_admin and only logs (no duplicate promotion)
+- AC3: audit events created with `action: 'bootstrap.super_admin'`, sanitized summaries using `redactEmail()` (shows first 2 chars + masked rest + domain)
+- AC4: `userRepository.update()` signature only accepts `{ name, avatarUrl }` — platformRole is structurally excluded from regular updates; PUT /api/user route also only extracts name and avatarUrl from body
+- AC5: unconfigured bootstrap in production logs clear warning but does not fail startup or randomly select a user; in development, no warning
+- Email redaction: `redactEmail('admin@example.com')` → `'ad****@example.com'` — never logs full email in audit summaries
+- Typecheck passes, tests pass (307/307), lint clean on new/changed files
+- **未来迭代的学习：**
+  - `audit_events` table is immutable (triggers block both UPDATE and DELETE) — tests cannot `db.delete(auditEvents)` between cases; use delta counting instead (count before action, count after, assert difference)
+  - Bootstrap pattern: env var configures target email → `dbReady` awaited → user lookup → conditional promotion → audit event. This is extensible for future bootstrap operations (org setup, etc.)
+  - The `instrumentation.ts` hook is the canonical place for startup-time operations; wrap bootstrap in try/catch so failures don't block server startup
+  - `redactEmail()` is a reusable utility for any audit/log output that needs to reference an email without exposing it fully
+  - `userRepository.update()` type signature (`Partial<{ name: string; avatarUrl: string }>`) is the primary defense against privilege escalation via profile updates — TypeScript enforces this at compile time
+  - For tests that need to count audit events: `db.select({ cnt: count() }).from(auditEvents).where(eq(auditEvents.action, '...'))` returns the count; use `Number(result[0]?.cnt ?? 0)` to handle the bigint/number conversion
+---

@@ -9,4 +9,15 @@
 export async function register() {
   const { assertEnvOrExit } = await import('./lib/env');
   assertEnvOrExit();
+
+  // Run super admin bootstrap after the database is ready.
+  // Bootstrap failures are logged but do not prevent startup.
+  try {
+    const { dbReady } = await import('./lib/db');
+    await dbReady;
+    const { bootstrapSuperAdmin } = await import('./lib/bootstrap/super-admin');
+    await bootstrapSuperAdmin();
+  } catch (e) {
+    console.error('[Instrumentation] Super admin bootstrap failed:', e);
+  }
 }
