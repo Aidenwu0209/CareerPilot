@@ -20,15 +20,38 @@ export async function POST(request: NextRequest) {
 
     const { messages, resumeId, model: modelId, sessionId } = await request.json();
 
+    // Verify resumeId ownership before loading any data
     let resumeContext = '';
+    let verifiedResumeId: string | null = null;
     if (resumeId) {
       const resume = await resumeRepository.findById(resumeId);
-      if (resume) {
-        resumeContext = JSON.stringify(resume.sections);
+      if (!resume || resume.userId !== user.id) {
+        return new Response('Not found', { status: 404 });
+      }
+      verifiedResumeId = resume.id;
+      resumeContext = JSON.stringify(resume.sections);
+    }
+
+    // Verify sessionId belongs to the user's resume
+    if (sessionId) {
+      const session = await chatRepository.findSession(sessionId);
+      if (!session) {
+        return new Response('Not found', { status: 404 });
+      }
+      // If resumeId provided, session must belong to that resume
+      if (resumeId && session.resumeId !== resumeId) {
+        return new Response('Not found', { status: 404 });
+      }
+      // If not already verified via resumeId, verify session's resume belongs to user
+      if (session.resumeId !== verifiedResumeId) {
+        const sessionResume = await resumeRepository.findById(session.resumeId);
+        if (!sessionResume || sessionResume.userId !== user.id) {
+          return new Response('Not found', { status: 404 });
+        }
       }
     }
 
-    // Save user message to DB before streaming
+    // Save user message to DB before streaming (ownership verified above)
     if (sessionId && messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
       if (lastMessage.role === 'user') {

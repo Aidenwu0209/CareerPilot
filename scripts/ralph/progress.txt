@@ -368,3 +368,25 @@
   - `resolveActiveContext` also catches `AmbiguousBillingError` from `resolveContext` and converts it to a structured 400 response — this makes the guard a single error-free entry point for routes
   - The `assertActorActive(ctx)` sync variant is for cases where the context is already resolved (e.g., inside a service function) and only the status check is needed
 ---
+
+## 2026-08-08 06:27 - US-018
+- Fixed ownership checks for AI Chat, Chat Sessions, and AI tools across 3 route files
+- Modified: `src/app/api/ai/chat/route.ts` (verify resumeId + sessionId ownership before any writes/AI calls), `src/app/api/ai/chat/sessions/route.ts` (verify resumeId ownership in GET and POST), `src/app/api/ai/chat/sessions/[sessionId]/route.ts` (verify session→resume→user chain in GET and DELETE)
+- New files: `src/app/api/ai/chat/ownership.test.ts` (28 tests)
+- Ownership chain: chatMessages.sessionId → chatSessions.resumeId → resumes.userId — all reverse-lookups traverse this chain
+- No-leak 404 pattern: both "not found" and "not owned" return identical 404, preventing information leakage about resource existence
+- Chat route: resumeId verified before loading resume context or creating tools; sessionId verified before saving any messages; streamText and createExecutableTools NOT called on rejection
+- Sessions routes: resumeId verified before listing/creating sessions; session→resume→user verified before returning details or deleting
+- AC coverage: chat route ownership (14 tests), sessions list (3 tests), session create (4 tests), session detail (3 tests), session delete (4 tests) = 28 total
+- Typecheck passes, tests pass (420/420), lint clean on new/changed files
+- **未来迭代的学习：**
+  - The no-leak 404 pattern returns identical responses for "resource doesn't exist" and "resource exists but not owned by you" — this prevents enumeration attacks where an attacker can distinguish valid from invalid IDs
+  - For the chat route, ownership checks must happen BEFORE `chatRepository.addMessage()`, `chatRepository.updateSessionTitle()`, `extractAIConfig()`, `createExecutableTools()`, and `streamText()` — any of these called on an unverified resource is a vulnerability
+  - The ownership check pattern: (1) load resource by ID, (2) if not found → 404, (3) check `resource.userId !== user.id` → 404. The 404 is the same response either way
+  - When both resumeId and sessionId are provided, verify the session belongs to the same resume (`session.resumeId === resumeId`) — this prevents mixing contexts
+  - AI tools (`createExecutableTools`) receive only `resumeId` after the route handler has verified ownership — the tools themselves don't need userId checks because they're only instantiated for verified resumes
+  - Dynamic route imports (`./sessions/[sessionId]/route`) work correctly in vitest — the square brackets in directory names are valid filesystem paths
+  - Pre-existing `@typescript-eslint/no-explicit-any` errors in `chat/route.ts` lines 107-109 (`onFinish` tool result processing) are not introduced by new changes
+  - For route handler tests: mock `@/lib/auth/helpers`, `ai`, `@/lib/ai/provider`, `@/lib/ai/prompts`, `@/lib/ai/tools` to avoid pulling in real AI/Next.js dependencies; use real in-memory SQLite via mocked `@/lib/db`
+---
+
