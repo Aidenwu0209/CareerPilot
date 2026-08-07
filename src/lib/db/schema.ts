@@ -146,3 +146,9 @@ export {
   aiProviders,
   aiModels,
 } from './schema-ai-providers';
+
+export {
+  aiOperations,
+  aiProviderAttempts,
+  creditHolds,
+} from './schema-ai-operations';

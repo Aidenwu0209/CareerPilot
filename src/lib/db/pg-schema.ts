@@ -409,3 +409,78 @@ export const aiModels = pgTable(
     tierIdx: index('ai_models_tier_idx').on(table.tier),
   }),
 );
+
+// ── AI operations, provider attempts, and credit holds ──
+
+export const aiOperations = pgTable(
+  'ai_operations',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    actorId: text('actor_id').notNull().references(() => users.id),
+    billingAccountId: text('billing_account_id').notNull().references(() => creditAccounts.id),
+    capability: text('capability').notNull(),
+    status: text('status').notNull().default('pending'),
+    idempotencyKey: text('idempotency_key').notNull(),
+    finalSettlementId: text('final_settlement_id'),
+    metadata: text('metadata').default('{}'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    idempotencyUnique: unique('ai_operations_idempotency_key_unique').on(table.idempotencyKey),
+    actorIdx: index('ai_operations_actor_id_idx').on(table.actorId),
+    billingAccountIdx: index('ai_operations_billing_account_id_idx').on(table.billingAccountId),
+    capabilityIdx: index('ai_operations_capability_idx').on(table.capability),
+    statusIdx: index('ai_operations_status_idx').on(table.status),
+    actorCapabilityIdx: index('ai_operations_actor_id_capability_idx').on(table.actorId, table.capability),
+    createdIdx: index('ai_operations_created_at_idx').on(table.createdAt),
+  }),
+);
+
+export const aiProviderAttempts = pgTable(
+  'ai_provider_attempts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    operationId: text('operation_id').notNull().references(() => aiOperations.id, { onDelete: 'cascade' }),
+    modelId: text('model_id').notNull().references(() => aiModels.id),
+    attemptNumber: integer('attempt_number').notNull(),
+    status: text('status').notNull().default('pending'),
+    usage: text('usage').default('{}'),
+    providerRequestId: text('provider_request_id'),
+    errorMessage: text('error_message'),
+    durationMs: integer('duration_ms'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    completedAt: integer('completed_at'),
+  },
+  (table) => ({
+    operationAttemptUnique: unique('ai_provider_attempts_operation_id_attempt_number_unique').on(
+      table.operationId,
+      table.attemptNumber,
+    ),
+    operationIdx: index('ai_provider_attempts_operation_id_idx').on(table.operationId),
+    modelIdx: index('ai_provider_attempts_model_id_idx').on(table.modelId),
+    statusIdx: index('ai_provider_attempts_status_idx').on(table.status),
+  }),
+);
+
+export const creditHolds = pgTable(
+  'credit_holds',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    accountId: text('account_id').notNull().references(() => creditAccounts.id, { onDelete: 'restrict' }),
+    operationId: text('operation_id').notNull().references(() => aiOperations.id, { onDelete: 'cascade' }),
+    holdAmount: integer('hold_amount').notNull(),
+    settledAmount: integer('settled_amount').notNull().default(0),
+    status: text('status').notNull().default('active'),
+    expiresAt: integer('expires_at'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    settledAt: integer('settled_at'),
+  },
+  (table) => ({
+    accountIdx: index('credit_holds_account_id_idx').on(table.accountId),
+    operationIdx: index('credit_holds_operation_id_idx').on(table.operationId),
+    statusIdx: index('credit_holds_status_idx').on(table.status),
+    expiresIdx: index('credit_holds_expires_at_idx').on(table.expiresAt),
+    accountStatusIdx: index('credit_holds_account_id_status_idx').on(table.accountId, table.status),
+  }),
+);

@@ -146,3 +146,24 @@
   - `ai_models` compound unique on `(provider_id, model_identifier)` — same model name is allowed across different providers
   - SQLite CHECK constraints for pricing must be inline in CREATE TABLE — same pattern as US-006 credit balance
 ---
+
+## 2026-08-08 03:32 - US-008
+- Added AI operations, provider attempts, and credit holds schema for tracking business AI requests, upstream calls, and quota pre-reservation
+- New files: `src/lib/db/schema-ai-operations.ts` (SQLite schema), `src/lib/db/schema-ai-operations.test.ts` (34 tests)
+- New migrations: `drizzle/migrations/0011_many_violations.sql` (SQLite), `drizzle/pg-migrations/0009_parched_angel.sql` (PostgreSQL)
+- Modified: `src/lib/db/schema.ts` (re-export aiOperations, aiProviderAttempts, creditHolds), `src/lib/db/pg-schema.ts` (added equivalent PG tables with FKs, indexes, CHECK constraints)
+- ai_operations: actor_id (FK→users), billing_account_id (FK→credit_accounts), capability, status (pending/in_progress/succeeded/failed/cancelled), idempotency_key (globally unique), final_settlement_id (nullable logical ref to credit_transactions)
+- ai_provider_attempts: operation_id (FK→ai_operations cascade), model_id (FK→ai_models), attempt_number (≥1 CHECK), status, usage (JSON, non-sensitive only), provider_request_id, error_message, duration_ms
+- credit_holds: account_id (FK→credit_accounts restrict), operation_id (FK→ai_operations cascade), hold_amount (≥0 CHECK), settled_amount (≥0 CHECK), status (active/settled/released/expired), expires_at
+- 34 new tests: column existence, defaults, all status values, capability/metadata, idempotency_key unique, FK rejection (actor/billing_account/operation/model), attempt_number compound unique + CHECK (≥1), usage non-sensitive data verification, credit holds structure/defaults/expiry/status, hold/settled amount CHECK (≥0), FK rejection + restrict + cascade, full lifecycle relationship
+- Typecheck passes, tests pass (183/183), lint clean on new files
+- **未来迭代的学习：**
+  - `ai_operations.final_settlement_id` is a nullable text column WITHOUT a hard FK constraint — it's a logical reference to `credit_transactions.id` set after settlement completes; the settlement transaction may not exist at operation creation time
+  - `ai_provider_attempts.usage` JSON field stores ONLY non-sensitive metrics (inputTokens, outputTokens, totalTokens, modelLatencyMs) — never prompts, resume text, or credentials (enforced by application layer, tested in schema tests)
+  - `credit_holds` uses `ON DELETE restrict` for account_id (can't delete an account with active holds) but `ON DELETE cascade` for operation_id (deleting an operation cleans up its holds)
+  - `ai_operations.idempotency_key` is globally unique (not scoped to actor) — business idempotency keys should be UUIDs or similar globally unique values per distinct operation
+  - CHECK constraints pattern: SQLite must be inline in CREATE TABLE, PostgreSQL uses `ALTER TABLE ADD CONSTRAINT` — same as US-006/US-007
+  - `ai_provider_attempts.attempt_number` has CHECK ≥ 1 — attempt sequences start at 1, not 0; this prevents invalid zero/negative attempt numbers at the DB level
+  - The schema split pattern continues: `schema-ai-operations.ts` imports from `schema.ts` (users), `schema-credits.ts` (creditAccounts), and `schema-ai-providers.ts` (aiModels); `schema.ts` re-exports the new tables
+  - drizzle-kit generate on Windows: pipe migration name via `printf 'name\n' |` to avoid interactive prompt hang
+---
