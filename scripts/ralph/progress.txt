@@ -28,6 +28,7 @@
 - Route inventory test at `src/app/api/route-inventory.test.ts` auto-discovers all API route.ts files and classifies them against `PUBLIC_API_PREFIXES` — new unclassified routes are visible in test output
 - Rate limiting: `src/lib/rate-limit/rate-limit.ts` — `checkRateLimit(key, policy)` + `rateLimitedResponse(retryAfter)` + `RATE_LIMIT_POLICIES` constants; adapter pattern with `MemoryRateLimitAdapter` (default) and pluggable `setRateLimitAdapter()` for Redis/DB; `failClosed` policies deny on store-unavailable, `failClosed: false` allows
 - SSRF guard: `src/lib/security/ssrf-guard.ts` — `validateUpstreamUrl(url)` checks HTTPS + approved domain allowlist; `sanitizeUpstreamUrl(url, fallback)` returns URL or fallback; `SSRF_SAFE_FETCH_OPTIONS` with `redirect:'error'`; approved domains: api.openai.com, api.anthropic.com, generativelanguage.googleapis.com
+- Audit service: `src/lib/audit/audit-service.ts` — `recordAuditEvent()` is the single entry point for all audit events; auto-sanitizes summaries (rejects API keys, auth headers, JWT, multi-line doc text); idempotent dedup via `idempotent:true` + `requestId`; query via `queryAuditEvents()` (filter by actor/target/action/tenant/time); audit_events table is immutable (triggers block UPDATE/DELETE)
 
 ---
 
@@ -503,5 +504,27 @@
   - `100::/64` discard prefix check: only first 4 groups need to match (`0100:0000:0000:0000`), remaining groups can be anything — NOT `slice(1,8).every(zero)`
   - `redirect: 'error'` in fetch options causes a TypeError on 3xx responses — prevents redirect-based SSRF where an approved endpoint might redirect to an internal address
   - Future stories (US-032 credential encryption, US-033 provider management) should use `validateUpstreamUrl` when storing custom provider base URLs; US-050 will make this moot by removing user-supplied URLs entirely
+---
+
+## 2026-08-08 07:38 - US-024
+- Implemented sanitized audit event service for recording administrative and security-relevant actions
+- New files: `src/lib/audit/audit-service.ts` (core service), `src/lib/audit/audit-service.test.ts` (37 tests)
+- Service provides: `recordAuditEvent()` (write), `queryAuditEvents()` (read), `countAuditEvents()` (count), `sanitizeSummary()` + `detectSensitiveContent()` (sanitization utilities)
+- AC1: Records actor, action, target, tenant, requestId, result, and sanitized summary — all fields stored in the immutable audit_events table
+- AC2: Sanitization layer detects and redacts: OpenAI keys (sk-…), Anthropic keys (sk-ant-…), Google keys (AIza…), Authorization: Bearer headers, x-api-key headers, JWT tokens, and multi-line document/prompt text (>200 chars, >=3 newlines) — replaces with `[redacted: <type> detected in summary]`
+- AC3: Idempotency via `idempotent: true` + `requestId` — duplicate success events with same (action, targetId, requestId) signature are skipped (returns 'DEDUPED'); failure events are never deduplicated
+- AC4: Immutability is structurally enforced — the service has NO update/delete methods; DB-level triggers (from US-009) block direct UPDATE/DELETE on audit_events table; tests verify triggers reject tampering
+- AC5: Query API supports filtering by actorId, targetType, targetId, action, tenantId, requestId, result, time range (from/to), with limit; results ordered by createdAt DESC (newest first)
+- 37 tests: sanitizeSummary (11), detectSensitiveContent (2), recordAuditEvent fields (4), failure events (1), system events (1), null target (1), service sanitization before storage (3), idempotency dedup (4), immutability (3 structural + 2 DB trigger), queryability by actor (1), target (1), time (1), both results (1), ordering (1), limit (1), count (1), tenant (1), requestId (1)
+- Typecheck passes, tests pass (680/680), lint clean on new files
+- **未来迭代的学习：**
+  - `src/lib/audit/audit-service.ts` is the single entry point for ALL future audit event recording — services like US-014 bootstrap already use `db.insert(auditEvents)` directly; future stories (US-027/028/029/033) should migrate to `recordAuditEvent()` for automatic sanitization and idempotency
+  - The idempotency design uses `requestId` as the dedup key — callers must pass a stable requestId for idempotent admin operations (e.g., freeze/unfreeze); `idempotent: true` flag must be explicitly set
+  - `sanitizeSummary()` checks raw input against sensitive patterns BEFORE truncation — this ensures long keys are caught even if they'd be truncated
+  - Multi-line detection threshold: >=3 newlines AND >200 chars — short multi-line summaries (<200 chars) are allowed since they could be legitimate brief descriptions
+  - The `isNull()` import from drizzle-orm is needed for null-equality conditions in WHERE clauses (e.g., `isNull(auditEvents.targetId)`) — `eq(field, null)` does NOT work in drizzle
+  - SQLite `unixepoch()` has SECOND precision — tests relying on timestamp ordering need >1s delay between inserts; the ordering test uses `toBeLessThanOrEqual` to handle same-second edge cases
+  - `SENSITIVE_PATTERNS` array order matters: Anthropic key pattern (`sk-ant-`) must come BEFORE the generic OpenAI pattern (`sk-`) — otherwise the generic pattern would match and mislabel Anthropic keys
+  - The service returns 'DEDUPED' (not the existing event id) for deduplicated calls — callers should treat this as a no-op signal, not an error; the event already exists and they shouldn't act on it again
 ---
 
