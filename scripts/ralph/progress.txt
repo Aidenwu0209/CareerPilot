@@ -550,3 +550,24 @@
   - Future stories (US-026 registration grant, US-028 admin adjustment, US-036 AI hold/settlement) should call `postTransaction()` / `creditAccount()` / `debitAccount()` rather than touching credit tables directly
   - The `ruleSnapshot` JSON column captures pricing/rule state at transaction time — callers should pass the current model pricing or grant amount so historical records remain accurate after rule changes
 ---
+
+## 2026-08-08 07:58 - US-026
+- Implemented registration grant service and personal balance/transactions API
+- New files: `src/lib/credits/registration-grant.ts` (grant service), `src/lib/credits/registration-grant.test.ts` (17 tests), `src/app/api/credits/balance/route.ts` (GET balance), `src/app/api/credits/transactions/route.ts` (GET transactions), `src/app/api/credits/balance/route.test.ts` (9 tests)
+- Modified: `src/lib/auth/email-otp.ts` (calls applyRegistrationGrant after user creation), `src/lib/auth/oauth-linking.ts` (same)
+- AC1: New users receive exactly one grant transaction based on active rule; default amount 100 when no rule configured
+- AC2: Idempotency key `reg-grant-${userId}` ensures duplicate OAuth callbacks, OTP replays, and retries never produce duplicate grants
+- AC3: GET /api/credits/balance returns personal balance, account type, billing scope, and actor context
+- AC4: GET /api/credits/transactions supports limit/offset pagination; accountId is never accepted from client (always resolved from session)
+- AC5: Empty transactions return []; unauthenticated → 401; suspended → 403 ACCOUNT_SUSPENDED
+- 26 new tests: grant creation (4), idempotency (3), balance API (3), transactions API (5), rule management (3), route auth (3), route data (5)
+- Typecheck passes, tests pass (736/736), lint clean on new/changed files
+- **未来迭代的学习：**
+  - Registration grant is hooked into BOTH `resolveEmailAccount` and `resolveOAuthAccount` — these are the only two code paths that create new users, so this covers all auth methods
+  - `applyRegistrationGrant` is wrapped in try/catch at the call site — grant failure must never block authentication (user can still log in, admin can manually grant later)
+  - `getActiveGrantRule()` reads from `credit_rules` table with `active=true` filter; when no rule exists, returns a synthetic default rule (id='default', version=0, value=100)
+  - The balance/transactions API routes resolve the account from `resolveActiveContext` → billing context, NEVER from client-supplied accountId — this structurally prevents cross-account reads
+  - API route tests must mock `@/lib/auth/guards` without `vi.importActual` — the real module imports `next-auth` which imports `next/server` that fails in vitest
+  - The `creditRules` table is NOT immutable (no triggers), so tests can clean it with `db.delete()` between cases — unlike `creditTransactions`
+  - US-028 (admin adjustment API) and US-031 (org quota API) should reuse the same `resolveActiveContext` + `getOrCreateAccount` pattern for route-level authorization
+---

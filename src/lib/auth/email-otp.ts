@@ -16,6 +16,7 @@ import { emailOtps, users, authAccounts } from '@/lib/db/schema';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { createSampleResume } from '@/lib/db/sample-resume';
+import { applyRegistrationGrant } from '@/lib/credits/registration-grant';
 import { getMailAdapter } from './mail-adapter';
 import {
   checkRateLimit,
@@ -267,6 +268,13 @@ async function resolveEmailAccount(email: string): Promise<EmailAccountResult> {
     await createSampleResume(newUserId);
   } catch {
     // Sample resume failure should not block authentication
+  }
+
+  // Apply one-time registration grant (idempotent — safe even on replay)
+  try {
+    await applyRegistrationGrant(newUserId);
+  } catch {
+    // Grant failure should not block authentication
   }
 
   return {

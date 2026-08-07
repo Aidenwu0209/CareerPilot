@@ -4,6 +4,7 @@ import { users, authAccounts } from '@/lib/db/schema';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { createSampleResume } from '@/lib/db/sample-resume';
+import { applyRegistrationGrant } from '@/lib/credits/registration-grant';
 
 export interface OAuthLinkResult {
   userId: string;
@@ -95,6 +96,13 @@ export async function resolveOAuthAccount(params: {
     await createSampleResume(newUserId);
   } catch {
     // Sample resume failure should not block authentication
+  }
+
+  // Apply one-time registration grant (idempotent — safe even on callback replay)
+  try {
+    await applyRegistrationGrant(newUserId);
+  } catch {
+    // Grant failure should not block authentication
   }
 
   return { userId: newUserId, isNewUser: true, isNewLink: true };
