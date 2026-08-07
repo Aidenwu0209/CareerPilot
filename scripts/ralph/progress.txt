@@ -56,3 +56,19 @@
   - PG migration 0004 adds ALTER TABLE constraints to existing tables — won't conflict with existing data as long as all current rows have valid parent IDs
   - SQLite migration 0006 only adds indexes (FKs were already in place from earlier migrations)
 ---
+
+## 2026-08-08 02:37 - US-004
+- Added `platformRole` and `status` columns to `users` table in both PG and SQLite schemas
+- `platformRole`: text enum `super_admin | user`, default `user` — supports admin role differentiation
+- `status`: text enum `active | suspended`, default `active` — supports account freeze/suspend
+- auth_accounts (provider, providerAccountId) unique constraint was already in place from US-003 — verified it survives the new migration
+- New migrations: `drizzle/migrations/0007_aberrant_umar.sql` (SQLite), `drizzle/pg-migrations/0005_boring_mathemanic.sql` (PostgreSQL) — both are ALTER TABLE ADD COLUMN with defaults, safe for existing rows
+- 6 new tests: default values verification, custom values (super_admin, suspended), column existence via PRAGMA, unique constraint re-verification, stable userId after migration
+- Typecheck passes, tests pass (84/84), lint clean on changed files
+- **未来迭代的学习：**
+  - Adding NOT NULL columns with defaults to existing tables is safe — SQLite and PostgreSQL both backfill the default for existing rows
+  - `text('column_name', { enum: [...] })` in drizzle-creates a CHECK-like constraint at the TypeScript level; at the SQL level it's still just `text` — the enum enforcement is application-side
+  - The auth_accounts compound unique constraint from US-003 persists across new migrations — no need to re-add it
+  - When adding columns to users table, update both `pg-schema.ts` (production) and `schema.ts` (SQLite dev) to keep them in sync
+  - PRAGMA table_info is the quickest way to verify column existence in SQLite tests
+---
