@@ -10,6 +10,11 @@
 - `process.env.NODE_ENV` is read-only in TypeScript types — use `Object.assign(process.env, { NODE_ENV: ... })` in tests
 - `vi.hoisted()` is required for mock functions referenced inside `vi.mock()` factories
 - Many pre-existing `@typescript-eslint/no-explicit-any` errors throughout the codebase — not introduced by new changes
+- Schema is split across files: `schema.ts` (SQLite core + re-exports), `schema-interview.ts` (SQLite interview tables), `schema-commercial.ts` (SQLite org/membership tables), `pg-schema.ts` (PostgreSQL production source with ALL tables in one file)
+- Pattern for new entity groups: create `schema-<domain>.ts` for SQLite, import `users` from `./schema`, re-export from `schema.ts`; add equivalent PG tables to `pg-schema.ts`
+- Vitest binary location: `node_modules/.pnpm/vitest@4.1.8_@opentelemetry_cf5557e02b4b3a36d0231881803c600e/node_modules/vitest/dist/cli.js`
+- Drizzle-kit binary location: `node_modules/.pnpm/drizzle-kit@0.31.9/node_modules/drizzle-kit/bin.cjs`
+- TypeScript binary location: `node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc`
 
 ---
 
@@ -71,4 +76,23 @@
   - The auth_accounts compound unique constraint from US-003 persists across new migrations — no need to re-add it
   - When adding columns to users table, update both `pg-schema.ts` (production) and `schema.ts` (SQLite dev) to keep them in sync
   - PRAGMA table_info is the quickest way to verify column existence in SQLite tests
+---
+
+## 2026-08-08 02:55 - US-005
+- Added `organizations` and `organization_memberships` tables for ToB tenant model
+- New files: `src/lib/db/schema-commercial.ts` (SQLite schema), `src/lib/db/schema-commercial.test.ts` (17 tests), `drizzle/migrations/0008_premium_moonstone.sql` (SQLite migration), `drizzle/pg-migrations/0006_crazy_darwin.sql` (PostgreSQL migration)
+- Modified: `src/lib/db/schema.ts` (re-export commercial tables), `src/lib/db/pg-schema.ts` (added organizations + organization_memberships with FKs, indexes, compound unique)
+- Organizations: id, slug (unique), name, status (active/suspended), seat_limit, created_by (FK→users), timestamps
+- Memberships: id, organization_id (FK→organizations cascade), user_id (FK→users cascade), role (org_admin/member), status (active/removed), timestamps
+- Compound unique on (organization_id, user_id) prevents duplicate memberships — supports remove-then-reactivate pattern via status field
+- 6 indexes on memberships: user_id, org_id, (org_id, status), (user_id, status), role, compound unique
+- 17 new tests: column existence, defaults, custom values, slug uniqueness, FK rejection (both tables), compound unique (same/different org/user), cascade delete (org→memberships, user→memberships), index verification, platform_role independence from org role
+- Typecheck passes, tests pass (101/101), lint clean on new files
+- **未来迭代的学习：**
+  - Schema split pattern: SQLite entities in domain-specific files (`schema-commercial.ts`), re-exported from `schema.ts`; PG entities all in single `pg-schema.ts`
+  - `organizations.created_by` references `users.id` with `ON DELETE no action` (not cascade) — deleting a user who created an org should NOT delete the org; use `ON DELETE restrict` semantics
+  - `organization_memberships` uses cascade delete for both org_id and user_id — deleting either parent cleans up memberships automatically
+  - Compound unique `(organization_id, user_id)` is strict: even a 'removed' membership blocks new 'active' row — enforce single-row-per-pair with status field for reactivation
+  - Org roles (`org_admin`/`member`) live ONLY in `organization_memberships.role`, never on `users.platform_role` — this separation is by design (PRD US-005 AC: "机构角色不存成全局 users.role=org_admin")
+  - Migration generation order matters: run SQLite generate (default config) and PG generate (`--config drizzle-pg.config.ts`) separately; both produce independent migration files with snapshots
 ---
