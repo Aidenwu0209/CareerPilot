@@ -130,3 +130,8 @@ export {
   interviewMessages,
   interviewReports,
 } from './schema-interview';
+
+export {
+  organizations,
+  organizationMemberships,
+} from './schema-commercial';
