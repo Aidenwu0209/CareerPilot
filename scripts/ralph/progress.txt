@@ -17,6 +17,9 @@
 - TypeScript binary location: `node_modules/.pnpm/typescript@5.9.3/node_modules/typescript/bin/tsc`
 - PGlite (`@electric-sql/pglite`) provides real PostgreSQL 18.3 via WASM — use `drizzle-orm/pglite` driver + migrator for integration tests without Docker/server; startup takes ~3-4s per instance, use `vi.setConfig({ testTimeout: 30000 })`
 - PGlite query typing: `pg.query<T>` infers T as `unknown` without explicit annotation — always pass type parameter or use a typed helper
+- better-sqlite3 native `transaction()` does NOT support async callbacks — use synchronous callbacks with `tx.insert(table).values(obj).run()` (the `.run()` is required to actually execute SQL inside a sync transaction)
+- Auth.js v5 config is at `src/lib/auth/config.ts` — jwt callback receives `user`/`account`/`profile` only on first sign-in call; `resolveOAuthAccount()` in `src/lib/auth/oauth-linking.ts` handles persistent account linking
+- `@/lib/db` can be mocked in tests via `vi.mock()` with an async factory that creates a real in-memory SQLite DB — all consumers (repositories, services) get the test DB automatically
 
 ---
 
@@ -215,3 +218,22 @@
   - The migration SQL uses `--> statement-breakpoint` as statement separator — when applying manually, split on this marker and execute each statement separately
   - All migrations are additive (CREATE TABLE, ALTER TABLE ADD COLUMN, ADD CONSTRAINT, CREATE INDEX, CREATE TRIGGER) — none are destructive, which makes upgrade tests straightforward
 ---
+
+## 2026-08-08 04:44 - US-011
+- Implemented persistent OAuth account linking via auth_accounts table
+- New files: `src/lib/auth/oauth-linking.ts` (resolution service), `src/lib/db/repositories/auth-account.repository.ts` (CRUD), `src/lib/auth/oauth-linking.test.ts` (14 tests), `src/types/next-auth.d.ts` (JWT/Session type augmentation)
+- Modified: `src/lib/auth/config.ts` — jwt callback now calls `resolveOAuthAccount()` instead of email-only `userRepository.findByEmail()`
+- Resolution order: (1) existing (provider, providerAccountId) → reuse userId, (2) existing user with same email → link auth account, (3) no match → create user + auth account atomically in a DB transaction
+- Orphan cleanup: if auth_account exists but linked user is deleted, the orphaned account is removed before creating fresh
+- 14 tests: first login (1 user + 1 account), repeat login (stable userId, no dupes), email linking (existing user linked, no dupes, no dupes grants), multiple providers (same email → same user), providerAccountId primary key (email change tolerated), transaction rollback (FK violation rolls back user creation), orphan cleanup, token persistence
+- Typecheck passes, tests pass (250/250), lint clean on new files
+- **未来迭代的学习：**
+  - `better-sqlite3` native `transaction()` does NOT support async callbacks — error: "Transaction function cannot return a promise". Must use synchronous callbacks with `.run()` on each drizzle insert
+  - drizzle's `tx.insert(table).values(obj)` does NOT execute SQL until `.run()` is called or the result is awaited — inside a synchronous transaction callback, always call `.run()` explicitly
+  - The `@/lib/db` module can be effectively mocked in tests using `vi.mock()` with an async factory that creates a real in-memory SQLite DB — repositories and services that import from `@/lib/db` all get the test DB
+  - NextAuth v5 JWT callback: `user`, `account`, and `profile` are only present on the first call after sign-in; subsequent calls only have `token` — so account linking logic only runs once per session
+  - `auth_accounts` table has FK `user_id → users.id` with default `ON DELETE NO ACTION` — cannot delete a user that has auth_accounts without first deleting the accounts
+  - Type augmentation for NextAuth: create `next-auth.d.ts` with `declare module 'next-auth'` and `declare module 'next-auth/jwt'` to add custom `userId` field to JWT and Session types
+  - `account.expires_at` from NextAuth is a number (epoch seconds), needs `new Date(expires_at)` conversion when storing as Drizzle timestamp
+---
+

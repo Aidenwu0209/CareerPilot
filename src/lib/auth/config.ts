@@ -2,8 +2,7 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { config } from '@/lib/config';
-import { userRepository } from '@/lib/db/repositories/user.repository';
-import { createSampleResume } from '@/lib/db/sample-resume';
+import { resolveOAuthAccount } from './oauth-linking';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -32,28 +31,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       ],
   callbacks: {
     async jwt({ token, user, account, profile }) {
-      // First sign-in via Google: create DB user immediately
+      // First sign-in via Google: resolve or create persistent account link
       if (user && account?.provider === 'google') {
-        const email = (profile?.email || user.email) as string;
+        const email = (profile?.email || user.email) as string | undefined;
         const name = (profile?.name || user.name) as string | undefined;
         const avatar = ((profile as any)?.picture || user.image) as string | undefined;
 
-        let dbUser = email ? await userRepository.findByEmail(email) : null;
-        if (!dbUser) {
-          dbUser = await userRepository.create({
-            email: email || undefined,
-            name,
-            avatarUrl: avatar,
-            authType: 'oauth',
-          });
-          if (dbUser) {
-            await createSampleResume(dbUser.id);
-          }
-        }
-        // Use stable DB user ID in the token
-        if (dbUser) {
-          token.userId = dbUser.id;
-        }
+        const result = await resolveOAuthAccount({
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+          email: email || null,
+          name: name || null,
+          avatarUrl: avatar || null,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          tokenType: account.token_type,
+          expiresAt: account.expires_at ? new Date(account.expires_at) : null,
+          scope: account.scope,
+        });
+
+        token.userId = result.userId;
         token.name = name;
         token.email = email;
         token.picture = avatar;
