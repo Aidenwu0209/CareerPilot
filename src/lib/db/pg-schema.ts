@@ -290,3 +290,69 @@ export const organizationMemberships = pgTable(
     roleIdx: index('organization_memberships_role_idx').on(table.role),
   }),
 );
+
+// ── Credits: accounts, transactions (immutable ledger), and rules ──
+
+export const creditAccounts = pgTable(
+  'credit_accounts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    ownerType: text('owner_type').notNull(),
+    ownerId: text('owner_id').notNull(),
+    balance: integer('balance').notNull().default(0),
+    status: text('status').notNull().default('active'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    ownerUnique: unique('credit_accounts_owner_type_owner_id_unique').on(table.ownerType, table.ownerId),
+    ownerTypeIdx: index('credit_accounts_owner_type_idx').on(table.ownerType),
+    ownerStatusIdx: index('credit_accounts_owner_type_status_idx').on(table.ownerType, table.status),
+  }),
+);
+
+export const creditTransactions = pgTable(
+  'credit_transactions',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    accountId: text('account_id').notNull().references(() => creditAccounts.id, { onDelete: 'restrict' }),
+    balanceBefore: integer('balance_before').notNull(),
+    delta: integer('delta').notNull(),
+    balanceAfter: integer('balance_after').notNull(),
+    reason: text('reason').notNull(),
+    operatorId: text('operator_id'),
+    businessRefId: text('business_ref_id'),
+    idempotencyKey: text('idempotency_key').notNull(),
+    ruleSnapshot: text('rule_snapshot').default('{}'),
+    note: text('note').notNull().default(''),
+    createdAt: integer('created_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    accountIdempotencyUnique: unique('credit_transactions_account_id_idempotency_key_unique').on(
+      table.accountId,
+      table.idempotencyKey,
+    ),
+    accountIdx: index('credit_transactions_account_id_idx').on(table.accountId),
+    accountCreatedIdx: index('credit_transactions_account_id_created_at_idx').on(table.accountId, table.createdAt),
+    reasonIdx: index('credit_transactions_reason_idx').on(table.reason),
+    businessRefIdx: index('credit_transactions_business_ref_id_idx').on(table.businessRefId),
+  }),
+);
+
+export const creditRules = pgTable(
+  'credit_rules',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    ruleType: text('rule_type').notNull(),
+    value: integer('value').notNull().default(0),
+    version: integer('version').notNull().default(1),
+    active: integer('active').notNull().default(1),
+    createdBy: text('created_by').references(() => users.id),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    ruleTypeActiveIdx: index('credit_rules_rule_type_active_idx').on(table.ruleType, table.active),
+    ruleTypeVersionIdx: index('credit_rules_rule_type_version_idx').on(table.ruleType, table.version),
+  }),
+);

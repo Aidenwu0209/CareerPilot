@@ -64,6 +64,13 @@
       "when": 1786128087279,
       "tag": "0008_premium_moonstone",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1786128618960,
+      "tag": "0009_glorious_tattoo",
+      "breakpoints": true
     }
   ]
 }

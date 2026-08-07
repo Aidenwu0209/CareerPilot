@@ -107,3 +107,24 @@
   - When picking up a partially completed Ralph run, always check `progress.txt` and prd.json `passes` status first
 ---
 
+## 2026-08-08 02:55 - US-006
+- Added credit accounts, immutable transactions (ledger), and configurable rules tables
+- New files: `src/lib/db/schema-credits.ts` (SQLite schema), `src/lib/db/schema-credits.test.ts` (22 tests)
+- New migrations: `drizzle/migrations/0009_glorious_tattoo.sql` (SQLite), `drizzle/pg-migrations/0007_skinny_fallen_one.sql` (PostgreSQL)
+- Modified: `src/lib/db/schema.ts` (re-export credit tables), `src/lib/db/pg-schema.ts` (added creditAccounts, creditTransactions, creditRules)
+- Tables: `credit_accounts` (owner_type+owner_id unique, balance CHECK >= 0), `credit_transactions` (immutable via triggers, balance_before/after CHECK >= 0, account+idempotency_key unique), `credit_rules` (rule_type, versioned, value CHECK >= 0)
+- SQLite CHECK constraints must be inline in CREATE TABLE — SQLite does NOT support `ALTER TABLE ADD CONSTRAINT`
+- Immutability: SQLite triggers (`BEFORE UPDATE/DELETE → RAISE(ABORT)`), PG triggers (function + BEFORE UPDATE/DELETE)
+- 22 new tests: column existence, defaults, compound unique (one acct per owner), non-negative balance CHECK (insert + update), transaction idempotency, FK restrict on account delete, non-negative before/after CHECK, immutability (UPDATE blocked, DELETE blocked), rules (registration_grant, daily_limit, versioning, non-negative value), FK on created_by
+- Typecheck passes, tests pass (123/123), lint clean on new files
+- **未来迭代的学习：**
+  - SQLite does NOT support `ALTER TABLE ADD CONSTRAINT` for CHECK — must put CHECK inline in CREATE TABLE
+  - Drizzle-kit generates table definitions without CHECK constraints; add them manually in the migration SQL
+  - For immutability, SQLite `CREATE TRIGGER ... BEFORE UPDATE/DELETE ... RAISE(ABORT)` works well
+  - PostgreSQL uses `CREATE FUNCTION + CREATE TRIGGER ... EXECUTE FUNCTION` pattern for immutability
+  - `credit_accounts.owner_id` is polymorphic (references users.id OR organizations.id based on owner_type) — no DB-level FK, enforce at application layer
+  - `credit_transactions.account_id` uses `ON DELETE restrict` — can't delete an account with transactions
+  - `credit_rules` supports versioning via `version` column + `active` flag — old versions set active=0, new version set active=1
+  - Test isolation: in-memory SQLite DB is shared across all tests in a file — use unique IDs or query by specific ID, not by general criteria
+---
+

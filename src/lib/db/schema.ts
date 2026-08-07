@@ -135,3 +135,9 @@ export {
   organizations,
   organizationMemberships,
 } from './schema-commercial';
+
+export {
+  creditAccounts,
+  creditTransactions,
+  creditRules,
+} from './schema-credits';
