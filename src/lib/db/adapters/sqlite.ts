@@ -38,7 +38,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
     }
 
     try {
-      const row = this.sqlite.prepare('SELECT count(*) as count FROM users').get() as any;
+      const row = this.sqlite.prepare('SELECT count(*) as count FROM users').get() as { count: number } | undefined;
       if (row?.count === 0) {
         const { seedDemoUser } = await import('../seed-demo');
         await seedDemoUser(this.db);
