@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { interviewRepository } from '@/lib/db/repositories/interview.repository';
+import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { dbReady } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
@@ -24,6 +25,14 @@ export async function POST(request: NextRequest) {
 
   if (!jobDescription || !jobTitle || !interviewers?.length) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  // Verify resumeId belongs to the current user
+  if (resumeId) {
+    const resume = await resumeRepository.findById(resumeId);
+    if (!resume || resume.userId !== user.id) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
   }
 
   const session = await interviewRepository.createSession({

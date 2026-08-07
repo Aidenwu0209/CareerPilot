@@ -390,3 +390,27 @@
   - For route handler tests: mock `@/lib/auth/helpers`, `ai`, `@/lib/ai/provider`, `@/lib/ai/prompts`, `@/lib/ai/tools` to avoid pulling in real AI/Next.js dependencies; use real in-memory SQLite via mocked `@/lib/db`
 ---
 
+## 2026-08-08 06:31 - US-019
+- Fixed ownership checks for interview nested resources across 4 route files + 1 repository addition
+- Modified: `src/app/api/interview/route.ts` (AC1: verify resumeId belongs to user before creating session), `src/app/api/interview/[id]/report/route.ts` (AC2: verify session ownership before returning report), `src/app/api/interview/[id]/control/route.ts` (AC3: verify roundId belongs to URL session), `src/app/api/interview/[id]/mark/route.ts` (AC4: verify messageId belongs to session via round→session chain)
+- Added: `interviewRepository.findMessageById(messageId)` in `src/lib/db/repositories/interview.repository.ts` — needed for AC4 message ownership verification
+- New files: `src/app/api/interview/ownership.test.ts` (21 tests)
+- Ownership chain for interviews: interviewMessages.roundId → interviewRounds.sessionId → interviewSessions.userId
+- AC1 fix: `resumeRepository.findById(resumeId)` checked against `user.id` before `createSession` — imported resumeRepository into interview route
+- AC2 fix: `findSession(sessionId)` + `session.userId !== user.id` check added to report GET handler — was completely missing (POST already had it)
+- AC3 fix: `findRound(roundId)` + `round.sessionId !== sessionId` check added to control handler before any round status updates or message inserts
+- AC4 fix: `findMessageById(messageId)` → `findRound(message.roundId)` → `round.sessionId !== sessionId` triple-hop verification in mark handler
+- No-leak 404 pattern consistent with US-018 — identical responses for "not found" and "not owned"
+- AC coverage: resumeId ownership (4 tests), report GET ownership (3 tests), control roundId ownership (6 tests), mark messageId ownership (4 tests), cross-user no-leak/no-side-effect (4 tests) = 21 total
+- Typecheck passes, tests pass (441/441), lint clean on new files
+- **未来迭代的学习：**
+  - Interview ownership chain is deeper than chat: message → round → session → user (4 hops vs chat's message → session → resume → user). The verification must traverse ALL hops.
+  - The report GET handler was the most critical gap — it returned complete interview evaluation reports (containing candidate weaknesses, scores, feedback) to ANY authenticated user who knew a session ID. The POST handler already had the check — inconsistency was likely an oversight during initial implementation.
+  - The control route's `end_round` action calls `updateRoundStatus(roundId, 'completed')` — if roundId belongs to another session, this would silently corrupt another user's interview state. The fix prevents this.
+  - The mark route's `updateMessageMetadata(messageId, ...)` was globally keyed by messageId with no join — ANY authenticated user could modify ANY message's metadata by guessing IDs. Now verified via message→round→session chain.
+  - Adding repository methods (`findMessageById`) is preferable to raw SQL in route handlers — keeps the DB access pattern consistent and testable
+  - Pre-existing `@typescript-eslint/no-explicit-any` errors in interview.repository.ts (12 errors) are from `as any` casts on JSON columns — not introduced by this change
+  - The `interview/[id]/chat/route.ts` was already correct (checks both session ownership and round ownership) — it served as the reference pattern for fixing control and mark routes
+---
+
+

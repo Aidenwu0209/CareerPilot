@@ -124,6 +124,11 @@ export const interviewRepository = {
     return db.select().from(interviewMessages).where(eq(interviewMessages.roundId, roundId)).orderBy(interviewMessages.createdAt);
   },
 
+  async findMessageById(messageId: string) {
+    const rows = await db.select().from(interviewMessages).where(eq(interviewMessages.id, messageId)).limit(1);
+    return rows[0] ?? null;
+  },
+
   async findAllMessagesBySessionId(sessionId: string) {
     const rounds = await db.select().from(interviewRounds).where(eq(interviewRounds.sessionId, sessionId)).orderBy(interviewRounds.sortOrder);
     if (rounds.length === 0) return [];

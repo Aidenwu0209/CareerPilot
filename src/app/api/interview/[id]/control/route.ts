@@ -18,6 +18,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const { action, roundId, locale = 'zh' } = await request.json();
 
+  // Verify roundId belongs to the current session
+  if (roundId) {
+    const round = await interviewRepository.findRound(roundId);
+    if (!round || round.sessionId !== sessionId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+  }
+
   let systemMessage = '';
   switch (action) {
     case 'skip':

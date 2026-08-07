@@ -14,6 +14,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const user = await resolveUser(fingerprint);
   if (!user) return new Response('Unauthorized', { status: 401 });
 
+  // Verify session belongs to the current user
+  const session = await interviewRepository.findSession(sessionId);
+  if (!session || session.userId !== user.id) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   const report = await interviewRepository.findReportBySessionId(sessionId);
   if (!report) return NextResponse.json({ error: 'No report found' }, { status: 404 });
 
