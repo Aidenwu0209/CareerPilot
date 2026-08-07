@@ -347,3 +347,24 @@
   - Future stories (US-017 status guard, US-018-019 ownership) will add checks INSIDE route handlers, layered on top of the middleware session-cookie gate
   - `readdirSync(dir, { withFileTypes: true })` returns `Dirent[]` (not `string[]`) — must import `type Dirent` from `'fs'` for TypeScript
 ---
+
+## 2026-08-08 06:20 - US-017
+- Implemented unified enforcement of account and organization suspension status
+- New files: `src/lib/auth/guards.ts` (guard service), `src/lib/auth/guards.test.ts` (30 tests)
+- `resolveActiveContext(fingerprint?)`: resolves context, returns discriminated union — `{ ok: true, context }` for active users, `{ ok: false, response: 403 }` for suspended, `null` for unauthenticated
+- `assertActorActive(context)`: synchronous assertion that throws `AccountSuspendedError` if actor.status === 'suspended'
+- `AccountSuspendedError`: structured error with message `'ACCOUNT_SUSPENDED'` matching the API error code convention
+- AC1: suspended user → `resolveActiveContext` returns `{ ok: false, response: 403 { error: 'ACCOUNT_SUSPENDED' } }` — blocks ALL private API operations regardless of role
+- AC2: disabled org / removed membership → `resolveContextForUser` already filters these from active memberships, causing fallback to personal billing context (stable rejection from org scope)
+- AC3: guard runs before any business logic — `resolveActiveContext` is the first call in route handler, `assertActorActive` throws before downstream code
+- AC4: unsuspend/re-enable is stateless — guard re-reads DB status on each call, no persistent state from prior rejections
+- AC5: access matrix tested across all 4 roles × 2 states (active/suspended) + disabled org + removed membership = 11 matrix scenarios
+- Typecheck passes, tests pass (392/392), lint clean on new files
+- **未来迭代的学习：**
+  - Guard pattern: `resolveActiveContext()` is designed as the primary entry point for future route handler refactoring — routes can adopt it incrementally by replacing `resolveUser` + manual checks with the unified guard
+  - The `ActiveContextResult` discriminated union (`null | { ok: false, response } | { ok: true, context }`) provides type-safe handling: callers must check `result.ok` before accessing `result.context`
+  - Organization/membership status enforcement is layered: `resolveContextForUser` already excludes disabled orgs and removed memberships from active membership query — the guard doesn't need to re-check; future org-scoped routes (US-029/030 admin APIs) will verify membership explicitly
+  - The guard is stateless by design — it re-reads from DB on every call via `resolveContext` → `resolveUser` → DB lookup. This means suspension/unsuspension takes effect on the next request with no caching or TTL
+  - `resolveActiveContext` also catches `AmbiguousBillingError` from `resolveContext` and converts it to a structured 400 response — this makes the guard a single error-free entry point for routes
+  - The `assertActorActive(ctx)` sync variant is for cases where the context is already resolved (e.g., inside a service function) and only the status check is needed
+---
