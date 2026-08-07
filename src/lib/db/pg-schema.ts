@@ -484,3 +484,51 @@ export const creditHolds = pgTable(
     accountStatusIdx: index('credit_holds_account_id_status_idx').on(table.accountId, table.status),
   }),
 );
+
+// ── Audit events and legal consent history (both immutable) ──
+
+export const auditEvents = pgTable(
+  'audit_events',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    actorId: text('actor_id').references(() => users.id),
+    action: text('action').notNull(),
+    targetType: text('target_type').notNull(),
+    targetId: text('target_id'),
+    tenantId: text('tenant_id'),
+    requestId: text('request_id'),
+    result: text('result').notNull().default('success'),
+    summary: text('summary').notNull().default(''),
+    ipAddress: text('ip_address'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    actorIdx: index('audit_events_actor_id_idx').on(table.actorId),
+    actionIdx: index('audit_events_action_idx').on(table.action),
+    targetIdx: index('audit_events_target_type_target_id_idx').on(table.targetType, table.targetId),
+    tenantIdx: index('audit_events_tenant_id_idx').on(table.tenantId),
+    createdIdx: index('audit_events_created_at_idx').on(table.createdAt),
+    actorCreatedIdx: index('audit_events_actor_id_created_at_idx').on(table.actorId, table.createdAt),
+    tenantCreatedIdx: index('audit_events_tenant_id_created_at_idx').on(table.tenantId, table.createdAt),
+  }),
+);
+
+export const legalConsents = pgTable(
+  'legal_consents',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text('user_id').notNull().references(() => users.id),
+    documentType: text('document_type').notNull(),
+    version: text('version').notNull(),
+    effectiveDate: integer('effective_date').notNull(),
+    source: text('source').notNull(),
+    ipAddress: text('ip_address'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    userIdx: index('legal_consents_user_id_idx').on(table.userId),
+    userDocIdx: index('legal_consents_user_id_document_type_idx').on(table.userId, table.documentType),
+    docVersionIdx: index('legal_consents_document_type_version_idx').on(table.documentType, table.version),
+    createdIdx: index('legal_consents_created_at_idx').on(table.createdAt),
+  }),
+);

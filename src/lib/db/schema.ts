@@ -152,3 +152,8 @@ export {
   aiProviderAttempts,
   creditHolds,
 } from './schema-ai-operations';
+
+export {
+  auditEvents,
+  legalConsents,
+} from './schema-audit';

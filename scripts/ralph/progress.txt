@@ -167,3 +167,24 @@
   - The schema split pattern continues: `schema-ai-operations.ts` imports from `schema.ts` (users), `schema-credits.ts` (creditAccounts), and `schema-ai-providers.ts` (aiModels); `schema.ts` re-exports the new tables
   - drizzle-kit generate on Windows: pipe migration name via `printf 'name\n' |` to avoid interactive prompt hang
 ---
+
+## 2026-08-08 03:42 - US-009
+- Added audit events and legal consent history schema for compliance and security tracking
+- New files: `src/lib/db/schema-audit.ts` (SQLite schema), `src/lib/db/schema-audit.test.ts` (37 tests)
+- New migrations: `drizzle/migrations/0012_medical_invaders.sql` (SQLite), `drizzle/pg-migrations/0010_naive_sasquatch.sql` (PostgreSQL)
+- Modified: `src/lib/db/schema.ts` (re-export auditEvents, legalConsents), `src/lib/db/pg-schema.ts` (added auditEvents + legalConsents with FKs, indexes)
+- audit_events: actor_id (nullable FK→users for system events), action, target_type, target_id (nullable), tenant_id (nullable), request_id, result (success/failure), summary (sanitized), ip_address, created_at — immutable via triggers
+- legal_consents: user_id (FK→users), document_type (privacy_policy/terms_of_service), version, effective_date, source (registration/explicit_reconsent/login), ip_address, created_at — immutable via triggers
+- Immutability: SQLite `BEFORE UPDATE/DELETE → RAISE(ABORT)`, PG `CREATE FUNCTION + TRIGGER` — same pattern as US-006 credit_transactions
+- 7 indexes on audit_events: actor_id, action, (target_type, target_id), tenant_id, created_at, (actor_id, created_at), (tenant_id, created_at)
+- 4 indexes on legal_consents: user_id, (user_id, document_type), (document_type, version), created_at
+- 37 new tests: column existence, defaults, all result/source values, nullable actor_id (system events), nullable target_id/tenant_id, request_id, ip_address, FK rejection, immutability (UPDATE + DELETE blocked for both tables), consent version history, multi-document-type consents, all index verification, PG export
+- Typecheck passes, tests pass (220/220), lint clean on new files
+- **未来迭代的学习：**
+  - When appending custom SQL (triggers) to a drizzle-kit generated migration, must add `--> statement-breakpoint` after the last drizzle-generated statement — drizzle splits on this marker, and without it, the last index + first trigger get merged into one statement that better-sqlite3 rejects
+  - `audit_events.actor_id` is nullable to support system-initiated events (bootstrap, cron, automated processes) — important for audit completeness without forcing fake actor references
+  - `audit_events.summary` is a plain text column that the APPLICATION LAYER must sanitize — the DB can't enforce "no API keys in summary", so US-024 (audit service) will need explicit redaction logic
+  - `legal_consents` maintains full history by design: each new consent version creates a new row, never updates existing ones — enforced by immutability triggers
+  - PG immutability uses `CREATE OR REPLACE FUNCTION` + separate `CREATE TRIGGER` statements, each separated by `--> statement-breakpoint`
+  - `legal_consents.version` is a text column (e.g. '2026-01-01-v1') not an integer — legal document versions follow semantic versioning with dates, not sequential numbers
+---
