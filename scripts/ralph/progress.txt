@@ -301,3 +301,24 @@
   - `userRepository.update()` type signature (`Partial<{ name: string; avatarUrl: string }>`) is the primary defense against privilege escalation via profile updates — TypeScript enforces this at compile time
   - For tests that need to count audit events: `db.select({ cnt: count() }).from(auditEvents).where(eq(auditEvents.action, '...'))` returns the count; use `Number(result[0]?.cnt ?? 0)` to handle the bigint/number conversion
 ---
+
+## 2026-08-08 05:52 - US-015
+- Implemented unified Actor, Tenant & Billing context resolution service
+- New files: `src/lib/auth/context.ts` (types + resolution service), `src/lib/auth/context.test.ts` (25 tests)
+- `RequestContext` type: `{ actor: { userId, platformRole, status }, tenant: { type, organizationId, orgRole }, billing: { accountOwnerType, accountOwnerId } }`
+- `resolveContextForUser(user)`: internal function that resolves tenant/billing from DB memberships — the core logic
+- `resolveContext(fingerprint?)`: public entry point that calls `resolveUser()` then `resolveContextForUser()`
+- Resolution rules: 0 active memberships → personal; 1 → org; >1 → `AmbiguousBillingError` (never silent)
+- "Active" means BOTH `membership.status = 'active'` AND `organization.status = 'active'`
+- Client-supplied userId, role, organizationId are structurally excluded — `resolveContextForUser` takes only a server-resolved user object
+- Context object contains NO credentials, API keys, tokens, or secrets — verified by serialization test
+- 25 tests across all 5 AC: actor resolution (4), org-only-from-membership (4), personal/org billing (4), ambiguous error (4), no-secrets (5), edge cases (4)
+- Typecheck passes, tests pass (332/332), lint clean on new files
+- **未来迭代的学习：**
+  - Context resolution pattern: internal `resolveContextForUser(user)` does the DB work; public `resolveContext(fingerprint?)` wraps it with auth resolution — this split makes testing trivial (no need to mock auth)
+  - `AmbiguousBillingError` includes `organizationIds[]` so callers can present a disambiguation UI to the user
+  - The context object intentionally excludes `balance` from billing — balances change frequently and should be queried by the credit service (US-025), not cached in context
+  - When testing `resolveContextForUser`, must pass a FRESH user object after DB updates — the function uses the passed object, not a re-fetch
+  - Tests must mock `./helpers` to avoid pulling in `next-auth` → `next/server` import chain that fails in vitest
+  - Future stories (US-017 enforcement, US-029/030 org APIs) will consume `RequestContext` for authorization decisions
+---
