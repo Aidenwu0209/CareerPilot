@@ -7,6 +7,12 @@ import {
   MAX_SHORT_TEXT_LENGTH,
   sanitizedError,
 } from '@/lib/validation/input-limits';
+import {
+  checkRateLimit,
+  rateLimitedResponse,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
 
 export const maxDuration = 60;
 
@@ -22,6 +28,15 @@ export async function POST(request: NextRequest) {
     }
     if (!ctx.ok) {
       return ctx.response;
+    }
+
+    // Rate limit: per-user, fail-closed for high-cost image generation
+    const rlResult = await checkRateLimit(
+      rateLimitKey('linkedin-photo', 'user', ctx.context.actor.userId),
+      RATE_LIMIT_POLICIES.linkedinPhoto,
+    );
+    if (!rlResult.allowed) {
+      return rateLimitedResponse(rlResult.retryAfter);
     }
 
     const { image, prompt, requirements, aspectRatio, apiKey } = await request.json();

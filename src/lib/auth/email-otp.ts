@@ -4,7 +4,7 @@
  * Implements:
  * - Code generation (cryptographic random 6-digit)
  * - Code hashing (SHA-256 — only digest stored)
- * - Rate limiting (IP and email dimensions, in-memory for now; US-022 adds distributed)
+ * - Rate limiting via shared rate-limit module (IP and email dimensions)
  * - Verification with single-use and expiry enforcement
  * - User resolution (create new or link existing user + auth account)
  */
@@ -17,52 +17,22 @@ import { userRepository } from '@/lib/db/repositories/user.repository';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { createSampleResume } from '@/lib/db/sample-resume';
 import { getMailAdapter } from './mail-adapter';
+import {
+  checkRateLimit,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
 
 // ── Constants ──
 
 const CODE_LENGTH = 6;
 const CODE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 const MAX_ATTEMPTS = 5; // Max failed verification attempts per code
-const RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const MAX_REQUESTS_PER_IP = 5;
-const MAX_REQUESTS_PER_EMAIL = 3;
 
 export const EMAIL_PROVIDER = 'email';
 
-// ── Rate limiting (in-memory, single-instance) ──
-
-interface RateBucket {
-  count: number;
-  windowStart: number;
-}
-
-const rateLimitStore = new Map<string, RateBucket>();
-
-/**
- * Check if a rate limit key has remaining quota.
- * Returns true if the request is allowed, false if rate-limited.
- */
-function checkRateLimit(key: string, maxRequests: number): boolean {
-  const now = Date.now();
-  const bucket = rateLimitStore.get(key);
-
-  if (!bucket || now - bucket.windowStart > RATE_WINDOW_MS) {
-    rateLimitStore.set(key, { count: 1, windowStart: now });
-    return true;
-  }
-
-  if (bucket.count >= maxRequests) {
-    return false;
-  }
-
-  bucket.count++;
-  return true;
-}
-
 /** Clear all rate limit data (for testing). */
-export function clearRateLimits(): void {
-  rateLimitStore.clear();
-}
+export { clearRateLimits } from '@/lib/rate-limit/rate-limit';
 
 // ── Code generation & hashing ──
 
@@ -124,13 +94,23 @@ export async function requestOtp(
 
   const normalizedEmail = email.toLowerCase().trim();
 
-  // Rate limit by IP
-  if (ipAddress && !checkRateLimit(`ip:${ipAddress}`, MAX_REQUESTS_PER_IP)) {
-    return { success: false, error: 'RATE_LIMITED' };
+  // Rate limit by IP (uses shared rate-limit module for cross-instance counting)
+  if (ipAddress) {
+    const ipResult = await checkRateLimit(
+      rateLimitKey('otp', 'ip', ipAddress),
+      RATE_LIMIT_POLICIES.otpRequestIP,
+    );
+    if (!ipResult.allowed) {
+      return { success: false, error: 'RATE_LIMITED' };
+    }
   }
 
   // Rate limit by email
-  if (!checkRateLimit(`email:${normalizedEmail}`, MAX_REQUESTS_PER_EMAIL)) {
+  const emailResult = await checkRateLimit(
+    rateLimitKey('otp', 'email', normalizedEmail),
+    RATE_LIMIT_POLICIES.otpRequestEmail,
+  );
+  if (!emailResult.allowed) {
     return { success: false, error: 'RATE_LIMITED' };
   }
 

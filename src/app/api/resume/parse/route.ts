@@ -11,6 +11,12 @@ import {
   MAX_PDF_PAGES,
   sanitizedError,
 } from '@/lib/validation/input-limits';
+import {
+  checkRateLimit,
+  rateLimitedResponse,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
 
 const SYSTEM_PROMPT = `You are a resume parser. Extract ALL information from the resume into the EXACT JSON schema below.
 
@@ -33,6 +39,15 @@ export async function POST(request: NextRequest) {
     const user = await resolveUser(fingerprint);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limit: per-user, fail-closed for high-cost PDF parsing
+    const rlResult = await checkRateLimit(
+      rateLimitKey('resume-parse', 'user', user.id),
+      RATE_LIMIT_POLICIES.resumeParse,
+    );
+    if (!rlResult.allowed) {
+      return rateLimitedResponse(rlResult.retryAfter);
     }
 
     const formData = await request.formData();

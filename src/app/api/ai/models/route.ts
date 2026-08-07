@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { getUserIdFromRequest } from '@/lib/auth/helpers';
+import {
+  checkRateLimit,
+  rateLimitedResponse,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
 
 export async function GET(request: NextRequest) {
   // Verify authentication and active status before any provider calls
@@ -10,6 +16,15 @@ export async function GET(request: NextRequest) {
   }
   if (!ctx.ok) {
     return ctx.response;
+  }
+
+  // Rate limit: per-user, fail-open (read-only catalog lookup)
+  const rlResult = await checkRateLimit(
+    rateLimitKey('ai-models', 'user', ctx.context.actor.userId),
+    RATE_LIMIT_POLICIES.aiModels,
+  );
+  if (!rlResult.allowed) {
+    return rateLimitedResponse(rlResult.retryAfter);
   }
 
   const provider = request.headers.get('x-provider') || 'openai';

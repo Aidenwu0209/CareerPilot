@@ -26,6 +26,7 @@
 - Session claims refresh: `src/lib/auth/session-claims.ts` provides `refreshUserClaims(userId)` (fetches platformRole + status from DB) and `shouldRefresh(lastRefreshAt)` (60s staleness check); JWT callback calls these periodically; sensitive ops should use `resolveUser()` which always reads from DB
 - Middleware API auth: `src/middleware.ts` enforces session-cookie presence for ALL `/api/*` routes except `PUBLIC_API_PREFIXES` (`/api/auth`, `/api/health`, `/api/share`); returns `401 { error: 'AUTH_REQUIRED' }` for missing cookie
 - Route inventory test at `src/app/api/route-inventory.test.ts` auto-discovers all API route.ts files and classifies them against `PUBLIC_API_PREFIXES` — new unclassified routes are visible in test output
+- Rate limiting: `src/lib/rate-limit/rate-limit.ts` — `checkRateLimit(key, policy)` + `rateLimitedResponse(retryAfter)` + `RATE_LIMIT_POLICIES` constants; adapter pattern with `MemoryRateLimitAdapter` (default) and pluggable `setRateLimitAdapter()` for Redis/DB; `failClosed` policies deny on store-unavailable, `failClosed: false` allows
 
 ---
 
@@ -455,5 +456,27 @@
   - The AI chat route previously used inline `stepCountIs(25)` — now uses shared `MAX_AI_STEPS` constant; this ensures the step limit can never diverge between routes
 ---
 
-
+## 2026-08-08 07:01 - US-022
+- Implemented cross-instance distributed rate limiting with pluggable adapter pattern
+- New files: `src/lib/rate-limit/rate-limit.ts` (core module), `src/lib/rate-limit/rate-limit.test.ts` (41 tests)
+- Modified routes: `src/app/api/ai/chat/route.ts` (per-user rate limit, fail-closed), `src/app/api/ai/models/route.ts` (per-user, fail-open), `src/app/api/linkedin-photo/route.ts` (per-user, fail-closed), `src/app/api/resume/parse/route.ts` (per-user, fail-closed)
+- Refactored: `src/lib/auth/email-otp.ts` — replaced inline in-memory rate limiting with shared module delegation (same thresholds: IP 5/hr, email 3/hr)
+- Adapter pattern: `RateLimitAdapter` interface with `MemoryRateLimitAdapter` (shared module-level Map for single-process), `UnavailableRateLimitAdapter` (testing), and factory `getRateLimitAdapter()` singleton
+- Cross-instance sharing (AC2): adapters sharing the same Map see each other's counts — in production, a Redis/DB adapter would be injected via `setRateLimitAdapter()` for true cross-process sharing
+- Fail-closed behavior (AC5): `checkRateLimit()` catches store unavailability/errors and returns `{ allowed: false }` for `failClosed: true` policies (aiChat, linkedinPhoto, resumeParse), `{ allowed: true }` for `failClosed: false` policies (aiModels, OTP)
+- Rate limit policies: `RATE_LIMIT_POLICIES` constant defines limit/windowMs/failClosed per route — AI chat 30/min, AI models 20/min, LinkedIn photo 5/min, resume parse 10/min, OTP IP 5/hr, OTP email 3/hr
+- Response helper: `rateLimitedResponse(retryAfter)` returns 429 with `{ error: 'RATE_LIMITED' }` body and `Retry-After` header (always >= 1)
+- Key builder: `rateLimitKey(scope, dimension, value)` produces consistent keys like `ai-chat:user:<userId>`
+- IP extraction: `getClientIP(request)` checks x-forwarded-for, x-real-ip, falls back to 'unknown'
+- 41 tests: policy config (7), cross-instance sharing (3), 429+Retry-After (5), no-provider-call guarantee (1), fail-closed/fail-open (7), MemoryAdapter (7), getClientIP (4), integration with policies (4), adapter management (3)
+- Typecheck passes, tests pass (563/563), lint clean on new files (3 pre-existing `any` errors in chat/route.ts unchanged from US-018)
+- **未来迭代的学习：**
+  - `RateLimitAdapter` interface is the extension point — future production deployment injects Redis/PostgreSQL adapter via `setRateLimitAdapter()`; the interface contract (increment/reset/clear/isAvailable) is sufficient for any shared store
+  - `checkRateLimit()` increments first, then checks `count > limit` — this means the count can exceed the limit by 1 on the denied request; callers should not use the adapter's count as a "number of successful requests" counter
+  - `failClosed` vs `failOpen` design: high-cost AI capabilities (chat, photo, parse) fail-closed to protect cost; read-only/low-cost routes (models catalog) fail-open to preserve availability; OTP routes fail-open because they have their own DB-level abuse protection and blocking auth is worse than allowing a burst
+  - `email-otp.ts` now delegates to the shared module via `checkRateLimit()` from `@/lib/rate-limit/rate-limit` — the `clearRateLimits` export is re-exported from the rate-limit module for backward compatibility with existing tests
+  - The shared module-level Map in `rate-limit.ts` is the default store for the singleton adapter — `resetRateLimitAdapter()` clears both the adapter instance and the Map for clean test isolation
+  - `createIsolatedAdapter()` creates a MemoryRateLimitAdapter with a fresh Map — useful for tests that need independent state without affecting the global singleton
+  - Future stories (US-037 AI Gateway) should add rate limiting checks at the gateway level using the same `checkRateLimit()` + `RATE_LIMIT_POLICIES` pattern
+---
 

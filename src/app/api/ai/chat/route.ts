@@ -7,6 +7,12 @@ import { chatRepository } from '@/lib/db/repositories/chat.repository';
 import { getSystemPrompt } from '@/lib/ai/prompts';
 import { createExecutableTools } from '@/lib/ai/tools';
 import { validateChatMessages, sanitizedError, MAX_AI_STEPS } from '@/lib/validation/input-limits';
+import {
+  checkRateLimit,
+  rateLimitedResponse,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
 
 const MAX_ROUNDS = 10;
 const MAX_MESSAGES = MAX_ROUNDS * 2; // 10 rounds = 20 messages (user + assistant)
@@ -17,6 +23,15 @@ export async function POST(request: NextRequest) {
     const user = await resolveUser(fingerprint);
     if (!user) {
       return new Response('Unauthorized', { status: 401 });
+    }
+
+    // Rate limit: per-user, fail-closed for high-cost AI chat
+    const rlResult = await checkRateLimit(
+      rateLimitKey('ai-chat', 'user', user.id),
+      RATE_LIMIT_POLICIES.aiChat,
+    );
+    if (!rlResult.allowed) {
+      return rateLimitedResponse(rlResult.retryAfter);
     }
 
     const { messages, resumeId, model: modelId, sessionId } = await request.json();
