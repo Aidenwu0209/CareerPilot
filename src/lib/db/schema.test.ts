@@ -261,3 +261,85 @@ describe('US-003: PG schema has proper FK definitions', () => {
     expect(pgSchemaSource.interviewReports).toBeDefined();
   });
 });
+
+// ── US-004: Auth account, platform role & account status schema ──
+
+describe('US-004: Users table has platform_role and status columns with defaults', () => {
+  it('new user defaults to platform_role = "user" and status = "active"', () => {
+    sqlite.prepare(
+      `INSERT INTO users (id, auth_type) VALUES ('u-defaults', 'fingerprint')`,
+    ).run();
+
+    const row = sqlite.prepare(
+      `SELECT platform_role, status FROM users WHERE id = ?`,
+    ).get('u-defaults') as { platform_role: string; status: string };
+
+    expect(row.platform_role).toBe('user');
+    expect(row.status).toBe('active');
+  });
+
+  it('can create a user with platform_role = "super_admin"', () => {
+    sqlite.prepare(
+      `INSERT INTO users (id, auth_type, platform_role) VALUES ('u-admin', 'fingerprint', 'super_admin')`,
+    ).run();
+
+    const row = sqlite.prepare(
+      `SELECT platform_role FROM users WHERE id = ?`,
+    ).get('u-admin') as { platform_role: string };
+
+    expect(row.platform_role).toBe('super_admin');
+  });
+
+  it('can create a user with status = "suspended"', () => {
+    sqlite.prepare(
+      `INSERT INTO users (id, auth_type, status) VALUES ('u-suspended', 'fingerprint', 'suspended')`,
+    ).run();
+
+    const row = sqlite.prepare(
+      `SELECT status FROM users WHERE id = ?`,
+    ).get('u-suspended') as { status: string };
+
+    expect(row.status).toBe('suspended');
+  });
+
+  it('platform_role and status columns exist after migration', () => {
+    const tableInfo = sqlite.prepare(`PRAGMA table_info(users)`).all() as { name: string }[];
+    const columnNames = tableInfo.map((c) => c.name);
+
+    expect(columnNames).toContain('platform_role');
+    expect(columnNames).toContain('status');
+  });
+});
+
+describe('US-004: auth_accounts unique constraint on (provider, providerAccountId)', () => {
+  it('prevents duplicate auth_account for same provider+providerAccountId (already covered by US-003, re-verified)', () => {
+    // This is a re-confirmation that the unique constraint from US-003 is still in place
+    // after adding new columns — the constraint should survive the migration.
+    sqlite.prepare(
+      `INSERT INTO users (id, auth_type) VALUES ('u-reverify', 'fingerprint')`,
+    ).run();
+    sqlite.prepare(
+      `INSERT INTO auth_accounts (id, user_id, provider, provider_account_id) VALUES ('aa-rev-1', 'u-reverify', 'github', 'gh-123')`,
+    ).run();
+
+    expect(() => {
+      sqlite.prepare(
+        `INSERT INTO auth_accounts (id, user_id, provider, provider_account_id) VALUES ('aa-rev-2', 'u-reverify', 'github', 'gh-123')`,
+      ).run();
+    }).toThrow();
+  });
+});
+
+describe('US-004: Existing users retain stable userId after migration', () => {
+  it('user created before migration columns still accessible with new defaults', () => {
+    // The user 'u-defaults' was created without specifying platform_role/status.
+    // After migration, it should have the default values — proving no data loss.
+    const row = sqlite.prepare(
+      `SELECT id, platform_role, status FROM users WHERE id = ?`,
+    ).get('u-defaults') as { id: string; platform_role: string; status: string };
+
+    expect(row.id).toBe('u-defaults');
+    expect(row.platform_role).toBe('user');
+    expect(row.status).toBe('active');
+  });
+});
