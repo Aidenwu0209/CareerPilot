@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 import { users, resumes } from './schema';
 
@@ -13,7 +13,10 @@ export const interviewSessions = sqliteTable('interview_sessions', {
   status: text('status', { enum: ['preparing', 'in_progress', 'paused', 'completed'] }).notNull().default('preparing'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-});
+}, (table) => ({
+  userIdx: index('interview_sessions_user_id_idx').on(table.userId),
+  resumeIdx: index('interview_sessions_resume_id_idx').on(table.resumeId),
+}));
 
 export const interviewRounds = sqliteTable('interview_rounds', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -27,7 +30,9 @@ export const interviewRounds = sqliteTable('interview_rounds', {
   summary: text('summary', { mode: 'json' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-});
+}, (table) => ({
+  sessionIdx: index('interview_rounds_session_id_idx').on(table.sessionId),
+}));
 
 export const interviewMessages = sqliteTable('interview_messages', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -36,7 +41,9 @@ export const interviewMessages = sqliteTable('interview_messages', {
   content: text('content').notNull(),
   metadata: text('metadata', { mode: 'json' }).default('{}'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-});
+}, (table) => ({
+  roundIdx: index('interview_messages_round_id_idx').on(table.roundId),
+}));
 
 export const interviewReports = sqliteTable('interview_reports', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
