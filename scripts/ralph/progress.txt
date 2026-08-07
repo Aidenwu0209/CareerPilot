@@ -528,3 +528,25 @@
   - The service returns 'DEDUPED' (not the existing event id) for deduplicated calls — callers should treat this as a no-op signal, not an error; the event already exists and they shouldn't act on it again
 ---
 
+## 2026-08-08 07:50 - US-025
+- Implemented atomic credit ledger service for all credit/quota balance mutations
+- New files: `src/lib/credits/ledger.ts` (core service), `src/lib/credits/ledger.test.ts` (30 tests)
+- Service provides: `postTransaction()` (core atomic operation), `creditAccount()` / `debitAccount()` (wrappers), `getOrCreateAccount()` / `getAccount()` / `getAccountById()` (account helpers), `getBalance()` / `getTransactions()` (read helpers), `verifyBalance()` (audit check)
+- Error types: `CreditError` (base), `InsufficientCreditsError`, `AccountNotFoundError`, `AccountFrozenError` — all with stable `code` property for API consumers
+- AC1: Single `BEGIN IMMEDIATE` transaction locks account row, validates balance, appends immutable ledger entry, and updates balance snapshot — all atomic
+- AC2: Insufficient credits throws `InsufficientCreditsError` with zero side effects (balance unchanged, no ledger entry)
+- AC3: Compound unique constraint on `(accountId, idempotencyKey)` + in-transaction idempotency check returns the original result for duplicate requests
+- AC4: `BEGIN IMMEDIATE` acquires exclusive write lock before reads; DB-level CHECK constraint `balance >= 0` is the ultimate safety net; `verifyBalance()` recomputes from ledger sum
+- AC5: All 6 reason codes supported: `registration_grant`, `manual_credit`, `manual_debit`, `consumption`, `refund`, `adjustment`
+- 30 tests: AC1 atomic operations (4), AC2 insufficient credits (3), AC3 idempotency (5), AC4 concurrency/balance-verification (3), AC5 reason codes (2), account helpers (3), pagination (2), audit verification (2), error cases (4), low-level postTransaction (2)
+- Typecheck passes, tests pass (710/710), lint clean on new files
+- **未来迭代的学习：**
+  - `db.transaction(fn, { behavior: 'immediate' })` is the SQLite-specific config for `BEGIN IMMEDIATE` — acquires the write lock at BEGIN, not at first write, preventing read-then-write races
+  - Inside a sync SQLite transaction, use `.get()` for single-row reads and `.run()` for writes — `await` doesn't work inside sync callbacks
+  - `credit_transactions` table has immutability triggers (from US-006) that block both UPDATE and DELETE — tests cannot truncate between cases; use unique IDs per test instead
+  - `verifyBalance()` only works when ALL balance changes go through the ledger (including the initial balance) — accounts should start at 0 and receive their first credit via `postTransaction()`, not via direct DB insert
+  - The `creditAccounts.ownerId` is polymorphic (user or org) — `getOrCreateAccount()` takes `ownerType` + `ownerId` and relies on the compound unique constraint for deduplication
+  - `creditAccount()` and `debitAccount()` are thin wrappers that validate amount > 0 and call `postTransaction()` with positive/negative delta — callers must always use these wrappers, never construct deltas manually
+  - Future stories (US-026 registration grant, US-028 admin adjustment, US-036 AI hold/settlement) should call `postTransaction()` / `creditAccount()` / `debitAccount()` rather than touching credit tables directly
+  - The `ruleSnapshot` JSON column captures pricing/rule state at transaction time — callers should pass the current model pricing or grant amount so historical records remain accurate after rule changes
+---
