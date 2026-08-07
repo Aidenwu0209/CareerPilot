@@ -27,6 +27,7 @@
 - Middleware API auth: `src/middleware.ts` enforces session-cookie presence for ALL `/api/*` routes except `PUBLIC_API_PREFIXES` (`/api/auth`, `/api/health`, `/api/share`); returns `401 { error: 'AUTH_REQUIRED' }` for missing cookie
 - Route inventory test at `src/app/api/route-inventory.test.ts` auto-discovers all API route.ts files and classifies them against `PUBLIC_API_PREFIXES` — new unclassified routes are visible in test output
 - Rate limiting: `src/lib/rate-limit/rate-limit.ts` — `checkRateLimit(key, policy)` + `rateLimitedResponse(retryAfter)` + `RATE_LIMIT_POLICIES` constants; adapter pattern with `MemoryRateLimitAdapter` (default) and pluggable `setRateLimitAdapter()` for Redis/DB; `failClosed` policies deny on store-unavailable, `failClosed: false` allows
+- SSRF guard: `src/lib/security/ssrf-guard.ts` — `validateUpstreamUrl(url)` checks HTTPS + approved domain allowlist; `sanitizeUpstreamUrl(url, fallback)` returns URL or fallback; `SSRF_SAFE_FETCH_OPTIONS` with `redirect:'error'`; approved domains: api.openai.com, api.anthropic.com, generativelanguage.googleapis.com
 
 ---
 
@@ -478,5 +479,29 @@
   - The shared module-level Map in `rate-limit.ts` is the default store for the singleton adapter — `resetRateLimitAdapter()` clears both the adapter instance and the Map for clean test isolation
   - `createIsolatedAdapter()` creates a MemoryRateLimitAdapter with a fresh Map — useful for tests that need independent state without affecting the global singleton
   - Future stories (US-037 AI Gateway) should add rate limiting checks at the gateway level using the same `checkRateLimit()` + `RATE_LIMIT_POLICIES` pattern
+---
+
+## 2026-08-08 07:15 - US-023
+- Implemented SSRF guard to prevent server-side requests to arbitrary user-supplied URLs
+- New files: `src/lib/security/ssrf-guard.ts` (core module), `src/lib/security/ssrf-guard.test.ts` (80 tests)
+- Modified: `src/lib/ai/provider.ts` (extractAIConfig now validates baseURL via sanitizeUpstreamUrl — unsafe URLs silently fall back to provider default), `src/app/api/ai/models/route.ts` (validates baseURL before fetch, uses redirect:'error' on all fetch calls)
+- Defense strategy: **approved domain allowlist** as primary defense (api.openai.com, api.anthropic.com, generativelanguage.googleapis.com) + private IP range detection as secondary
+- `validateUpstreamUrl(url)`: checks HTTPS protocol, approved domain hostname, rejects all raw IPs, returns generic `UPSTREAM_URL_NOT_ALLOWED` error
+- `sanitizeUpstreamUrl(url, fallback)`: returns URL if safe, fallback if not — used in extractAIConfig to silently replace unsafe URLs
+- `isPrivateIPv4` / `isPrivateIPv6`: detects loopback, private, link-local, cloud metadata, CGNAT, multicast, reserved, TEST-NET, discard, NAT64, IPv4-mapped IPv6
+- `SSRF_SAFE_FETCH_OPTIONS`: `redirect: 'error'` constant — prevents redirect-based SSRF where an approved domain might redirect to internal addresses
+- IPv6 normalization handles: `::` shorthand expansion, bracket stripping, mixed notation (`::ffff:127.0.0.1`), all within a single `normalizeIPv6()` helper
+- 80 tests covering all 5 AC: approved domains pass (4), protocol enforcement (6), non-approved domains (5), IPv4 SSRF (11), IPv6 SSRF (9), IP encoding tricks (4), DNS variations (3), no-leakage verification (2), sanitizeUpstreamUrl (3), isApprovedDomain (3), isPrivateIPv4 (7), isPrivateIPv6 (10), isLikelyIPAddress (7), SSRF_SAFE_FETCH_OPTIONS (1), integration (3)
+- Typecheck passes, tests pass (643/643), lint clean on new/changed files
+- **未来迭代的学习：**
+  - `extractAIConfig()` in `src/lib/ai/provider.ts` is the single point where user-supplied headers (x-base-url, x-api-key, x-provider, x-model) become server config — it's the natural integration point for SSRF validation
+  - The approved domain allowlist approach is simpler and more secure than trying to detect all private IP variants — if a hostname isn't in the approved set, it's rejected, period. No DNS resolution needed.
+  - `URL.hostname` is already lowercased by the URL parser — no manual `.toLowerCase()` needed on parsed hostnames (but it doesn't hurt)
+  - `String.prototype.includes('')` returns `true` — the empty string is a substring of every string. Watch out for this in `.not.toContain()` assertions
+  - IPv6 `::` expansion: split on `::` first, then split head and tail separately, pad missing groups in between — much simpler than iterating over split parts with empty strings
+  - Mixed notation (`::ffff:127.0.0.1`) requires special handling: detect trailing dotted-decimal, convert to two hex groups before `::` expansion
+  - `100::/64` discard prefix check: only first 4 groups need to match (`0100:0000:0000:0000`), remaining groups can be anything — NOT `slice(1,8).every(zero)`
+  - `redirect: 'error'` in fetch options causes a TypeError on 3xx responses — prevents redirect-based SSRF where an approved endpoint might redirect to an internal address
+  - Future stories (US-032 credential encryption, US-033 provider management) should use `validateUpstreamUrl` when storing custom provider base URLs; US-050 will make this moot by removing user-supplied URLs entirely
 ---
 

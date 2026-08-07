@@ -7,6 +7,7 @@ import {
   RATE_LIMIT_POLICIES,
   rateLimitKey,
 } from '@/lib/rate-limit/rate-limit';
+import { validateUpstreamUrl, SSRF_SAFE_FETCH_OPTIONS } from '@/lib/security/ssrf-guard';
 
 export async function GET(request: NextRequest) {
   // Verify authentication and active status before any provider calls
@@ -29,7 +30,11 @@ export async function GET(request: NextRequest) {
 
   const provider = request.headers.get('x-provider') || 'openai';
   const apiKey = request.headers.get('x-api-key') || '';
-  const baseURL = request.headers.get('x-base-url') || '';
+  const rawBaseURL = request.headers.get('x-base-url') || '';
+
+  // SSRF guard: only use user-supplied baseURL if it passes validation.
+  // Unsafe URLs are treated as empty → hardcoded provider defaults are used instead.
+  const baseURL = rawBaseURL && validateUpstreamUrl(rawBaseURL).ok ? rawBaseURL : '';
 
   if (!apiKey) {
     return Response.json({ models: [] });
@@ -44,6 +49,7 @@ export async function GET(request: NextRequest) {
           ? `${baseURL.replace(/\/$/, '')}/v1/models`
           : 'https://api.anthropic.com/v1/models';
         const res = await fetch(url, {
+          ...SSRF_SAFE_FETCH_OPTIONS,
           headers: {
             'x-api-key': apiKey,
             'anthropic-version': '2023-06-01',
@@ -59,7 +65,7 @@ export async function GET(request: NextRequest) {
         const url = baseURL
           ? `${baseURL.replace(/\/$/, '')}/models?key=${apiKey}`
           : `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-        const res = await fetch(url);
+        const res = await fetch(url, SSRF_SAFE_FETCH_OPTIONS);
         if (!res.ok) return Response.json({ models: [] });
         const data = await res.json();
         models = (data.models ?? []).map((m: { name: string }) => ({
@@ -72,6 +78,7 @@ export async function GET(request: NextRequest) {
         // openai
         const effectiveBaseURL = baseURL || 'https://api.openai.com/v1';
         const res = await fetch(`${effectiveBaseURL}/models`, {
+          ...SSRF_SAFE_FETCH_OPTIONS,
           headers: { Authorization: `Bearer ${apiKey}` },
         });
         if (!res.ok) return Response.json({ models: [] });

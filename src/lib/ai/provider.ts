@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { sanitizeUpstreamUrl } from '@/lib/security/ssrf-guard';
 
 export interface AIConfig {
   provider: string;
@@ -10,11 +11,25 @@ export interface AIConfig {
   model: string;
 }
 
+/** Default upstream URLs per provider — used when user-supplied URL is unsafe. */
+const DEFAULT_PROVIDER_URLS: Record<string, string> = {
+  openai: 'https://api.openai.com/v1',
+  anthropic: 'https://api.anthropic.com/v1',
+  gemini: 'https://generativelanguage.googleapis.com/v1beta',
+};
+
 export function extractAIConfig(request: NextRequest): AIConfig {
   const provider = request.headers.get('x-provider') || 'openai';
   const apiKey = request.headers.get('x-api-key') || '';
-  const baseURL = request.headers.get('x-base-url') || 'https://api.openai.com/v1';
+  const rawBaseURL = request.headers.get('x-base-url') || '';
   const model = request.headers.get('x-model') || 'gpt-4o';
+
+  // SSRF guard: validate user-supplied baseURL before using it for upstream calls.
+  // Unsafe URLs (private IPs, non-approved domains, non-HTTPS) silently fall back
+  // to the provider default — the server never connects to the user-supplied address.
+  const fallback = DEFAULT_PROVIDER_URLS[provider] ?? DEFAULT_PROVIDER_URLS.openai;
+  const baseURL = sanitizeUpstreamUrl(rawBaseURL, fallback);
+
   return { provider, apiKey, baseURL, model };
 }
 
