@@ -3,6 +3,12 @@ import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { interviewRepository } from '@/lib/db/repositories/interview.repository';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { dbReady } from '@/lib/db';
+import {
+  MAX_ARRAY_LENGTH,
+  MAX_PROMPT_LENGTH,
+  MAX_SHORT_TEXT_LENGTH,
+  sanitizedError,
+} from '@/lib/validation/input-limits';
 
 export async function GET(request: NextRequest) {
   await dbReady;
@@ -25,6 +31,17 @@ export async function POST(request: NextRequest) {
 
   if (!jobDescription || !jobTitle || !interviewers?.length) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  // Input size limits — reject before any DB writes
+  if (typeof jobDescription === 'string' && jobDescription.length > MAX_PROMPT_LENGTH) {
+    return sanitizedError(`Job description too long (max ${MAX_PROMPT_LENGTH} characters)`);
+  }
+  if (typeof jobTitle === 'string' && jobTitle.length > MAX_SHORT_TEXT_LENGTH) {
+    return sanitizedError(`Job title too long (max ${MAX_SHORT_TEXT_LENGTH} characters)`);
+  }
+  if (Array.isArray(interviewers) && interviewers.length > MAX_ARRAY_LENGTH) {
+    return sanitizedError(`Too many interviewers (max ${MAX_ARRAY_LENGTH})`);
   }
 
   // Verify resumeId belongs to the current user

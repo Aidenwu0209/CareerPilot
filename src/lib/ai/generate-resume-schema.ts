@@ -1,12 +1,13 @@
 import { z } from 'zod/v4';
+import { MAX_PROMPT_LENGTH, MAX_SHORT_TEXT_LENGTH, MAX_ARRAY_LENGTH } from '@/lib/validation/input-limits';
 
 // Input schema for generate-resume API
 export const generateResumeInputSchema = z.object({
-  jobTitle: z.string().min(1).describe('The target job title, e.g. "Frontend Engineer"'),
+  jobTitle: z.string().min(1).max(MAX_SHORT_TEXT_LENGTH).describe('The target job title, e.g. "Frontend Engineer"'),
   yearsOfExperience: z.number().min(0).max(50).optional().default(0).describe('Years of professional experience'),
-  skills: z.array(z.string()).optional().describe('Optional list of skills to include'),
-  industry: z.string().optional().describe('Optional industry context, e.g. "fintech", "healthcare"'),
-  experience: z.string().optional().describe('Optional free-text work experience description for AI to parse and incorporate'),
+  skills: z.array(z.string().max(MAX_SHORT_TEXT_LENGTH)).max(MAX_ARRAY_LENGTH).optional().describe('Optional list of skills to include'),
+  industry: z.string().max(MAX_SHORT_TEXT_LENGTH).optional().describe('Optional industry context, e.g. "fintech", "healthcare"'),
+  experience: z.string().max(MAX_PROMPT_LENGTH).optional().describe('Optional free-text work experience description for AI to parse and incorporate'),
   template: z.string().optional().describe('Template to use for the generated resume'),
   language: z.enum(['zh', 'en']).optional().default('zh').describe('Language for the generated resume'),
 });

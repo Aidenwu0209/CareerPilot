@@ -1,9 +1,10 @@
 import { z } from 'zod/v4';
+import { MAX_PROMPT_LENGTH } from '@/lib/validation/input-limits';
 
 // Input schema for cover-letter API
 export const coverLetterInputSchema = z.object({
   resumeId: z.string().min(1).describe('The ID of the resume to base the cover letter on'),
-  jobDescription: z.string().min(1).describe('The target job description'),
+  jobDescription: z.string().min(1).max(MAX_PROMPT_LENGTH).describe('The target job description'),
   tone: z.enum(['formal', 'friendly', 'confident']).describe('The tone of the cover letter'),
   language: z.enum(['zh', 'en', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar']).optional().default('zh').describe('Language for the cover letter'),
 });

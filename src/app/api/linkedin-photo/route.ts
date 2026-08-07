@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { getUserIdFromRequest } from '@/lib/auth/helpers';
+import {
+  validateBase64Image,
+  validatePromptLength,
+  MAX_SHORT_TEXT_LENGTH,
+  sanitizedError,
+} from '@/lib/validation/input-limits';
 
 export const maxDuration = 60;
 
@@ -32,6 +38,22 @@ export async function POST(request: NextRequest) {
         { error: 'Image is required' },
         { status: 400 }
       );
+    }
+
+    // Validate image size and MIME type before sending to provider
+    const imageCheck = validateBase64Image(image);
+    if (!imageCheck.ok) {
+      return sanitizedError(imageCheck.error);
+    }
+
+    // Validate prompt lengths before concatenation
+    if (typeof prompt === 'string') {
+      const promptCheck = validatePromptLength(prompt);
+      if (!promptCheck.ok) return sanitizedError(promptCheck.error);
+    }
+    if (typeof requirements === 'string') {
+      const reqCheck = validatePromptLength(requirements, MAX_SHORT_TEXT_LENGTH);
+      if (!reqCheck.ok) return sanitizedError(reqCheck.error);
     }
 
     // Build final prompt with aspect ratio and requirements

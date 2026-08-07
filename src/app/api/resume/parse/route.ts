@@ -5,15 +5,12 @@ import { getModel, extractAIConfig, getJsonProviderOptions, AIConfigError } from
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import type { ParsedResume } from '@/lib/ai/parse-schema';
-
-const ACCEPTED_TYPES = [
-  'application/pdf',
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-];
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+import {
+  ALLOWED_UPLOAD_MIME,
+  MAX_FILE_SIZE,
+  MAX_PDF_PAGES,
+  sanitizedError,
+} from '@/lib/validation/input-limits';
 
 const SYSTEM_PROMPT = `You are a resume parser. Extract ALL information from the resume into the EXACT JSON schema below.
 
@@ -47,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    if (!ACCEPTED_TYPES.includes(file.type)) {
+    if (!ALLOWED_UPLOAD_MIME.includes(file.type as typeof ALLOWED_UPLOAD_MIME[number])) {
       return NextResponse.json(
         { error: 'Unsupported file type. Accepted: PDF, PNG, JPG, WebP' },
         { status: 400 }
@@ -71,6 +68,13 @@ export async function POST(request: NextRequest) {
     const isPdf = file.type === 'application/pdf';
 
     if (isPdf) {
+      // Check PDF page count before any rendering
+      const { doc } = await loadMupdfDoc(new Uint8Array(buffer));
+      const pageCount = doc.countPages();
+      if (pageCount > MAX_PDF_PAGES) {
+        return sanitizedError(`PDF has too many pages (${pageCount}, max ${MAX_PDF_PAGES})`);
+      }
+
       // Try to extract text from PDF first
       const pdfText = await extractPdfText(buffer);
 
@@ -187,6 +191,9 @@ function extractPdfText(buffer: Buffer): Promise<string> {
 async function pdfPagesToImages(buffer: Uint8Array): Promise<Uint8Array[]> {
   const { mupdf, doc } = await loadMupdfDoc(buffer);
   const pageCount = doc.countPages();
+  if (pageCount > MAX_PDF_PAGES) {
+    throw new Error(`PDF has ${pageCount} pages (max ${MAX_PDF_PAGES})`);
+  }
   const images: Uint8Array[] = [];
 
   for (let i = 0; i < pageCount; i++) {

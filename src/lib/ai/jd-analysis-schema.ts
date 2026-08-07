@@ -1,9 +1,10 @@
 import { z } from 'zod/v4';
+import { MAX_PROMPT_LENGTH } from '@/lib/validation/input-limits';
 
 // Input schema for JD analysis API
 export const jdAnalysisInputSchema = z.object({
   resumeId: z.string().describe('The ID of the resume to analyze'),
-  jobDescription: z.string().min(1).describe('The job description text to match against'),
+  jobDescription: z.string().min(1).max(MAX_PROMPT_LENGTH).describe('The job description text to match against'),
 });
 
 export type JdAnalysisInput = z.infer<typeof jdAnalysisInputSchema>;

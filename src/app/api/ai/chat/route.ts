@@ -6,6 +6,7 @@ import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { chatRepository } from '@/lib/db/repositories/chat.repository';
 import { getSystemPrompt } from '@/lib/ai/prompts';
 import { createExecutableTools } from '@/lib/ai/tools';
+import { validateChatMessages, sanitizedError, MAX_AI_STEPS } from '@/lib/validation/input-limits';
 
 const MAX_ROUNDS = 10;
 const MAX_MESSAGES = MAX_ROUNDS * 2; // 10 rounds = 20 messages (user + assistant)
@@ -19,6 +20,14 @@ export async function POST(request: NextRequest) {
     }
 
     const { messages, resumeId, model: modelId, sessionId } = await request.json();
+
+    // Validate message count and per-message length before any processing
+    if (Array.isArray(messages)) {
+      const msgCheck = validateChatMessages(messages);
+      if (!msgCheck.ok) {
+        return sanitizedError(msgCheck.error);
+      }
+    }
 
     // Verify resumeId ownership before loading any data
     let resumeContext = '';
@@ -88,7 +97,7 @@ export async function POST(request: NextRequest) {
       system: getSystemPrompt(resumeContext),
       messages: truncatedMessages,
       tools,
-      stopWhen: tools ? stepCountIs(25) : undefined,
+      stopWhen: tools ? stepCountIs(MAX_AI_STEPS) : undefined,
       onFinish: async ({ text, steps }) => {
         if (!sessionId) return;
 
