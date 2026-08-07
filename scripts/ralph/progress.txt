@@ -20,6 +20,9 @@
 - better-sqlite3 native `transaction()` does NOT support async callbacks — use synchronous callbacks with `tx.insert(table).values(obj).run()` (the `.run()` is required to actually execute SQL inside a sync transaction)
 - Auth.js v5 config is at `src/lib/auth/config.ts` — jwt callback receives `user`/`account`/`profile` only on first sign-in call; `resolveOAuthAccount()` in `src/lib/auth/oauth-linking.ts` handles persistent account linking
 - `@/lib/db` can be mocked in tests via `vi.mock()` with an async factory that creates a real in-memory SQLite DB — all consumers (repositories, services) get the test DB automatically
+- ESLint binary location: `node_modules/.pnpm/eslint@9.39.2_jiti@2.6.1/node_modules/eslint/bin/eslint.js`
+- NextAuth v5 `encode()` from `next-auth/jwt` can create session tokens manually: `encode({ token, secret, maxAge, salt })` — salt must match the cookie name (`authjs.session-token` or `__Secure-authjs.session-token` in production)
+- Mail adapter pattern: `MailAdapter` interface with `TestMailAdapter` (in-memory, has `getLastCode(email)`), `ConsoleMailAdapter` (dev logging), `SmtpMailAdapter` (production, uses nodemailer dynamically); `getMailAdapter()` selects based on `NODE_ENV` and `SMTP_HOST`
 
 ---
 
@@ -237,3 +240,23 @@
   - `account.expires_at` from NextAuth is a number (epoch seconds), needs `new Date(expires_at)` conversion when storing as Drizzle timestamp
 ---
 
+## 2026-08-08 05:08 - US-012
+- Implemented email OTP (one-time password) authentication backend
+- New files: `src/lib/db/schema-email-otp.ts` (email_otps table), `src/lib/auth/email-otp.ts` (OTP service), `src/lib/auth/mail-adapter.ts` (mail adapter abstraction), `src/app/api/auth/otp/request/route.ts`, `src/app/api/auth/otp/verify/route.ts`, `src/lib/auth/email-otp.test.ts` (29 tests)
+- New migrations: `drizzle/migrations/0013_dark_black_widow.sql` (SQLite), `drizzle/pg-migrations/0011_clean_leader.sql` (PostgreSQL)
+- Modified: `src/lib/db/schema.ts` (added 'email' to authType enum, re-export emailOtps), `src/lib/db/pg-schema.ts` (added emailOtps PG table), `src/lib/db/repositories/user.repository.ts` (updated authType type), `src/lib/db/pg-migrations.test.ts` (updated migration/table counts)
+- email_otps table: stores SHA-256 hash (never plaintext code), with expiry, single-use (usedAt), attempt counter (max 5), IP tracking
+- OTP service: generates 6-digit code via `crypto.randomBytes`, rate limits by IP (5/hr) and email (3/hr) in-memory, resolves user identity (create new or link existing), creates auth_accounts with provider='email'
+- Mail adapters: TestMailAdapter (stores in memory, `getLastCode(email)` for tests), ConsoleMailAdapter (dev), SmtpMailAdapter (production, uses nodemailer dynamically, configured by SMTP_* env vars)
+- Verify route: creates NextAuth session by encoding JWT with `encode()` from `next-auth/jwt` and setting the session cookie manually (salt must match cookie name)
+- 29 new tests covering all 5 AC: email format validation, IP/email rate limits, hash-only storage, TTL enforcement, single-use enforcement, user creation for new emails, user restoration for existing emails, auth account linking, stable errors without leaking registration status, test adapter code retrieval
+- Typecheck passes, tests pass (279/279), lint clean on new files
+- **未来迭代的学习：**
+  - NextAuth v5 `encode()` from `next-auth/jwt` takes `{ token, secret, maxAge, salt }` — salt MUST match the cookie name for `auth()` to decode the token. Dev: `authjs.session-token`, Prod: `__Secure-authjs.session-token`
+  - Setting session cookie manually in Route Handlers: `const cookieStore = await cookies(); cookieStore.set(name, token, { httpOnly: true, ... })` — this is `next/headers` cookies(), not request cookies
+  - OTP code generation: use `crypto.randomBytes(length)` with `% 10` per byte for unbiased 0-9 digits — Math.random() is not cryptographically secure
+  - Rate limiting is in-memory for now (Map<string, {count, windowStart}>) — US-022 will add distributed rate limiting (Redis/shared store)
+  - `auth_accounts` table has compound unique on `(provider, providerAccountId)` — for email auth, providerAccountId = normalized email, so one email auth account per user max
+  - Adding a new table to pg-schema.ts: also update pg-migrations.test.ts migration count (currently 12 SQL files, 26 tables) and the `_journal.json` entries
+  - `nodemailer` is an optional dependency — dynamic import with `@ts-expect-error` prevents type errors when it's not installed
+---
