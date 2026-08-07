@@ -39,3 +39,20 @@
   - For dynamic mock switching in route tests, use `vi.resetModules()` + `vi.doMock()` + dynamic `import()`
   - SQLiteAdapter migrations run in constructor (sync), PostgreSQLAdapter migrations run in `initialize()` (async) — test accordingly
 ---
+
+## 2026-08-08 02:26 - US-003
+- Unified PostgreSQL production schema with proper FK constraints, cascade rules, unique constraints, and indexes
+- Rewrote `src/lib/db/pg-schema.ts`: added `.references()` calls (13 FKs total), cascade rules matching SQLite, compound unique on auth_accounts(provider, providerAccountId), and 15 secondary indexes
+- Updated `src/lib/db/schema.ts` and `src/lib/db/schema-interview.ts`: added matching indexes and compound unique for SQLite parity
+- New files: `drizzle/pg-migrations/0004_green_microchip.sql` (13 FKs + 15 indexes + 1 unique constraint), `drizzle/migrations/0006_thin_chat.sql` (15 indexes + 1 unique index), `src/lib/db/schema.test.ts` (17 integrity tests)
+- 17 new tests: FK rejection for all 12 child→parent relationships, cascade delete (resume→children + interview_session→children), compound unique on auth_accounts, unique on interview_reports.session_id
+- Typecheck passes, tests pass (78/78), lint clean on new files
+- **未来迭代的学习：**
+  - `pg-schema.ts` is the authoritative PostgreSQL production schema source; `schema.ts` (SQLite) is only for development adapter and runtime query building
+  - Drizzle PG table third argument: `(table) => ({ name: unique('...').on(...), name2: index('...').on(...) })` — returns an object, not array
+  - Drizzle SQLite table third argument: same callback pattern, imports from `drizzle-orm/sqlite-core`
+  - `drizzle-kit generate --config drizzle-pg.config.ts` generates PG migrations; `drizzle-kit generate` (default config) generates SQLite migrations
+  - To test FK/cascade behavior without a real PostgreSQL, use in-memory SQLite (`new Database(':memory:')`) with `PRAGMA foreign_keys = ON` — same integrity rules apply
+  - PG migration 0004 adds ALTER TABLE constraints to existing tables — won't conflict with existing data as long as all current rows have valid parent IDs
+  - SQLite migration 0006 only adds indexes (FKs were already in place from earlier migrations)
+---
