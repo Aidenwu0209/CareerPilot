@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { encode } from 'next-auth/jwt';
 import { verifyOtp } from '@/lib/auth/email-otp';
+import { refreshUserClaims } from '@/lib/auth/session-claims';
 
 /**
  * POST /api/auth/otp/verify
@@ -50,11 +51,17 @@ export async function POST(req: NextRequest) {
   const maxAge = 30 * 24 * 60 * 60; // 30 days (matches NextAuth default)
   const now = Math.floor(Date.now() / 1000);
 
+  // Fetch fresh claims (platformRole, status) for the JWT
+  const claims = await refreshUserClaims(result.userId);
+
   const sessionToken = await encode({
     token: {
       userId: result.userId,
       name: result.name || undefined,
       email: result.email,
+      platformRole: claims?.platformRole,
+      status: claims?.status,
+      lastRefreshAt: now,
       sub: result.userId,
       iat: now,
       exp: now + maxAge,
