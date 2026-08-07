@@ -23,6 +23,7 @@
 - ESLint binary location: `node_modules/.pnpm/eslint@9.39.2_jiti@2.6.1/node_modules/eslint/bin/eslint.js`
 - NextAuth v5 `encode()` from `next-auth/jwt` can create session tokens manually: `encode({ token, secret, maxAge, salt })` — salt must match the cookie name (`authjs.session-token` or `__Secure-authjs.session-token` in production)
 - Mail adapter pattern: `MailAdapter` interface with `TestMailAdapter` (in-memory, has `getLastCode(email)`), `ConsoleMailAdapter` (dev logging), `SmtpMailAdapter` (production, uses nodemailer dynamically); `getMailAdapter()` selects based on `NODE_ENV` and `SMTP_HOST`
+- Session claims refresh: `src/lib/auth/session-claims.ts` provides `refreshUserClaims(userId)` (fetches platformRole + status from DB) and `shouldRefresh(lastRefreshAt)` (60s staleness check); JWT callback calls these periodically; sensitive ops should use `resolveUser()` which always reads from DB
 
 ---
 
@@ -259,4 +260,23 @@
   - `auth_accounts` table has compound unique on `(provider, providerAccountId)` — for email auth, providerAccountId = normalized email, so one email auth account per user max
   - Adding a new table to pg-schema.ts: also update pg-migrations.test.ts migration count (currently 12 SQL files, 26 tables) and the `_journal.json` entries
   - `nodemailer` is an optional dependency — dynamic import with `@ts-expect-error` prevents type errors when it's not installed
+---
+
+## 2026-08-08 05:33 - US-013
+- Implemented session role & status sync: JWT and session now include platformRole and status
+- New files: `src/lib/auth/session-claims.ts` (refreshUserClaims + shouldRefresh), `src/lib/auth/session-claims.test.ts` (12 tests)
+- Modified: `src/types/next-auth.d.ts` (added platformRole, status, lastRefreshAt to Session.user and JWT types), `src/lib/auth/config.ts` (explicit cookie config with HttpOnly/Secure/SameSite, jwt callback fetches claims on sign-in + periodic refresh, session callback propagates claims), `src/app/api/auth/otp/verify/route.ts` (includes platformRole/status in JWT payload for OTP auth)
+- Cookie config: `__Secure-authjs.session-token` in prod, `authjs.session-token` in dev; always httpOnly: true, sameSite: 'lax', path: '/', secure in prod only
+- JWT refresh mechanism: `shouldRefresh(lastRefreshAt)` checks if > 60s since last DB fetch; jwt callback calls `refreshUserClaims()` to get latest platformRole/status; handles user deletion by clearing token
+- Sensitive operations use existing `resolveUser()` in `helpers.ts` which always reads from DB (not the cached JWT) — so role/status changes are reflected immediately for authorization checks
+- Fixed pre-existing `@typescript-eslint/no-explicit-any` in config.ts (replaced `profile as any` with typed cast)
+- 12 new tests: refreshUserClaims (correct defaults, role change reflected, status change reflected, null for missing user, no sensitive data in claims), shouldRefresh (undefined→true, fresh→false, stale→true, boundary), cookie config verification, session shape (includes platformRole/status, no sensitive fields)
+- Typecheck passes, tests pass (291/291), lint clean on changed files
+- **未来迭代的学习：**
+  - NextAuth v5 `cookies.sessionToken.options` config overrides default cookie attributes — must set httpOnly, sameSite, path, secure explicitly; this config is separate from the OTP route's manual `cookieStore.set()`
+  - JWT callback runs on every request that needs the session (not just sign-in) — use `!user && token.userId` guard to distinguish "refresh" calls from "initial sign-in" calls
+  - For periodic DB refresh in JWT: store `lastRefreshAt` (unix seconds) in token, check staleness with `shouldRefresh()`, re-fetch via `refreshUserClaims()` — 60s interval balances freshness with DB load
+  - `resolveUser()` in `helpers.ts` already reads the full user record from DB on every call — this is the canonical function for sensitive operations (authorization checks), NOT `session.user` which may be up to 60s stale
+  - Session.user now has `platformRole` and `status` as non-optional fields with fallback defaults (`?? 'user'` / `?? 'active'`) so TypeScript consumers don't need null checks
+  - The `session` callback must use `token.platformRole ?? 'user'` (not just `token.platformRole`) because tokens created before US-013 won't have these fields — graceful degradation for existing sessions
 ---
