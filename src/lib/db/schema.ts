@@ -7,7 +7,7 @@ export const users = sqliteTable('users', {
   name: text('name'),
   avatarUrl: text('avatar_url'),
   fingerprint: text('fingerprint').unique(),
-  authType: text('auth_type', { enum: ['oauth', 'fingerprint'] }).notNull(),
+  authType: text('auth_type', { enum: ['oauth', 'fingerprint', 'email'] }).notNull(),
   platformRole: text('platform_role', { enum: ['super_admin', 'user'] }).notNull().default('user'),
   status: text('status', { enum: ['active', 'suspended'] }).notNull().default('active'),
   settings: text('settings', { mode: 'json' }).default('{}'),
@@ -157,3 +157,7 @@ export {
   auditEvents,
   legalConsents,
 } from './schema-audit';
+
+export {
+  emailOtps,
+} from './schema-email-otp';

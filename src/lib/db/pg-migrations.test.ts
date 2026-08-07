@@ -127,10 +127,10 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         pg,
         `SELECT count(*)::int as cnt FROM drizzle."__drizzle_migrations"`
       );
-      expect(rows[0].cnt).toBe(11);
+      expect(rows[0].cnt).toBe(12);
     });
 
-    it('should create all 25 expected tables in public schema', async () => {
+    it('should create all 26 expected tables in public schema', async () => {
       pg = await createPglite();
       const db = drizzle(pg);
 
@@ -146,7 +146,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         'ai_models', 'ai_operations', 'ai_provider_attempts', 'ai_providers',
         'audit_events', 'auth_accounts', 'chat_messages', 'chat_sessions',
         'credit_accounts', 'credit_holds', 'credit_rules', 'credit_transactions',
-        'grammar_checks', 'interview_messages', 'interview_reports',
+        'email_otps', 'grammar_checks', 'interview_messages', 'interview_reports',
         'interview_rounds', 'interview_sessions', 'jd_analyses',
         'legal_consents', 'organization_memberships', 'organizations',
         'resume_sections', 'resume_shares', 'resumes', 'users',
@@ -460,11 +460,11 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       );
       expect(txnCount[0].cnt).toBe(1);
 
-      // Migration tracking table should still have exactly 11 entries
+      // Migration tracking table should still have exactly 12 entries
       const trackingCount = await query<{ cnt: number }>(
         pg, `SELECT count(*)::int as cnt FROM drizzle."__drizzle_migrations"`
       );
-      expect(trackingCount[0].cnt).toBe(11);
+      expect(trackingCount[0].cnt).toBe(12);
     });
   });
 
@@ -719,7 +719,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         .filter((f) => f.endsWith('.sql'))
         .sort();
 
-      expect(sqlFiles.length).toBe(11);
+      expect(sqlFiles.length).toBe(12);
 
       const journalTags = getAllMigrationTags();
       const fileTags = sqlFiles.map((f) => f.replace('.sql', ''));

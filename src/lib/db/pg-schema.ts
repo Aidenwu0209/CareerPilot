@@ -532,3 +532,24 @@ export const legalConsents = pgTable(
     createdIdx: index('legal_consents_created_at_idx').on(table.createdAt),
   }),
 );
+
+// ── Email OTP (one-time password) storage ──
+
+export const emailOtps = pgTable(
+  'email_otps',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    email: text('email').notNull(),
+    codeHash: text('code_hash').notNull(),
+    ipAddress: text('ip_address'),
+    expiresAt: integer('expires_at').notNull(),
+    usedAt: integer('used_at'),
+    attempts: integer('attempts').notNull().default(0),
+    createdAt: integer('created_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    emailIdx: index('email_otps_email_idx').on(table.email),
+    emailUsedIdx: index('email_otps_email_used_at_idx').on(table.email, table.usedAt),
+    ipIdx: index('email_otps_ip_address_idx').on(table.ipAddress),
+  }),
+);
