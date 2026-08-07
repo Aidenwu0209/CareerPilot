@@ -1,0 +1,24 @@
+## Codebase Patterns
+- Next.js 16 instrumentation hook (`src/instrumentation.ts`) runs before the server accepts traffic — use it for fail-closed config checks
+- Environment validation is in `src/lib/env.ts` with `validateEnv()` (returns issues) and `assertEnvOrExit()` (exits process in prod, warns in dev)
+- DB adapter pattern: `src/lib/db/adapter.ts` interface, `sqlite.ts` and `postgresql.ts` implementations, `index.ts` selects based on `DB_TYPE`
+- In production (`NODE_ENV=production`): DB init rejects instead of catching errors; auto-seed is skipped entirely
+- `dbReady` export in `src/lib/db/index.ts` is a Promise — await it in readiness checks
+- Health endpoint at `src/app/api/health/route.ts` returns 200/503 based on `dbReady` status
+- Quality commands: `pnpm type-check`, `pnpm test`, `pnpm lint` — but if `node_modules/.bin` is missing, run via `node node_modules/.pnpm/<pkg>/node_modules/<pkg>/<entry>`
+- Many pre-existing `@typescript-eslint/no-explicit-any` errors throughout the codebase — not introduced by new changes
+
+---
+
+## 2026-08-08 01:52 - US-001
+- Implemented production fail-closed configuration validation
+- New files: `src/lib/env.ts`, `src/lib/env.test.ts`, `src/instrumentation.ts`, `src/app/api/health/route.ts`
+- Modified: `.env.example` (added `AI_CREDENTIAL_MASTER_KEY`), `src/lib/db/index.ts` (prod init rejects), `src/lib/db/adapters/postgresql.ts` (prod migration propagates errors, no seed), `src/lib/db/adapters/sqlite.ts` (same pattern)
+- 15 config matrix tests cover all failure scenarios (placeholder AUTH_SECRET, sqlite in prod, missing DATABASE_URL, etc.)
+- Typecheck passes, tests pass (15/15), lint clean on new files
+- **未来迭代的学习：**
+  - `node_modules/.bin` may be missing on Windows; use direct `node` invocation from `.pnpm` store as fallback
+  - Pre-existing `any` lint errors exist in DB adapters and many API routes — don't try to fix them in unrelated stories
+  - Next.js instrumentation hook is the canonical place for startup-time validation
+  - `AI_CREDENTIAL_MASTER_KEY` is a new env var that will be needed by future stories about provider credential encryption (US-032)
+---
