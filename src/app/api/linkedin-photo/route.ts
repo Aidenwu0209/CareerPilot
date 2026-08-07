@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { resolveActiveContext } from '@/lib/auth/guards';
+import { getUserIdFromRequest } from '@/lib/auth/helpers';
 
 export const maxDuration = 60;
 
@@ -7,6 +9,15 @@ const GEMINI_ENDPOINT =
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify authentication and active status before any external calls
+    const ctx = await resolveActiveContext(getUserIdFromRequest(request));
+    if (!ctx) {
+      return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+    }
+    if (!ctx.ok) {
+      return ctx.response;
+    }
+
     const { image, prompt, requirements, aspectRatio, apiKey } = await request.json();
 
     if (!apiKey || typeof apiKey !== 'string') {

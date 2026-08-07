@@ -413,4 +413,26 @@
   - The `interview/[id]/chat/route.ts` was already correct (checks both session ownership and round ownership) — it served as the reference pattern for fixing control and mark routes
 ---
 
+## 2026-08-08 06:35 - US-020
+- Protected model catalog and LinkedIn photo APIs with authentication and active status guard
+- Modified: `src/app/api/ai/models/route.ts` (added resolveActiveContext guard before any provider calls), `src/app/api/linkedin-photo/route.ts` (added resolveActiveContext guard before any Gemini calls)
+- New files: `src/app/api/ai/models/auth.test.ts` (7 tests), `src/app/api/linkedin-photo/auth.test.ts` (6 tests)
+- Both routes now integrate `resolveActiveContext(getUserIdFromRequest(request))` as first operation — returns 401 for no auth, 403 for suspended, proceeds only for active authenticated users
+- `resolveActiveContext` is the US-017 guard — this is the first production integration of the guard into route handlers
+- Middleware (US-016) already blocks unauthenticated requests at the edge, but route-level guard adds defense-in-depth and handles suspended user rejection that middleware cannot do
+- Fetch spy tests verify zero external calls on all rejection paths (unauthenticated + suspended)
+- API key exposure test verifies the key string does not appear in any JSON response body
+- AC coverage: models route (7 tests: unauth 401 + zero fetch, suspended 403 + zero fetch, active proceeds, no key exposure, no-key empty list), linkedin-photo route (6 tests: unauth 401 + zero fetch, suspended 403 + zero fetch, active proceeds, no key exposure) = 13 total
+- Typecheck passes, tests pass (454/454), lint clean on new/changed files
+- **未来迭代的学习：**
+  - `resolveActiveContext` is the canonical entry point for route handler auth — returns a discriminated union (`null | { ok: false, response } | { ok: true, context }`) that makes auth flow type-safe
+  - The guard returns a pre-built `NextResponse` for rejection cases — callers just return `ctx.response` directly, no manual error formatting needed
+  - `vi.spyOn(globalThis, 'fetch')` is the cleanest way to verify "zero external calls" in route tests — the spy tracks all fetch invocations including those inside the route handler
+  - The models route still accepts client-supplied API keys (BYOK pattern) — US-050 will replace this with server-side model catalog. US-020 only adds the auth gate
+  - The linkedin-photo route still accepts body `apiKey` — US-049 will migrate it to managed provider. US-020 only adds the auth gate
+  - For the guard to work in tests, mock `@/lib/auth/helpers` (resolveUser + getUserIdFromRequest) and seed users in the in-memory SQLite DB — the guard internally calls `resolveContext → resolveUser → DB lookup`
+  - `Response.json()` (Fetch API) and `NextResponse.json()` can be mixed in the same route — NextResponse extends Response, so both work as return values
+---
+
+
 

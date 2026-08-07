@@ -1,6 +1,17 @@
 import { NextRequest } from 'next/server';
+import { resolveActiveContext } from '@/lib/auth/guards';
+import { getUserIdFromRequest } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
+  // Verify authentication and active status before any provider calls
+  const ctx = await resolveActiveContext(getUserIdFromRequest(request));
+  if (!ctx) {
+    return Response.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  }
+  if (!ctx.ok) {
+    return ctx.response;
+  }
+
   const provider = request.headers.get('x-provider') || 'openai';
   const apiKey = request.headers.get('x-api-key') || '';
   const baseURL = request.headers.get('x-base-url') || '';
