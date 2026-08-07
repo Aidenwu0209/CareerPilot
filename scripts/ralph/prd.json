@@ -1,0 +1,1718 @@
+{
+  "project": "CareerPilot",
+  "branchName": "ralph/careerpilot-commercialization-phase-1",
+  "description": "CareerPilot 商用化一期：建立正式认证、ToC 点数、ToB 机构额度、平台托管 AI、管理后台、安全合规与生产就绪闭环。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "添加商用生产配置校验",
+      "description": "作为运维人员，我需要生产环境在认证、数据库或密钥配置不安全时拒绝启动。",
+      "acceptanceCriteria": [
+        "生产环境启用指纹认证或 SQLite 时，配置校验在监听业务端口前失败",
+        "生产环境缺少 PostgreSQL 连接、使用占位 AUTH_SECRET 或缺少独立 AI 凭据加密主密钥时失败",
+        "开发环境只有在显式开发开关下才能继续使用 SQLite 或测试身份",
+        "配置矩阵测试断言每个失败场景返回非零退出状态和明确配置项名称",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-002",
+      "title": "让数据库初始化失败时停止服务",
+      "description": "作为运维人员，我需要迁移或初始化失败时应用 fail-closed，并禁止生产自动 seed 演示数据。",
+      "acceptanceCriteria": [
+        "数据库连接或迁移失败时初始化 Promise 抛出错误，readiness 失败且业务 API 不可用",
+        "生产空库初始化不会创建指纹用户、演示用户或示例简历",
+        "重复启动不会重复执行破坏性 seed 或吞掉迁移异常",
+        "自动化测试覆盖迁移失败、空库生产启动和开发 seed 三条路径",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-003",
+      "title": "统一现有 PostgreSQL Schema 基线",
+      "description": "作为开发者，我需要现有用户、简历、分享、聊天和面试实体在 PostgreSQL 中拥有一致的约束与索引。",
+      "acceptanceCriteria": [
+        "现有核心实体和面试实体使用同一明确的 PostgreSQL 生产 schema 来源",
+        "补齐用户归属、父子资源、级联删除、唯一约束和常用查询索引",
+        "向无效父 ID 写入子资源会被数据库拒绝，删除父资源按定义级联或阻止",
+        "SQLite 如保留为开发适配器，不再作为生产迁移的隐式来源",
+        "成功生成并执行 PostgreSQL migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-004",
+      "title": "添加认证账号、平台角色与账号状态 Schema",
+      "description": "作为开发者，我需要持久化正式认证账号、平台角色和冻结状态。",
+      "acceptanceCriteria": [
+        "用户数据支持平台角色 `super_admin` 与 `user`，默认新用户为 `user`",
+        "用户数据支持 `active` 与 `suspended` 状态，默认新用户为 `active`",
+        "认证账号表对 provider 与 providerAccountId 建立唯一约束并关联用户",
+        "迁移已有 OAuth 用户时不会创建重复用户或丢失稳定 userId",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-005",
+      "title": "添加机构与 Membership Schema",
+      "description": "作为开发者，我需要以机构 membership 表达 ToB 租户角色和席位归属。",
+      "acceptanceCriteria": [
+        "机构包含唯一标识、名称、状态、席位上限、创建者和时间字段",
+        "membership 包含 organization、user、`org_admin/member` 角色和有效状态",
+        "同一用户在同一机构不能有重复有效 membership",
+        "机构角色不存成全局 `users.role=org_admin`",
+        "为机构成员、角色和状态查询建立必要索引",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-006",
+      "title": "添加点数账户、规则与不可变流水 Schema",
+      "description": "作为开发者，我需要为个人点数和机构额度建立隔离且可审计的数据结构。",
+      "acceptanceCriteria": [
+        "账户支持个人 owner 或机构 owner，且每个 owner 只有一个对应有效账户",
+        "流水包含变动前余额、变动值、变动后余额、原因、操作者、业务关联 ID、幂等键和时间",
+        "账户余额和流水结果受非负约束，同一账户的幂等键唯一",
+        "点数规则支持注册赠点、个人每日上限和规则版本",
+        "流水记录不能通过普通更新或删除路径修改",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-007",
+      "title": "添加供应商、模型目录与计价 Schema",
+      "description": "作为开发者，我需要持久化托管供应商凭据、模型能力和扣点规则。",
+      "acceptanceCriteria": [
+        "供应商记录包含类型、受控服务地址、启用状态、加密凭据和凭据版本",
+        "模型记录包含供应商、模型标识、显示名、文本/生图能力、档位和启用状态",
+        "模型记录包含可见范围、输入输出限制、最大 steps 和固定/Token 计价字段",
+        "同一供应商下模型标识唯一，模型必须引用有效供应商",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-008",
+      "title": "添加 AI Operation、Attempt 与预占 Schema",
+      "description": "作为开发者，我需要分别记录业务 AI 操作、真实供应商尝试和额度预占。",
+      "acceptanceCriteria": [
+        "AI operation 包含 actor、计费账户、业务能力、状态、幂等键和最终结算关联",
+        "provider attempt 包含 operation、模型、尝试序号、状态、usage 和供应商请求 ID",
+        "预占记录包含账户、operation、预占值、已结算值、状态和过期时间",
+        "同一 operation 的 attempt 序号唯一，同一业务幂等键不能创建重复 operation",
+        "敏感 Prompt、简历正文和明文凭据不属于默认 usage 字段",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-009",
+      "title": "添加审计事件与法律同意 Schema",
+      "description": "作为开发者，我需要记录关键管理操作和用户同意的法律版本。",
+      "acceptanceCriteria": [
+        "审计事件包含 actor、动作、目标、租户、请求关联 ID、结果、脱敏摘要和时间",
+        "用户同意记录包含 user、文档类型、版本、生效日期、同意时间和来源",
+        "审计事件和同意历史不能由普通用户更新或删除",
+        "为 actor、目标、租户和时间查询建立必要索引",
+        "成功生成并执行 migration",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-010",
+      "title": "验证全新安装与存量 PostgreSQL 升级",
+      "description": "作为运维人员，我需要证明完整商用 schema 可从空库安装并从代表性旧库升级。",
+      "acceptanceCriteria": [
+        "全新 PostgreSQL 数据库可从零执行全部 migration 并启动",
+        "包含用户、简历、分享、聊天和面试的旧库 fixture 升级后记录数量与归属一致",
+        "重复启动不会创建重复角色、membership、账户或赠点",
+        "迁移失败回退到升级前备份后，旧数据仍可读取",
+        "迁移测试在 CI 中使用真实 PostgreSQL 而不是内存假实现",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-011",
+      "title": "持久化 OAuth 账号关联",
+      "description": "作为用户，我需要 Google OAuth 登录稳定关联同一个数据库用户。",
+      "acceptanceCriteria": [
+        "Auth.js 使用持久化认证账号关联，而不是只依赖临时 JWT 回调查找用户",
+        "全新 Google 身份首次登录只创建一个用户和一个认证账号",
+        "同一 Google 身份重复登录保持相同稳定 userId",
+        "同邮箱已有用户按明确安全规则关联，不创建重复用户或重复赠点",
+        "OAuth 失败返回认证错误且不留下半创建账号",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-012",
+      "title": "实现邮箱验证码认证后端",
+      "description": "作为新用户，我需要通过有时效且单次使用的邮箱验证码建立正式身份。",
+      "acceptanceCriteria": [
+        "请求验证码接口对邮箱格式、IP 和邮箱维度执行校验与频率限制",
+        "验证码只保存安全摘要，具有有效期和单次使用约束",
+        "有效验证码为全新邮箱创建用户和认证账号，为已有邮箱恢复同一用户",
+        "错误、过期和已使用验证码返回稳定错误且不泄露邮箱是否已注册",
+        "测试邮件适配器可在本地和自动化环境读取一次性验证码，生产适配器由环境配置",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-013",
+      "title": "在 Session 中同步角色与账号状态",
+      "description": "作为平台，我需要 session 提供稳定 userId 和展示角色，同时敏感请求仍读取最新账号状态。",
+      "acceptanceCriteria": [
+        "登录成功后的 session 包含稳定 userId 和平台角色，不包含数据库凭据或 AI Key",
+        "session cookie 在生产使用 HttpOnly、Secure 和明确 SameSite 策略",
+        "主动退出后原 session 无法再访问私有 API",
+        "角色或状态变更后，下一次敏感请求读取数据库最新值而不是长期信任旧 token",
+        "认证 token 不写入 localStorage",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-014",
+      "title": "添加超级管理员 Bootstrap",
+      "description": "作为平台负责人，我需要通过显式可审计的部署方式授予首个超级管理员。",
+      "acceptanceCriteria": [
+        "bootstrap 仅对显式配置的唯一账号授予 super_admin，普通首个注册用户不会自动提权",
+        "重复运行 bootstrap 不创建重复用户或重复角色变更",
+        "bootstrap 成功与失败都生成不含敏感值的日志或审计输入",
+        "普通用户资料更新、请求头、cookie 和请求体均不能修改平台角色",
+        "未配置 bootstrap 目标时生产启动给出明确提示但不随机选择用户",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-015",
+      "title": "实现统一 Actor、Tenant 与计费上下文解析",
+      "description": "作为开发者，我需要从可信 session 和数据库统一解析用户、角色、机构和计费账户。",
+      "acceptanceCriteria": [
+        "访问上下文从服务端 session 解析 actor，并从数据库加载平台角色与账号状态",
+        "机构上下文只来自有效 membership，客户端 userId、role、organizationId 不被直接信任",
+        "无机构用户解析为个人账户，有唯一有效机构的普通成员解析为机构账户",
+        "检测到多个有效计费机构时返回明确错误，不静默选择第一条 membership",
+        "上下文对象不包含可序列化到客户端的供应商密钥",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-016",
+      "title": "建立私有 API 默认认证与公共白名单",
+      "description": "作为平台，我需要除明确白名单外的 API 默认要求正式登录。",
+      "acceptanceCriteria": [
+        "公共白名单只包含认证回调、法律页面、健康检查和明确公开的分享读取",
+        "未登录访问任一其他 API 返回 `401 AUTH_REQUIRED` 且不创建指纹用户",
+        "公开分享只能读取 token 对应的公开数据，不能获得所有者身份或其他资源",
+        "生产环境伪造 x-fingerprint 不能建立身份或访问私有 API",
+        "自动化路由清单能发现新增但未分类的 API route",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-017",
+      "title": "统一执行账号与机构停用状态",
+      "description": "作为平台运营人员，我需要冻结用户或停用机构后立即阻止新的私有操作和 AI 消费。",
+      "acceptanceCriteria": [
+        "suspended 用户的下一次私有 API 请求返回 `ACCOUNT_SUSPENDED`",
+        "disabled 机构或已移除 membership 的下一次机构范围请求返回稳定拒绝",
+        "状态拒绝发生在业务写入、AI 供应商调用和账本预占之前",
+        "解冻用户或重新启用机构后，新请求恢复且旧拒绝不产生副作用",
+        "访问矩阵覆盖普通用户、机构成员、机构管理员和超级管理员",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-018",
+      "title": "修复 AI Chat 与 Chat Session 所有权",
+      "description": "作为用户，我需要聊天、消息和 AI tools 只能访问我拥有的简历与会话。",
+      "acceptanceCriteria": [
+        "AI Chat 使用 resumeId 前验证简历属于当前用户",
+        "写入 sessionId 前验证会话属于该简历和当前用户",
+        "Chat session 的列表、创建、详情、分页消息和删除都通过简历反查所有权",
+        "AI tools 只能修改已经验证属于当前用户的简历",
+        "用户 A 请求用户 B 的 resumeId 或 sessionId 返回无泄漏的 404，且没有写入或模型调用",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-019",
+      "title": "修复面试嵌套资源所有权",
+      "description": "作为用户，我需要面试、报告、轮次和消息只能由会话所有者访问。",
+      "acceptanceCriteria": [
+        "创建面试并携带 resumeId 时验证简历属于当前用户",
+        "面试报告 GET 验证 session 属于当前用户",
+        "control 的 roundId 同时验证属于 URL 中的当前 session",
+        "mark 的 messageId 同时验证属于当前 session 和当前用户",
+        "跨用户请求返回无泄漏的 404，且不更新会话、轮次、消息或报告",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-020",
+      "title": "保护模型目录与职业照 API",
+      "description": "作为平台，我需要模型目录和生图接口进入正式认证边界。",
+      "acceptanceCriteria": [
+        "未登录访问 `/api/ai/models` 返回 401，不再根据客户端凭据访问上游",
+        "未登录访问 `/api/linkedin-photo` 返回 401，不再接受匿名高成本调用",
+        "suspended 用户或 disabled 机构调用两个接口均在外部请求前被拒绝",
+        "认证成功的现有用户仍可获得受控响应，不暴露供应商密钥",
+        "拒绝路径的外部 fetch 调用数为零",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-021",
+      "title": "添加高成本请求输入限制",
+      "description": "作为平台，我需要限制图片、PDF、Prompt、消息和模型 steps，避免超大请求耗尽资源。",
+      "acceptanceCriteria": [
+        "共享校验定义图片 MIME、图片大小、PDF 大小与页数、JSON body 和 Prompt 上限",
+        "AI Chat 对消息数和最大 steps 使用服务端硬限制",
+        "超限请求返回稳定 4xx 错误且不调用供应商、不创建预占或业务结果",
+        "边界值、刚好超限和伪造 MIME 的测试结果可重复",
+        "错误响应不包含完整上传内容或内部堆栈",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-022",
+      "title": "添加跨实例分布式限流",
+      "description": "作为平台，我需要按 IP、用户、计费账户和能力共享限流计数。",
+      "acceptanceCriteria": [
+        "认证验证码、AI、模型目录、生图和简历解析分别配置适用的限流键与阈值",
+        "两个应用实例对同一主体共享计数，切换实例不能绕过限制",
+        "超限返回 `429 RATE_LIMITED` 和 `Retry-After`",
+        "被限流请求不调用供应商、不预占或扣减余额",
+        "限流存储不可用时高成本 AI 能力按配置 fail-closed",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-023",
+      "title": "阻止任意上游地址与 SSRF",
+      "description": "作为平台，我需要阻止终端用户或恶意配置让服务端访问内网和任意地址。",
+      "acceptanceCriteria": [
+        "终端用户提交的 baseURL、Provider 或上游 URL 不会触发服务端外连",
+        "允许的自定义供应商地址仅接受 HTTPS 和批准域名或网络范围",
+        "环回、私网、link-local、云 metadata、受限重定向和 DNS rebinding 被拒绝",
+        "拒绝响应不泄露内部网络探测结果",
+        "SSRF 测试覆盖 IPv4、IPv6、重定向和 DNS 变化",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-024",
+      "title": "实现脱敏审计事件服务",
+      "description": "作为安全负责人，我需要关键管理操作通过统一服务写入不可变审计事件。",
+      "acceptanceCriteria": [
+        "审计服务记录 actor、动作、目标、租户、请求关联 ID、结果和脱敏摘要",
+        "服务拒绝把完整 AI Key、Authorization 头、简历正文或完整 Prompt 写入摘要",
+        "相同管理幂等请求不会写入重复成功事件",
+        "普通用户和机构管理员不能修改或删除审计事件",
+        "成功和失败事件可按 actor、目标和时间查询用于测试核对",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-025",
+      "title": "实现原子点数账本服务",
+      "description": "作为平台，我需要所有个人点数和机构额度变化通过幂等事务完成。",
+      "acceptanceCriteria": [
+        "账本服务在同一事务中锁定账户、校验余额、追加流水并更新余额快照",
+        "余额不足时返回稳定错误，账户和流水均不变化",
+        "相同账户与幂等键重试返回首次结果，不新增流水",
+        "并发扣减测试无法产生负余额，余额与流水重算一致",
+        "人工增加、人工扣减、赠点、预占释放和消费使用明确原因代码",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-026",
+      "title": "实现注册赠点与个人余额 API",
+      "description": "作为 ToC 用户，我需要首次注册只获得一次赠点，并只能读取自己的余额和流水。",
+      "acceptanceCriteria": [
+        "新用户首次完成正式认证时按当前规则写入一笔赠点流水",
+        "重复 OAuth 回调、验证码重放或任务重试不会重复赠点",
+        "当前用户余额 API 返回个人可用余额和规则所需摘要",
+        "当前用户流水 API 支持稳定分页且不能通过 accountId 读取他人账户",
+        "无流水返回空列表而不是错误，suspended 用户按访问策略被拒绝",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-027",
+      "title": "实现超管用户查询与冻结 API",
+      "description": "作为超级管理员，我需要查询用户并冻结或解冻异常账号。",
+      "acceptanceCriteria": [
+        "超管可按姓名或精确邮箱分页查询用户并读取角色、状态、余额和机构摘要",
+        "普通用户和机构管理员调用用户管理 API 返回 403",
+        "冻结与解冻要求明确目标和幂等键，并写入脱敏审计事件",
+        "冻结成功后目标用户下一次私有请求被 US-017 的状态守卫拒绝",
+        "用户查询响应不包含简历、面试正文、认证 token 或 AI Key",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-028",
+      "title": "实现超管个人调账与点数规则 API",
+      "description": "作为超级管理员，我需要带备注地加减个人点数并配置注册赠点和每日上限。",
+      "acceptanceCriteria": [
+        "个人调账要求非零整数、必填原因和幂等键",
+        "扣减会导致负余额时返回 `INSUFFICIENT_CREDITS` 且无流水变化",
+        "成功调账返回新余额和新增流水，并写入当前超管审计事件",
+        "超管可更新非负注册赠点和每日上限，规则变更只影响后续业务事件",
+        "重复幂等请求不重复调账或重复审计",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-029",
+      "title": "实现机构生命周期与管理员授权 API",
+      "description": "作为超级管理员，我需要创建、启停机构并任命或回收机构管理员。",
+      "acceptanceCriteria": [
+        "超管可创建唯一机构并设置名称、唯一标识、席位上限和状态",
+        "重复标识、空名称或无效席位数返回字段错误且不创建半成品机构",
+        "超管可通过已注册用户精确邮箱任命或回收 org_admin membership",
+        "停用机构后下一次机构范围请求被拒绝，历史数据保持可审计",
+        "所有生命周期和授权变化写入当前超管审计事件",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-030",
+      "title": "实现机构成员与席位 API",
+      "description": "作为机构管理员，我需要在本机构席位范围内添加或移除已注册成员。",
+      "acceptanceCriteria": [
+        "机构管理员可通过精确邮箱添加已注册普通用户到自己的机构",
+        "重复成员、已达席位上限或冲突计费归属返回明确错误且不占用席位",
+        "机构管理员可移除本机构 member，但不能管理其他机构或授予 super_admin",
+        "移除后成员的新机构请求立即被拒绝，历史机构流水保留",
+        "成员响应不包含简历、面试、聊天正文或平台密钥",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-031",
+      "title": "实现机构额度调账与余额 API",
+      "description": "作为超级管理员和机构管理员，我需要按权限调整或查看机构额度。",
+      "acceptanceCriteria": [
+        "超管可带必填备注和幂等键增加或扣减机构额度",
+        "机构额度不能被扣成负数，失败时账户和流水均不变化",
+        "机构管理员只能读取本机构额度和分页流水，不能自行增加总额度",
+        "普通用户只能读取产品明确开放的当前机构额度摘要",
+        "跨机构 accountId 请求返回无泄漏拒绝并且无副作用",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-032",
+      "title": "实现供应商凭据加密与轮换服务",
+      "description": "作为平台安全负责人，我需要供应商密钥加密保存并支持版本化轮换。",
+      "acceptanceCriteria": [
+        "凭据使用独立于 AUTH_SECRET 的主密钥或 Secret/KMS 适配器加密",
+        "数据库读取不能直接得到可用明文 Key，普通服务只能请求解密后的短生命周期值",
+        "凭据轮换创建新版本并保留明确启用状态，不在日志中记录明文",
+        "读取 API 只返回掩码、版本和最后验证元数据",
+        "缺少解密条件时生产配置失败，不降级为读取客户端 Key",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-033",
+      "title": "实现超管供应商管理与连接测试 API",
+      "description": "作为超级管理员，我需要新增、编辑、启停、轮换并测试托管供应商。",
+      "acceptanceCriteria": [
+        "超管可新增和编辑受支持供应商并写入加密凭据",
+        "连接测试使用受控目标，返回成功或脱敏失败结果",
+        "启停和轮换凭据写入审计事件，读取响应始终只含掩码",
+        "普通用户和机构管理员调用任一供应商管理 API 返回 403",
+        "自定义服务地址通过 US-023 的出站安全策略",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-034",
+      "title": "实现模型目录管理与用户目录 API",
+      "description": "作为超级管理员和终端用户，我需要分别管理模型和读取获授权模型目录。",
+      "acceptanceCriteria": [
+        "超管可新增、编辑和启停模型，并配置能力、限制、档位和固定/Token 计价",
+        "非法负价格、无效限制、重复模型标识或不存在供应商被拒绝",
+        "终端目录只返回当前账户可使用且已启用的模型、能力和公开点数信息",
+        "目录响应不包含供应商 Key 或内部服务地址",
+        "直接提交停用或无权模型 ID 返回 `MODEL_NOT_ALLOWED`",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-035",
+      "title": "解析 AI 计费账户与模型授权",
+      "description": "作为 AI 服务，我需要在外部调用前确定唯一计费账户并验证模型权限。",
+      "acceptanceCriteria": [
+        "无机构用户解析为个人点数账户，有唯一有效机构的成员解析为机构额度账户",
+        "多机构冲突、账号冻结、机构停用或 membership 失效时返回稳定错误",
+        "模型必须存在、启用、能力匹配且在当前账户授权范围内",
+        "客户端提交的账户余额、价格、Provider 或 Base URL 被忽略或拒绝",
+        "所有拒绝发生在预占和供应商调用之前",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-036",
+      "title": "实现 AI 额度预占、结算与释放",
+      "description": "作为平台，我需要在调用前预占额度，并在结束后按规则结算或释放。",
+      "acceptanceCriteria": [
+        "固定价和 Token 计价模型都能计算确定的最大预占值",
+        "余额不足在供应商调用前返回个人或机构对应的不足错误",
+        "成功调用按规则快照和实际 usage 结算，多余预占被释放",
+        "明确供应商失败释放全部预占，过期预占可被幂等补偿任务释放",
+        "并发预占不能使余额低于零，相同 operation 不能重复结算",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-037",
+      "title": "实现统一 AI Gateway 单次调用",
+      "description": "作为平台，我需要单次 AI 调用统一经过授权、限流、预占、供应商调用和结算。",
+      "acceptanceCriteria": [
+        "Gateway 只接受目录 modelId 和业务输入，不接受客户端 Key、Provider 或 Base URL",
+        "调用按认证、状态、归属、模型授权、限流、预占、调用、结算顺序执行",
+        "每次业务请求创建唯一 operation 和至少一个可追踪 provider attempt",
+        "成功响应包含业务结果但不包含平台 Key 或内部凭据元数据",
+        "权限、余额、限流和模型拒绝路径的供应商调用数为零",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-038",
+      "title": "支持 AI Gateway 多 Attempt 与受控重试",
+      "description": "作为平台，我需要自动重试和嵌套模型调用分别计量但归属同一业务操作。",
+      "acceptanceCriteria": [
+        "每个真实供应商请求创建独立 attempt，并按顺序关联同一 operation",
+        "重试次数受模型规则限制，解析失败不会形成无限重试",
+        "相同业务幂等键重放返回首次 operation 结果，不重复调用或扣点",
+        "每个 attempt 保存 usage 和状态，最终结算符合明确失败政策",
+        "日志不保存完整 Prompt、简历正文或供应商错误中的敏感值",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-039",
+      "title": "支持 AI Gateway 流式调用与取消",
+      "description": "作为平台，我需要流式响应在首字节前完成预占，并对完成、断流和超时一致结算。",
+      "acceptanceCriteria": [
+        "流式调用在发送首个响应字节前完成授权、限流和额度预占",
+        "正常结束按 usage 结算，明确失败按政策释放",
+        "客户端断开、供应商中断和超时分别产生可追踪 operation 状态",
+        "未完成预占具有超时补偿且补偿可幂等重试",
+        "重复提交同一流式消息不会重复写消息或重复扣点",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-040",
+      "title": "迁移求职信 AI 到统一 Gateway",
+      "description": "作为用户，我需要求职信生成继续可用并使用托管模型与点数结算。",
+      "acceptanceCriteria": [
+        "求职信 route 验证当前用户和 resumeId 所有权后调用统一 Gateway",
+        "成功生成结果关联 operation、attempt、usage 和一笔最终结算",
+        "客户端 AI Key、Provider 或 Base URL 不能改变上游配置",
+        "余额不足、跨用户简历和供应商失败均不创建求职信结果",
+        "Route 测试覆盖成功、余额不足、越权和供应商失败",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 40,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-041",
+      "title": "迁移 AI 简历生成到统一 Gateway",
+      "description": "作为用户，我需要 AI 简历生成通过托管模型并正确计量结构化输出重试。",
+      "acceptanceCriteria": [
+        "AI 简历生成只通过统一 Gateway 访问模型",
+        "结构化输出失败后的受控重试创建独立 attempt 但共享 operation",
+        "只有成功完成的业务结果才创建当前用户拥有的新简历",
+        "余额不足或最终失败不会留下半创建简历，预占按政策结算或释放",
+        "遗留客户端 AI 配置不能改变供应商或价格",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 41,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-042",
+      "title": "迁移语法检查到统一 Gateway",
+      "description": "作为用户，我需要语法检查通过托管模型，并只读取我拥有的简历。",
+      "acceptanceCriteria": [
+        "语法检查验证 resumeId 属于当前用户并通过统一 Gateway 调用",
+        "成功结果、历史记录、operation、usage 和结算可关联",
+        "跨用户 resumeId、余额不足和模型停用在供应商调用前被拒绝",
+        "失败不会写入部分语法检查历史或错误流水",
+        "Route 测试覆盖成功和主要失败路径",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 42,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-043",
+      "title": "迁移 JD 分析到统一 Gateway",
+      "description": "作为用户，我需要 JD 匹配分析通过托管模型，并正确记录结果和消费。",
+      "acceptanceCriteria": [
+        "JD 分析验证 resumeId 属于当前用户并通过统一 Gateway 调用",
+        "成功结果、历史记录、operation、usage 和结算可关联",
+        "跨用户 resumeId、余额不足和超长 JD 在供应商调用前被拒绝",
+        "失败不会写入部分分析历史或错误流水",
+        "Route 测试覆盖成功和主要失败路径",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 43,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-044",
+      "title": "迁移简历解析到统一 Gateway",
+      "description": "作为用户，我需要上传简历解析时受文件限制、所有权和托管计费保护。",
+      "acceptanceCriteria": [
+        "简历解析只通过统一 Gateway 调用模型",
+        "服务端限制文件类型、文件大小、PDF 页数、抽取文本长度和最大 Token",
+        "超限、余额不足和无效文件不调用供应商、不扣点、不创建简历",
+        "成功解析只为当前用户创建结果并关联 operation、usage 和结算",
+        "Route 测试覆盖有效 PDF、伪造 MIME、超限和供应商失败",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 44,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-045",
+      "title": "迁移多章节翻译到统一 Gateway",
+      "description": "作为用户，我需要简历翻译的并发模型调用被完整计量并正确处理部分失败。",
+      "acceptanceCriteria": [
+        "翻译验证 resumeId 和 sectionIds 都属于当前用户简历",
+        "多个 section 调用共享一个 operation，每个真实供应商请求具有独立 attempt",
+        "成功、部分成功和全部失败使用明确结算规则并返回可观察结果",
+        "相同幂等键重放不会重复创建译文、重复简历或重复扣点",
+        "余额不足在任何并发供应商调用开始前被拒绝",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 45,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-046",
+      "title": "迁移简历聊天与 AI Tools 到统一 Gateway",
+      "description": "作为用户，我需要流式简历聊天和嵌套工具调用使用托管模型并保持资源所有权。",
+      "acceptanceCriteria": [
+        "简历聊天在首个流式字节前完成所有权、模型授权、限流和预占",
+        "多 step 与嵌套模型调用分别记录 attempt 并共享同一 operation",
+        "AI tools 只能读取或修改当前用户已经验证的 resumeId",
+        "正常结束、供应商失败和客户端断流按流式政策结算或释放",
+        "相同消息幂等重放不会重复保存消息、执行 tools 或扣点",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 46,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-047",
+      "title": "迁移面试聊天到统一 Gateway",
+      "description": "作为用户，我需要模拟面试聊天通过托管模型，并只访问自己的面试会话。",
+      "acceptanceCriteria": [
+        "面试聊天验证 session、round 和可选 resume 都属于当前用户",
+        "流式响应在首字节前完成预占，成功后记录 operation、attempt、usage 和结算",
+        "跨用户 session/round、余额不足和模型停用不调用供应商",
+        "正常完成、断流和供应商失败按统一流式政策处理",
+        "Route 测试断言拒绝路径不写消息、不更新轮次且不扣点",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 47,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-048",
+      "title": "迁移面试报告生成到统一 Gateway",
+      "description": "作为用户，我需要面试报告只为自己的会话生成并正确计量结构化输出。",
+      "acceptanceCriteria": [
+        "报告 GET 和生成操作都验证 session 属于当前用户",
+        "报告生成只通过统一 Gateway，并记录可能的解析重试 attempt",
+        "成功报告关联 operation、usage 和一次最终结算",
+        "余额不足、跨用户 session 或最终解析失败不留下半完成报告",
+        "重复生成请求按幂等策略返回已有报告或同一 operation",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 48,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-049",
+      "title": "迁移职业照生图到统一 Gateway",
+      "description": "作为用户，我需要无需提交 Gemini Key 即可使用获授权的托管生图模型。",
+      "acceptanceCriteria": [
+        "职业照 API 不再接受 body apiKey 或用户自定义服务地址",
+        "请求使用模型目录中的生图 modelId 并执行认证、授权、限流和固定点数预占",
+        "图片 MIME、大小、Prompt 和宽高比在供应商调用前校验",
+        "成功图片关联 operation、attempt 和结算；余额不足时供应商调用数为零",
+        "供应商错误经过脱敏，响应和日志不包含平台 Key",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 49,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-050",
+      "title": "替换模型代理并拒绝遗留客户端 AI 配置",
+      "description": "作为终端用户，我需要模型接口只返回服务端授权目录，而不是代理客户端指定地址。",
+      "acceptanceCriteria": [
+        "`/api/ai/models` 只读取服务端模型目录并按当前账户权限过滤",
+        "接口不再读取 x-api-key、x-provider 或 x-base-url，也不向客户端地址发起 fetch",
+        "生产 AI routes 收到遗留敏感头或 body apiKey 时按统一策略明确拒绝或忽略且记录脱敏告警",
+        "目录只返回 modelId、显示名、能力和公开点数信息",
+        "停用模型在下一次目录请求中消失，直接提交其 ID 被拒绝",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 50,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-051",
+      "title": "实现机构最小用量汇总 API",
+      "description": "作为机构管理员，我需要查看本机构额度、成员和模型的最小消费汇总。",
+      "acceptanceCriteria": [
+        "机构管理员可按时间范围读取本机构总消费和剩余额度",
+        "接口提供按成员和模型的最小聚合或分页明细，合计与机构流水一致",
+        "跨机构 organizationId、memberId 或时间参数不能读取其他租户数据",
+        "响应不包含完整 Prompt、简历、面试正文、平台 Key 或其他机构数据",
+        "无消费时间范围返回空数据和零汇总",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 51,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-052",
+      "title": "创建中英文隐私政策与服务条款页面",
+      "description": "作为访客，我需要在登录前访问具有版本信息的真实法律页面。",
+      "acceptanceCriteria": [
+        "`/zh/privacy`、`/zh/terms`、`/en/privacy` 和 `/en/terms` 均为公共路由",
+        "每个页面显示对应语言正文、版本号、生效日期和联系渠道",
+        "落地页页脚的隐私与条款链接不再使用 #，并跳到当前语言页面",
+        "切换语言后保持在相同法律文档类型",
+        "Use agent-browser to open /zh/privacy and /zh/terms while logged out and confirm both complete pages render without private data",
+        "Use agent-browser to click the landing footer legal links and confirm the URL and document title change correctly",
+        "No console errors are present on the tested pages",
+        "Typecheck passes"
+      ],
+      "priority": 52,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-053",
+      "title": "实现法律同意版本服务",
+      "description": "作为平台，我需要记录用户同意的隐私政策和服务条款版本。",
+      "acceptanceCriteria": [
+        "首次正式认证必须提交当前隐私政策和条款版本的同意",
+        "同意服务记录用户、文档类型、版本、时间和来源，并保留历史",
+        "客户端不能伪造不存在或已失效的文档版本",
+        "规则要求重新同意时，未同意新版本的用户只能访问法律与同意流程",
+        "当前用户可读取自己的最近同意版本，不能读取他人记录",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 53,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-054",
+      "title": "添加邮箱验证码请求界面",
+      "description": "作为新用户，我需要在登录页输入邮箱并请求一次性验证码。",
+      "acceptanceCriteria": [
+        "`/zh/login` 显示邮箱输入、获取验证码命令、Google 登录和可点击法律链接",
+        "无效邮箱在提交前显示字段错误，有效邮箱请求真实到达验证码后端",
+        "成功后界面进入验证码输入状态并显示脱敏目标邮箱和重发倒计时",
+        "限流或发送失败显示明确错误且允许用户修正邮箱或稍后重试",
+        "Use agent-browser to open /zh/login, submit an invalid email, and confirm the field error appears without a network request",
+        "Use agent-browser to submit a unique valid email and confirm the real OTP endpoint succeeds and the code-entry state appears",
+        "No console errors are present on the page",
+        "Typecheck passes"
+      ],
+      "priority": 54,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-055",
+      "title": "添加验证码提交与登录跳转界面",
+      "description": "作为用户，我需要提交有效验证码后建立 session 并返回目标受保护页面。",
+      "acceptanceCriteria": [
+        "验证码界面支持提交、返回修改邮箱和受倒计时控制的重发",
+        "有效验证码请求真实到达验证后端并建立 HttpOnly session cookie",
+        "登录成功返回原 callbackUrl；没有 callbackUrl 时进入 `/zh/dashboard`",
+        "错误、过期和已使用验证码显示不同明确错误且不清空可修正状态",
+        "Use agent-browser to open /zh/login, request a test OTP for a unique email, submit the valid code, and confirm /zh/dashboard protected content is visible",
+        "Use agent-browser to submit an invalid code and confirm the error is visible and no authenticated session is created",
+        "No console errors are present on the page",
+        "Typecheck passes"
+      ],
+      "priority": 55,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-056",
+      "title": "实现登录态恢复、退出与受保护跳转",
+      "description": "作为已登录用户，我需要刷新后恢复 session，退出后无法继续访问私有页面。",
+      "acceptanceCriteria": [
+        "未登录访问 `/zh/dashboard`、`/zh/admin` 或 `/zh/org-admin` 跳转 `/zh/login` 并保留 callbackUrl",
+        "登录后刷新受保护页面仍恢复当前 userId 和有效 session",
+        "退出命令真实调用后端并使原 session 失效，再访问私有页面返回登录页",
+        "认证 token 不写入 localStorage，生产不读取 jade_fingerprint 作为身份",
+        "Use agent-browser to log in, refresh /zh/dashboard, and confirm protected content remains visible",
+        "Use agent-browser to log out and confirm revisiting /zh/dashboard redirects to /zh/login with callbackUrl",
+        "No console errors are present during login, refresh, and logout",
+        "Typecheck passes"
+      ],
+      "priority": 56,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-057",
+      "title": "添加三角色导航与受保护入口",
+      "description": "作为用户，我需要只看到符合平台角色和机构 membership 的导航入口。",
+      "acceptanceCriteria": [
+        "普通用户导航不显示超管或机构管理入口",
+        "机构管理员显示用户端和 `/zh/org-admin` 入口，不显示 `/zh/admin`",
+        "超级管理员显示 `/zh/admin` 入口",
+        "角色或 membership 被回收后刷新立即移除入口，直接 API 请求仍由服务端拒绝",
+        "Use agent-browser with each of the three roles to open /zh/dashboard and confirm only the expected navigation items are visible",
+        "Use agent-browser as a normal user to open /zh/admin directly and confirm no sensitive content renders",
+        "No console errors are present for any role",
+        "Typecheck passes"
+      ],
+      "priority": 57,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-058",
+      "title": "创建超级管理员工作区壳层",
+      "description": "作为超级管理员，我需要独立管理工作区导航用户、AI 和机构模块。",
+      "acceptanceCriteria": [
+        "`/[locale]/admin` 具有用户与点数、AI 供应商与模型、机构三个一级入口",
+        "普通用户和机构管理员直接访问管理页面显示无权限且不加载管理数据",
+        "桌面侧栏和移动菜单都能进入每个一级入口并明确显示当前栏目",
+        "标题、导航和动态加载状态具有稳定尺寸且文本不溢出",
+        "Use agent-browser as a super admin to open /zh/admin and navigate to users, AI, and organizations without full-page errors",
+        "Use agent-browser at a mobile viewport and confirm the admin menu opens, navigates, and closes correctly",
+        "No console errors are present in the admin workspace",
+        "Typecheck passes"
+      ],
+      "priority": 58,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-059",
+      "title": "创建机构管理员工作区壳层",
+      "description": "作为机构管理员，我需要独立工作区管理本机构成员并查看用量。",
+      "acceptanceCriteria": [
+        "`/[locale]/org-admin` 显示机构名称、状态、席位摘要、额度摘要、成员和用量入口",
+        "非本机构管理员直接访问返回无权限且不加载机构数据",
+        "页面不会显示平台供应商 Key、超管命令或其他机构标识",
+        "桌面和移动导航均可操作且当前栏目明确",
+        "Use agent-browser as an org admin to open /zh/org-admin and navigate to members and usage",
+        "Use agent-browser as a normal member to open /zh/org-admin and confirm no organization administration data renders",
+        "No console errors are present in the org admin workspace",
+        "Typecheck passes"
+      ],
+      "priority": 59,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-060",
+      "title": "移除用户 BYOK 设置并清理本地密钥",
+      "description": "作为终端用户，我需要设置界面不再要求 Provider、API Key 或 Base URL。",
+      "acceptanceCriteria": [
+        "普通设置界面移除 Provider、API Key 和 Base URL 输入，只保留非敏感用户偏好",
+        "首次加载新版本删除 `jade_api_key`、`jade_provider_configs` 和 `jade_nanobanana_api_key`",
+        "清理逻辑不会把旧值复制到 cookie、服务器设置或其他 localStorage key",
+        "前端请求不再生成 x-api-key、x-provider 或 x-base-url headers",
+        "Use agent-browser to seed the three legacy localStorage keys, reload /zh/dashboard, and confirm all three keys are removed",
+        "Use agent-browser to open settings and confirm no AI key, provider, or base URL control is visible",
+        "No sensitive AI headers appear in browser network requests and no console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 60,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-061",
+      "title": "创建获授权模型选择器",
+      "description": "作为用户，我需要从服务端目录选择当前账户可用的文本或生图模型。",
+      "acceptanceCriteria": [
+        "模型选择器从真实用户目录 API 加载候选项，不使用硬编码 Provider 列表",
+        "每个候选项显示名称、能力、档位和可理解的预估点数",
+        "选择结果只保存 modelId，刷新后恢复仍有效的选择",
+        "模型停用或失去权限时选择器显示明确提示并回退到有效模型",
+        "Use agent-browser to open /zh/editor/[owned-id], choose another allowed model, refresh, and confirm the selection persists",
+        "Use agent-browser to reopen /zh/editor/[owned-id] after disabling the selected model and confirm it disappears and a clear fallback state is shown",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-062",
+      "title": "接入简历编辑器托管聊天界面",
+      "description": "作为用户，我需要在编辑器选择获授权模型并使用托管 AI 聊天。",
+      "acceptanceCriteria": [
+        "编辑器聊天使用共享模型选择器并只提交 modelId、resumeId、sessionId 和消息",
+        "成功流式响应实时显示并在结束后刷新余额摘要",
+        "余额不足、限流、模型停用和账号冻结显示不同错误，不再显示缺少 API Key",
+        "刷新编辑器后已保存聊天消息和模型有效选择保持一致",
+        "Use agent-browser to open /zh/editor/[owned-id], select a model, send a message, and confirm a real streamed response and updated balance appear",
+        "Use agent-browser with zero balance to send another message and confirm the insufficient-credit error appears with no assistant result",
+        "No sensitive AI headers or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-063",
+      "title": "接入 AI 简历生成与求职信界面",
+      "description": "作为用户，我需要简历生成和求职信界面使用服务端模型目录和托管点数。",
+      "acceptanceCriteria": [
+        "AI 简历生成和求职信入口都使用共享模型选择器，不显示 Key 或 Base URL",
+        "成功请求真实到达对应后端并在 UI 显示新简历或求职信结果",
+        "成功后余额摘要更新，刷新后生成结果和账本状态保持",
+        "余额不足和供应商失败显示不同错误且不留下半完成结果",
+        "Use agent-browser to open /zh/dashboard, generate a resume with a funded user, and confirm the new owned resume is visible after refresh",
+        "Use agent-browser to open /zh/editor/[owned-id], generate a cover letter, and confirm the result appears without sensitive request fields",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-064",
+      "title": "接入语法检查与 JD 分析界面",
+      "description": "作为用户，我需要语法检查和 JD 分析使用托管模型并展示明确消费错误。",
+      "acceptanceCriteria": [
+        "语法检查和 JD 分析都使用获授权模型且不读取本地 AI Key",
+        "成功请求真实到达后端，结果与历史记录在刷新后保持",
+        "成功后余额摘要和对应流水同步更新",
+        "余额不足、输入超限和供应商失败显示可区分错误",
+        "Use agent-browser on /zh/editor/[owned-id] to complete a grammar check and confirm the result persists after refresh",
+        "Use agent-browser to complete a JD analysis and confirm its score/history and updated balance are visible",
+        "No sensitive AI headers or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-065",
+      "title": "接入翻译与简历解析界面",
+      "description": "作为用户，我需要翻译和上传解析流程使用托管模型并完整展示成功与失败状态。",
+      "acceptanceCriteria": [
+        "翻译和简历解析入口使用获授权模型且不显示 API Key 配置",
+        "翻译成功或部分成功状态在 UI 明确显示，刷新后目标简历保持",
+        "有效简历文件解析真实到达后端，成功结果只创建当前用户简历",
+        "超限文件、余额不足和供应商失败显示不同错误且无半完成数据",
+        "Use agent-browser to open /zh/editor/[owned-id], translate the resume, and confirm the translated result and balance persist after refresh",
+        "Use agent-browser to open /zh/editor/[owned-id], upload a valid resume file and confirm parsing succeeds, then upload an oversized file and confirm it is rejected before AI processing",
+        "No sensitive AI headers or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 65,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-066",
+      "title": "接入模拟面试托管 AI 界面",
+      "description": "作为用户，我需要面试聊天和报告使用获授权模型与当前计费账户。",
+      "acceptanceCriteria": [
+        "面试聊天和报告界面不要求 API Key，并使用服务端模型目录",
+        "面试流式消息真实到达后端并在 UI 展示，刷新后会话状态保持",
+        "完成报告生成后结果、余额和流水可刷新恢复",
+        "余额不足、跨会话、模型停用和供应商失败显示不同错误",
+        "Use agent-browser to open /zh/interview/[owned-id], send an answer, and confirm a real interviewer response appears",
+        "Use agent-browser to generate /zh/interview/[owned-id]/report and confirm the report and updated balance remain after refresh",
+        "No sensitive AI headers or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 66,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-067",
+      "title": "接入职业照托管生图界面",
+      "description": "作为用户，我需要职业照页面使用获授权生图模型而不再填写 Gemini Key。",
+      "acceptanceCriteria": [
+        "`/zh/linkedin-photo` 移除 API Key 输入并使用生图模型选择器",
+        "上传有效图片并提交后，请求真实到达托管生图后端且不包含 body apiKey",
+        "成功图片显示并更新余额，刷新后的流水与结算一致",
+        "无效图片、余额不足、限流和安全过滤显示不同错误",
+        "Use agent-browser to open /zh/linkedin-photo, upload a valid image, choose an allowed image model, and confirm a generated image appears",
+        "Use agent-browser with insufficient balance to submit again and confirm no image result is created and the organization/user-specific error is shown",
+        "No sensitive request fields or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 67,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-068",
+      "title": "在用户导航显示当前余额上下文",
+      "description": "作为用户，我需要在导航中看到个人点数或当前机构额度摘要。",
+      "acceptanceCriteria": [
+        "ToC 用户导航显示个人点数并链接到 `/zh/credits`",
+        "ToB 成员导航显示机构名称和机构额度摘要，不混入个人余额",
+        "成功 AI 结算后摘要在不整页刷新的情况下更新",
+        "加载、错误和长数字状态使用稳定尺寸且不造成导航跳动",
+        "Use agent-browser as a ToC user to open /zh/dashboard, complete a funded AI action, and confirm the displayed personal balance decreases",
+        "Use agent-browser as a ToB member and confirm the navigation identifies the organization billing context",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 68,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-069",
+      "title": "创建用户点数与机构额度流水页",
+      "description": "作为用户，我需要查看当前计费账户的余额、分页流水和失败状态。",
+      "acceptanceCriteria": [
+        "`/[locale]/credits` 显示账户类型、可用余额和分页流水",
+        "流水显示时间、类型、变动值、变动后余额、模型或业务能力和备注",
+        "ToC 只看到个人流水，ToB 只看到当前机构授权摘要，修改 accountId 不能越权",
+        "空状态、加载中、加载失败和无权限状态都有明确界面",
+        "Use agent-browser to open /zh/credits after an AI action and confirm the new transaction and resulting balance are visible",
+        "Use agent-browser to refresh /zh/credits and confirm the same balance and transaction persist",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 69,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-070",
+      "title": "创建超管供应商管理界面",
+      "description": "作为超级管理员，我需要在管理端维护、测试和轮换托管供应商凭据。",
+      "acceptanceCriteria": [
+        "`/zh/admin/ai/providers` 支持新增、编辑、测试连接、启停和轮换凭据",
+        "保存后只显示不可复制的掩码、凭据版本和最后验证状态",
+        "有效与无效凭据测试显示不同明确结果，页面和控制台不输出完整 Key",
+        "普通用户和机构管理员无法看到页面或调用真实管理 API",
+        "Use agent-browser as a super admin to add a test provider, run a successful connection test, reload, and confirm only a masked credential is shown",
+        "Use agent-browser to test an invalid credential and confirm a clear failure result without exposing the submitted secret",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 70,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-071",
+      "title": "创建超管模型目录管理界面",
+      "description": "作为超级管理员，我需要配置模型能力、限制、启用状态和扣点规则。",
+      "acceptanceCriteria": [
+        "`/zh/admin/ai/models` 支持新增和编辑模型的供应商、ID、显示名、能力、档位、限制和价格",
+        "负价格、无效 Token/steps 上限、重复 ID 和缺失供应商显示字段错误且不能提交",
+        "启停模型后普通用户目录在刷新时立即反映，停用 ID 的直接调用被拒绝",
+        "普通用户和机构管理员无法看到页面或管理字段",
+        "Use agent-browser as a super admin to create an enabled test model and confirm it appears in a funded user model selector",
+        "Use agent-browser to disable the model, refresh the user selector, and confirm it disappears",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 71,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-072",
+      "title": "创建超管用户列表与冻结界面",
+      "description": "作为超级管理员，我需要查询用户并确认冻结或解冻账号。",
+      "acceptanceCriteria": [
+        "`/zh/admin/users` 支持按姓名或精确邮箱搜索并显示角色、状态、余额和机构摘要",
+        "冻结和解冻操作使用确认对话框，成功后列表立即更新且刷新保持",
+        "用户列表不显示简历、面试正文、认证 token 或平台 Key",
+        "普通用户和机构管理员直接访问页面不加载任何用户数据",
+        "Use agent-browser as a super admin to find a test user, freeze it, refresh, and confirm the suspended state persists",
+        "Use agent-browser as the frozen user to call a private action and confirm `ACCOUNT_SUSPENDED` is shown without data changes",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 72,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-073",
+      "title": "创建超管用户调账与点数规则界面",
+      "description": "作为超级管理员，我需要查看用户流水、人工调账并配置注册赠点。",
+      "acceptanceCriteria": [
+        "`/zh/admin/users/[id]` 显示目标余额和分页流水，不显示业务正文",
+        "正负整数调账要求必填备注和确认，成功后余额与流水立即更新",
+        "0、空备注、负余额结果和重复幂等提交显示明确错误且不重复流水",
+        "`/zh/admin/credits/rules` 可更新非负注册赠点和每日上限",
+        "Use agent-browser to add points with a note, refresh the user detail, and confirm the same balance and one new transaction persist",
+        "Use agent-browser to change the registration grant, register a new test user, and confirm exactly one grant uses the new value",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 73,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-074",
+      "title": "创建超管机构列表与开户界面",
+      "description": "作为超级管理员，我需要创建机构并查看席位、额度、状态和管理员摘要。",
+      "acceptanceCriteria": [
+        "`/zh/admin/organizations` 显示机构名称、状态、席位使用、额度和管理员摘要",
+        "创建表单要求名称、唯一标识、席位上限和初始额度",
+        "重复标识、空名称、负额度或无效席位数显示字段错误且不创建机构",
+        "成功创建后列表立即出现新机构，刷新后保持",
+        "Use agent-browser as a super admin to create a valid organization and confirm it persists after refresh",
+        "Use agent-browser to submit a duplicate identifier and confirm the field error appears with no second organization",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 74,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-075",
+      "title": "创建超管机构详情与授权界面",
+      "description": "作为超级管理员，我需要调整机构席位和额度，并任命或回收机构管理员。",
+      "acceptanceCriteria": [
+        "`/zh/admin/organizations/[id]` 显示机构详情、席位、额度流水、状态和管理员",
+        "额度调整要求非零整数、必填备注和确认，不能扣成负数",
+        "通过精确邮箱任命或回收已注册用户的 org_admin 权限，下一次请求立即生效",
+        "停用机构前显示影响确认，成功后成员新机构请求被拒绝",
+        "Use agent-browser to allocate organization quota and assign an org admin, then log in as that user and confirm /zh/org-admin is accessible",
+        "Use agent-browser to revoke the org admin and confirm the same user can no longer access /zh/org-admin after refresh",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 75,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-076",
+      "title": "创建机构成员与席位管理界面",
+      "description": "作为机构管理员，我需要在本机构席位范围内添加和移除已注册成员。",
+      "acceptanceCriteria": [
+        "`/zh/org-admin/members` 只显示本机构成员、角色、状态和加入时间",
+        "输入已注册用户精确邮箱可添加 member，席位立即更新并在刷新后保持",
+        "不存在邮箱、重复成员、冲突归属和满席显示不同明确错误",
+        "移除成员使用确认对话框，成功后该成员不能继续消费机构额度",
+        "Use agent-browser as an org admin to add a registered test member and confirm the used-seat count increases after refresh",
+        "Use agent-browser to reach the seat limit and confirm another member cannot be added and no seat is consumed",
+        "No cross-organization data or console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 76,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-077",
+      "title": "创建机构额度与用量界面",
+      "description": "作为机构管理员，我需要查看本机构席位、额度和最小消费汇总。",
+      "acceptanceCriteria": [
+        "`/zh/org-admin` 显示机构名称、状态、席位已用/上限和额度已用/剩余",
+        "`/zh/org-admin/usage` 可按时间查看总消费及按成员和模型的最小明细",
+        "汇总与明细合计一致，空时间范围显示清晰空状态",
+        "页面不能增加总额度，也不显示完整 Prompt、简历、面试正文或平台 Key",
+        "Use agent-browser after a member AI action to open /zh/org-admin/usage and confirm the member/model usage and remaining quota match the ledger",
+        "Use agent-browser as another organization admin with a modified URL and confirm the first organization's data is not visible",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 77,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-078",
+      "title": "实现用户全量数据导出服务",
+      "description": "作为用户，我需要安全导出平台保存的完整个人数据。",
+      "acceptanceCriteria": [
+        "导出包含用户资料、设置、简历与章节、分享、聊天、分析、面试、个人流水和 membership",
+        "导出文件标识生成时间、schema 版本和每个数据集合，空集合使用空数组",
+        "导出只包含当前用户有权取得的数据，不包含其他成员、平台 Key 或内部风控规则",
+        "下载链接受当前 session 或短期签名保护，退出后不能继续访问",
+        "大数据量或单集合失败返回明确状态，不产生公开可猜测文件",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 78,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-079",
+      "title": "创建账号资料与数据导出界面",
+      "description": "作为用户，我需要在账号页查看身份摘要并下载自己的完整数据。",
+      "acceptanceCriteria": [
+        "`/zh/account` 显示姓名、邮箱、账号类型、平台角色和机构摘要",
+        "导出命令真实调用导出服务并下载可解压或解析的文件",
+        "导出进行中、成功和失败有明确状态，重复点击不会并发生成无限任务",
+        "下载内容不包含其他用户或机构数据",
+        "Use agent-browser to open /zh/account, start an export, download the result, and confirm it contains the current user's expected collections",
+        "Use agent-browser to log out and confirm the previous protected download URL can no longer be used",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 79,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-080",
+      "title": "实现账号注销与数据清理服务",
+      "description": "作为用户，我需要重新认证后注销账号、撤销 session 并按政策删除个人数据。",
+      "acceptanceCriteria": [
+        "注销要求近期重新认证和一次性确认 token",
+        "成功后撤销所有 session、公开分享和有效 membership",
+        "私有简历、聊天、分析和面试数据按数据图级联删除",
+        "必须保留的账务、安全和同意记录按配置匿名化而不是保留可识别正文",
+        "任一关键步骤失败不留下不可恢复半删除状态，重复请求可安全完成",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 80,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-081",
+      "title": "创建账号注销确认界面",
+      "description": "作为用户，我需要在理解影响并重新认证后确认注销账号。",
+      "acceptanceCriteria": [
+        "`/zh/account` 危险区列出将删除或撤销的主要数据和 membership 范围",
+        "注销需要重新认证、明确二次确认和不可误触的最终命令",
+        "取消确认不改变任何数据，成功后退出并返回公开首页",
+        "成功后原 session、私有资源、导出链接和分享 token 都不可访问",
+        "Use agent-browser to cancel the deletion confirmation and confirm the account and data remain accessible",
+        "Use agent-browser to reauthenticate, confirm deletion, and verify /zh/dashboard redirects to login and the old share/export links fail",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 81,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-082",
+      "title": "在账号页显示法律版本与同意记录",
+      "description": "作为用户，我需要查看当前法律文档版本和自己最近同意的版本。",
+      "acceptanceCriteria": [
+        "`/zh/account` 显示当前隐私政策和服务条款版本、生效日期及链接",
+        "页面显示当前用户最近同意的每类文档版本和时间",
+        "需要重新同意时显示明确命令并只允许访问法律与同意流程",
+        "用户不能通过请求参数读取其他用户同意记录",
+        "Use agent-browser to open /zh/account and confirm current and accepted versions are visible and link to the matching legal pages",
+        "Use agent-browser with a user missing a required new consent and confirm protected product content stays unavailable until consent succeeds",
+        "No console errors are present",
+        "Typecheck passes"
+      ],
+      "priority": 82,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-083",
+      "title": "添加生产 Readiness 与配置检查清单",
+      "description": "作为运维人员，我需要部署层只向数据库和迁移状态健康的实例发送流量。",
+      "acceptanceCriteria": [
+        "readiness 检查验证进程、PostgreSQL 连接和当前 migration 版本",
+        "数据库不可达或 migration 落后时 readiness 返回失败",
+        "readiness 响应不包含连接串、密钥、用户数据或内部错误堆栈",
+        "生产检查清单输出认证模式、数据库类型、迁移、密钥来源、公共路由和备份状态",
+        "部署测试断言失败实例不会继续接收新业务流量",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 83,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-084",
+      "title": "添加 PostgreSQL 备份与恢复验证",
+      "description": "作为运维人员，我需要生成加密隔离备份并证明可以恢复商用数据。",
+      "acceptanceCriteria": [
+        "备份任务至少每日生成一次加密 PostgreSQL 备份并使用最小权限凭据",
+        "备份目标与数据库运行节点隔离，保留周期和负责人可配置",
+        "隔离恢复环境可从最新备份恢复用户、简历、机构、余额、流水和 AI usage",
+        "恢复后余额与流水重算差异为零，外键关系检查通过",
+        "恢复演练记录实际 RPO/RTO，备份失败通知明确责任人",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 84,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-085",
+      "title": "验证正式认证端到端闭环",
+      "description": "作为发布负责人，我需要验证注册、登录、刷新、退出和失败路径真实闭环。",
+      "acceptanceCriteria": [
+        "Use agent-browser to register a unique email with the test OTP, accept current legal versions, and reach /zh/dashboard",
+        "The newly registered user has one database identity, one auth account, and exactly one registration-grant transaction",
+        "Use agent-browser to refresh /zh/dashboard and confirm the same authenticated user and protected content are restored",
+        "Use agent-browser to log out and confirm /zh/dashboard redirects to /zh/login and the old session cannot call a private API",
+        "Use agent-browser to submit an invalid or expired OTP and confirm a clear error appears without creating a user or session",
+        "A forged x-fingerprint header cannot authenticate in production configuration",
+        "No console errors are present",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 85,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-086",
+      "title": "验证 ToC 托管 AI 端到端闭环",
+      "description": "作为发布负责人，我需要验证个人用户从赠点到托管 AI 消费和流水核对完整可用。",
+      "acceptanceCriteria": [
+        "Use agent-browser with a newly registered funded user to open an owned resume and complete a real AI optimization",
+        "The browser request reaches the real local backend and managed provider without API key, provider, or base URL fields",
+        "The AI result appears, exactly one settlement reduces the personal balance, and the transaction references the model and operation",
+        "Use agent-browser to refresh the editor and /zh/credits and confirm the result, balance, and transaction persist",
+        "After reducing the balance below the required amount, another request shows `INSUFFICIENT_CREDITS` and provider-call and ledger counters remain unchanged",
+        "A second user cannot read the first user's resume, chat session, ledger, or export",
+        "No plaintext key, full prompt, or console error is present",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 86,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-087",
+      "title": "验证 ToB 机构额度端到端闭环",
+      "description": "作为发布负责人，我需要验证机构开户、授权、成员和机构额度消费保持租户隔离。",
+      "acceptanceCriteria": [
+        "Use agent-browser as a super admin to open /zh/admin/organizations, create an organization, allocate quota, and assign a registered org admin",
+        "Use agent-browser as that org admin to open /zh/org-admin/members and add a registered member within the seat limit",
+        "Use agent-browser as the member to open /zh/editor/[owned-id], complete a real AI action, and confirm only the organization quota decreases while personal balance is unchanged",
+        "The org admin usage page shows the matching member/model usage and the totals equal the organization ledger",
+        "Another organization cannot read the session, member, operation, quota, or usage by changing IDs",
+        "After quota becomes insufficient or the member is removed, the next AI request is rejected before provider invocation",
+        "No plaintext key, cross-tenant data, or console error is present",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 87,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    },
+    {
+      "id": "US-088",
+      "title": "建立安全、成本与发布回归门禁",
+      "description": "作为发布负责人，我需要自动阻止越权、开放代理、重复扣点、密钥泄漏或生产检查失败的版本。",
+      "acceptanceCriteria": [
+        "自动化覆盖匿名、伪造 fingerprint、角色越权、跨用户 ID、跨机构 ID 和冻结状态",
+        "自动化覆盖恶意 Base URL、遗留 AI Key、超大载荷、限流、余额不足、并发超扣、幂等重放和供应商失败",
+        "所有安全、余额或限流拒绝都断言 provider call、ledger mutation 和 target write 计数为零",
+        "并发测试后所有余额非负并与流水重算一致，每个成功 operation 只结算一次",
+        "构建产物、HTML、API 响应、localStorage、网络和日志扫描不包含 AI Key 或数据库凭据",
+        "PostgreSQL migration、readiness 和最近备份恢复验证通过",
+        "Core resume editing, export, sharing, interview, and zh/en smoke tests pass",
+        "Lint passes",
+        "Tests pass",
+        "Build passes",
+        "Typecheck passes"
+      ],
+      "priority": 88,
+      "passes": false,
+      "notes": "",
+      "retryCount": 0,
+      "blocked": false
+    }
+  ]
+}
