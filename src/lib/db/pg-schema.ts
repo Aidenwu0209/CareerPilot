@@ -356,3 +356,56 @@ export const creditRules = pgTable(
     ruleTypeVersionIdx: index('credit_rules_rule_type_version_idx').on(table.ruleType, table.version),
   }),
 );
+
+// ── AI providers and model catalog ──
+
+export const aiProviders = pgTable(
+  'ai_providers',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    type: text('type').notNull(),
+    name: text('name').notNull(),
+    baseUrl: text('base_url'),
+    status: text('status').notNull().default('active'),
+    encryptedCredentials: text('encrypted_credentials'),
+    credentialVersion: integer('credential_version').notNull().default(1),
+    lastValidatedAt: integer('last_validated_at'),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    typeIdx: index('ai_providers_type_idx').on(table.type),
+    statusIdx: index('ai_providers_status_idx').on(table.status),
+  }),
+);
+
+export const aiModels = pgTable(
+  'ai_models',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    providerId: text('provider_id').notNull().references(() => aiProviders.id, { onDelete: 'cascade' }),
+    modelIdentifier: text('model_identifier').notNull(),
+    displayName: text('display_name').notNull(),
+    capabilities: text('capabilities').notNull().default('[]'),
+    tier: text('tier').notNull().default('standard'),
+    status: text('status').notNull().default('active'),
+    visibility: text('visibility').notNull().default('public'),
+    inputTokenLimit: integer('input_token_limit'),
+    outputTokenLimit: integer('output_token_limit'),
+    maxSteps: integer('max_steps'),
+    fixedPrice: integer('fixed_price').default(0),
+    tokenPriceInput: integer('token_price_input').default(0),
+    tokenPriceOutput: integer('token_price_output').default(0),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    providerModelUnique: unique('ai_models_provider_id_model_identifier_unique').on(
+      table.providerId,
+      table.modelIdentifier,
+    ),
+    providerIdx: index('ai_models_provider_id_idx').on(table.providerId),
+    statusIdx: index('ai_models_status_idx').on(table.status),
+    tierIdx: index('ai_models_tier_idx').on(table.tier),
+  }),
+);

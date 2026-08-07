@@ -141,3 +141,8 @@ export {
   creditTransactions,
   creditRules,
 } from './schema-credits';
+
+export {
+  aiProviders,
+  aiModels,
+} from './schema-ai-providers';

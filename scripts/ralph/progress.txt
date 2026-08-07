@@ -128,3 +128,21 @@
   - Test isolation: in-memory SQLite DB is shared across all tests in a file — use unique IDs or query by specific ID, not by general criteria
 ---
 
+## 2026-08-08 03:04 - US-007
+- Added AI provider and model catalog schema for managed AI suppliers
+- New files: `src/lib/db/schema-ai-providers.ts` (SQLite schema), `src/lib/db/schema-ai-providers.test.ts` (26 tests)
+- New migrations: `drizzle/migrations/0010_aspiring_the_fury.sql` (SQLite), `drizzle/pg-migrations/0008_famous_bullseye.sql` (PostgreSQL)
+- Modified: `src/lib/db/schema.ts` (re-export aiProviders, aiModels), `src/lib/db/pg-schema.ts` (added aiProviders + aiModels with FK, unique, indexes, CHECK constraints)
+- ai_providers: type, name, base_url (nullable for provider default), status (active/disabled), encrypted_credentials, credential_version (for rotation), last_validated_at
+- ai_models: provider FK (cascade delete), model_identifier (unique per provider), display_name, capabilities (JSON array: text/image_generation), tier, status, visibility, input/output token limits, max_steps, fixed_price + token_price_input + token_price_output (all with CHECK >= 0)
+- 26 new tests: column existence, defaults, status variants, credential storage/rotation, base_url handling, unique model per provider, FK rejection/cascade delete, capabilities (text/image/both), non-negative pricing CHECKs, tiers, visibility scopes, token limits, null limits, fixed vs token pricing, PG export verification
+- Typecheck passes, tests pass (149/149), lint clean on new files
+- **未来迭代的学习：**
+  - `ai_models.capabilities` uses JSON text column (`text('capabilities', { mode: 'json' })`) — supports flexible capability arrays like `["text","image_generation"]` without schema changes
+  - `ai_providers.encrypted_credentials` is a plain text column — encryption/decryption is handled at the application/service layer (see US-032), not the DB level
+  - `ai_providers.base_url` is nullable — null means "use the provider's default endpoint"; non-null means a controlled custom endpoint (validated by US-023 SSRF guard)
+  - `credential_version` integer supports rotation: old credentials stay with their version, new version increments; combined with `encrypted_credentials` field
+  - Pricing model: `fixed_price` for per-call models (image generation), `token_price_input`/`token_price_output` for token-based models (text generation) — a model can use either or both
+  - `ai_models` compound unique on `(provider_id, model_identifier)` — same model name is allowed across different providers
+  - SQLite CHECK constraints for pricing must be inline in CREATE TABLE — same pattern as US-006 credit balance
+---
