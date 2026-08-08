@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { coverLetterInputSchema } from '@/lib/ai/cover-letter-schema';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { validatePromptLength } from '@/lib/validation/input-limits';
+import { buildModel } from '@/lib/ai/model-builder';
 
 interface CoverLetterOutput {
   title: string;
@@ -65,35 +63,6 @@ function parseCoverLetter(text: string): CoverLetterOutput {
   const firstLine = lines[0].replace(/^#+\s*/, '').replace(/^TITLE:\s*/i, '').trim();
   const content = lines.slice(1).join('\n').trim();
   return { title: firstLine, content: content || text.trim() };
-}
-
-/** Build an AI SDK model instance from gateway dispatch context. */
-function buildModel(ctx: {
-  providerType: string;
-  apiKey: string;
-  baseUrl: string | null;
-  modelIdentifier: string;
-}) {
-  if (ctx.providerType === 'anthropic') {
-    const provider = createAnthropic({
-      apiKey: ctx.apiKey,
-      ...(ctx.baseUrl ? { baseURL: ctx.baseUrl } : {}),
-    });
-    return provider(ctx.modelIdentifier);
-  }
-  if (ctx.providerType === 'gemini' || ctx.providerType === 'google') {
-    const provider = createGoogleGenerativeAI({
-      apiKey: ctx.apiKey,
-      ...(ctx.baseUrl ? { baseURL: ctx.baseUrl } : {}),
-    });
-    return provider(ctx.modelIdentifier);
-  }
-  // Default: OpenAI
-  const provider = createOpenAI({
-    apiKey: ctx.apiKey,
-    ...(ctx.baseUrl ? { baseURL: ctx.baseUrl } : {}),
-  });
-  return provider.chat(ctx.modelIdentifier);
 }
 
 export async function POST(request: NextRequest) {
