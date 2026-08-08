@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { useTranslations } from 'next-intl';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, UserCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -13,10 +13,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { BrandSwitcher } from '@/components/layout/brand-switcher';
 import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
+import { Link } from '@/i18n/routing';
 
 export function UserMenu() {
   const { user, signOut } = useAuth();
   const t = useTranslations('auth');
+  const tNav = useTranslations('nav');
   const { authEnabled } = useRuntimeConfig();
 
   if (!user) return null;
@@ -39,6 +41,12 @@ export function UserMenu() {
           )}
         </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/account" className="cursor-pointer">
+            <UserCircle className="mr-2 h-4 w-4" />
+            {tNav('account')}
+          </Link>
+        </DropdownMenuItem>
         <BrandSwitcher />
         {authEnabled && (
           <>

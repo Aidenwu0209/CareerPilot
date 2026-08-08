@@ -1069,7 +1069,8 @@
     "admin": "Admin",
     "orgAdmin": "Org Admin",
     "personalCredits": "Personal Credits",
-    "orgCredits": "Organization Credits"
+    "orgCredits": "Organization Credits",
+    "account": "Account"
   },
   "credits": {
     "title": "Credits & Transactions",
@@ -1635,6 +1636,43 @@
       },
       "empty": "No consumption records in the selected time range",
       "noData": "No data available"
+    }
+  },
+  "account": {
+    "title": "Account",
+    "description": "View your profile, organization memberships, and export your data",
+    "unnamed": "Unnamed User",
+    "role": {
+      "superAdmin": "Super Admin",
+      "user": "User"
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "authType": {
+      "email": "Email Code",
+      "oauth": "OAuth",
+      "fingerprint": "Fingerprint"
+    },
+    "field": {
+      "userId": "User ID",
+      "joined": "Joined"
+    },
+    "orgs": {
+      "title": "Organizations",
+      "roleAdmin": "Admin",
+      "roleMember": "Member",
+      "statusActive": "Active",
+      "statusRemoved": "Removed"
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Download all personal data stored on the platform, including resumes, chats, interviews, credit transactions, and more.",
+      "download": "Export My Data",
+      "exporting": "Generating export file…",
+      "success": "Export successful, download started",
+      "failed": "Export failed, please try again later"
     }
   }
 }

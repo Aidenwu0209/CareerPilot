@@ -1069,7 +1069,8 @@
     "admin": "管理后台",
     "orgAdmin": "机构管理",
     "personalCredits": "个人点数",
-    "orgCredits": "机构额度"
+    "orgCredits": "机构额度",
+    "account": "账号"
   },
   "credits": {
     "title": "点数与流水",
@@ -1635,6 +1636,43 @@
       },
       "empty": "所选时间范围内暂无消费记录",
       "noData": "暂无数据"
+    }
+  },
+  "account": {
+    "title": "账号信息",
+    "description": "查看你的账号资料、机构归属和导出个人数据",
+    "unnamed": "未命名用户",
+    "role": {
+      "superAdmin": "超级管理员",
+      "user": "普通用户"
+    },
+    "status": {
+      "active": "正常",
+      "suspended": "已冻结"
+    },
+    "authType": {
+      "email": "邮箱验证码",
+      "oauth": "第三方登录",
+      "fingerprint": "指纹"
+    },
+    "field": {
+      "userId": "用户 ID",
+      "joined": "注册时间"
+    },
+    "orgs": {
+      "title": "所属机构",
+      "roleAdmin": "管理员",
+      "roleMember": "成员",
+      "statusActive": "活跃",
+      "statusRemoved": "已移除"
+    },
+    "export": {
+      "title": "数据导出",
+      "description": "下载平台保存的全部个人数据，包括简历、聊天、面试记录、点数流水等。",
+      "download": "导出我的数据",
+      "exporting": "正在生成导出文件…",
+      "success": "导出成功，文件已开始下载",
+      "failed": "导出失败，请稍后重试"
     }
   }
 }
