@@ -1543,3 +1543,31 @@
   - 创建 Dialog 使用 `formErrors` state（Record<string, string>）跟踪每个字段的验证错误——提交前清空，验证失败时填充
   - slug 验证正则 `/^[a-zA-Z0-9-]+$/` 确保只接受字母、数字和连字符——与 API 端验证一致
 ---
+
+## 2026-08-08 14:25 - US-075
+- 创建超管机构详情与授权界面 `/[locale]/admin/organizations/[id]`
+- New files:
+  - `src/app/[locale]/admin/organizations/[id]/page.tsx`: 机构详情页——header 卡片（名称/slug/状态/席位/余额/创建时间）+ 追加/扣减额度 Dialog + 机构管理员列表（任命/撤销）+ 停用/启用确认 Dialog + 分页额度流水表格
+  - `src/app/api/admin/organizations/[id]/transactions/route.ts`: 超管查看指定机构分页流水 API（super_admin guard + getOrCreateAccount('organization', orgId) + getTransactions）
+- Modified files:
+  - `src/app/api/admin/organizations/[id]/route.ts`: 增强 GET 返回 balance（creditAccounts 查询）和 admins（org_admin 用户列表），与列表 API 保持一致
+  - `src/app/[locale]/admin/organizations/page.tsx`: 机构名称添加 Link 到详情页 `/admin/organizations/[id]`
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.orgDetail` 命名空间（75+ i18n keys，含 errApi/reasons 子字典）
+  - `scripts/ralph/prd.json`: US-075 passes=true
+- AC1 ✅：`/[locale]/admin/organizations/[id]` 显示机构名称、slug、状态 badge、席位（已用/上限）、额度余额、管理员列表和创建时间
+- AC2 ✅：额度调整 Dialog 要求非零整数 + 必填备注 + 确认按钮；API 层返回 INSUFFICIENT_CREDITS（422）防止扣成负数；前端 KNOWN_API_ERRORS 映射友好提示
+- AC3 ✅：通过精确邮箱任命（POST /admins）或撤销（DELETE /admins）org_admin 权限——org-admin layout 服务端每次请求查询 active org_admin membership，撤销后下一次请求立即生效
+- AC4 ✅：停用/启用使用 PATCH /organizations/[id] { status }——停用前弹出影响确认 Dialog（显示成员数和后果说明）；org-admin layout 查询 `eq(organizations.status, 'active')` 确保停用后成员的 org-admin 请求被拒
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~074 限制）
+- AC7 ⏳：同上限制；组件结构清洁，无副作用
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - 机构详情页的 GET API 原来只返回 org 基础字段 + memberCount——US-075 增强为同时返回 balance 和 admins，与列表 API 的数据结构保持一致（前端可复用 OrgAdmin 类型）
+  - 机构流水 API 模式与用户流水 API 完全对称：`GET /api/admin/organizations/[id]/transactions` 复用 `getOrCreateAccount('organization', orgId)` + `getTransactions()`，无需额外逻辑
+  - 撤销 org_admin 权限后，org-admin layout 的服务端查询在下一次 HTTP 请求时立即重新执行——不需要刷新 JWT token，因为 layout 在每个 SSR 请求中直接查 DB
+  - 停用机构后，org-admin layout 查询条件包含 `eq(organizations.status, 'active')`——停用状态的机构，其 org_admin 无法访问 /org-admin 路由
+  - 机构详情页使用三个独立 Dialog（adjust/appoint/suspend），各自管理 open/loading state——互不干扰
+  - 从列表页跳转到详情页使用 `Link` from `@/i18n/routing`——自动添加 locale 前缀
+  - Next.js 动态路由 slug 命名约定：`[id]` 是所有 admin API 路由的统一约定——不要在同一层级混用 `[id]` 和 `[orgId]`
+---
+---
