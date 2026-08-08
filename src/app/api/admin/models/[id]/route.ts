@@ -34,12 +34,17 @@ export async function PATCH(
   if (model.length === 0) {
     return NextResponse.json({ error: 'MODEL_NOT_FOUND' }, { status: 404 });
   }
+  const nextResolution = typeof body.deliveryResolution === 'string' ? body.deliveryResolution : model[0].deliveryResolution;
+  const nextUpscalerUrl = body.upscalerUrl !== undefined ? body.upscalerUrl : model[0].upscalerUrl;
+  if (nextResolution === '4k' && (typeof nextUpscalerUrl !== 'string' || !nextUpscalerUrl)) {
+    return NextResponse.json({ error: 'UPSCALER_URL_REQUIRED_FOR_4K' }, { status: 400 });
+  }
 
   const updates: Partial<typeof aiModels.$inferInsert> = { updatedAt: new Date() };
   const changes: string[] = [];
 
   const allowedFields = [
-    'displayName', 'capabilities', 'tier', 'status', 'visibility',
+    'displayName', 'family', 'capabilities', 'tier', 'deliveryResolution', 'upscalerUrl', 'status', 'visibility',
     'inputTokenLimit', 'outputTokenLimit', 'maxSteps',
     'fixedPrice', 'tokenPriceInput', 'tokenPriceOutput',
   ];
@@ -56,6 +61,12 @@ export async function PATCH(
       // Validate status/visibility enums
       if (field === 'status' && !['active', 'disabled'].includes(body[field] as string)) {
         return NextResponse.json({ error: 'INVALID_STATUS' }, { status: 400 });
+      }
+      if (field === 'family' && !['gpt', 'claude', 'glm', 'deepseek', 'gemini', 'ernie', 'other'].includes(body[field] as string)) {
+        return NextResponse.json({ error: 'INVALID_MODEL_FAMILY' }, { status: 400 });
+      }
+      if (field === 'deliveryResolution' && !['native', '1k', '4k'].includes(body[field] as string)) {
+        return NextResponse.json({ error: 'INVALID_DELIVERY_RESOLUTION' }, { status: 400 });
       }
       updates[field as keyof typeof updates] = body[field] as never;
       changes.push(`${field}=${body[field]}`);

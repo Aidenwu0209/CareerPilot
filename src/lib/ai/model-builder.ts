@@ -49,7 +49,7 @@ export function buildModel(ctx: ModelBuildContext) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getJsonOptions(providerType: string): Record<string, any> {
-  if (providerType === 'openai') {
+  if (['openai', 'glm', 'deepseek', 'ernie', 'qianfan'].includes(providerType)) {
     return { openai: { response_format: { type: 'json_object' } } };
   }
   return {};

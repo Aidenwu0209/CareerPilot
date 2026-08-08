@@ -11,6 +11,8 @@ export async function register() {
   // Node.js runtime. Next.js also evaluates instrumentation for Edge bundles,
   // where importing the DB adapters would emit runtime errors for fs/path.
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+  const { registerOTel } = await import('@vercel/otel');
+  registerOTel({ serviceName: process.env.OTEL_SERVICE_NAME || 'careerpilot-web' });
   if (
     process.env.NEXT_PHASE === 'phase-production-build' ||
     process.env.npm_lifecycle_event === 'build'
@@ -29,4 +31,22 @@ export async function register() {
   } catch (e) {
     console.error('[Instrumentation] Super admin bootstrap failed:', e);
   }
+}
+
+export async function onRequestError(
+  error: unknown,
+  request: { path: string; method: string; headers: Record<string, string> },
+  context: { routerKind: string; routePath: string; routeType: string; renderSource?: string },
+) {
+  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+  const { dispatchAlert } = await import('./lib/observability/alerts');
+  const message = error instanceof Error ? error.message : String(error);
+  await dispatchAlert({
+    fingerprint: `next-error:${context.routePath}:${message.slice(0, 160)}`,
+    source: 'nextjs-onRequestError',
+    severity: 'critical',
+    title: `Unhandled server error on ${context.routePath}`,
+    message,
+    details: { method: request.method, path: request.path, routeType: context.routeType },
+  });
 }

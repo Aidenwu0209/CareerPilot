@@ -121,6 +121,34 @@ export function validateEnv(): EnvValidationResult {
     }
   }
 
+  // Commercial subsystems are opt-in, but become fail-closed once enabled.
+  if (prod && process.env.BILLING_ENABLED === 'true') {
+    for (const field of ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'APP_URL']) {
+      if (!process.env[field]) {
+        issues.push({ field, message: `${field} is required when BILLING_ENABLED=true.` });
+      }
+    }
+  }
+  if (prod && process.env.APM_ENABLED === 'true' && !process.env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+    issues.push({ field: 'OTEL_EXPORTER_OTLP_ENDPOINT', message: 'An OTLP collector endpoint is required when APM_ENABLED=true.' });
+  }
+  if (prod && process.env.IMAGE_4K_ENABLED === 'true') {
+    if (!process.env.IMAGE_UPSCALER_API_KEY) {
+      issues.push({ field: 'IMAGE_UPSCALER_API_KEY', message: 'A dedicated upscaler credential is required when IMAGE_4K_ENABLED=true.' });
+    }
+    if (!process.env.AI_UPSTREAM_ALLOWED_DOMAINS) {
+      issues.push({ field: 'AI_UPSTREAM_ALLOWED_DOMAINS', message: 'Allow-list the 4K upscaler hostname when IMAGE_4K_ENABLED=true.' });
+    }
+  }
+  if (prod && process.env.EXTERNAL_ALERTS_ENABLED === 'true') {
+    if (!process.env.ALERT_WEBHOOK_URL && !process.env.ONCALL_EMAILS) {
+      issues.push({ field: 'ALERT_WEBHOOK_URL', message: 'Configure ALERT_WEBHOOK_URL or ONCALL_EMAILS when external alerts are enabled.' });
+    }
+    if (!process.env.CRON_SECRET || process.env.CRON_SECRET.length < 24) {
+      issues.push({ field: 'CRON_SECRET', message: 'CRON_SECRET of at least 24 characters is required for monitoring checks.' });
+    }
+  }
+
   return { ok: issues.length === 0, issues };
 }
 

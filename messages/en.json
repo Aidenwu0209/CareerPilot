@@ -1112,6 +1112,10 @@
       "manualDebit": "Manual Debit",
       "consumption": "Consumption",
       "refund": "Refund",
+      "purchaseCredit": "Package top-up",
+      "subscriptionCredit": "Subscription credits",
+      "paymentRefund": "Payment refund",
+      "paymentRefundRollback": "Failed refund rollback",
       "adjustment": "Adjustment"
     }
   },
@@ -1146,6 +1150,10 @@
       "creditRules": {
         "title": "Credit Rules",
         "description": "Configure registration grants and daily limits"
+      },
+      "billing": {
+        "title": "Billing & Plans",
+        "description": "Manage credit packs, subscriptions, model access, refunds, and reconciliation"
       }
     },
     "operations": {
@@ -1345,6 +1353,10 @@
         "manualDebit": "Manual Debit",
         "consumption": "Consumption",
         "refund": "Refund",
+        "purchaseCredit": "Package top-up",
+        "subscriptionCredit": "Subscription credits",
+        "paymentRefund": "Payment refund",
+        "paymentRefundRollback": "Failed refund rollback",
         "adjustment": "Adjustment"
       },
       "errApi": {
@@ -1406,6 +1418,10 @@
         "manualDebit": "Manual Debit",
         "consumption": "Consumption",
         "refund": "Refund",
+        "purchaseCredit": "Package top-up",
+        "subscriptionCredit": "Subscription credits",
+        "paymentRefund": "Payment refund",
+        "paymentRefundRollback": "Failed refund rollback",
         "adjustment": "Adjustment"
       },
       "errApi": {

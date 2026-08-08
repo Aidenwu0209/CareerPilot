@@ -22,6 +22,8 @@ const PUBLIC_API_PREFIXES = [
   '/api/auth',
   '/api/health',
   '/api/share',
+  '/api/webhooks/stripe',
+  '/api/internal',
 ];
 
 /** Recursively find all route.ts files under the api directory. */

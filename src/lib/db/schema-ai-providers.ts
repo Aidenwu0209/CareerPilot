@@ -33,8 +33,11 @@ export const aiModels = sqliteTable('ai_models', {
   providerId: text('provider_id').notNull().references(() => aiProviders.id, { onDelete: 'cascade' }),
   modelIdentifier: text('model_identifier').notNull(), // unique per provider
   displayName: text('display_name').notNull(),
+  family: text('family').notNull().default('other'), // gpt/claude/glm/deepseek/gemini/ernie
   capabilities: text('capabilities', { mode: 'json' }).notNull().default('[]'), // ['text','image_generation']
   tier: text('tier').notNull().default('standard'),
+  deliveryResolution: text('delivery_resolution').notNull().default('native'), // native/1k/4k
+  upscalerUrl: text('upscaler_url'), // required for commercial 4K delivery when upstream is not native 4K
   status: text('status', { enum: ['active', 'disabled'] }).notNull().default('active'),
   visibility: text('visibility').notNull().default('public'),
   inputTokenLimit: integer('input_token_limit'),
@@ -50,4 +53,5 @@ export const aiModels = sqliteTable('ai_models', {
   providerIdx: index('ai_models_provider_id_idx').on(table.providerId),
   statusIdx: index('ai_models_status_idx').on(table.status),
   tierIdx: index('ai_models_tier_idx').on(table.tier),
+  familyIdx: index('ai_models_family_idx').on(table.family),
 }));

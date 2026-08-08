@@ -99,6 +99,10 @@ const REASON_LABEL_KEYS: Record<string, string> = {
   manual_debit: 'reasons.manualDebit',
   consumption: 'reasons.consumption',
   refund: 'reasons.refund',
+  purchase_credit: 'reasons.purchaseCredit',
+  subscription_credit: 'reasons.subscriptionCredit',
+  payment_refund: 'reasons.paymentRefund',
+  payment_refund_rollback: 'reasons.paymentRefundRollback',
   adjustment: 'reasons.adjustment',
 };
 

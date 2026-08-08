@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Coins, Building2, ChevronLeft, ChevronRight, AlertCircle, Inbox } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BillingPanel } from '@/components/billing/billing-panel';
+import { useAuth } from '@/hooks/use-auth';
 
 interface Transaction {
   id: string;
@@ -52,6 +54,10 @@ const REASON_LABEL_KEYS: Record<string, string> = {
   manual_debit: 'reasons.manualDebit',
   consumption: 'reasons.consumption',
   refund: 'reasons.refund',
+  purchase_credit: 'reasons.purchaseCredit',
+  subscription_credit: 'reasons.subscriptionCredit',
+  payment_refund: 'reasons.paymentRefund',
+  payment_refund_rollback: 'reasons.paymentRefundRollback',
   adjustment: 'reasons.adjustment',
 };
 
@@ -59,6 +65,7 @@ export default function CreditsPage() {
   const t = useTranslations('credits');
   const { balance, billingScope, loading: balanceLoading } = useCredits();
   const locale = useLocale();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [offset, setOffset] = useState(0);
@@ -88,8 +95,8 @@ export default function CreditsPage() {
   }, []);
 
   useEffect(() => {
-    fetchTransactions(0);
-  }, [fetchTransactions]);
+    if (!authLoading && isAuthenticated) fetchTransactions(0);
+  }, [authLoading, isAuthenticated, fetchTransactions]);
 
   const handlePrev = () => {
     const newOffset = Math.max(0, offset - PAGE_SIZE);
@@ -156,6 +163,8 @@ export default function CreditsPage() {
           </div>
         </div>
       </div>
+
+      <BillingPanel personalAccount={!isOrg} />
 
       {/* Transactions */}
       <div className="rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

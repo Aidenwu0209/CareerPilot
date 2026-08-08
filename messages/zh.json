@@ -1112,6 +1112,10 @@
       "manualDebit": "人工扣减",
       "consumption": "消费",
       "refund": "退款",
+      "purchaseCredit": "套餐充值",
+      "subscriptionCredit": "订阅赠点",
+      "paymentRefund": "支付退款",
+      "paymentRefundRollback": "退款失败回滚",
       "adjustment": "调整"
     }
   },
@@ -1146,6 +1150,10 @@
       "creditRules": {
         "title": "点数规则",
         "description": "配置注册赠点和个人每日上限"
+      },
+      "billing": {
+        "title": "支付与套餐",
+        "description": "管理充值包、订阅等级、模型权限、退款和对账"
       }
     },
     "operations": {
@@ -1345,6 +1353,10 @@
         "manualDebit": "手动扣减",
         "consumption": "消费",
         "refund": "退款",
+        "purchaseCredit": "套餐充值",
+        "subscriptionCredit": "订阅赠点",
+        "paymentRefund": "支付退款",
+        "paymentRefundRollback": "退款失败回滚",
         "adjustment": "调整"
       },
       "errApi": {
@@ -1406,6 +1418,10 @@
         "manualDebit": "人工扣减",
         "consumption": "消费",
         "refund": "退款",
+        "purchaseCredit": "套餐充值",
+        "subscriptionCredit": "订阅赠点",
+        "paymentRefund": "支付退款",
+        "paymentRefundRollback": "退款失败回滚",
         "adjustment": "调整"
       },
       "errApi": {

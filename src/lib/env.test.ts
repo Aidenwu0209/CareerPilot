@@ -71,6 +71,24 @@ describe('validateEnv', () => {
     expect(result.issues).toHaveLength(0);
   });
 
+  it('requires Stripe, OTLP, and on-call configuration when commercial systems are enabled', () => {
+    setEnv({
+      NODE_ENV: 'production', AUTH_ENABLED: 'true', DB_TYPE: 'postgresql',
+      DATABASE_URL: 'postgresql://user:pass@localhost:5432/db',
+      AUTH_SECRET: 'a-very-long-and-secure-production-secret-key-32+chars',
+      AI_CREDENTIAL_MASTER_KEY: 'a-different-very-long-encryption-key-32+chars',
+      BILLING_ENABLED: 'true', APM_ENABLED: 'true', EXTERNAL_ALERTS_ENABLED: 'true',
+      STRIPE_SECRET_KEY: undefined, STRIPE_WEBHOOK_SECRET: undefined, APP_URL: undefined,
+      OTEL_EXPORTER_OTLP_ENDPOINT: undefined, ALERT_WEBHOOK_URL: undefined,
+      ONCALL_EMAILS: undefined, CRON_SECRET: undefined,
+    });
+    const fields = new Set(validateEnv().issues.map((issue) => issue.field));
+    expect(fields).toEqual(new Set([
+      'STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET', 'APP_URL',
+      'OTEL_EXPORTER_OTLP_ENDPOINT', 'ALERT_WEBHOOK_URL', 'CRON_SECRET',
+    ]));
+  });
+
   // --- Production: each unsafe condition fails ---
 
   it('fails in production when AUTH_ENABLED is not true (fingerprint)', () => {

@@ -92,6 +92,13 @@
       "when": 1786202679326,
       "tag": "0012_parched_jean_grey",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1786205996036,
+      "tag": "0013_right_molten_man",
+      "breakpoints": true
     }
   ]
 }

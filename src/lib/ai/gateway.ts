@@ -31,6 +31,9 @@ export interface GatewayParams<T> {
   context: RequestContext;
   /** Catalog model ID (from admin-managed catalog). */
   modelId: string;
+  /** Commercial delivery tier. 4K requires a configured upscaler URL. */
+  deliveryResolution?: string;
+  upscalerUrl?: string | null;
   /** Requested capability. */
   capability: ModelCapability;
   /** Business capability label for the operation (e.g. 'chat', 'cover_letter'). */
@@ -58,6 +61,9 @@ export interface GatewayDispatchContext {
   operationId: string;
   /** Catalog model ID — for sub-attempt records. */
   modelId: string;
+  /** Commercial image delivery tier; 4K requires an external upscaler. */
+  deliveryResolution?: string;
+  upscalerUrl?: string | null;
 }
 
 export interface GatewayResult<T> {
@@ -265,6 +271,8 @@ export async function executeAiOperation<T>(
         baseUrl,
         operationId,
         modelId: model.id,
+        deliveryResolution: model.deliveryResolution,
+        upscalerUrl: model.upscalerUrl,
       });
 
       const durationMs = Date.now() - startTime;
@@ -559,7 +567,7 @@ export async function executeStreamingOperation(
   // ── Call dispatch to get the stream ──
   let dispatchResult: StreamingDispatchResult;
   try {
-    dispatchResult = await dispatch({ modelIdentifier: model.modelIdentifier, providerType, apiKey, baseUrl, operationId, modelId: model.id });
+    dispatchResult = await dispatch({ modelIdentifier: model.modelIdentifier, providerType, apiKey, baseUrl, operationId, modelId: model.id, deliveryResolution: model.deliveryResolution, upscalerUrl: model.upscalerUrl });
   } catch {
     // Dispatch creation failed — release hold, mark failure
     await db.update(aiProviderAttempts)

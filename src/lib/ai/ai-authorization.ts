@@ -108,7 +108,7 @@ export async function authorizeAiRequest(
   }
 
   // AC3: Validate model access (exists, active, public, provider active)
-  const modelAccess = await validateModelAccess(modelId);
+  const modelAccess = await validateModelAccess(modelId, context.actor.userId);
   if (!modelAccess.ok) {
     return {
       ok: false,

@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     return rateLimitedResponse(rlResult.retryAfter);
   }
 
-  const models = await getUserCatalog();
+  const models = await getUserCatalog(ctx.context.actor.userId);
 
   // AC4: Return only safe, public fields — no keys, no internal URLs
   return NextResponse.json({
@@ -46,9 +46,11 @@ export async function GET(request: Request) {
       id: m.id,
       modelIdentifier: m.modelIdentifier,
       displayName: m.displayName,
+      family: m.family,
       providerType: m.providerType,
       capabilities: m.capabilities,
       tier: m.tier,
+      deliveryResolution: m.deliveryResolution,
       inputTokenLimit: m.inputTokenLimit,
       outputTokenLimit: m.outputTokenLimit,
       maxSteps: m.maxSteps,

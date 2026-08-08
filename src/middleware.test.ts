@@ -87,6 +87,14 @@ describe('Middleware — API public whitelist', () => {
     expect(res.status).toBe(200);
   });
 
+  it('allows signed webhook and bearer-protected scheduler routes through to route-level auth', async () => {
+    const { default: middleware } = await import('./middleware');
+    for (const path of ['/api/webhooks/stripe', '/api/internal/monitoring/check', '/api/internal/billing/reconcile']) {
+      const res = await middleware(createRequest(path));
+      expect(res.status).not.toBe(401);
+    }
+  });
+
   it('allows /api/share/:token without session cookie', async () => {
     const { default: middleware } = await import('./middleware');
     const req = createRequest('/api/share/abc123token');

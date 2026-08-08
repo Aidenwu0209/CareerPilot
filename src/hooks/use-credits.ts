@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useCreditsStore, type BillingScope } from '@/stores/credits-store';
+import { useAuth } from './use-auth';
 
 interface CreditsState {
   balance: number | null;
@@ -22,13 +23,14 @@ interface CreditsState {
 export function useCredits(): CreditsState {
   const { balance, accountId, billingScope, loading, error, fetched, refresh } =
     useCreditsStore();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   // Initial fetch — only fires once across all consumers
   useEffect(() => {
-    if (!fetched && !loading) {
+    if (!authLoading && isAuthenticated && !fetched && !loading) {
       refresh();
     }
-  }, [fetched, loading, refresh]);
+  }, [authLoading, isAuthenticated, fetched, loading, refresh]);
 
   return { balance, accountId, billingScope, loading, error, refresh };
 }

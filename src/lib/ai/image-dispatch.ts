@@ -18,6 +18,7 @@ export interface ImageEditResult {
 const DEFAULT_BASE_URLS: Record<string, string> = {
   google: 'https://generativelanguage.googleapis.com/v1beta',
   openai: 'https://api.openai.com/v1',
+  ernie: 'https://qianfan.baidubce.com/v2',
 };
 
 export async function dispatchManagedImageEdit(
@@ -26,12 +27,73 @@ export async function dispatchManagedImageEdit(
 ): Promise<ImageEditResult> {
   const providerType = context.providerType.toLowerCase();
   if (providerType === 'google' || providerType === 'gemini') {
-    return dispatchGoogle(context, input);
+    return deliverResolution(context, await dispatchGoogle(context, input));
   }
   if (providerType === 'openai') {
-    return dispatchOpenAI(context, input);
+    return deliverResolution(context, await dispatchOpenAI(context, input));
+  }
+  if (providerType === 'ernie' || providerType === 'baidu' || providerType === 'qianfan') {
+    return deliverResolution(context, await dispatchErnie(context, input));
   }
   throw new Error('IMAGE_PROVIDER_UNSUPPORTED');
+}
+
+async function dispatchErnie(
+  context: GatewayDispatchContext,
+  input: ImageEditInput,
+): Promise<ImageEditResult> {
+  const baseUrl = resolveBaseUrl(context, 'ernie');
+  const bytes = Buffer.from(input.base64Data, 'base64');
+  const form = new FormData();
+  form.append('model', context.modelIdentifier);
+  form.append('prompt', input.prompt);
+  form.append('image', new Blob([bytes], { type: input.mimeType }), 'input.png');
+  const response = await fetch(`${baseUrl}/images/edits`, {
+    ...SSRF_SAFE_FETCH_OPTIONS,
+    method: 'POST',
+    headers: { Authorization: `Bearer ${context.apiKey}` },
+    body: form,
+    signal: AbortSignal.timeout(55_000),
+  });
+  if (!response.ok) throw new Error(`IMAGE_PROVIDER_ERROR_${response.status}`);
+  const data = await response.json();
+  const first = data?.data?.[0];
+  const image = first?.b64_json
+    ? `data:image/png;base64,${first.b64_json}`
+    : typeof first?.url === 'string' ? first.url : null;
+  if (!image) throw new Error('IMAGE_PROVIDER_EMPTY_RESPONSE');
+  return { image, text: first.revised_prompt ?? null };
+}
+
+async function deliverResolution(
+  context: GatewayDispatchContext,
+  result: ImageEditResult,
+): Promise<ImageEditResult> {
+  if (context.deliveryResolution !== '4k') return result;
+  if (!context.upscalerUrl) throw new Error('IMAGE_4K_UPSCALER_NOT_CONFIGURED');
+  const upscalerApiKey = process.env.IMAGE_UPSCALER_API_KEY;
+  if (!upscalerApiKey) throw new Error('IMAGE_4K_UPSCALER_CREDENTIAL_NOT_CONFIGURED');
+  if (!validateUpstreamUrl(context.upscalerUrl).ok) throw new Error('UPSTREAM_URL_NOT_ALLOWED');
+  const response = await fetch(context.upscalerUrl, {
+    ...SSRF_SAFE_FETCH_OPTIONS,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${upscalerApiKey}`,
+    },
+    body: JSON.stringify({ image: result.image, targetResolution: '4k', outputFormat: 'png' }),
+    signal: AbortSignal.timeout(90_000),
+  });
+  if (!response.ok) throw new Error(`IMAGE_UPSCALER_ERROR_${response.status}`);
+  const data = await response.json();
+  const image = data.image ?? data.output?.image ?? data.data?.[0]?.b64_json;
+  if (!image) throw new Error('IMAGE_UPSCALER_EMPTY_RESPONSE');
+  return {
+    ...result,
+    image: typeof image === 'string' && image.startsWith('data:')
+      ? image
+      : `data:image/png;base64,${image}`,
+  };
 }
 
 async function dispatchGoogle(
@@ -127,7 +189,7 @@ async function dispatchOpenAI(
   };
 }
 
-function resolveBaseUrl(context: GatewayDispatchContext, normalizedType: 'google' | 'openai'): string {
+function resolveBaseUrl(context: GatewayDispatchContext, normalizedType: 'google' | 'openai' | 'ernie'): string {
   const baseUrl = (context.baseUrl || DEFAULT_BASE_URLS[normalizedType]).replace(/\/$/, '');
   if (!validateUpstreamUrl(baseUrl).ok) throw new Error('UPSTREAM_URL_NOT_ALLOWED');
   return baseUrl;

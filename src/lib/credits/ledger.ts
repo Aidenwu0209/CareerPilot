@@ -70,7 +70,11 @@ export type CreditReason =
   | 'manual_debit'
   | 'consumption'
   | 'refund'
-  | 'adjustment';
+  | 'adjustment'
+  | 'purchase_credit'
+  | 'subscription_credit'
+  | 'payment_refund'
+  | 'payment_refund_rollback';
 
 export type OwnerType = 'user' | 'organization';
 

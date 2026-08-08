@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
-import { aiModels, aiProviders } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { aiModels, aiProviders, billingPlans, paymentOrders, planModelAccess, userEntitlements } from '@/lib/db/schema';
+import { eq, and, inArray, gt, isNull, or } from 'drizzle-orm';
 
 /**
  * Model catalog service (US-034)
@@ -14,8 +14,11 @@ export interface CatalogModel {
   providerType: string;
   modelIdentifier: string;
   displayName: string;
+  family?: string;
   capabilities: string[];
   tier: string;
+  deliveryResolution?: string;
+  upscalerUrl?: string | null;
   inputTokenLimit: number | null;
   outputTokenLimit: number | null;
   maxSteps: number | null;
@@ -29,7 +32,7 @@ export interface CatalogModel {
  * AC3: Returns only active + public models with capabilities and public pricing.
  * AC4: Never includes provider keys or internal service URLs.
  */
-export async function getUserCatalog(): Promise<CatalogModel[]> {
+export async function getUserCatalog(userId?: string): Promise<CatalogModel[]> {
   const rows = await db
     .select({
       id: aiModels.id,
@@ -37,8 +40,11 @@ export async function getUserCatalog(): Promise<CatalogModel[]> {
       providerType: aiProviders.type,
       modelIdentifier: aiModels.modelIdentifier,
       displayName: aiModels.displayName,
+      family: aiModels.family,
       capabilities: aiModels.capabilities,
       tier: aiModels.tier,
+      deliveryResolution: aiModels.deliveryResolution,
+      upscalerUrl: aiModels.upscalerUrl,
       inputTokenLimit: aiModels.inputTokenLimit,
       outputTokenLimit: aiModels.outputTokenLimit,
       maxSteps: aiModels.maxSteps,
@@ -56,7 +62,8 @@ export async function getUserCatalog(): Promise<CatalogModel[]> {
       ),
     );
 
-  return rows.map((r: typeof rows[number]) => ({
+  const allowedIds = userId ? await getAllowedModelIds(userId) : null;
+  return rows.filter((r: typeof rows[number]) => allowedIds === null || allowedIds.has(r.id)).map((r: typeof rows[number]) => ({
     ...r,
     capabilities: typeof r.capabilities === 'string' ? JSON.parse(r.capabilities) : r.capabilities,
   }));
@@ -67,7 +74,7 @@ export async function getUserCatalog(): Promise<CatalogModel[]> {
  *
  * AC5: Returns MODEL_NOT_ALLOWED if model is disabled, not public, or provider is disabled.
  */
-export async function validateModelAccess(modelId: string): Promise<
+export async function validateModelAccess(modelId: string, userId?: string): Promise<
   { ok: true; model: CatalogModel } | { ok: false; error: 'MODEL_NOT_ALLOWED' }
 > {
   const rows = await db
@@ -77,8 +84,11 @@ export async function validateModelAccess(modelId: string): Promise<
       providerType: aiProviders.type,
       modelIdentifier: aiModels.modelIdentifier,
       displayName: aiModels.displayName,
+      family: aiModels.family,
       capabilities: aiModels.capabilities,
       tier: aiModels.tier,
+      deliveryResolution: aiModels.deliveryResolution,
+      upscalerUrl: aiModels.upscalerUrl,
       inputTokenLimit: aiModels.inputTokenLimit,
       outputTokenLimit: aiModels.outputTokenLimit,
       maxSteps: aiModels.maxSteps,
@@ -102,6 +112,12 @@ export async function validateModelAccess(modelId: string): Promise<
   if (r.modelStatus !== 'active' || r.providerStatus !== 'active' || r.modelVisibility !== 'public') {
     return { ok: false, error: 'MODEL_NOT_ALLOWED' };
   }
+  if (userId) {
+    const allowedIds = await getAllowedModelIds(userId);
+    if (allowedIds !== null && !allowedIds.has(modelId)) {
+      return { ok: false, error: 'MODEL_NOT_ALLOWED' };
+    }
+  }
 
   return {
     ok: true,
@@ -111,8 +127,11 @@ export async function validateModelAccess(modelId: string): Promise<
       providerType: r.providerType,
       modelIdentifier: r.modelIdentifier,
       displayName: r.displayName,
+      family: r.family,
       capabilities: typeof r.capabilities === 'string' ? JSON.parse(r.capabilities) : r.capabilities,
       tier: r.tier,
+      deliveryResolution: r.deliveryResolution,
+      upscalerUrl: r.upscalerUrl,
       inputTokenLimit: r.inputTokenLimit,
       outputTokenLimit: r.outputTokenLimit,
       maxSteps: r.maxSteps,
@@ -121,4 +140,35 @@ export async function validateModelAccess(modelId: string): Promise<
       tokenPriceOutput: r.tokenPriceOutput,
     },
   };
+}
+
+/** null means no access matrix has been configured yet (safe migration compatibility). */
+async function getAllowedModelIds(userId: string): Promise<Set<string> | null> {
+  const configured = await db.select({ id: planModelAccess.id }).from(planModelAccess)
+    .where(eq(planModelAccess.enabled, true)).limit(1);
+  if (configured.length === 0) return null;
+
+  const [freePlans, entitlements, purchases] = await Promise.all([
+    db.select({ id: billingPlans.id }).from(billingPlans).where(and(
+      eq(billingPlans.active, true), eq(billingPlans.code, 'free'),
+    )),
+    db.select({ planId: userEntitlements.planId }).from(userEntitlements).where(and(
+      eq(userEntitlements.userId, userId), eq(userEntitlements.status, 'active'),
+      or(isNull(userEntitlements.currentPeriodEnd), gt(userEntitlements.currentPeriodEnd, new Date())),
+    )),
+    db.select({ planId: paymentOrders.planId }).from(paymentOrders)
+      .innerJoin(billingPlans, eq(paymentOrders.planId, billingPlans.id)).where(and(
+      eq(paymentOrders.userId, userId), inArray(paymentOrders.status, ['paid', 'partially_refunded']),
+      eq(billingPlans.kind, 'credit_pack'),
+    )),
+  ]);
+  const planIds = [...new Set([
+    ...freePlans.map((row: { id: string }) => row.id),
+    ...entitlements.map((row: { planId: string }) => row.planId),
+    ...purchases.map((row: { planId: string }) => row.planId),
+  ])];
+  if (planIds.length === 0) return new Set();
+  const access = await db.select({ modelId: planModelAccess.modelId }).from(planModelAccess)
+    .where(and(inArray(planModelAccess.planId, planIds), eq(planModelAccess.enabled, true)));
+  return new Set(access.map((row: { modelId: string }) => row.modelId));
 }

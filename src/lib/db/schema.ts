@@ -148,6 +148,22 @@ export {
 } from './schema-ai-providers';
 
 export {
+  billingPlans,
+  planModelAccess,
+  userEntitlements,
+  paymentOrders,
+  paymentRefunds,
+  paymentWebhookEvents,
+  reconciliationRuns,
+  reconciliationItems,
+} from './schema-billing';
+
+export {
+  alertEvents,
+  alertDeliveries,
+} from './schema-observability';
+
+export {
   aiOperations,
   aiProviderAttempts,
   creditHolds,

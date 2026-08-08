@@ -34,7 +34,7 @@ export const creditTransactions = sqliteTable('credit_transactions', {
   delta: integer('delta').notNull(),
   balanceAfter: integer('balance_after').notNull(),
   reason: text('reason', {
-    enum: ['registration_grant', 'manual_credit', 'manual_debit', 'consumption', 'refund', 'adjustment'],
+    enum: ['registration_grant', 'manual_credit', 'manual_debit', 'consumption', 'refund', 'adjustment', 'purchase_credit', 'subscription_credit', 'payment_refund', 'payment_refund_rollback'],
   }).notNull(),
   operatorId: text('operator_id'),
   businessRefId: text('business_ref_id'),

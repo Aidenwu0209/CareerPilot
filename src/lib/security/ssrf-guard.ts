@@ -22,13 +22,17 @@ const APPROVED_UPSTREAM_DOMAINS = new Set<string>([
   'api.openai.com',
   'api.anthropic.com',
   'generativelanguage.googleapis.com',
+  'qianfan.baidubce.com',
 ]);
 
 /**
  * Check if a hostname is in the approved upstream domain allowlist.
  */
 export function isApprovedDomain(hostname: string): boolean {
-  return APPROVED_UPSTREAM_DOMAINS.has(hostname.toLowerCase());
+  const normalized = hostname.toLowerCase();
+  const deploymentDomains = (process.env.AI_UPSTREAM_ALLOWED_DOMAINS || '')
+    .split(',').map((domain) => domain.trim().toLowerCase()).filter(Boolean);
+  return APPROVED_UPSTREAM_DOMAINS.has(normalized) || deploymentDomains.includes(normalized);
 }
 
 // ─── IPv4 Private / Reserved Range Detection ────────────────────────────────

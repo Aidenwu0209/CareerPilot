@@ -22,6 +22,8 @@ const PUBLIC_API_PREFIXES = [
   '/api/auth',     // NextAuth callbacks + OTP request/verify
   '/api/health',   // Health / readiness check
   '/api/share',    // Public share token reads
+  '/api/webhooks/stripe', // Stripe signature is verified by the route
+  '/api/internal', // Internal scheduler routes require CRON_SECRET bearer auth
 ];
 
 function isPublicPagePath(pathname: string): boolean {

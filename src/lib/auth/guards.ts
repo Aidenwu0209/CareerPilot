@@ -18,6 +18,8 @@ import {
   RequestContext,
   AmbiguousBillingError,
 } from './context';
+import { config } from '@/lib/config';
+import { FINGERPRINT_COOKIE_NAME } from './providers/fingerprint';
 
 // ── Errors ──
 
@@ -69,8 +71,17 @@ export async function resolveActiveContext(
 ): Promise<ActiveContextResult> {
   let context: RequestContext | null;
 
+  // Client hooks persist the development fingerprint as a SameSite cookie.
+  // Reading it here prevents first-render API races without trusting any
+  // fingerprint in production, where session auth remains mandatory.
+  let effectiveFingerprint = fingerprint;
+  if (effectiveFingerprint === undefined && process.env.NODE_ENV === 'development' && !config.auth.enabled) {
+    const { cookies } = await import('next/headers');
+    effectiveFingerprint = (await cookies()).get(FINGERPRINT_COOKIE_NAME)?.value ?? null;
+  }
+
   try {
-    context = await resolveContext(fingerprint);
+    context = await resolveContext(effectiveFingerprint);
   } catch (error) {
     if (error instanceof AmbiguousBillingError) {
       return {

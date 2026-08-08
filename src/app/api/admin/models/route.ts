@@ -25,8 +25,11 @@ export async function GET() {
       providerName: aiProviders.name,
       modelIdentifier: aiModels.modelIdentifier,
       displayName: aiModels.displayName,
+      family: aiModels.family,
       capabilities: aiModels.capabilities,
       tier: aiModels.tier,
+      deliveryResolution: aiModels.deliveryResolution,
+      upscalerUrl: aiModels.upscalerUrl,
       status: aiModels.status,
       visibility: aiModels.visibility,
       inputTokenLimit: aiModels.inputTokenLimit,
@@ -63,8 +66,11 @@ export async function POST(request: Request) {
     providerId?: string;
     modelIdentifier?: string;
     displayName?: string;
+    family?: string;
     capabilities?: string[];
     tier?: string;
+    deliveryResolution?: string;
+    upscalerUrl?: string | null;
     visibility?: string;
     status?: string;
     inputTokenLimit?: number;
@@ -81,8 +87,8 @@ export async function POST(request: Request) {
   }
 
   const {
-    providerId, modelIdentifier, displayName, capabilities,
-    tier, visibility, status,
+    providerId, modelIdentifier, displayName, capabilities, family,
+    tier, deliveryResolution, upscalerUrl, visibility, status,
     inputTokenLimit, outputTokenLimit, maxSteps,
     fixedPrice, tokenPriceInput, tokenPriceOutput,
   } = body;
@@ -91,6 +97,9 @@ export async function POST(request: Request) {
   if (!providerId) return NextResponse.json({ error: 'PROVIDER_ID_REQUIRED' }, { status: 400 });
   if (!modelIdentifier || typeof modelIdentifier !== 'string') return NextResponse.json({ error: 'MODEL_IDENTIFIER_REQUIRED' }, { status: 400 });
   if (!displayName || typeof displayName !== 'string') return NextResponse.json({ error: 'DISPLAY_NAME_REQUIRED' }, { status: 400 });
+  if (family && !['gpt', 'claude', 'glm', 'deepseek', 'gemini', 'ernie', 'other'].includes(family)) return NextResponse.json({ error: 'INVALID_MODEL_FAMILY' }, { status: 400 });
+  if (deliveryResolution && !['native', '1k', '4k'].includes(deliveryResolution)) return NextResponse.json({ error: 'INVALID_DELIVERY_RESOLUTION' }, { status: 400 });
+  if (deliveryResolution === '4k' && !upscalerUrl) return NextResponse.json({ error: 'UPSCALER_URL_REQUIRED_FOR_4K' }, { status: 400 });
 
   // AC2: Validate provider exists
   const provider = await db.select({ id: aiProviders.id }).from(aiProviders).where(eq(aiProviders.id, providerId)).limit(1);
@@ -134,8 +143,11 @@ export async function POST(request: Request) {
     providerId,
     modelIdentifier,
     displayName,
+    family: family ?? 'other',
     capabilities: capabilities ?? ['text'],
     tier: tier ?? 'standard',
+    deliveryResolution: deliveryResolution ?? 'native',
+    upscalerUrl: upscalerUrl ?? null,
     status: (status === 'disabled' ? 'disabled' : 'active'),
     visibility: visibility ?? 'public',
     inputTokenLimit: inputTokenLimit ?? null,

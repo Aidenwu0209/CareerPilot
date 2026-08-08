@@ -11,7 +11,10 @@ const baseContext: GatewayDispatchContext = {
   modelId: 'model-1',
 };
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  delete process.env.IMAGE_UPSCALER_API_KEY;
+});
 
 describe('managed image dispatch', () => {
   it('dispatches Google image edits with managed headers and usage', async () => {
@@ -54,6 +57,39 @@ describe('managed image dispatch', () => {
     expect(JSON.parse(String(init.body))).toMatchObject({
       model: 'gpt-image-1.5', size: '1536x1024', input_fidelity: 'high',
     });
+  });
+
+  it('dispatches ERNIE image edits through Qianfan v2', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      data: [{ b64_json: 'ernie-image' }],
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const result = await dispatchManagedImageEdit(
+      { ...baseContext, providerType: 'ernie', modelIdentifier: 'ernie-image-turbo' },
+      { prompt: 'professional headshot', mimeType: 'image/png', base64Data: 'c291cmNl' },
+    );
+    expect(result.image).toBe('data:image/png;base64,ernie-image');
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe('https://qianfan.baidubce.com/v2/images/edits');
+    expect((init.headers as Record<string, string>).Authorization).toBe('Bearer managed-secret');
+    expect(init.body).toBeInstanceOf(FormData);
+  });
+
+  it('uses a separately configured upscaler for the GPT 4K delivery tier', async () => {
+    process.env.IMAGE_UPSCALER_API_KEY = 'upscaler-secret';
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ data: [{ b64_json: 'one-k' }] }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ image: 'data:image/png;base64,four-k' }), { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const result = await dispatchManagedImageEdit(
+      { ...baseContext, providerType: 'openai', modelIdentifier: 'gpt-image-1.5', deliveryResolution: '4k', upscalerUrl: 'https://api.openai.com/v1/upscale' },
+      { prompt: 'professional headshot', mimeType: 'image/png', base64Data: 'source' },
+    );
+    expect(result.image).toBe('data:image/png;base64,four-k');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[1][0]).toBe('https://api.openai.com/v1/upscale');
+    expect((fetchMock.mock.calls[1][1].headers as Record<string, string>).Authorization).toBe('Bearer upscaler-secret');
+    expect(JSON.parse(String(fetchMock.mock.calls[1][1].body))).toMatchObject({ targetResolution: '4k' });
   });
 
   it('rejects unsupported and non-allowlisted providers', async () => {

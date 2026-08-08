@@ -13,13 +13,16 @@ let adapter: DatabaseAdapter;
 if (config.db.type === 'postgresql') {
   adapter = new PostgreSQLAdapter(process.env.DATABASE_URL!);
 } else {
-  if (process.env.VERCEL || isProduction) {
+  if ((process.env.VERCEL || isProduction) && !isBuildPhase) {
     throw new Error(
       'SQLite is not supported in production or on Vercel (read-only filesystem). ' +
       'Please set DB_TYPE=postgresql and DATABASE_URL in your environment variables.',
     );
   }
-  adapter = new SQLiteAdapter(process.env.SQLITE_PATH || './data/careerpilot.db');
+  // Next imports route modules while collecting build metadata. Use an
+  // isolated in-memory schema for that phase; production runtime still rejects
+  // SQLite above and therefore remains PostgreSQL-only.
+  adapter = new SQLiteAdapter(isBuildPhase ? ':memory:' : (process.env.SQLITE_PATH || './data/careerpilot.db'));
 }
 
 // Initialize (migrate + seed) — must complete before first query.

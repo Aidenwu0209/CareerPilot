@@ -55,8 +55,11 @@ interface ModelInfo {
   providerName: string;
   modelIdentifier: string;
   displayName: string;
+  family: string;
   capabilities: string[];
   tier: string;
+  deliveryResolution: string;
+  upscalerUrl: string | null;
   status: string;
   visibility: string;
   inputTokenLimit: number | null;
@@ -254,6 +257,10 @@ export default function AdminAiModelsPage() {
                       <Badge variant="outline" className="text-xs">
                         {model.providerName}
                       </Badge>
+                      <Badge variant="outline" className="text-xs">{model.family || 'other'}</Badge>
+                      {model.deliveryResolution !== 'native' && (
+                        <Badge variant="secondary" className="text-xs">{model.deliveryResolution.toUpperCase()}</Badge>
+                      )}
                       <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
                         {model.modelIdentifier}
                       </code>
@@ -473,6 +480,9 @@ function AddModelDialog({
   const [modelIdentifier, setModelIdentifier] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [capabilities, setCapabilities] = useState<string[]>(['text']);
+  const [family, setFamily] = useState('other');
+  const [deliveryResolution, setDeliveryResolution] = useState('native');
+  const [upscalerUrl, setUpscalerUrl] = useState('');
   const [tier, setTier] = useState('standard');
   const [visibility, setVisibility] = useState('public');
   const [inputTokenLimit, setInputTokenLimit] = useState('');
@@ -491,6 +501,9 @@ function AddModelDialog({
     setModelIdentifier('');
     setDisplayName('');
     setCapabilities(['text']);
+    setFamily('other');
+    setDeliveryResolution('native');
+    setUpscalerUrl('');
     setTier('standard');
     setVisibility('public');
     setInputTokenLimit('');
@@ -518,6 +531,10 @@ function AddModelDialog({
       setFieldError(t('errNameRequired'));
       return;
     }
+    if (deliveryResolution === '4k' && !upscalerUrl.trim()) {
+      setFieldError('4K delivery requires a configured upscaler URL.');
+      return;
+    }
 
     // Validate numeric fields
     const body: Record<string, unknown> = {
@@ -525,7 +542,10 @@ function AddModelDialog({
       modelIdentifier: modelIdentifier.trim(),
       displayName: displayName.trim(),
       capabilities,
+      family,
       tier,
+      deliveryResolution,
+      upscalerUrl: deliveryResolution === '4k' ? upscalerUrl.trim() : null,
       visibility,
       status: 'active',
     };
@@ -656,6 +676,18 @@ function AddModelDialog({
             <Label>{t('fieldCapabilities')}</Label>
             <CapabilityToggle capabilities={capabilities} onChange={setCapabilities} t={t} />
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Model family</Label>
+              <Select value={family} onValueChange={setFamily}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['gpt', 'claude', 'glm', 'deepseek', 'gemini', 'ernie', 'other'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Image delivery</Label>
+              <Select value={deliveryResolution} onValueChange={setDeliveryResolution}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['native', '1k', '4k'].map((value) => <SelectItem key={value} value={value}>{value.toUpperCase()}</SelectItem>)}</SelectContent></Select>
+            </div>
+          </div>
+          {deliveryResolution === '4k' && <div className="space-y-2"><Label>4K upscaler URL</Label><Input value={upscalerUrl} onChange={(e) => setUpscalerUrl(e.target.value)} placeholder="https://upscaler.example.com/v1/upscale" /></div>}
 
           {/* Tier + Visibility */}
           <div className="grid grid-cols-2 gap-4">
@@ -800,6 +832,9 @@ function EditModelDialog({
 
   const [displayName, setDisplayName] = useState('');
   const [capabilities, setCapabilities] = useState<string[]>([]);
+  const [family, setFamily] = useState('other');
+  const [deliveryResolution, setDeliveryResolution] = useState('native');
+  const [upscalerUrl, setUpscalerUrl] = useState('');
   const [tier, setTier] = useState('standard');
   const [visibility, setVisibility] = useState('public');
   const [inputTokenLimit, setInputTokenLimit] = useState('');
@@ -815,6 +850,9 @@ function EditModelDialog({
     if (model) {
       setDisplayName(model.displayName);
       setCapabilities(model.capabilities);
+      setFamily(model.family || 'other');
+      setDeliveryResolution(model.deliveryResolution || 'native');
+      setUpscalerUrl(model.upscalerUrl || '');
       setTier(model.tier);
       setVisibility(model.visibility);
       setInputTokenLimit(model.inputTokenLimit?.toString() ?? '');
@@ -837,11 +875,18 @@ function EditModelDialog({
       setFieldError(t('errNameRequired'));
       return;
     }
+    if (deliveryResolution === '4k' && !upscalerUrl.trim()) {
+      setFieldError('4K delivery requires a configured upscaler URL.');
+      return;
+    }
 
     const body: Record<string, unknown> = {
       displayName: displayName.trim(),
       capabilities,
+      family,
       tier,
+      deliveryResolution,
+      upscalerUrl: deliveryResolution === '4k' ? upscalerUrl.trim() : null,
       visibility,
     };
 
@@ -933,6 +978,18 @@ function EditModelDialog({
             <Label>{t('fieldIdentifier')}</Label>
             <Input value={model.modelIdentifier} disabled className="bg-zinc-50 dark:bg-zinc-800" />
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Model family</Label>
+              <Select value={family} onValueChange={setFamily}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['gpt', 'claude', 'glm', 'deepseek', 'gemini', 'ernie', 'other'].map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}</SelectContent></Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Image delivery</Label>
+              <Select value={deliveryResolution} onValueChange={setDeliveryResolution}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{['native', '1k', '4k'].map((value) => <SelectItem key={value} value={value}>{value.toUpperCase()}</SelectItem>)}</SelectContent></Select>
+            </div>
+          </div>
+          {deliveryResolution === '4k' && <div className="space-y-2"><Label>4K upscaler URL</Label><Input value={upscalerUrl} onChange={(e) => setUpscalerUrl(e.target.value)} placeholder="https://upscaler.example.com/v1/upscale" /></div>}
 
           {/* Display name */}
           <div className="space-y-2">
