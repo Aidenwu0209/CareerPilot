@@ -696,6 +696,20 @@
   - Model pricing: `fixedPrice` for per-call (image gen), `tokenPriceInput`/`tokenPriceOutput` for token-based — can coexist on same model
   - Visibility: 'public' models appear in user catalog; 'private' models are admin-only (internal/testing)
 
+## 2026-08-08 08:36 - US-034 (completion pass)
+- Migrated `/api/ai/models` route from BYOK proxy to server-side managed catalog
+- Modified: `src/app/api/ai/models/route.ts` — replaced upstream provider fetch with `getUserCatalog()` DB query; removed x-api-key/x-provider/x-base-url header handling
+- Modified: `src/app/api/ai/models/auth.test.ts` — rewrote to test server-side catalog behavior (no fetch spy, validates DB-sourced models, disabled model exclusion, no-secrets guarantee)
+- Modified: `src/app/api/admin/models/admin-models.test.ts` — fixed import path from `@/app/api/ai/catalog/route` to `@/app/api/ai/models/route`; added `@/lib/auth/helpers` mock; passed `Request` argument to `getCatalog()` calls
+- Modified: `src/app/api/admin/models/route.ts` — cleaned up duplicate-check code (replaced select-all-then-filter with targeted `and()` query)
+- AC3/AC4 now fully validated: user catalog returns only active+public models from active providers, response contains no provider keys/URLs/credentials
+- All quality checks pass: typecheck clean, 898 tests pass (42 files), lint clean on US-034 files
+- **未来迭代的学习：**
+  - The `/api/ai/models` route is now the single user-facing catalog endpoint — it reads exclusively from `getUserCatalog()` in `model-catalog.ts`, never touches upstream providers
+  - US-050 will further harden this by rejecting legacy x-api-key/x-provider headers explicitly; for now they are simply ignored (no upstream fetch)
+  - `validateModelAccess(modelId)` from `model-catalog.ts` is ready for US-035/US-037 integration — returns `{ ok: true, model }` or `{ ok: false, error: 'MODEL_NOT_ALLOWED' }`
+  - When a previous Ralph iteration leaves untracked files for a future story (e.g., `ai-authorization.ts`), do NOT commit them with the current story — leave them for their own story iteration
+
 ## 2026-08-08 08:29 - US-033
 - Implemented super admin provider management and connection test API
 - New files: `src/app/api/admin/providers/route.ts` (GET list, POST create), `src/app/api/admin/providers/[id]/route.ts` (GET detail, PATCH update), `src/app/api/admin/providers/[id]/test/route.ts` (POST connection test), `src/app/api/admin/providers/admin-providers.test.ts` (20 tests)

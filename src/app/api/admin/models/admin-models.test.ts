@@ -245,7 +245,7 @@ describe('AC3: User-facing catalog', () => {
   });
 
   it('returns only active public models', async () => {
-    const res = await getCatalog();
+    const res = await getCatalog(new Request('http://localhost/api/ai/models'));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.models).toHaveLength(1);
@@ -253,7 +253,7 @@ describe('AC3: User-facing catalog', () => {
   });
 
   it('returns capabilities and pricing info', async () => {
-    const res = await getCatalog();
+    const res = await getCatalog(new Request('http://localhost/api/ai/models'));
     const body = await res.json();
     expect(body.models[0].fixedPrice).toBe(50);
     expect(body.models[0].capabilities).toBeDefined();
@@ -264,7 +264,7 @@ describe('AC3: User-facing catalog', () => {
     await seedProvider('p3', 'custom', 'Custom', 'disabled');
     await seedModel('m4', 'p3', 'custom-model', 'Custom Model');
 
-    const res = await getCatalog();
+    const res = await getCatalog(new Request('http://localhost/api/ai/models'));
     const body = await res.json();
     // m4 should not appear (provider disabled)
     expect(body.models.find((m: { id: string }) => m.id === 'm4')).toBeUndefined();
@@ -281,7 +281,7 @@ describe('AC4: Catalog excludes sensitive data', () => {
   });
 
   it('catalog does not contain provider keys or URLs', async () => {
-    const res = await getCatalog();
+    const res = await getCatalog(new Request('http://localhost/api/ai/models'));
     const body = await res.json();
     const serialized = JSON.stringify(body);
     expect(serialized).not.toContain('encryptedCredentials');
