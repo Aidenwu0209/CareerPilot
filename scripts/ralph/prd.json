@@ -740,7 +740,7 @@
         "Typecheck passes"
       ],
       "priority": 39,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false

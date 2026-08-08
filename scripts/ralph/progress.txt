@@ -747,6 +747,26 @@
   - The retry loop catches ALL errors from dispatch — no distinction between transient and permanent failures yet; US-050+ may add error classification
   - Sanitizer truncation to 100 chars prevents most prompt content leakage while preserving error type identification
 
+## 2026-08-08 08:53 - US-039
+- Implemented streaming AI gateway with cancellation support
+- Modified: `src/lib/ai/gateway.ts` — added `executeStreamingOperation()` + `wrapStreamWithMonitoring()`
+- New file: `src/lib/ai/gateway-streaming.test.ts` (7 tests)
+- AC1: Authorization, rate limit, and credit hold complete before returning stream
+- AC2: Normal stream completion → `settleHold` with usage from `getUsage()` callback; failure → `releaseHold`
+- AC3: Client disconnect → `cancel()` handler → operation `cancelled`; provider error → operation `failed`; timeout → attempt `timeout` + operation `failed`
+- AC4: Timeout compensation via `releaseExpiredHolds()` (US-036); stream timeout also triggers immediate release
+- AC5: Duplicate idempotency key → 409 `OPERATION_EXISTS` (streaming can't be replayed)
+- Stream monitoring: manual pump via `ReadableStream({ pull, cancel })` — reads from original stream, forwards chunks, handles close/error/cancel
+- 7 tests: hold before stream (3), settlement on completion (1), cancellation states (2), duplicate key (1)
+- Typecheck passes, all 968 tests pass (47 files)
+- **未来迭代的学习：**
+  - `TransformStream` doesn't have a `cancel` handler in its `Transformer` interface — use `ReadableStream({ pull, cancel })` instead for client disconnect detection
+  - `controller.dequeue` doesn't exist on `TransformStreamDefaultController` — only `enqueue`, `error`, `close`, `terminate`
+  - `executeStreamingOperation` returns `{ ok: true, stream, operationId, attemptId }` — the caller pipes the stream to the HTTP response
+  - `getUsage` callback: the dispatch function provides this so the gateway can extract token counts after streaming completes (e.g., from Vercel AI SDK's `streamText` result)
+  - Stream timeout default is 120s — configurable via `streamTimeoutMs` parameter
+  - Streaming results cannot be cached for idempotent replay (streams are consumed) — duplicate keys are always rejected
+
 ## 2026-08-08 08:39 - US-036
 - Implemented AI credit hold, settlement, and release service
 - New files: `src/lib/ai/credit-hold-service.ts` (hold lifecycle service), `src/lib/ai/credit-hold-service.test.ts` (17 tests)

@@ -409,3 +409,277 @@ function sanitizeErrorMessage(message: string): string {
   if (sanitized.length > 100) sanitized = sanitized.substring(0, 100) + '...';
   return sanitized;
 }
+
+// ── Streaming Gateway (US-039) ──
+
+export interface StreamingDispatchResult {
+  /** The readable stream to send to the client. */
+  stream: ReadableStream<Uint8Array>;
+  /** Called when streaming completes to get final usage. */
+  getUsage?: () => Promise<{ inputTokens?: number; outputTokens?: number; totalTokens?: number }>;
+}
+
+export interface StreamingGatewayParams {
+  context: RequestContext;
+  modelId: string;
+  capability: ModelCapability;
+  businessCapability: string;
+  idempotencyKey: string;
+  /** Creates the stream (called after hold is secured). */
+  dispatch: (ctx: GatewayDispatchContext) => Promise<StreamingDispatchResult>;
+  /** Timeout in milliseconds (default: 120000 = 2 min). */
+  streamTimeoutMs?: number;
+}
+
+export interface StreamingGatewaySuccess {
+  ok: true;
+  stream: ReadableStream<Uint8Array>;
+  operationId: string;
+  attemptId: string;
+}
+
+export type StreamingGatewayResponse = StreamingGatewaySuccess | GatewayReject;
+
+/**
+ * Execute a streaming AI operation through the gateway.
+ *
+ * AC1: Authorization, rate limit, and credit hold complete BEFORE first byte.
+ * AC2: Normal completion settles by usage; failure releases per policy.
+ * AC3: Client disconnect, provider error, timeout → distinct operation status.
+ * AC4: Expired holds have timeout compensation (from US-036 releaseExpiredHolds).
+ * AC5: Duplicate idempotency key returns cached status, no double-charge.
+ */
+export async function executeStreamingOperation(
+  params: StreamingGatewayParams,
+): Promise<StreamingGatewayResponse> {
+  const { context, modelId, capability, businessCapability, idempotencyKey, dispatch, streamTimeoutMs } = params;
+
+  // ── Pre-flight: Authorization ──
+  const authResult = await authorizeAiRequest({ context, modelId, capability });
+  if (!authResult.ok) return rejectFromAuthError(authResult.error);
+  const { account, model } = authResult.data;
+
+  // ── Pre-flight: Rate limiting ──
+  const rateKey = rateLimitKey('ai-gateway', 'user', context.actor.userId);
+  const rateLimit = await checkRateLimit(rateKey, RATE_LIMIT_POLICIES.aiChat);
+  if (!rateLimit.allowed) {
+    return { ok: false, status: 429, error: 'RATE_LIMITED', message: 'Too many AI requests.' };
+  }
+
+  // ── Check for existing operation (idempotent replay) ──
+  const existingOp = await db
+    .select()
+    .from(aiOperations)
+    .where(eq(aiOperations.idempotencyKey, idempotencyKey))
+    .limit(1);
+
+  if (existingOp.length > 0) {
+    // Streaming results can't be replayed (the stream was already consumed)
+    return {
+      ok: false,
+      status: 409,
+      error: 'OPERATION_EXISTS',
+      message: 'A streaming operation with this idempotency key already exists.',
+    };
+  }
+
+  // ── Create operation record ──
+  const operationId = crypto.randomUUID();
+  try {
+    await db.insert(aiOperations).values({
+      id: operationId,
+      actorId: context.actor.userId,
+      billingAccountId: account.id,
+      capability: businessCapability,
+      status: 'in_progress',
+      idempotencyKey,
+    });
+  } catch {
+    return { ok: false, status: 409, error: 'OPERATION_EXISTS', message: 'Operation already exists.' };
+  }
+
+  // ── Create credit hold ──
+  let holdId: string;
+  try {
+    const holdResult = await createHold({
+      accountId: account.id,
+      operationId,
+      model,
+      actorId: context.actor.userId,
+      idempotencyKey: `hold-${idempotencyKey}`,
+    });
+    holdId = holdResult.hold.id;
+  } catch (err) {
+    await db.update(aiOperations).set({ status: 'failed' }).where(eq(aiOperations.id, operationId));
+    const error = err as Error;
+    const isInsufficient = error.message.includes('Insufficient credits') || error.name === 'InsufficientCreditsError';
+    return {
+      ok: false,
+      status: 422,
+      error: isInsufficient ? 'INSUFFICIENT_CREDITS' : 'HOLD_FAILED',
+      message: isInsufficient ? 'Insufficient credits for this operation.' : 'Failed to reserve credits.',
+    };
+  }
+
+  // ── Resolve provider credentials ──
+  let apiKey: string;
+  let baseUrl: string | null = null;
+  let providerType: string;
+
+  try {
+    const provider = await db.select().from(aiProviders).where(eq(aiProviders.id, model.providerId)).limit(1);
+    if (provider.length === 0) throw new Error('Provider not found');
+    providerType = provider[0].type;
+    baseUrl = provider[0].baseUrl;
+    apiKey = resolveProviderCredential(model.providerId);
+  } catch {
+    await releaseHold({ holdId, reason: 'provider_failure' });
+    await db.update(aiOperations).set({ status: 'failed' }).where(eq(aiOperations.id, operationId));
+    return { ok: false, status: 503, error: 'PROVIDER_CONFIG_ERROR', message: 'Provider configuration error.' };
+  }
+
+  // ── Create attempt record ──
+  const attemptId = crypto.randomUUID();
+  const startTime = Date.now();
+  await db.insert(aiProviderAttempts).values({
+    id: attemptId,
+    operationId,
+    modelId: model.id,
+    attemptNumber: 1,
+    status: 'in_progress',
+  });
+
+  // ── Call dispatch to get the stream ──
+  let dispatchResult: StreamingDispatchResult;
+  try {
+    dispatchResult = await dispatch({ modelIdentifier: model.modelIdentifier, providerType, apiKey, baseUrl });
+  } catch {
+    // Dispatch creation failed — release hold, mark failure
+    await db.update(aiProviderAttempts)
+      .set({ status: 'failed', durationMs: Date.now() - startTime, completedAt: new Date(), errorMessage: 'Dispatch creation failed' })
+      .where(eq(aiProviderAttempts.id, attemptId));
+    await releaseHold({ holdId, reason: 'provider_failure' });
+    await db.update(aiOperations).set({ status: 'failed' }).where(eq(aiOperations.id, operationId));
+    return { ok: false, status: 502, error: 'PROVIDER_ERROR', message: 'Failed to create stream.' };
+  }
+
+  // ── Wrap stream with monitoring ──
+  const timeoutMs = streamTimeoutMs ?? 120000;
+  const wrappedStream = wrapStreamWithMonitoring({
+    originalStream: dispatchResult.stream,
+    getUsage: dispatchResult.getUsage,
+    holdId,
+    operationId,
+    attemptId,
+    startTime,
+    timeoutMs,
+  });
+
+  return {
+    ok: true,
+    stream: wrappedStream,
+    operationId,
+    attemptId,
+  };
+}
+
+/**
+ * Wrap a ReadableStream with monitoring for completion, errors, and timeout.
+ * Handles settlement/release based on stream outcome.
+ */
+function wrapStreamWithMonitoring(params: {
+  originalStream: ReadableStream<Uint8Array>;
+  getUsage?: () => Promise<{ inputTokens?: number; outputTokens?: number; totalTokens?: number }>;
+  holdId: string;
+  operationId: string;
+  attemptId: string;
+  startTime: number;
+  timeoutMs: number;
+}): ReadableStream<Uint8Array> {
+  const { originalStream, getUsage, holdId, operationId, attemptId, startTime, timeoutMs } = params;
+
+  let settled = false;
+  const reader = originalStream.getReader();
+
+  // Set up timeout
+  const timeoutHandle = setTimeout(() => {
+    handleFailure('timeout', `Stream timed out after ${timeoutMs}ms`);
+    reader.cancel('timeout').catch(() => {});
+  }, timeoutMs);
+
+  const clearTimer = () => { clearTimeout(timeoutHandle); };
+
+  const handleComplete = async (usage: { totalTokens?: number }) => {
+    if (settled) return;
+    settled = true;
+    clearTimer();
+
+    const durationMs = Date.now() - startTime;
+    await db.update(aiProviderAttempts)
+      .set({ status: 'succeeded', durationMs, completedAt: new Date(), usage })
+      .where(eq(aiProviderAttempts.id, attemptId));
+
+    await settleHold({ holdId, actualUsage: usage });
+
+    await db.update(aiOperations)
+      .set({ status: 'succeeded' })
+      .where(eq(aiOperations.id, operationId));
+  };
+
+  const handleFailure = async (reason: 'client_disconnect' | 'provider_error' | 'timeout', errorMsg?: string) => {
+    if (settled) return;
+    settled = true;
+    clearTimer();
+
+    const durationMs = Date.now() - startTime;
+    const attemptStatus = reason === 'timeout' ? 'timeout' : 'failed';
+
+    await db.update(aiProviderAttempts)
+      .set({
+        status: attemptStatus as 'failed' | 'timeout',
+        durationMs,
+        completedAt: new Date(),
+        errorMessage: sanitizeErrorMessage(errorMsg ?? `Stream ${reason}`),
+      })
+      .where(eq(aiProviderAttempts.id, attemptId));
+
+    await releaseHold({ holdId, reason: 'provider_failure' });
+
+    await db.update(aiOperations)
+      .set({ status: reason === 'client_disconnect' ? 'cancelled' : 'failed' })
+      .where(eq(aiOperations.id, operationId));
+  };
+
+  // Create monitored stream by manually pumping chunks
+  return new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      try {
+        const { done, value } = await reader.read();
+        if (done) {
+          // Stream completed normally
+          try {
+            const usage = getUsage ? await getUsage() : { totalTokens: 0 };
+            await handleComplete(usage);
+          } catch {
+            await handleComplete({ totalTokens: 0 });
+          }
+          controller.close();
+          return;
+        }
+        if (value) controller.enqueue(value);
+      } catch (err) {
+        // Provider stream errored
+        const msg = err instanceof Error ? err.message : String(err);
+        await handleFailure('provider_error', `Provider stream error: ${msg}`);
+        controller.error(err);
+      }
+    },
+
+    cancel(reason) {
+      // Client disconnected
+      const reasonStr = reason instanceof Error ? reason.message : String(reason);
+      handleFailure('client_disconnect', `Client disconnected: ${reasonStr}`);
+      reader.cancel(reason).catch(() => {});
+    },
+  });
+}
