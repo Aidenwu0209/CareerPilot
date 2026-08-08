@@ -1062,5 +1062,33 @@
         "description": "Create orgs, assign seats and quota"
       }
     }
+  },
+  "orgAdmin": {
+    "title": "Organization Admin",
+    "overview": "Overview",
+    "noPermission": {
+      "title": "Access Denied",
+      "description": "You are not an organization admin and cannot access this page."
+    },
+    "summary": {
+      "orgName": "Organization",
+      "status": "Status",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "seats": "Seats",
+      "seatsUsed": "Used",
+      "seatsTotal": "Total",
+      "credits": "Credit Balance"
+    },
+    "sections": {
+      "members": {
+        "title": "Members",
+        "description": "Manage organization members and seats"
+      },
+      "usage": {
+        "title": "Usage",
+        "description": "View organization quota and consumption"
+      }
+    }
   }
 }

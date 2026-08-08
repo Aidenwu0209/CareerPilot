@@ -1062,5 +1062,33 @@
         "description": "创建机构、分配席位与配额"
       }
     }
+  },
+  "orgAdmin": {
+    "title": "机构管理",
+    "overview": "概览",
+    "noPermission": {
+      "title": "无权限访问",
+      "description": "您不是机构管理员，无法访问此页面。"
+    },
+    "summary": {
+      "orgName": "机构名称",
+      "status": "状态",
+      "statusActive": "正常",
+      "statusSuspended": "已暂停",
+      "seats": "席位",
+      "seatsUsed": "已用",
+      "seatsTotal": "总数",
+      "credits": "额度余额"
+    },
+    "sections": {
+      "members": {
+        "title": "成员管理",
+        "description": "管理机构成员和席位"
+      },
+      "usage": {
+        "title": "用量",
+        "description": "查看机构配额和消耗"
+      }
+    }
   }
 }

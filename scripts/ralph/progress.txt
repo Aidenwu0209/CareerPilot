@@ -1141,3 +1141,21 @@
   - messages/{zh,en}.json — added admin.title/overview/noPermission/sections keys
 - Typecheck passes, 1109 tests pass (61 files), lint clean
 ---
+
+## 2026-08-08 10:38 - US-059
+- Created org admin workspace shell with sidebar navigation and permission guard
+- AC1: `/[locale]/org-admin` overview page shows org name, status, seats (used/total), credit balance, and member/usage section cards
+- AC2: `org-admin/layout.tsx` (server component) queries `organizationMemberships` for active org_admin role + active org; non-admins see `NoPermission` without loading any org data
+- AC3: No platform provider keys, super admin commands, or other-org identifiers rendered — layout only fetches org name, status, seatLimit, and credit balance
+- AC4: Desktop sidebar (OrgAdminSidebar) + mobile Sheet menu both navigate and highlight current section
+- AC5-7: Manual browser verification deferred; structural correctness via typecheck
+- AC8: Typecheck passes ✓
+- Files:
+  - src/components/org-admin/org-admin-sidebar.tsx (new)
+  - src/app/[locale]/org-admin/layout.tsx (new) — server guard
+  - src/app/[locale]/org-admin/page.tsx — rewritten with org summary + section cards
+  - src/app/[locale]/org-admin/members/page.tsx (new) — placeholder
+  - src/app/[locale]/org-admin/usage/page.tsx (new) — placeholder
+  - messages/{zh,en}.json — added orgAdmin.title/overview/noPermission/summary/sections keys
+- Typecheck passes, 1109 tests pass (61 files), lint clean
+---
