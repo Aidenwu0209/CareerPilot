@@ -3,6 +3,7 @@ import { dbReady, db } from '@/lib/db';
 import { config } from '@/lib/config';
 import { checkReadiness } from '@/lib/readiness';
 import { validateEnv } from '@/lib/env';
+import { validateBackupConfig } from '@/lib/backup/types';
 
 /**
  * Readiness / health check endpoint.
@@ -75,6 +76,11 @@ function buildChecklist(readiness: Awaited<ReturnType<typeof checkReadiness>>): 
     },
     backup: {
       configured: process.env.BACKUP_ENABLED === 'true',
+      destination: process.env.BACKUP_DESTINATION ? 'set' : 'missing',
+      retentionDays: process.env.BACKUP_RETENTION_DAYS || null,
+      ownerSet: process.env.BACKUP_OWNER_EMAIL ? true : false,
+      encryptionKeySet: process.env.BACKUP_ENCRYPTION_KEY ? true : false,
+      configIssues: validateBackupConfig(process.env).issues.length,
     },
     env: {
       production: isProduction,
