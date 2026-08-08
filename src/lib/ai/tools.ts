@@ -1,12 +1,12 @@
 import { tool, generateText } from 'ai';
 import { z } from 'zod/v4';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
-import { getModel, getJsonProviderOptions, type AIConfig } from '@/lib/ai/provider';
+import { buildModel, getJsonOptions, type ModelBuildContext } from '@/lib/ai/model-builder';
 import { jdAnalysisOutputSchema } from '@/lib/ai/jd-analysis-schema';
 import { extractJson } from '@/lib/ai/extract-json';
 import { normalizeSectionContent } from '@/lib/resume/normalize-content';
 
-export function createExecutableTools(resumeId: string, aiConfig: AIConfig) {
+export function createExecutableTools(resumeId: string, modelCtx: ModelBuildContext) {
   return {
     updateSection: tool({
       description: `Update the content of a specific resume section. Section content structures:
@@ -236,7 +236,7 @@ Use field="items" or field="categories" to update list sections. Each item MUST 
         const resume = await resumeRepository.findById(resumeId);
         if (!resume) return { success: false, error: 'Resume not found' };
 
-        const model = getModel(aiConfig);
+        const model = buildModel(modelCtx);
         const resumeContext = JSON.stringify(resume.sections);
 
         const result = await generateText({
@@ -245,7 +245,7 @@ Use field="items" or field="categories" to update list sections. Each item MUST 
           system: `You are an expert resume analyst. Analyze the match between the resume and job description. Be specific and actionable.
 CRITICAL: You are a JSON API. Your entire response must be a single valid JSON object starting with { and ending with }. Do NOT use markdown syntax. Do NOT wrap in code fences.`,
           prompt: `## Resume Data\n${resumeContext}\n\n## Job Description\n${jobDescription}\n\nReturn a JSON object with: overallScore (0-100), keywordMatches (string[]), missingKeywords (string[]), suggestions ([{section, current, suggested}]), atsScore (0-100), summary (string).`,
-          providerOptions: getJsonProviderOptions(aiConfig),
+          providerOptions: getJsonOptions(modelCtx.providerType),
         });
 
         const analysis = extractJson(result.text, jdAnalysisOutputSchema);
@@ -262,7 +262,7 @@ CRITICAL: You are a JSON API. Your entire response must be a single valid JSON o
         const resume = await resumeRepository.findById(resumeId);
         if (!resume) return { success: false, error: 'Resume not found' };
 
-        const model = getModel(aiConfig);
+        const model = buildModel(modelCtx);
         const langName = targetLanguage === 'zh' ? 'Simplified Chinese' : 'English';
 
         const singleSectionSchema = z.object({
@@ -295,7 +295,7 @@ Rules:
 - Keep all IDs, URLs, emails, phone numbers unchanged
 - CRITICAL: Return a single valid JSON object with keys: sectionId, title, content. No markdown, no code fences.`,
             prompt: `Translate this resume section. Return JSON with keys: sectionId, title, content.\n\n${JSON.stringify(section)}`,
-            providerOptions: getJsonProviderOptions(aiConfig),
+            providerOptions: getJsonOptions(modelCtx.providerType),
           });
 
           return extractJson(result.text, singleSectionSchema);
