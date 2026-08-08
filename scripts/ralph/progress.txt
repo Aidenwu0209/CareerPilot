@@ -607,3 +607,21 @@
   - Credit rule updates use versioned insert pattern: deactivate old active row, insert new row with version+1 — old versions remain in DB for audit trail
   - The adjust endpoint uses ledger `reason: 'adjustment'` enum value; the admin's human-readable reason goes in the `note` field
   - `creditAccount()` and `debitAccount()` are synchronous (SQLite adapter) — no await needed, but the surrounding route handler is async for the DB queries and audit event
+
+## 2026-08-08 08:12 - US-029
+- Implemented organization lifecycle and admin authorization API
+- New files: `src/app/api/admin/organizations/route.ts` (POST create, GET list), `src/app/api/admin/organizations/[id]/route.ts` (GET detail, PATCH update), `src/app/api/admin/organizations/[id]/admins/route.ts` (POST appoint, DELETE revoke), `src/app/api/admin/organizations/admin-orgs.test.ts` (23 tests)
+- AC1: Create org with name, slug, seatLimit, status; returns 201
+- AC2: Empty name → INVALID_NAME, empty slug → INVALID_SLUG, negative/non-int seatLimit → INVALID_SEAT_LIMIT, duplicate slug → 409 SLUG_ALREADY_EXISTS (no half-created org)
+- AC3: POST /admins appoints by exact email (404 if user not found, 409 if already admin); DELETE /admins revokes to member role
+- AC4: PATCH status='suspended' blocks org-scoped context (resolveContextForUser INNER JOINs on organizations.status='active'); historical memberships/data preserved
+- AC5: All lifecycle changes (create, update, appoint, revoke) write sanitized audit events
+- 23 tests: create (2), validation (7), appoint/revoke (6), suspend/reactivate/update (5), list/detail (3)
+- Typecheck passes, all 792 tests pass (37 files)
+- **未来迭代的学习：**
+  - SQLite doesn't support PostgreSQL's `count(*)::int` cast syntax — use `sql<number>\`count(*)\`` without the cast for cross-adapter compatibility
+  - The `organizations.status` field only has 'active' and 'suspended' — suspending doesn't delete memberships, so reactivation is instant
+  - Context resolver already filters `organizations.status = 'active'` in the membership INNER JOIN — no additional code needed to block org-scoped requests for suspended orgs
+  - Admin appoint creates or upgrades membership: if user is already a member, role is updated to org_admin; if no membership exists, a new one is created
+  - Admin revoke downgrades to 'member' (not removed) — the user retains org access, just loses admin privileges
+  - Org slug uniqueness is enforced by DB constraint AND checked in application code for better error messages
