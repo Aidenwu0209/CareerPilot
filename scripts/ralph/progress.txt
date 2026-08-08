@@ -643,3 +643,20 @@
   - Seat counting only counts active memberships; reactivating a removed member doesn't consume a new seat
   - Billing conflict: users can only have one active org membership — prevents ambiguous billing scope
   - Removal is soft-delete (status='removed') to preserve audit trail; re-adding reactivates the existing row
+
+## 2026-08-08 08:19 - US-031
+- Implemented organization credit adjustment and balance API
+- New files: `src/app/api/organizations/[orgId]/credits/balance/route.ts` (GET balance), `src/app/api/organizations/[orgId]/credits/transactions/route.ts` (GET transactions), `src/app/api/admin/organizations/[orgId]/adjust/route.ts` (POST adjust), `src/app/api/organizations/[orgId]/credits/org-credits.test.ts` (16 tests)
+- AC1: Super admin can add/debit org credits with mandatory reason and idempotency key
+- AC2: Debit causing negative → 422 INSUFFICIENT_CREDITS, no account/transaction changes
+- AC3: Org admin reads balance with full details (accountId, status) and paginated transactions; cannot self-adjust
+- AC4: Regular member sees limited balance summary (balance + ownerType only); cannot read transactions
+- AC5: Cross-org accountId param always ignored; account resolved from URL orgId; non-member → 403
+- 16 tests: super admin adjust (5), insufficient credits (1), org admin read (3), member limited (3), cross-org (3), idempotency (1)
+- Typecheck passes, all 827 tests pass (39 files)
+- **未来迭代的学习：**
+  - Org credit account uses same `getOrCreateAccount('organization', orgId)` as personal accounts — polymorphic ownerType handles the distinction
+  - Balance endpoint has role-based response shaping: org_admin gets full details, regular member gets limited fields, non-member gets 403
+  - `getTransactions(accountId, options)` returns `TransactionRecord[]` directly — not wrapped in `{ transactions: [...] }`
+  - The `organizations.createdBy` column has FK to `users.id` — test seed functions must create the creator user before the org, or pass `createdBy` explicitly
+  - Super admin can adjust any org's credits; org admin cannot (prevents self-dealing)
