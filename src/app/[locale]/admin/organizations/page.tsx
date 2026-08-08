@@ -28,6 +28,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/routing';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -283,9 +284,12 @@ export default function AdminOrganizationsPage() {
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <Building2 className="h-4 w-4 text-zinc-400" />
-                      <h3 className="truncate text-base font-semibold text-zinc-900 dark:text-zinc-50">
+                      <Link
+                        href={`/admin/organizations/${org.id}`}
+                        className="truncate text-base font-semibold text-zinc-900 hover:underline dark:text-zinc-50"
+                      >
                         {org.name}
-                      </h3>
+                      </Link>
                       <Badge variant="outline" className="text-xs text-zinc-500">
                         {org.slug}
                       </Badge>

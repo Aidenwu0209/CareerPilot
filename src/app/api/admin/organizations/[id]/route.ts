@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
 import { db } from '@/lib/db';
-import { organizations, organizationMemberships } from '@/lib/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { organizations, organizationMemberships, creditAccounts, users } from '@/lib/db/schema';
+import { eq, sql, and } from 'drizzle-orm';
 
 /**
  * GET /api/admin/organizations/[id]
  *
- * Super admin: view org detail with member count.
+ * Super admin: view org detail with member count, balance, and admins.
  */
 export async function GET(
   _request: Request,
@@ -33,11 +33,47 @@ export async function GET(
   const memberCount = await db
     .select({ count: sql<number>`count(*)` })
     .from(organizationMemberships)
-    .where(eq(organizationMemberships.organizationId, id));
+    .where(
+      and(
+        eq(organizationMemberships.organizationId, id),
+        eq(organizationMemberships.status, 'active'),
+      ),
+    );
+
+  // Fetch balance
+  const [balanceRow] = await db
+    .select({ balance: creditAccounts.balance })
+    .from(creditAccounts)
+    .where(
+      and(
+        eq(creditAccounts.ownerType, 'organization'),
+        eq(creditAccounts.ownerId, id),
+      ),
+    )
+    .limit(1);
+
+  // Fetch admins
+  const admins = await db
+    .select({
+      userId: users.id,
+      name: users.name,
+      email: users.email,
+    })
+    .from(organizationMemberships)
+    .innerJoin(users, eq(organizationMemberships.userId, users.id))
+    .where(
+      and(
+        eq(organizationMemberships.organizationId, id),
+        eq(organizationMemberships.role, 'org_admin'),
+        eq(organizationMemberships.status, 'active'),
+      ),
+    );
 
   return NextResponse.json({
     ...org[0],
     memberCount: memberCount[0]?.count ?? 0,
+    balance: balanceRow?.balance ?? 0,
+    admins,
   });
 }
 
