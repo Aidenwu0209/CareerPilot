@@ -16,10 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LanguageSelect } from '@/components/ui/language-select';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { TEMPLATES } from '@/lib/constants';
 import { TemplateThumbnail } from './template-thumbnail';
 import { templateLabelsMap } from '@/lib/template-labels';
-import { getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 
 interface GenerateResumeDialogProps {
   open: boolean;
@@ -32,8 +34,10 @@ type GenerateState = 'form' | 'generating' | 'success' | 'error';
 export function GenerateResumeDialog({ open, onOpenChange, onCreated }: GenerateResumeDialogProps) {
   const t = useTranslations('generateResume');
   const tGlobal = useTranslations();
+  const tAi = useTranslations('ai');
   const locale = useLocale();
   const router = useRouter();
+  const { refresh: refreshCredits } = useCredits();
 
   const [jobTitle, setJobTitle] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState<number | ''>('');
@@ -42,9 +46,26 @@ export function GenerateResumeDialog({ open, onOpenChange, onCreated }: Generate
   const [experience, setExperience] = useState('');
   const [template, setTemplate] = useState('classic');
   const [language, setLanguage] = useState(locale);
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
   const [state, setState] = useState<GenerateState>('form');
   const [error, setError] = useState('');
   const [result, setResult] = useState<{ resumeId: string; title: string } | null>(null);
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('error');
+  }
 
   const handleGenerate = async () => {
     if (!jobTitle.trim()) return;
@@ -52,14 +73,9 @@ export function GenerateResumeDialog({ open, onOpenChange, onCreated }: Generate
     setError('');
 
     try {
-      const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
       const res = await fetch('/api/ai/generate-resume', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-          ...getAIHeaders(),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           jobTitle: jobTitle.trim(),
           yearsOfExperience: yearsOfExperience === '' ? undefined : yearsOfExperience,
@@ -70,6 +86,7 @@ export function GenerateResumeDialog({ open, onOpenChange, onCreated }: Generate
           experience: experience.trim() || undefined,
           template,
           language,
+          model: selectedModel,
         }),
       });
 
@@ -82,8 +99,9 @@ export function GenerateResumeDialog({ open, onOpenChange, onCreated }: Generate
       setResult(data);
       setState('success');
       onCreated?.();
+      refreshCredits();
     } catch (err: any) {
-      setError(err.message || 'Failed to generate resume');
+      setError(mapError(err.message || ''));
       setState('error');
     }
   };
@@ -221,6 +239,19 @@ export function GenerateResumeDialog({ open, onOpenChange, onCreated }: Generate
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              {/* Model Selector */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  {tAi('model')}
+                </label>
+                <ModelSelector
+                  selectedModel={selectedModel}
+                  onModelChange={handleModelChange}
+                  capability="text"
+                  size="default"
+                />
               </div>
             </>
           )}

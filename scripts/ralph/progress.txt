@@ -1243,3 +1243,27 @@
   - 检测流式完成：跟踪 `useChat` 的 `status` ref，当从 'streaming'/'submitted' 变为 'ready' 时触发副作用
   - Chat route 的 `model` 参数现在从 client body 读取，但 gateway 的 `authorizeAiRequest` 已验证模型权限——客户端无法提交未授权 modelId
 ---
+
+## 2026-08-08 11:59 - US-063
+- 接入 AI 简历生成与求职信界面，使用共享 ModelSelector 和托管点数
+- 修改文件：
+  - `src/lib/ai/cover-letter-schema.ts`：添加 `model: z.string().optional()` 字段
+  - `src/lib/ai/generate-resume-schema.ts`：添加 `model: z.string().optional()` 字段
+  - `src/app/api/ai/cover-letter/route.ts`：从 body 读取 `model`，传给 gateway 的 `modelId`（回退 `'cover-letter-default'`）
+  - `src/app/api/ai/generate-resume/route.ts`：从 body 读取 `model`，传给 gateway 的 `modelId`（回退 `'generate-resume-default'`）
+  - `src/components/editor/cover-letter-dialog.tsx`：移除 `getAIHeaders()` 和 `x-fingerprint` header；添加 ModelSelector、useCredits、useSettingsStore；成功后 refreshCredits()；mapError() 将 INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 映射为本地化消息
+  - `src/components/dashboard/generate-resume-dialog.tsx`：同上改造——移除 BYOK 和 fingerprint；添加 ModelSelector、useCredits、useSettingsStore；成功后 refreshCredits()；mapError() 错误映射
+  - `messages/zh.json` + `messages/en.json`：在 `ai` 命名空间添加 `model` 键
+- AC1 ✅：两个入口都使用共享 ModelSelector（capability='text'），不显示 Key 或 Base URL
+- AC2 ✅：成功请求到达 `/api/ai/cover-letter` 和 `/api/ai/generate-resume`，UI 显示求职信结果或新创建简历
+- AC3 ✅：成功后调用 `refreshCredits()` 刷新余额；服务端正确扣点，刷新后状态保持
+- AC4 ✅：mapError() 将不同错误码映射为不同本地化消息（INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED/generic）
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061/US-062 限制）
+- AC7 ✅：请求不含 x-api-key/x-provider/x-base-url/x-fingerprint headers
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint clean（3 个预存 `any` 警告非新引入）
+- **未来迭代的学习：**
+  - `mapError()` 模式适用于所有非流式 AI 对话框——后续 US-064/US-065/US-066 的语法检查、JD 分析、翻译、面试等界面可直接复用
+  - 客户端发送的 `model` 字段会被 gateway 的 `authorizeAiRequest` 验证——客户端无法提交未授权 modelId
+  - API route 中 `modelId: model || 'xxx-default'` 模式保持向后兼容：客户端不传 model 时使用默认值
+  - `useCredits` hook 实例是组件局部的——dialog 内的 refresh 只更新 dialog 本地状态；US-068 的全局余额显示需要自己的 useCredits 实例或事件机制
+---

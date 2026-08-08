@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { jobTitle, yearsOfExperience, skills, industry, experience, template, language } = parsed.data;
+  const { jobTitle, yearsOfExperience, skills, industry, experience, template, language, model } = parsed.data;
   const lang = language || 'zh';
 
   const skillsContext = skills && skills.length > 0
@@ -110,7 +110,7 @@ Respond with JSON only.`;
   // Execute through unified gateway
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'generate-resume-default',
+    modelId: model || 'generate-resume-default',
     capability: 'text',
     businessCapability: 'generate_resume',
     idempotencyKey: `gen-resume-${ctx.context.actor.userId}-${Date.now()}`,

@@ -7,6 +7,7 @@ export const coverLetterInputSchema = z.object({
   jobDescription: z.string().min(1).max(MAX_PROMPT_LENGTH).describe('The target job description'),
   tone: z.enum(['formal', 'friendly', 'confident']).describe('The tone of the cover letter'),
   language: z.enum(['zh', 'en', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar']).optional().default('zh').describe('Language for the cover letter'),
+  model: z.string().optional().describe('Model ID from the server directory to use for generation'),
 });
 
 export type CoverLetterInput = z.infer<typeof coverLetterInputSchema>;

@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { resumeId, jobDescription, tone, language } = parsed.data;
+  const { resumeId, jobDescription, tone, language, model } = parsed.data;
   const lang = language || 'zh';
 
   // ── Validate prompt length ──
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
   // ── Execute through unified gateway ──
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'cover-letter-default', // Will be resolved by model catalog
+    modelId: model || 'cover-letter-default', // Will be resolved by model catalog
     capability: 'text',
     businessCapability: 'cover_letter',
     idempotencyKey: `cover-letter-${ctx.context.actor.userId}-${resumeId}-${Date.now()}`,
