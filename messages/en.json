@@ -1071,6 +1071,35 @@
     "personalCredits": "Personal Credits",
     "orgCredits": "Organization Credits"
   },
+  "credits": {
+    "title": "Credits & Transactions",
+    "description": "View your current billing account balance and transaction history",
+    "accountType": "Account Type",
+    "personalAccount": "Personal Account",
+    "orgAccount": "Organization Account",
+    "personalBadge": "Personal",
+    "orgBadge": "Organization",
+    "availableBalance": "Available Balance",
+    "transactionHistory": "Transaction History",
+    "colTime": "Time",
+    "colType": "Type",
+    "colAmount": "Change",
+    "colBalanceAfter": "Balance After",
+    "colNote": "Note",
+    "empty": "No transactions yet",
+    "loadError": "Failed to load transactions. Please try again.",
+    "retry": "Retry",
+    "prev": "Previous",
+    "next": "Next",
+    "reasons": {
+      "registrationGrant": "Registration Grant",
+      "manualCredit": "Manual Credit",
+      "manualDebit": "Manual Debit",
+      "consumption": "Consumption",
+      "refund": "Refund",
+      "adjustment": "Adjustment"
+    }
+  },
   "admin": {
     "title": "Admin Console",
     "overview": "Overview",

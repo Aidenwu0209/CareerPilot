@@ -1071,6 +1071,35 @@
     "personalCredits": "个人点数",
     "orgCredits": "机构额度"
   },
+  "credits": {
+    "title": "点数与流水",
+    "description": "查看当前计费账户余额和历史流水记录",
+    "accountType": "账户类型",
+    "personalAccount": "个人账户",
+    "orgAccount": "机构账户",
+    "personalBadge": "个人",
+    "orgBadge": "机构",
+    "availableBalance": "可用余额",
+    "transactionHistory": "流水记录",
+    "colTime": "时间",
+    "colType": "类型",
+    "colAmount": "变动",
+    "colBalanceAfter": "变动后余额",
+    "colNote": "备注",
+    "empty": "暂无流水记录",
+    "loadError": "加载流水失败，请稍后重试",
+    "retry": "重试",
+    "prev": "上一页",
+    "next": "下一页",
+    "reasons": {
+      "registrationGrant": "注册赠点",
+      "manualCredit": "人工充值",
+      "manualDebit": "人工扣减",
+      "consumption": "消费",
+      "refund": "退款",
+      "adjustment": "调整"
+    }
+  },
   "admin": {
     "title": "管理后台",
     "overview": "概览",

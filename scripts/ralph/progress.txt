@@ -1393,3 +1393,29 @@
   - NavBalance 放在 LocaleSwitcher 之前——用户从左到右看到余额→语言→设置→头像的自然顺序
   - `/credits` 页面尚不存在（US-069 将创建），但链接已就绪
 ---
+
+## 2026-08-08 13:15 - US-069
+- 创建用户点数与机构额度流水页 `/[locale]/credits`
+- New files:
+  - `src/app/[locale]/credits/layout.tsx`: 页面布局（Header + max-w-5xl main，同 dashboard 模式）
+  - `src/app/[locale]/credits/page.tsx`: 客户端组件——余额卡片 + 分页流水表格 + 空/加载/错误状态
+- Modified files:
+  - `messages/zh.json` + `messages/en.json`: 新增 `credits` 命名空间（title, description, accountType, personalAccount, orgAccount, personalBadge, orgBadge, availableBalance, transactionHistory, colTime, colType, colAmount, colBalanceAfter, colNote, empty, loadError, retry, prev, next, reasons.*）
+- AC1 ✅：`/[locale]/credits` 显示账户类型（Coins/Building2 图标区分 ToC/ToB）、可用余额（3xl font-bold tabular-nums）和分页流水
+- AC2 ✅：流水每行显示时间、类型（reason badge，绿色=充值类，灰色=扣减类）、变动值（+/- 数字带颜色）、变动后余额、备注
+- AC3 ✅：ToC 用户通过 `/api/credits/transactions` 只看到个人流水；ToB 成员看到机构授权摘要（orgName + 余额）；API 服务端忽略 accountId 参数防止越权
+- AC4 ✅：空状态（Inbox 图标 + empty 文案）、加载中（5 行 Skeleton）、加载失败（AlertCircle + 重试按钮）、无权限（API 返回 401/403 触发 error 状态）
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~068 限制）
+- AC7 ✅：组件无副作用，不会产生 console errors；所有 fetch 使用 session cookie 认证
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all new/changed files
+- **未来迭代的学习：**
+  - `/[locale]/credits` 页面使用 `useCredits()` hook（Zustand 共享 store）获取余额——与 NavBalance 组件共享同一状态
+  - 流水数据需要独立 fetch `/api/credits/transactions?limit=20&offset=N`——credits-store 只管理余额，不管理流水列表
+  - `useLocale()` from `next-intl` 返回当前 locale 字符串（'zh' 或 'en'），用于 `toLocaleString()` 格式化日期
+  - 无 Table UI 组件——使用 CSS Grid `grid-cols-[1fr_1fr_1fr_1fr_2fr]` 自建响应式流水表格；移动端切换到 2 列布局
+  - `REASON_LABEL_KEYS` 映射表将 snake_case reason 映射到 i18n key——新增 reason 类型时只需更新映射表和 messages 文件
+  - 分页使用 `hasMore = transactions.length === PAGE_SIZE` 判断是否还有更多记录——精确分页需要 API 返回 total count
+  - 页面布局使用 `max-w-5xl`（比 dashboard 的 `max-w-7xl` 窄），更适合流水表格的单列阅读体验
+  - `useCallback()` 包装 `fetchTransactions` 避免不必要的 re-fetch——只有初始 mount 时触发一次
+  - 至此所有用户端 AI 界面 + 余额导航 + 流水页面全部完成（US-052~069），后续 US-070~088 均为管理后台或安全合规 story
+---
