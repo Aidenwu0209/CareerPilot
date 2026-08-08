@@ -53,7 +53,7 @@ vi.mock('@/lib/db', () => {
           }),
         }),
       }),
-      update: (_table: { name: string }) => ({
+      update: () => ({
         set: (values: Record<string, unknown>) => ({
           where: () => ({
             run: () => {
@@ -68,7 +68,7 @@ vi.mock('@/lib/db', () => {
           }),
         }),
       }),
-      insert: (_table: { name: string }) => ({
+      insert: () => ({
         values: (obj: Record<string, unknown>) => ({
           run: () => {
             const id = (obj.id as string) || crypto.randomUUID();
