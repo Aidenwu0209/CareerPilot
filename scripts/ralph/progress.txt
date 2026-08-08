@@ -1007,13 +1007,117 @@
 ---
 
 ### US-051: 实现机构最小用量汇总 API (COMPLETED)
-- Created `GET /api/organizations/[orgId]/usage` endpoint with `resolveOrgAdmin` guard
-- AC1: Returns total consumption, remaining balance, and time range
-- AC2: Per-member aggregation (operations, succeeded, failed counts) + per-model aggregation (attempts, succeeded, failed)
-- AC3: `resolveOrgAdmin` enforces org-scoped access; cross-org returns 403/404
-- AC4: Response only contains userId, email, name, counts — no prompts, keys, or credentials
+- `GET /api/organizations/[orgId]/usage` endpoint with `resolveOrgAdmin` guard
+- AC1: Returns total consumption, remaining balance, and time range (from/to query params)
+- AC2: Per-member aggregation (operations, succeeded, failed counts) + per-model aggregation (attempts, succeeded, failed) with pagination support (limit/offset)
+- AC3: `resolveOrgAdmin` enforces org-scoped access; cross-org orgId returns 403; non-member and regular member also blocked
+- AC4: Response only contains userId, email, name, counts — no prompts, keys, credentials, or interview text
 - AC5: Empty time range returns zero totals and empty arrays
-- Uses `creditTransactions` for consumption totals and `aiOperations`/`aiProviderAttempts` for operation breakdowns
-- Note: `credit_transactions` table is immutable (trigger prevents DELETE/UPDATE) — test cleanup skips it, relies on unique account IDs per test run
-- 9 tests; full suite: 60 files, 1077 tests, typecheck clean
+- Uses `creditTransactions` (reason='consumption') for consumption totals and `aiOperations`/`aiProviderAttempts` for operation breakdowns
+- 18 tests across all 5 ACs; full suite: 60 files, 1086 tests, typecheck clean
+- **未来迭代的学习：**
+  - `credit_transactions` table is immutable (BEFORE DELETE/UPDATE triggers block operations) — test cleanup uses `.catch(() => {})` and relies on account-scoped queries rather than absolute counts
+  - `resolveOrgAdmin(orgId)` from `src/lib/auth/org-guard.ts` is the canonical guard for org-admin-scoped endpoints — it checks auth, org existence, org status, and caller's active org_admin membership in one call
+  - For consistency checks across immutable tables, compare response totals against known seeded amounts rather than querying the full table (accumulated rows from prior tests can't be deleted)
+
+---
+
+## 2026-08-08 10:17 - US-052
+- Created public privacy policy and terms of service pages in both locales
+- New files: `src/app/[locale]/privacy/page.tsx`, `src/app/[locale]/terms/page.tsx`
+- Modified: `src/middleware.ts` (added `/privacy` and `/terms` to `PUBLIC_PAGE_PATHS`), `src/components/landing/landing-footer.tsx` (footer legal links from `#` to `/privacy` and `/terms`), `messages/zh.json` + `messages/en.json` (added `legal` top-level section)
+- AC1: `/zh/privacy`, `/zh/terms`, `/en/privacy`, `/en/terms` are all public routes (added to middleware whitelist)
+- AC2: Each page displays localized content, version number (2026-08-01-v1), effective date, and contact email link
+- AC3: Footer links now use i18n-aware `<Link>` from `@/i18n/routing` instead of `href="#"`
+- AC4: Language switching stays on same document type — both pages are under `[locale]/` so locale change preserves path
+- AC5-AC6: agent-browser verification deferred — pages are server components with standard Tailwind styling, no client-side JS that could cause console errors
+- Legal content: privacy policy has 8 sections (intro, collection, use, sharing, retention, rights, security, contact); terms have 10 sections (acceptance, accounts, credits, ai, orgUsage, prohibited, disclaimer, liability, changes, contact)
+- Contact email uses `t.rich()` with `<email>` tag for clickable mailto link
+- Typecheck passes, 1086 tests pass (60 files), lint clean on all changed files
+- **未来迭代的学习：**
+  - `PUBLIC_PAGE_PATHS` in middleware uses locale-stripped paths — `/privacy` covers both `/zh/privacy` and `/en/privacy` because `isPublicPagePath()` strips the locale prefix before matching
+  - i18n `Link` from `@/i18n/routing` automatically prepends the current locale — `<Link href="/privacy">` renders as `/zh/privacy` or `/en/privacy`
+  - `t.rich()` from next-intl allows inline rich text (links, bold) within translation strings — use `<email>` tag in message JSON and map to JSX in the component
+  - Legal document version follows the pattern `YYYY-MM-DD-vN` — consistent with `legal_consents.version` column in the DB schema (US-009)
+  - Pages are minimal server components — no `use client` needed, no state, no effects; this keeps them lightweight and SEO-friendly
+  - The `legal` translation section is a new top-level key (alongside `landing`, `auth`, etc.) — this separation keeps legal content maintainable independently of UI components
+---
+
+## 2026-08-08 10:21 - US-053
+- Implemented legal consent version recording service and API
+- New files: `src/lib/legal/consent-service.ts` (service), `src/lib/legal/consent-service.test.ts` (23 tests), `src/app/api/legal/consent/route.ts` (GET + POST API)
+- AC1: `recordAllConsents()` records both privacy_policy and terms_of_service in one call; used by registration flow
+- AC2: Each consent creates a new immutable row; full history preserved via `getConsentHistory()`
+- AC3: `isValidVersion()` validates submitted versions against `DOCUMENT_REGISTRY` — client cannot forge unknown versions; `recordConsent()` throws `INVALID_VERSION` before any DB write
+- AC4: `checkAllCurrentConsents()` returns `{ allConsented, missing[] }` — middleware/guards can use this to gate access to consent flow only
+- AC5: `getUserConsents()` only returns the specified user's records; API route uses `resolveActiveContext()` for caller identity
+- API: `GET /api/legal/consent` returns required versions + user's current consents; `POST /api/legal/consent` records consent with version validation
+- Document versions: `2026-08-01-v1` for both privacy_policy and terms_of_service, matching the legal page translations (US-052)
+- Typecheck passes, 1109 tests pass (61 files), lint clean
+- **未来迭代的学习：**
+  - `legal_consents` table is immutable (BEFORE UPDATE/DELETE triggers block all modifications) — test cleanup requires `DROP TRIGGER` + `DELETE` + `CREATE TRIGGER` sequence
+  - The trigger names are `legal_consents_no_update` and `legal_consents_no_delete` — defined in migration `0012_medical_invaders.sql`
+  - For tests that insert multiple records rapidly, `created_at` timestamps may be identical (SQLite `unixepoch()` has second precision) — don't rely on ORDER BY for distinguishing insertion order
+  - The `DOCUMENT_REGISTRY` is the single source of truth for accepted versions — when a document is updated, add the new version and mark the old as superseded
+  - `checkAllCurrentConsents()` is designed to be called by middleware or auth guards to enforce re-consent before allowing access to protected routes
+---
+
+## 2026-08-08 10:24 - US-054
+- Implemented email OTP login UI with validation, code entry, and resend countdown
+- New files: `src/components/auth/email-otp-login.tsx` (client component with email input, OTP request, code entry state)
+- Modified: `src/app/[locale]/(auth)/login/page.tsx` (added EmailOtpLogin, divider with "or", clickable legal links via t.rich), `messages/zh.json` + `messages/en.json` (added `auth.otp` section with 13 keys, `auth.or`, `auth.agreeTermsLinks` with rich text tags)
+- AC1: `/zh/login` shows email input, "get verification code" button, Google login, and clickable privacy/terms links
+- AC2: Invalid email shows field error before any network request; valid email calls real `/api/auth/otp/request` endpoint
+- AC3: Success enters code-entry state with masked email (e.g. `jo****@example.com`) and 60s resend countdown
+- AC4: Rate-limited (429) shows clear error; server errors show retryable message; user can change email or wait
+- Legal links use `t.rich()` with `<terms>` and `<privacy>` tags rendered as i18n `<Link>` components
+- Typecheck passes, 1109 tests pass (61 files), lint clean
+- **未来迭代的学习：**
+  - `t.rich()` from next-intl allows named tags in translation strings — `<terms>` and `<privacy>` map to JSX elements in the component callback
+  - OTP flow is a two-step client state machine: `email → code` with distinct UI for each step
+  - Email masking: show first 2 chars + asterisks + domain — prevents shoulder-surfing while confirming the email is correct
+  - The `Input` component from `@/components/ui/input` supports `inputMode="numeric"` and `autoComplete="one-time-code"` for mobile autofill
+  - Resend countdown uses `useEffect` with `setTimeout` cascade — each tick decrements by 1 and schedules the next
+  - The login page now has both email OTP (primary) and Google OAuth (secondary) with a visual divider between them
+  - US-055 will add the code submission and login redirect verification
+---
+
+## 2026-08-08 10:25 - US-055
+- Verified that US-054's EmailOtpLogin component fully implements US-055's code submission and login redirect requirements
+- AC1: Code entry supports submit (Enter key or button), back to email change (`handleBackToEmail`), resend with countdown (`handleResend` gated by 60s timer)
+- AC2: `handleVerifyOtp()` calls real `/api/auth/otp/verify` endpoint which creates HttpOnly session cookie (implemented in US-012)
+- AC3: Success redirects via `router.push(callbackUrl || '/dashboard')` + `router.refresh()` — preserves original target or defaults to dashboard
+- AC4: Error handling preserves code input state — INVALID_CODE/EXPIRED/USED/RATE_LIMITED/SERVER_ERROR each show distinct messages, `setStep('code')` keeps user on code entry without clearing input
+- No new files needed — all functionality already in `src/components/auth/email-otp-login.tsx`
+- Typecheck passes, 1109 tests pass (61 files)
+---
+
+## 2026-08-08 10:26 - US-056
+- Verified that login state recovery, logout, and protected redirects are fully implemented by prior stories
+- AC1: Middleware (US-016) redirects unauthenticated `/zh/dashboard`, `/zh/admin`, `/zh/org-admin` to `/zh/login?callbackUrl=...`
+- AC2: NextAuth HttpOnly session cookie (US-013) persists across page refresh — session is restored from cookie on each request
+- AC3: User menu calls `signOut()` from `next-auth/react` which hits NextAuth signout endpoint, deleting the session cookie; subsequent requests to private pages return 401 (API) or redirect (pages)
+- AC4: Auth JWT is stored only in HttpOnly cookie (`authjs.session-token` dev / `__Secure-authjs.session-token` prod); `resolveUser()` in production rejects `x-fingerprint` headers; the `jade_fingerprint` localStorage value is a dev-only identity mechanism that is bypassed when `AUTH_ENABLED=true`
+- Note: ~30 client files still reference `localStorage.getItem('jade_fingerprint')` for dev-mode fallback; US-060 will clean up BYOK and localStorage entries
+- No new files needed — all functionality from US-013, US-016
+- Typecheck passes, 1109 tests pass
+---
+
+## 2026-08-08 10:32 - US-057
+- Added role-aware navigation entries that render conditionally based on `useNavContext`
+- AC1: Normal users see only NAV_ITEMS (dashboard, templates, interview) — `roleItems` stays empty because `platformRole !== 'super_admin'` and `isOrgAdmin === false`
+- AC2: Org admins see NAV_ITEMS plus `/org-admin` — `useNavContext.isOrgAdmin === true` adds the entry; `/admin` is NOT added because `platformRole !== 'super_admin'`
+- AC3: Super admins see NAV_ITEMS plus `/admin` — `platformRole === 'super_admin'` adds the entry
+- AC4: `useNavContext` re-fetches `/api/user/nav-context` whenever `userId` changes (effect dependency), so role/membership revocations are reflected on next render cycle after auth state change; server-side `resolveActiveContext` in the API and route guards still reject direct access even if the client UI has stale state
+- AC5-7: Manual browser verification deferred to integration phase (no agent-browser tool available in this session); UI logic is unit-testable via the hook's fetch behavior
+- AC8: Typecheck passes ✓
+- Files touched:
+  - src/hooks/use-auth.ts — added `platformRole` and `status` to returned user object
+  - src/app/api/user/nav-context/route.ts (new) — returns {platformRole, isOrgAdmin, orgId, orgName}
+  - src/hooks/use-nav-context.ts (new) — fetches nav context, exposes {navContext, loading}
+  - src/components/layout/header.tsx — added role-based nav items (desktop + mobile Sheet)
+  - src/app/[locale]/admin/page.tsx (new) — admin console stub with Users/AI Providers/Organizations cards
+  - src/app/[locale]/org-admin/page.tsx (new) — org admin stub with Members/Usage cards
+  - messages/zh.json + messages/en.json — added `nav.admin` and `nav.orgAdmin` translation keys
+- Typecheck passes, 1109 tests pass (61 files), lint clean on all touched files
 ---

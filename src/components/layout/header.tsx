@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useUIStore } from '@/stores/ui-store';
 import { useTranslations } from 'next-intl';
+import { useNavContext } from '@/hooks/use-nav-context';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS: { href: string; i18nKey: string; match: string; tourId?: string }[] = [
@@ -21,6 +22,17 @@ export function Header() {
   const { openModal } = useUIStore();
   const t = useTranslations();
   const pathname = usePathname();
+  const { navContext } = useNavContext();
+
+  // Build role-based nav items
+  const roleItems: { href: string; i18nKey: string; match: string }[] = [];
+  if (navContext?.platformRole === 'super_admin') {
+    roleItems.push({ href: '/admin', i18nKey: 'nav.admin', match: '/admin' });
+  }
+  if (navContext?.isOrgAdmin) {
+    roleItems.push({ href: '/org-admin', i18nKey: 'nav.orgAdmin', match: '/org-admin' });
+  }
+  const allItems = [...NAV_ITEMS, ...roleItems];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-background/95 dark:supports-[backdrop-filter]:bg-background/60">
@@ -30,13 +42,13 @@ export function Header() {
             <Image src="/logo.svg" alt="CareerPilot" width={160} height={36} priority />
           </Link>
           <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => {
+            {allItems.map((item) => {
               const isActive = pathname.startsWith(item.match);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  data-tour={item.tourId}
+                  data-tour={'tourId' in item ? item.tourId : undefined}
                   className={cn(
                     'relative rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
                     isActive
@@ -75,13 +87,13 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-64">
                 <nav className="flex flex-col gap-2 pt-8">
-                  {NAV_ITEMS.map((item) => {
+                  {allItems.map((item) => {
                     const isActive = pathname.startsWith(item.match);
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        data-tour={item.tourId}
+                        data-tour={'tourId' in item ? item.tourId : undefined}
                         className={cn(
                           'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                           isActive

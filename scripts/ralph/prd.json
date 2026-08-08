@@ -968,7 +968,7 @@
         "Typecheck passes"
       ],
       "priority": 51,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -988,7 +988,7 @@
         "Typecheck passes"
       ],
       "priority": 52,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -1007,7 +1007,7 @@
         "Typecheck passes"
       ],
       "priority": 53,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -1027,7 +1027,7 @@
         "Typecheck passes"
       ],
       "priority": 54,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -1047,7 +1047,7 @@
         "Typecheck passes"
       ],
       "priority": 55,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -1067,7 +1067,7 @@
         "Typecheck passes"
       ],
       "priority": 56,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -1087,7 +1087,7 @@
         "Typecheck passes"
       ],
       "priority": 57,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false

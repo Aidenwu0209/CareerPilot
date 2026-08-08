@@ -18,6 +18,8 @@ export function useAuth() {
             email: session.data.user.email,
             avatarUrl: session.data.user.image,
             authType: 'oauth' as const,
+            platformRole: (session.data.user.platformRole || 'user') as 'super_admin' | 'user',
+            status: (session.data.user.status || 'active') as 'active' | 'suspended',
           }
         : null,
       isLoading: session.status === 'loading',
