@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
+import { getOrCreateAccount, creditAccount } from '@/lib/credits/ledger';
 import { db } from '@/lib/db';
-import { organizations } from '@/lib/db/schema';
-import { eq, desc, like, or } from 'drizzle-orm';
+import { organizations, organizationMemberships, creditAccounts, users } from '@/lib/db/schema';
+import { eq, desc, like, or, sql, and } from 'drizzle-orm';
 
 /**
  * GET /api/admin/organizations
@@ -46,7 +47,56 @@ export async function GET(request: Request) {
 
   const rows = conditions ? await baseQuery.where(conditions) : await baseQuery;
 
-  return NextResponse.json({ organizations: rows, pagination: { limit, offset, count: rows.length } });
+  // Enrich with member count, balance, and admin summaries
+  const enriched = await Promise.all(
+    rows.map(async (org: typeof rows[number]) => {
+      const [memberRow] = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(organizationMemberships)
+        .where(
+          and(
+            eq(organizationMemberships.organizationId, org.id),
+            eq(organizationMemberships.status, 'active'),
+          ),
+        );
+
+      const [balanceRow] = await db
+        .select({ balance: creditAccounts.balance })
+        .from(creditAccounts)
+        .where(
+          and(
+            eq(creditAccounts.ownerType, 'organization'),
+            eq(creditAccounts.ownerId, org.id),
+          ),
+        )
+        .limit(1);
+
+      const admins = await db
+        .select({
+          userId: users.id,
+          name: users.name,
+          email: users.email,
+        })
+        .from(organizationMemberships)
+        .innerJoin(users, eq(organizationMemberships.userId, users.id))
+        .where(
+          and(
+            eq(organizationMemberships.organizationId, org.id),
+            eq(organizationMemberships.role, 'org_admin'),
+            eq(organizationMemberships.status, 'active'),
+          ),
+        );
+
+      return {
+        ...org,
+        memberCount: memberRow?.count ?? 0,
+        balance: balanceRow?.balance ?? 0,
+        admins,
+      };
+    }),
+  );
+
+  return NextResponse.json({ organizations: enriched, pagination: { limit, offset, count: rows.length } });
 }
 
 /**
@@ -69,14 +119,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   }
 
-  let body: { name?: string; slug?: string; seatLimit?: number; status?: string };
+  let body: { name?: string; slug?: string; seatLimit?: number; status?: string; initialQuota?: number };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: 'INVALID_BODY' }, { status: 400 });
   }
 
-  const { name, slug, seatLimit, status } = body;
+  const { name, slug, seatLimit, status, initialQuota } = body;
 
   // AC2: Validate name — non-empty
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -100,6 +150,14 @@ export async function POST(request: Request) {
   if (status && !['active', 'suspended'].includes(status)) {
     return NextResponse.json(
       { error: 'INVALID_STATUS', detail: 'status must be active or suspended' },
+      { status: 400 },
+    );
+  }
+
+  // Validate initialQuota — non-negative integer
+  if (initialQuota !== undefined && (!Number.isInteger(initialQuota) || initialQuota < 0)) {
+    return NextResponse.json(
+      { error: 'INVALID_INITIAL_QUOTA', detail: 'initialQuota must be a non-negative integer' },
       { status: 400 },
     );
   }
@@ -132,6 +190,30 @@ export async function POST(request: Request) {
     result: 'success',
     summary: `Created organization '${name.trim()}' (slug=${slug.trim()}, seats=${seatLimit})`,
   });
+
+  // Set up initial quota if provided
+  if (initialQuota && initialQuota > 0) {
+    const account = await getOrCreateAccount('organization', orgId);
+    creditAccount({
+      accountId: account.id,
+      amount: initialQuota,
+      reason: 'adjustment',
+      operatorId: adminId,
+      idempotencyKey: `org-initial-${orgId}`,
+      note: 'Initial quota allocation',
+    });
+
+    await recordAuditEvent({
+      actorId: adminId,
+      action: 'org.credit.adjust',
+      targetType: 'organization',
+      targetId: orgId,
+      requestId: `org-initial-${orgId}`,
+      result: 'success',
+      summary: `Initial quota +${initialQuota} for org '${name.trim()}'`,
+      idempotent: true,
+    });
+  }
 
   const created = await db.select().from(organizations).where(eq(organizations.id, orgId)).limit(1);
 

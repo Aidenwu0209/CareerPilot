@@ -1519,3 +1519,27 @@
   - 点数规则 API（US-028 已实现）的 PUT 创建新版本并停用旧版本——`v{version}` badge 和 fetchRules() 刷新后自动反映
   - 用户列表页的"详情"链接使用 `Link` from `@/i18n/routing`——自动添加 locale 前缀
 ---
+
+## 2026-08-08 14:15 - US-074
+- 创建超管机构列表与开户界面 `/[locale]/admin/organizations`
+- Modified files:
+  - `src/app/[locale]/admin/organizations/page.tsx`: 从占位页重写为完整客户端组件——搜索栏 + 机构卡片列表（含席位/额度/管理员摘要） + 新增机构 Dialog
+  - `src/app/api/admin/organizations/route.ts`: 增强 GET 列表（返回 memberCount/balance/admins）和 POST 创建（支持 initialQuota 字段）
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.orgs` 命名空间（50+ i18n keys）
+  - `scripts/ralph/prd.json`: US-074 passes=true
+- AC1 ✅：页面显示机构名称、slug badge、状态 badge（正常/已停用）、席位（已用/上限）、额度余额、管理员姓名列表
+- AC2 ✅：创建表单要求名称、唯一标识、席位上限（非负整数）和初始额度（非负整数，可选）
+- AC3 ✅：前端验证（空名称、slug 格式、非负整数）+ API 后端双重验证（INVALID_NAME/INVALID_SLUG/INVALID_SEAT_LIMIT/INVALID_INITIAL_QUOTA/SLUG_ALREADY_EXISTS）；字段错误以红色文字显示在对应输入框下方
+- AC4 ✅：创建成功后 toast 提示 + 立即 `fetchOrgs(submittedQuery)` 刷新列表；持久化由后端 DB 保证
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~073 限制）
+- AC7 ⏳：同上限制
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on changed files
+- **未来迭代的学习：**
+  - 机构列表 API 增强：GET 列表现在返回 `memberCount`（active 会员数）、`balance`（credit account 余额）、`admins`（org_admin 用户摘要数组）——每个 org 额外 3 个查询，对 50 条/页的列表来说性能可接受
+  - 创建 API 的 `initialQuota` 字段在 org 创建后通过 `getOrCreateAccount('organization', orgId)` + `creditAccount()` 分配初始额度——使用固定幂等键 `org-initial-${orgId}` 防止重复
+  - `creditAccount()` 是同步函数（基于 better-sqlite3 事务）——不需要 await
+  - 机构列表页复用用户列表页的 flex card 模式——不使用 Table，移动端自动换行
+  - US-075（机构详情与授权界面）可在此基础上添加详情页 `/admin/organizations/[id]`
+  - 创建 Dialog 使用 `formErrors` state（Record<string, string>）跟踪每个字段的验证错误——提交前清空，验证失败时填充
+  - slug 验证正则 `/^[a-zA-Z0-9-]+$/` 确保只接受字母、数字和连字符——与 API 端验证一致
+---
