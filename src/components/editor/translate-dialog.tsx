@@ -15,7 +15,9 @@ import { Button } from '@/components/ui/button';
 import { useResumeStore } from '@/stores/resume-store';
 import { LanguageSelect } from '@/components/ui/language-select';
 import { Languages, Loader2, CheckCircle2, AlertCircle, FileEdit, FilePlus2 } from 'lucide-react';
-import { getAIHeaders } from '@/stores/settings-store';
+import { ModelSelector } from '@/components/ai/model-selector';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 import { cn } from '@/lib/utils';
 
 interface TranslateDialogProps {
@@ -61,10 +63,32 @@ async function readNDJSON(
   }
 }
 
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
 export function TranslateDialog({ open, onOpenChange, resumeId }: TranslateDialogProps) {
   const t = useTranslations('translate');
+  const tAi = useTranslations('ai');
   const router = useRouter();
   const currentResume = useResumeStore((s) => s.currentResume);
+  const { refresh: refreshCredits } = useCredits();
+
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  const mapError = useCallback((errorCode: string): string => {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('error');
+  }, [tAi, t]);
 
   const currentLanguage = currentResume?.language || 'en';
   const defaultTarget = currentLanguage === 'zh' ? 'en' : 'zh';
@@ -103,15 +127,10 @@ export function TranslateDialog({ open, onOpenChange, resumeId }: TranslateDialo
     abortRef.current = controller;
 
     try {
-      const fingerprint = localStorage.getItem('jade_fingerprint');
       const res = await fetch('/api/ai/translate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-          ...getAIHeaders(),
-        },
-        body: JSON.stringify({ resumeId, targetLanguage, mode }),
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ resumeId, targetLanguage, mode, model: selectedModel }),
         signal: controller.signal,
       });
 
@@ -148,6 +167,7 @@ export function TranslateDialog({ open, onOpenChange, resumeId }: TranslateDialo
           const failed = (data.failedCount as number) || 0;
           setFailedCount(failed);
           setState('success');
+          refreshCredits();
 
           if (mode === 'copy' && data.newResumeId) {
             // Copy mode: navigate to the new resume
@@ -175,9 +195,9 @@ export function TranslateDialog({ open, onOpenChange, resumeId }: TranslateDialo
     } catch (err: any) {
       if (err.name === 'AbortError') return;
       setState('error');
-      setErrorMessage(err.message || t('error'));
+      setErrorMessage(mapError(err.message || ''));
     }
-  }, [resumeId, targetLanguage, mode, onOpenChange, t, router]);
+  }, [resumeId, targetLanguage, mode, selectedModel, onOpenChange, mapError, router, refreshCredits]);
 
   const progressPercent = progress.total > 0
     ? Math.round((progress.completed / progress.total) * 100)
@@ -246,6 +266,19 @@ export function TranslateDialog({ open, onOpenChange, resumeId }: TranslateDialo
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Model Selector */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  {tAi('model')}
+                </label>
+                <ModelSelector
+                  selectedModel={selectedModel}
+                  onModelChange={handleModelChange}
+                  capability="text"
+                  size="default"
+                />
               </div>
             </>
           )}

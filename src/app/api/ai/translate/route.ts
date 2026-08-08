@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { resumeId, targetLanguage, sectionIds, mode } = parsed.data;
+  const { resumeId, targetLanguage, sectionIds, mode, model: clientModel } = parsed.data;
 
   // AC1: Validate resumeId belongs to current user
   const resume = await resumeRepository.findById(resumeId);
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
   // AC5: Insufficient credits rejected before any concurrent provider call
   const authResult = await authorizeAiRequest({
     context: ctx.context,
-    modelId: 'translate-default',
+    modelId: clientModel || 'translate-default',
     capability: 'text',
   });
   if (!authResult.ok) {

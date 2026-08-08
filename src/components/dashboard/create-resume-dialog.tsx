@@ -14,7 +14,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TEMPLATES } from '@/lib/constants';
 import { cn } from '@/lib/utils';
-import { getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { Upload, FileText, Image, X, Loader2, Check } from 'lucide-react';
 import { TemplateThumbnail } from './template-thumbnail';
 import { templateLabelsMap } from '@/lib/template-labels';
@@ -31,6 +33,7 @@ const ACCEPTED_EXTENSIONS = '.pdf,.png,.jpg,.jpeg,.webp';
 
 export function CreateResumeDialog({ open, onClose, onCreate }: CreateResumeDialogProps) {
   const t = useTranslations();
+  const tAi = useTranslations('ai');
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('template');
   const [title, setTitle] = useState('');
@@ -43,6 +46,26 @@ export function CreateResumeDialog({ open, onClose, onCreate }: CreateResumeDial
   const [parseError, setParseError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Model selection
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
+  const { refresh: refreshCredits } = useCredits();
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('dashboard.upload.parseFailed');
+  }
 
   const handleCreate = async () => {
     setIsCreating(true);
@@ -77,14 +100,13 @@ export function CreateResumeDialog({ open, onClose, onCreate }: CreateResumeDial
     setParseError('');
 
     try {
-      const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
       const formData = new FormData();
       formData.append('file', file);
       formData.append('template', template);
+      if (selectedModel) formData.append('model', selectedModel);
 
       const res = await fetch('/api/resume/parse', {
         method: 'POST',
-        headers: { ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}), ...getAIHeaders() },
         body: formData,
       });
 
@@ -94,10 +116,11 @@ export function CreateResumeDialog({ open, onClose, onCreate }: CreateResumeDial
       }
 
       const resume = await res.json();
+      refreshCredits();
       resetAndClose();
       router.push(`/editor/${resume.id}`);
     } catch (err: any) {
-      setParseError(err.message || t('dashboard.upload.parseFailed'));
+      setParseError(mapError(err.message || ''));
     } finally {
       setIsParsing(false);
     }
@@ -289,6 +312,19 @@ export function CreateResumeDialog({ open, onClose, onCreate }: CreateResumeDial
               {parseError && (
                 <p className="text-sm text-red-500">{parseError}</p>
               )}
+
+              {/* Model Selector */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  {tAi('model')}
+                </label>
+                <ModelSelector
+                  selectedModel={selectedModel}
+                  onModelChange={handleModelChange}
+                  capability="text"
+                  size="default"
+                />
+              </div>
 
               {/* Template selector for uploaded file */}
               <div>

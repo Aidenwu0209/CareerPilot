@@ -7,6 +7,7 @@ export const translateInputSchema = z.object({
   targetLanguage: z.enum(['zh', 'en', 'ja', 'ko', 'fr', 'de', 'es', 'pt', 'ru', 'ar']).describe('Target language for translation'),
   sectionIds: z.array(z.string()).max(MAX_ARRAY_LENGTH).optional().describe('Optional list of specific section IDs to translate. If omitted, all sections are translated.'),
   mode: z.enum(['overwrite', 'copy']).default('overwrite').describe('overwrite replaces the current resume; copy duplicates it first'),
+  model: z.string().optional().describe('Optional model ID from the server-side catalog'),
 });
 
 export type TranslateInput = z.infer<typeof translateInputSchema>;

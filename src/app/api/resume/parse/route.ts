@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
   const file = formData.get('file') as File | null;
   const template = (formData.get('template') as string) || 'classic';
   const language = (formData.get('language') as string) || 'zh';
+  const clientModel = (formData.get('model') as string) || undefined;
 
   if (!file) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
   // Execute through unified gateway
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'parse-resume-default',
+    modelId: clientModel || 'parse-resume-default',
     capability: 'text',
     businessCapability: 'resume_parse',
     idempotencyKey: `parse-resume-${ctx.context.actor.userId}-${Date.now()}`,

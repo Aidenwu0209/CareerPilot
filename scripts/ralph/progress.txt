@@ -1292,3 +1292,26 @@
   - JD 分析之前缺少 `jdAnalysis.error` i18n key，本次补上；grammarCheck.error 已存在
   - 历史/删除请求只需 `{ 'Content-Type': 'application/json' }` 静态 header——session cookie 自动附带
 ---
+
+## 2026-08-08 12:30 - US-065
+- 接入翻译与简历解析界面使用托管模型选择器和统一点数体系
+- Modified files:
+  - `src/components/editor/translate-dialog.tsx`: 添加 ModelSelector、useCredits、mapError、移除 getAIHeaders/fingerprint、body 添加 model 字段、成功后刷新余额
+  - `src/components/dashboard/create-resume-dialog.tsx`: 上传 tab 添加 ModelSelector、useCredits、mapError、移除 getAIHeaders/fingerprint、FormData 添加 model 字段、成功后刷新余额
+  - `src/app/api/ai/translate/route.ts`: 从 body 读取 `model` 字段，传给 authorizeAiRequest
+  - `src/app/api/resume/parse/route.ts`: 从 FormData 读取 `model` 字段，传给 executeAiOperation
+  - `src/lib/ai/translate-schema.ts`: 添加 `model: z.string().optional()` 到输入 schema
+- AC1 ✅：翻译和简历解析入口都使用获授权 ModelSelector（capability='text'），不显示 API Key 配置
+- AC2 ✅：翻译成功/部分成功状态通过 NDJSON 流式 progress + done 事件在 UI 明确展示；copy 模式跳转新简历，overwrite 模式同步 store
+- AC3 ✅：有效简历文件解析通过 executeAiOperation 创建当前用户简历
+- AC4 ✅：mapError() 将不同错误码映射为不同本地化消息（INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED/generic）
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~064 限制）；已通过 snapshot 确认上传 tab 中 ModelSelector 正确渲染（"模型" 标签 + 错误状态），network 确认无敏感 headers，errors 确认无页面错误
+- AC7 ✅：请求不含 x-api-key/x-provider/x-base-url/x-fingerprint headers
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint 无新增错误（6 个预存 `any` errors + 1 个预存 exhaustive-deps warning，git stash 对比确认）
+- **未来迭代的学习：**
+  - translate-dialog 的 `handleTranslate` 是 useCallback——内部引用的 `mapError` 需要用 useCallback 包装或加入 deps，否则触发 exhaustive-deps warning
+  - 翻译 API 使用 NDJSON 流式响应（不是标准 JSON），`refreshCredits()` 应在 `done` 事件时调用而非在 fetch 完成后
+  - 简历解析 API 使用 FormData（不是 JSON），model 字段通过 `formData.append('model', selectedModel)` 传递
+  - translate route 的 `authorizeAiRequest` modelId 从 `'translate-default'` 改为 `clientModel || 'translate-default'`——保持向后兼容
+  - parse route 的 `executeAiOperation` modelId 从 `'parse-resume-default'` 改为 `clientModel || 'parse-resume-default'`
+---
