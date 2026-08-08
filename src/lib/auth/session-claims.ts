@@ -14,7 +14,7 @@ export const REFRESH_INTERVAL_SECONDS = 60;
 export interface UserClaims {
   userId: string;
   platformRole: 'super_admin' | 'user';
-  status: 'active' | 'suspended';
+  status: 'active' | 'suspended' | 'deleted';
 }
 
 /**

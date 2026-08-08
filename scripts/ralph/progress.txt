@@ -32,6 +32,9 @@
 - Next.js dynamic route slug naming: all sibling dynamic segments at the same path level MUST use the same slug name (e.g. `[id]` and `[orgId]` under `organizations/` causes a build error). Use `[id]` as the convention for all admin API routes
 - Credit balance: `useCredits()` hook (`src/hooks/use-credits.ts`) fetches from `/api/credits/balance` and exposes `refresh()` — call after AI operations to sync displayed balance
 - AI chat transport: `DefaultChatTransport` in `use-ai-chat.ts` sends only `{ resumeId, model, sessionId }` in body — no sensitive headers; session cookie handles auth automatically
+- User status enum: `['active', 'suspended', 'deleted']` — guards reject any status !== 'active'; tests mocking `resolveUser` must include `platformRole` and `status` fields in the returned user object
+- Account deletion pattern: anonymize user row (email/name/fingerprint=null, status='deleted') + hard-delete business data (resumes, interviews) + keep immutable records (audit_events, legal_consents, credit_transactions) referencing the anonymized row — cannot hard-delete users because immutable tables have FK constraints
+- HMAC-signed confirmation tokens: stateless pattern using `AUTH_SECRET` — payload `userId:expiresAt:nonce` + HMAC-SHA256 signature, verified with `timingSafeEqual`; no DB table needed for one-time semantics when the underlying operation is idempotent
 
 ---
 
@@ -1666,4 +1669,35 @@
   - ExportButton 防并发模式：state guard 在函数入口检查 `state === 'exporting'` 后直接 return——不需要 ref 锁或 disable 属性之外的逻辑
   - UserMenu 下拉菜单中添加链接使用 `<DropdownMenuItem asChild>` + `<Link>` from `@/i18n/routing`——自动添加 locale 前缀
   - `memberships.map((m: typeof memberships[number]) => ...)` 显式类型标注避免 implicit any——Drizzle 查询返回的数组元素类型可以通过 `typeof array[number]` 获取
+---
+
+## 2026-08-08 15:20 - US-080
+- 实现了账号注销与数据清理服务（service layer + API endpoints）
+- New files:
+  - `src/lib/account/account-deletion.ts`: 注销服务核心——`issueDeletionToken`（HMAC 签名 token，5 分钟 TTL）、`verifyDeletionToken`（常量时间比较）、`verifyOtpForReauth`（OTP 重新认证，不复用 verifyOtp 的 user resolution）、`initiateAccountDeletion`（验证 OTP + 发 token）、`deleteUserData`（幂等数据清理）、`confirmAccountDeletion`（验证 token + 执行删除 + 审计）
+  - `src/app/api/account/delete/initiate/route.ts`: POST 端点——session 保护 + rate limit + OTP 验证 + 返回 confirmation token
+  - `src/app/api/account/delete/confirm/route.ts`: POST 端点——session 保护 + token 验证 + 执行删除
+  - `src/lib/account/account-deletion.test.ts`: 23 个测试覆盖 token 生命周期、OTP 重新认证、数据清理、幂等性和审计
+- Modified files:
+  - `src/lib/db/schema.ts`: users.status 枚举添加 `'deleted'` 值
+  - `src/lib/auth/context.ts`: Actor.status 类型添加 `'deleted'`
+  - `src/lib/auth/session-claims.ts`: UserClaims.status 类型添加 `'deleted'`
+  - `src/lib/auth/guards.ts`: 守卫从 `=== 'suspended'` 改为 `!== 'active'`，确保 deleted 用户也被拒绝
+  - `src/types/next-auth.d.ts`: Session.user.status 和 JWT.status 类型添加 `'deleted'`
+  - `src/app/api/interview/ownership.test.ts`: 修复 mock 用户对象——补充 `platformRole` 和 `status` 字段（之前的 mock 不完整，guard 变更暴露了此问题）
+  - `scripts/ralph/prd.json`: US-080 passes=true
+- AC1 ✅：注销要求 OTP 重新认证 + HMAC 签名的一次性 confirmation token（5 分钟 TTL，绑定 userId）
+- AC2 ✅：成功后删除 auth_accounts（撤销所有登录方式）、级联删除 resumes→shares（公开分享随 resume 级联删除）、soft-remove organization_memberships（释放席位）
+- AC3 ✅：私有 resumes、chat_sessions/messages、jd_analyses、grammar_checks、interview_sessions/rounds/messages/reports 按 FK cascade 级联硬删除
+- AC4 ✅：credit_transactions、audit_events、legal_consents 为不可变表（DB triggers 阻止 DELETE）——用户行被匿名化（email/name/fingerprint/avatarUrl=null, status='deleted'），保留记录引用匿名化实体
+- AC5 ✅：`deleteUserData` 每个步骤幂等（DELETE WHERE / UPDATE WHERE 模式）；如果首次失败，重试安全完成；已 deleted 用户重复调用返回 success
+- AC6-7 ⏳：浏览器 E2E 受限（OTP 使用 TestMailAdapter，无法从浏览器端获取验证码——UI 流程将在 US-081 实现）
+- Typecheck passes, 1164 tests pass (65 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - 用户注销采用"匿名化用户行 + 硬删除业务数据"模式——因为 audit_events、legal_consents、credit_transactions 有不可变 trigger 和 FK 到 users.id，不能硬删除用户行
+  - Confirmation token 使用 HMAC-SHA256 签名（payload = `userId:expiresAt:nonce`），无状态——不需要 DB 表，token 的"一次性"由删除本身的幂等性保证
+  - `verifyOtpForReauth` 是独立于 `verifyOtp` 的 OTP 验证函数——只验证 code 正确性并标记 usedAt，不调用 `resolveEmailAccount`（避免创建/修改 auth account）
+  - Guard 从 `status === 'suspended'` 改为 `status !== 'active'` 后，测试中 mock `resolveUser` 返回的对象必须包含完整的 user 字段（platformRole, status）——否则 undefined !== 'active' 会导致 403
+  - RateLimitPolicy 接口使用 `limit`（不是 `maxRequests`）+ `windowMs` + `failClosed`
+  - `isNull()` from drizzle-orm 用于查询 NULL 值——不要用 `eq(field, null)`，SQLite 和 PG 行为不一致
 ---

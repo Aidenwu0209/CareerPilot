@@ -24,7 +24,7 @@ import { eq, and } from 'drizzle-orm';
 export interface Actor {
   userId: string;
   platformRole: 'super_admin' | 'user';
-  status: 'active' | 'suspended';
+  status: 'active' | 'suspended' | 'deleted';
 }
 
 /**
@@ -88,7 +88,7 @@ export class AmbiguousBillingError extends Error {
 export async function resolveContextForUser(user: {
   id: string;
   platformRole: 'super_admin' | 'user';
-  status: 'active' | 'suspended';
+  status: 'active' | 'suspended' | 'deleted';
 }): Promise<RequestContext> {
   const actor: Actor = {
     userId: user.id,

@@ -90,8 +90,8 @@ export async function resolveActiveContext(
   // No authenticated user
   if (!context) return null;
 
-  // AC1: suspended user → reject ALL private API operations
-  if (context.actor.status === 'suspended') {
+  // AC1: suspended or deleted user → reject ALL private API operations
+  if (context.actor.status !== 'active') {
     return {
       ok: false,
       response: NextResponse.json(
@@ -118,7 +118,7 @@ export async function resolveActiveContext(
  * @throws {AccountSuspendedError} if actor.status === 'suspended'
  */
 export function assertActorActive(context: RequestContext): void {
-  if (context.actor.status === 'suspended') {
+  if (context.actor.status !== 'active') {
     throw new AccountSuspendedError();
   }
 }

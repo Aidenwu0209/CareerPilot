@@ -9,7 +9,7 @@ export const users = sqliteTable('users', {
   fingerprint: text('fingerprint').unique(),
   authType: text('auth_type', { enum: ['oauth', 'fingerprint', 'email'] }).notNull(),
   platformRole: text('platform_role', { enum: ['super_admin', 'user'] }).notNull().default('user'),
-  status: text('status', { enum: ['active', 'suspended'] }).notNull().default('active'),
+  status: text('status', { enum: ['active', 'suspended', 'deleted'] }).notNull().default('active'),
   settings: text('settings', { mode: 'json' }).default('{}'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

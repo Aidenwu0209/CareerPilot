@@ -83,9 +83,9 @@ const ALICE_REPORT = 'rep-alice';
 // ── Helpers ──
 
 async function loginUser(userId: string) {
-  const userMap: Record<string, { id: string; email: string; name: string }> = {
-    [ALICE_ID]: { id: ALICE_ID, email: 'alice@test.com', name: 'Alice' },
-    [BOB_ID]: { id: BOB_ID, email: 'bob@test.com', name: 'Bob' },
+  const userMap: Record<string, { id: string; email: string; name: string; platformRole: 'super_admin' | 'user'; status: 'active' | 'suspended' | 'deleted'; fingerprint: null; authType: string; avatarUrl: string | null; settings: unknown; createdAt: Date; updatedAt: Date }> = {
+    [ALICE_ID]: { id: ALICE_ID, email: 'alice@test.com', name: 'Alice', platformRole: 'user', status: 'active', fingerprint: null, authType: 'fingerprint', avatarUrl: null, settings: {}, createdAt: new Date(), updatedAt: new Date() },
+    [BOB_ID]: { id: BOB_ID, email: 'bob@test.com', name: 'Bob', platformRole: 'user', status: 'active', fingerprint: null, authType: 'fingerprint', avatarUrl: null, settings: {}, createdAt: new Date(), updatedAt: new Date() },
   };
   mockResolveUser.mockResolvedValue(userMap[userId]);
 }
