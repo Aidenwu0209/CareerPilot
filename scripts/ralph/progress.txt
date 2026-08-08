@@ -625,3 +625,21 @@
   - Admin appoint creates or upgrades membership: if user is already a member, role is updated to org_admin; if no membership exists, a new one is created
   - Admin revoke downgrades to 'member' (not removed) — the user retains org access, just loses admin privileges
   - Org slug uniqueness is enforced by DB constraint AND checked in application code for better error messages
+
+## 2026-08-08 08:16 - US-030
+- Implemented organization member and seat management API for org admins
+- New files: `src/lib/auth/org-guard.ts` (resolveOrgAdmin helper), `src/app/api/organizations/[orgId]/members/route.ts` (GET list, POST add), `src/app/api/organizations/[orgId]/members/[userId]/route.ts` (DELETE remove), `src/app/api/organizations/[orgId]/members/members.test.ts` (19 tests)
+- AC1: Org admin adds registered users by exact email; creates membership with role='member', status='active'
+- AC2: Duplicate active member → 409 ALREADY_MEMBER; seat limit exceeded → 409 SEAT_LIMIT_EXCEEDED; billing conflict (user active in another org) → 409 BILLING_CONFLICT
+- AC3: Org admin can only manage own org (resolveOrgAdmin checks membership.role='org_admin' + membership.status='active'); cannot add super_admin; cross-org management → 403
+- AC4: Removal sets status='removed' (not deleted); historical data preserved; context resolver already filters on status='active'
+- AC5: Member list returns only userId/email/name/avatarUrl/role/status/joinedAt — no resumes, tokens, or AI keys
+- Also added billing conflict detection: user can only have one active org membership at a time
+- 19 tests: add member (2), validation/errors (4), authorization (6), removal (5), data exclusion (2)
+- Typecheck passes, all 810 tests pass (38 files)
+- **未来迭代的学习：**
+  - `resolveOrgAdmin(orgId)` is a reusable guard for all org-admin scoped routes: resolves auth context, verifies org exists/active, verifies caller is org_admin of that specific org
+  - Super admin bypasses org-admin check in `resolveOrgAdmin` — can manage any org
+  - Seat counting only counts active memberships; reactivating a removed member doesn't consume a new seat
+  - Billing conflict: users can only have one active org membership — prevents ambiguous billing scope
+  - Removal is soft-delete (status='removed') to preserve audit trail; re-adding reactivates the existing row
