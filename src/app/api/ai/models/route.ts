@@ -8,6 +8,7 @@ import {
   rateLimitKey,
 } from '@/lib/rate-limit/rate-limit';
 import { getUserCatalog } from '@/lib/ai/model-catalog';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 /**
  * GET /api/ai/models
@@ -18,6 +19,7 @@ import { getUserCatalog } from '@/lib/ai/model-catalog';
  * AC4: Response never includes provider keys or internal service URLs.
  */
 export async function GET(request: Request) {
+  warnLegacyByok(request);
   // Verify authentication and active status before any provider calls
   const ctx = await resolveActiveContext(getUserIdFromRequest(request));
   if (ctx === null) {

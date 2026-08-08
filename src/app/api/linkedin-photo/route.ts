@@ -8,6 +8,7 @@ import {
   sanitizedError,
 } from '@/lib/validation/input-limits';
 import { executeAiOperation } from '@/lib/ai/gateway';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 export const maxDuration = 60;
 
@@ -15,6 +16,7 @@ const GEMINI_ENDPOINT =
   'https://generativelanguage.googleapis.com/v1beta/models';
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   // Verify authentication and active status before any external calls
   const ctx = await resolveActiveContext(getUserIdFromRequest(request));
   if (!ctx) {

@@ -6,6 +6,7 @@ import { interviewReportSchema } from '@/lib/ai/interview-report-schema';
 import { extractJson } from '@/lib/ai/extract-json';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const ctx = await resolveActiveContext();
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

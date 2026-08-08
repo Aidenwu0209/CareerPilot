@@ -6,6 +6,7 @@ import { coverLetterInputSchema } from '@/lib/ai/cover-letter-schema';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { validatePromptLength } from '@/lib/validation/input-limits';
 import { buildModel } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 interface CoverLetterOutput {
   title: string;
@@ -66,6 +67,7 @@ function parseCoverLetter(text: string): CoverLetterOutput {
 }
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   // ── Auth + status guard ──
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });

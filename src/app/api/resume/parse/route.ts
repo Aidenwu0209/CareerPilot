@@ -13,6 +13,7 @@ import {
 } from '@/lib/validation/input-limits';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const SYSTEM_PROMPT = `You are a resume parser. Extract ALL information from the resume into the EXACT JSON schema below.
 
@@ -30,6 +31,7 @@ RULES:
 - Read ALL pages of the document thoroughly. Information may span multiple pages.`;
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

@@ -7,6 +7,7 @@ import { jdAnalysisInputSchema, jdAnalysisOutputSchema } from '@/lib/ai/jd-analy
 import { extractJson } from '@/lib/ai/extract-json';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const JD_ANALYSIS_PROMPT = `You are an expert resume analyst and career coach. Analyze the match between the provided resume and job description.
 
@@ -23,6 +24,7 @@ Your analysis should be thorough and actionable. You MUST return a JSON object w
 CRITICAL: You are a JSON API. Your entire response must be a single valid JSON object starting with { and ending with }. Do NOT use markdown syntax. Do NOT wrap in code fences. Do NOT add any text before or after the JSON.`;
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

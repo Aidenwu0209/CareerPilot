@@ -5,6 +5,7 @@ import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { generateResumeInputSchema, type GenerateResumeOutput } from '@/lib/ai/generate-resume-schema';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const SECTION_TITLES: Record<string, Record<string, string>> = {
   zh: {
@@ -59,6 +60,7 @@ const generateResumeOutputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

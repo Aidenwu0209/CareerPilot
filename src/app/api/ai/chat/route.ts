@@ -8,11 +8,13 @@ import { createExecutableTools } from '@/lib/ai/tools';
 import { validateChatMessages, sanitizedError, MAX_AI_STEPS } from '@/lib/validation/input-limits';
 import { executeStreamingOperation } from '@/lib/ai/gateway';
 import { buildModel } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const MAX_ROUNDS = 10;
 const MAX_MESSAGES = MAX_ROUNDS * 2;
 
 export async function POST(request: NextRequest) {
+  warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

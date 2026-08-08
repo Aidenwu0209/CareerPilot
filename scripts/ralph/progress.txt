@@ -967,3 +967,13 @@
 - Updated `auth.test.ts` (US-020): added gateway module mocks, seeded provider/model/credits
 - 8 gateway tests + 6 auth tests = 14 tests; full suite: 57 files, 1032 tests
 ---
+
+### US-050: 替换模型代理并拒绝遗留客户端 AI 配置 (COMPLETED)
+- AC1-AC2, AC4-AC5: Already satisfied — `/api/ai/models` reads only server catalog, returns safe fields, excludes disabled models
+- AC3: Implemented `src/lib/ai/legacy-detect.ts` with `detectLegacyByok()` and `warnLegacyByok()` utilities
+  - Detects `x-api-key`, `x-provider`, `x-base-url`, `x-model` headers
+  - Logs sanitized warning (header names only, never header values) via `console.warn`
+  - Strategy: ignore + warn (backward compatible during transition)
+- Added `warnLegacyByok(request)` call to all 11 AI route handlers (10 POST + 1 GET for models)
+- 8 unit tests for legacy detection; full suite: 58 files, 1040 tests, typecheck clean
+---
