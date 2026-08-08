@@ -10,8 +10,10 @@ const intlMiddleware = createMiddleware(routing);
 
 // Public page paths (relative to locale prefix)
 const PUBLIC_PAGE_PATHS = [
-  '/',        // Landing page
-  '/login',   // Login page
+  '/',          // Landing page
+  '/login',     // Login page
+  '/privacy',   // Privacy policy
+  '/terms',     // Terms of service
 ];
 
 // Public API path prefixes — auth callbacks, OTP, health, public share reads.
