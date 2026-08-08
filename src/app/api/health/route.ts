@@ -1,35 +1,84 @@
 import { NextResponse } from 'next/server';
-import { dbReady } from '@/lib/db';
+import { dbReady, db } from '@/lib/db';
+import { config } from '@/lib/config';
+import { checkReadiness } from '@/lib/readiness';
+import { validateEnv } from '@/lib/env';
 
 /**
  * Readiness / health check endpoint.
  *
  * Returns 200 when the app is ready to serve traffic:
  * - The process is running (trivially true if this route responds)
- * - The database is initialized and migrations have completed
+ * - The database is initialized and reachable
+ * - PostgreSQL migrations are up to date with the code's migration set
  *
- * Returns 503 when the app is NOT ready, with a safe, non-sensitive message.
- * Never exposes connection strings, secrets, user data, or internal errors.
+ * Returns 503 when the app is NOT ready.
+ *
+ * The response also includes a production checklist with safe, non-sensitive
+ * configuration status (auth mode, db type, migration status, secret presence,
+ * public routes, backup status).
+ *
+ * NEVER exposes connection strings, secrets, user data, or internal errors.
  */
 export async function GET() {
-  let dbOk = false;
-  let dbError = '';
+  const readiness = await checkReadiness({
+    dbReady,
+    db,
+    dbType: config.db.type,
+  });
 
-  try {
-    await dbReady;
-    dbOk = true;
-  } catch {
-    dbOk = false;
-    dbError = 'database initialization failed';
+  const checklist = buildChecklist(readiness);
+
+  const body: Record<string, unknown> = {
+    status: readiness.ok ? 'ok' : 'unavailable',
+    checks: readiness.checks,
+    checklist,
+  };
+
+  if (readiness.migration) {
+    body.migration = readiness.migration;
   }
 
-  const ok = dbOk;
+  return NextResponse.json(body, { status: readiness.ok ? 200 : 503 });
+}
 
-  return NextResponse.json(
-    {
-      status: ok ? 'ok' : 'unavailable',
-      ...(dbError ? { db: dbError } : {}),
+/**
+ * Build a safe production checklist with no sensitive values.
+ *
+ * Only reports presence/absence of secrets, not the values themselves.
+ */
+function buildChecklist(readiness: Awaited<ReturnType<typeof checkReadiness>>): Record<string, unknown> {
+  const envResult = validateEnv();
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  return {
+    authMode: config.auth.enabled ? 'oauth+email' : 'fingerprint',
+    dbType: config.db.type,
+    migration: {
+      expected: readiness.migration?.expected ?? null,
+      applied: readiness.migration?.applied ?? null,
+      upToDate: readiness.checks.migrations,
     },
-    { status: ok ? 200 : 503 },
-  );
+    secrets: {
+      authSecret: process.env.AUTH_SECRET ? 'set' : 'missing',
+      aiCredentialKey: process.env.AI_CREDENTIAL_MASTER_KEY
+        ? 'set'
+        : 'missing',
+      googleOAuth:
+        process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+          ? 'set'
+          : 'missing',
+    },
+    publicRoutes: {
+      pages: ['/', '/login', '/privacy', '/terms'],
+      api: ['/api/auth', '/api/health', '/api/share'],
+    },
+    backup: {
+      configured: process.env.BACKUP_ENABLED === 'true',
+    },
+    env: {
+      production: isProduction,
+      configIssues: envResult.issues.length,
+    },
+  };
 }

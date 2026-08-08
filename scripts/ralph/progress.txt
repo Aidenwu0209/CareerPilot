@@ -1720,3 +1720,40 @@
   - `count()` from drizzle-orm is the standard way to get row counts — import alongside `eq` from 'drizzle-orm'
   - When passing server-fetched data to client components in Next.js server components, type the props interface explicitly (including nullability for fields like email)
 ---
+
+## 2026-08-08 15:45 - US-082
+- Added legal documents & consent section to /zh/account page
+- New file: `src/components/account/reconsent-button.tsx` — client component with idle/loading/success/error states, calls POST /api/legal/consent for re-consent, triggers router.refresh() on success
+- Modified: `src/app/[locale]/account/page.tsx` — added legal section between data export and danger zone; imports `getAllCurrentVersions()`, `getUserConsents()`, `checkAllCurrentConsents()` from consent-service; uses `Link` from `@/i18n/routing` for locale-aware links to /privacy and /terms
+- Modified: `messages/zh.json` and `messages/en.json` — added `account.legal.*` i18n keys (section title/description, document labels, version/effective/consented labels, source labels, re-consent warning/success/error)
+- AC1 ✅: Legal section displays current privacy_policy and terms_of_service versions (2026-08-01-v1) with effective dates and links to /privacy and /terms
+- AC2 ✅: Each document shows user's latest consent record (version, consent time, source) from `getUserConsents(userId)`
+- AC3 ✅: When `checkAllCurrentConsents()` returns `allConsented: false`, amber warning box shows with ReconsentButton; button calls POST /api/legal/consent and refreshes page
+- AC4 ✅: All consent queries use `userId` from `resolveContext()` session — no URL params or client-supplied userId; users cannot read other users' consent records
+- AC5-7 ⏳: Browser E2E deferred — OTP uses TestMailAdapter (in-memory), cannot complete browser authentication flow
+- AC8 ✅: Typecheck passes, 1164 tests pass (65 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - `getAllCurrentVersions()` is synchronous (returns hardcoded DOCUMENT_REGISTRY) — no DB call needed for current version display
+  - `getUserConsents()` and `checkAllCurrentConsents()` are async (DB queries) — call them in parallel if performance matters
+  - `Link` from `@/i18n/routing` automatically adds locale prefix (/zh/privacy, /en/privacy) — use this instead of `next/link` for locale-aware navigation in server components
+  - Dynamic i18n key pattern: `t(`legal.source.${consent.source}` as 'registration')` — cast to a known key literal to satisfy TypeScript, runtime resolves the actual key
+  - `router.refresh()` from `next/navigation` re-fetches server component data after client-side mutation (re-consent) without full page reload
+  - ReconsentButton reuses existing POST /api/legal/consent endpoint — no new API route needed; the endpoint validates the source and records consent for current versions
+  - Consent display layout: each document in its own bordered card within the section, with version badge (green if current, red if not consented), effective date, consent metadata, and a "View Document" link
+---
+
+## 2026-08-08 15:52 - US-083
+- Implemented production readiness check with PostgreSQL connection + migration version verification and configuration checklist
+- New files: `src/lib/db/migration-status.ts` (PG migration count helpers), `src/lib/readiness.ts` (readiness check orchestrator)
+- Modified: `src/app/api/health/route.ts` (enhanced to include readiness checks + production checklist), `src/app/api/health/route.test.ts` (expanded from 3 to 12 tests)
+- Readiness check validates: process running, DB initialized/reachable, PG migration version up-to-date (applied >= expected .sql files count)
+- Production checklist outputs: authMode, dbType, migration status, secret presence/absence (set|missing — never values), public routes (pages + API), backup status, env config issues count
+- 12 tests: healthy instance (200), DB down (503), migration stale (503), migration ahead (200), no connection-string/secret/password leak, checklist completeness, SQLite dev mode (migration check skipped), deployment traffic gating assertions
+- Typecheck passes, tests pass (1173/1173), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - Drizzle's PG migration tracking table is `drizzle."__drizzle_migrations"` (schema `drizzle`, table `__drizzle_migrations`) — count rows to get applied migration count
+  - Count `.sql` files in `drizzle/pg-migrations/` for expected migration count (the `meta/` folder contains journals, not migrations)
+  - In test helpers, rejected promises passed as deps trigger unhandled-rejection warnings before `checkReadiness` can await them — attach a noop `.catch(() => {})` to register a rejection handler without resolving
+  - Health checklist field names like `"secrets"` contain the substring "secret" — when asserting no-leak, check specific credential values (e.g. `s3cr3tP@ssW0rd`) not generic words that match field names
+  - Readiness deps use `MigrationQueryable` interface (minimal `execute` method) instead of `any` to satisfy `@typescript-eslint/no-explicit-any`
+---
