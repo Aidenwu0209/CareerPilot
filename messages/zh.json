@@ -1040,5 +1040,27 @@
   "nav": {
     "admin": "管理后台",
     "orgAdmin": "机构管理"
+  },
+  "admin": {
+    "title": "管理后台",
+    "overview": "概览",
+    "noPermission": {
+      "title": "无权限访问",
+      "description": "您没有超级管理员权限，无法访问此页面。"
+    },
+    "sections": {
+      "users": {
+        "title": "用户与点数",
+        "description": "管理用户、冻结账户、调整点数"
+      },
+      "aiProviders": {
+        "title": "AI 供应商与模型",
+        "description": "管理供应商、凭证、模型目录"
+      },
+      "organizations": {
+        "title": "机构",
+        "description": "创建机构、分配席位与配额"
+      }
+    }
   }
 }

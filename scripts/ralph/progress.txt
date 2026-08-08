@@ -1121,3 +1121,23 @@
   - messages/zh.json + messages/en.json — added `nav.admin` and `nav.orgAdmin` translation keys
 - Typecheck passes, 1109 tests pass (61 files), lint clean on all touched files
 ---
+
+## 2026-08-08 10:36 - US-058
+- Created super admin workspace shell with sidebar navigation and permission guard
+- AC1: `/[locale]/admin` has three first-level entries: Users & Credits (`/admin/users`), AI Providers & Models (`/admin/ai-providers`), Organizations (`/admin/organizations`) — plus an overview landing
+- AC2: `admin/layout.tsx` (server component) calls `resolveContext()` and checks `platformRole === 'super_admin'`; non-superadmins see `NoPermission` component without loading any admin data or sidebar
+- AC3: Desktop sidebar (AdminSidebar) shows all entries with active-section highlight; mobile Sheet menu mirrors the same nav items and closes on navigation
+- AC4: Stable layout sizing — sidebar is fixed `w-60`, main content uses `flex-1`, headings use `truncate` to prevent overflow
+- AC5-7: Manual browser verification deferred (no agent-browser in session); structural correctness verified via typecheck
+- AC8: Typecheck passes ✓
+- Files:
+  - src/components/admin/admin-sidebar.tsx (new) — client sidebar with desktop + mobile Sheet
+  - src/components/admin/no-permission.tsx (new) — access denied card
+  - src/app/[locale]/admin/layout.tsx (new) — server guard + sidebar shell
+  - src/app/[locale]/admin/page.tsx — rewritten as overview with 3 section cards
+  - src/app/[locale]/admin/users/page.tsx (new) — placeholder
+  - src/app/[locale]/admin/ai-providers/page.tsx (new) — placeholder
+  - src/app/[locale]/admin/organizations/page.tsx (new) — placeholder
+  - messages/{zh,en}.json — added admin.title/overview/noPermission/sections keys
+- Typecheck passes, 1109 tests pass (61 files), lint clean
+---

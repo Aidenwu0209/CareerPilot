@@ -1040,5 +1040,27 @@
   "nav": {
     "admin": "Admin",
     "orgAdmin": "Org Admin"
+  },
+  "admin": {
+    "title": "Admin Console",
+    "overview": "Overview",
+    "noPermission": {
+      "title": "Access Denied",
+      "description": "You do not have super admin privileges to access this page."
+    },
+    "sections": {
+      "users": {
+        "title": "Users & Credits",
+        "description": "Manage users, freeze accounts, adjust credits"
+      },
+      "aiProviders": {
+        "title": "AI Providers & Models",
+        "description": "Manage providers, credentials, model catalog"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "description": "Create orgs, assign seats and quota"
+      }
+    }
   }
 }
