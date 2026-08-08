@@ -678,3 +678,19 @@
   - The `CredentialKeyAdapter` interface allows production KMS integration (AWS KMS, Vault) without changing application code
   - `scryptSync` derives a 256-bit key from the master key + per-encryption salt — even if the DB is compromised, each credential needs independent cracking
   - `maskCredential` shows first 2 and last 4 chars with bullets in between — no exact length leak for short keys (≤5 chars fully masked)
+
+## 2026-08-08 08:29 - US-033
+- Implemented super admin provider management and connection test API
+- New files: `src/app/api/admin/providers/route.ts` (GET list, POST create), `src/app/api/admin/providers/[id]/route.ts` (GET detail, PATCH update), `src/app/api/admin/providers/[id]/test/route.ts` (POST connection test), `src/app/api/admin/providers/admin-providers.test.ts` (20 tests)
+- AC1: POST creates provider with encrypted credentials via `encryptCredential()`; PATCH updates name/status/baseUrl
+- AC2: Connection test fetches provider's models endpoint with decrypted key; returns sanitized `{ result, httpStatus }` or `{ result: 'failed', error: 'CONNECTION_ERROR' }` — no internal details leaked
+- AC3: All reads return `getProviderCredentialInfo()` with masked credentials; status changes and rotations write audit events
+- AC4: Non-super-admin → 403 on all provider management endpoints
+- AC5: Custom baseUrl validated through `validateUpstreamUrl()` — rejects non-allowlisted domains, HTTP, private IPs
+- 20 tests: create/edit (5), masked reads (3), authorization (3), SSRF validation (4), connection test (5)
+- Typecheck passes, all 881 tests pass (41 files)
+- **未来迭代的学习：**
+  - Connection test uses `fetch()` with `SSRF_SAFE_FETCH_OPTIONS` (redirect: 'error') and `AbortSignal.timeout(10000)` — prevents redirect-based SSRF and indefinite hangs
+  - The test request format is provider-specific: OpenAI uses `Authorization: Bearer`, Anthropic uses `x-api-key` + version header, Google uses query param
+  - Failed connection tests return HTTP 200 with `{ result: 'failed' }` — not an HTTP error, since the API call itself succeeded
+  - The static SSRF allowlist (`api.openai.com`, `api.anthropic.com`, `generativelanguage.googleapis.com`) restricts which custom baseUrls are accepted
