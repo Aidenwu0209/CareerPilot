@@ -29,6 +29,7 @@
 - Rate limiting: `src/lib/rate-limit/rate-limit.ts` — `checkRateLimit(key, policy)` + `rateLimitedResponse(retryAfter)` + `RATE_LIMIT_POLICIES` constants; adapter pattern with `MemoryRateLimitAdapter` (default) and pluggable `setRateLimitAdapter()` for Redis/DB; `failClosed` policies deny on store-unavailable, `failClosed: false` allows
 - SSRF guard: `src/lib/security/ssrf-guard.ts` — `validateUpstreamUrl(url)` checks HTTPS + approved domain allowlist; `sanitizeUpstreamUrl(url, fallback)` returns URL or fallback; `SSRF_SAFE_FETCH_OPTIONS` with `redirect:'error'`; approved domains: api.openai.com, api.anthropic.com, generativelanguage.googleapis.com
 - Audit service: `src/lib/audit/audit-service.ts` — `recordAuditEvent()` is the single entry point for all audit events; auto-sanitizes summaries (rejects API keys, auth headers, JWT, multi-line doc text); idempotent dedup via `idempotent:true` + `requestId`; query via `queryAuditEvents()` (filter by actor/target/action/tenant/time); audit_events table is immutable (triggers block UPDATE/DELETE)
+- Next.js dynamic route slug naming: all sibling dynamic segments at the same path level MUST use the same slug name (e.g. `[id]` and `[orgId]` under `organizations/` causes a build error). Use `[id]` as the convention for all admin API routes
 
 ---
 
@@ -1201,4 +1202,19 @@
   - `estimateCredits()` utility: returns the fixed price as string, '~' for token-based pricing, or null for free models — call from any component that needs to display cost
   - Settings store `setAIModel()` triggers debounced sync to server `/api/user/settings` — model selection persists across sessions
   - When adding i18n keys under the 'ai' namespace, update BOTH `messages/zh.json` and `messages/en.json` — missing keys cause runtime errors in `useTranslations()`
+---
+
+## 2026-08-08 11:35 - US-061 (retry/fix)
+- **AC4 修复：** 在 model-selector.tsx 的 `selectedUnavailable` useEffect 中，回退模型时添加 `toast.warning(t('modelUnavailable'), { description: fallback.displayName })` 通知用户模型已切换。使用 sonner toast（项目已依赖）
+- 新增 2 个 AC4 单元测试：验证不可用时有 toast.warning + 回退模型名，验证可用时无 toast
+- **路由冲突修复：** `src/app/api/admin/organizations/` 下同时存在 `[id]` 和 `[orgId]` 导致 Next.js 16 启动失败。统一为 `[id]`，更新 adjust/route.ts 的 params 类型，添加测试适配器函数
+- 浏览器测试尝试：成功启动 dev server，页面无控制台错误（AC7 部分）；OTP 认证流程因 TestMailAdapter 内存隔离无法从外部读取验证码，完整 E2E 测试推迟
+- 修改文件：`model-selector.tsx`（+toast.warning）、`model-selector.test.ts`（+2 AC4 tests）、`[id]/adjust/route.ts`（从 `[orgId]` 迁移）、`org-credits.test.ts`（import 路径修复 + 参数适配器）
+- Typecheck passes, 1119 tests pass (62 files), lint clean
+- **未来迭代的学习：**
+  - Next.js 16 要求同一路径级别的所有动态段使用相同 slug 名称——`[id]` 和 `[orgId]` 不能共存
+  - `sonner` toast 已在项目中使用（ai-chat-panel.tsx），直接 `import { toast } from 'sonner'` 即可
+  - 测试中 `vi.mock('sonner', ...)` 需要在文件顶部使用 `vi.hoisted` 或直接定义 spy 变量
+  - Dev server 中 OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码；需要通过浏览器 OTP UI 流程或添加测试辅助端点
+  - `next-auth/jwt` 的 `encode()` 创建的 token 在 `AUTH_SECRET` 为默认占位值时可能与服务器解密不兼容
 ---
