@@ -8,8 +8,9 @@ import { JDInput } from './jd-input';
 import { ResumeSelector } from './resume-selector';
 import { InterviewerPicker } from './interviewer-picker';
 import { useRouter } from '@/i18n/routing';
-import { getAIHeaders } from '@/stores/settings-store';
 import type { InterviewerConfig } from '@/types/interview';
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 export function InterviewSetup() {
   const t = useTranslations('interview.setup');
@@ -27,14 +28,9 @@ export function InterviewSetup() {
     setIsCreating(true);
 
     try {
-      const fp = localStorage.getItem('jade_fingerprint');
       const res = await fetch('/api/interview', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(fp ? { 'x-fingerprint': fp } : {}),
-          ...getAIHeaders(),
-        },
+        headers: JSON_HEADERS,
         body: JSON.stringify({
           jobDescription: jd,
           jobTitle: title.trim() || jd.split('\n')[0].slice(0, 100) || 'Interview',

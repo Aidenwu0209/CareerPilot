@@ -1315,3 +1315,35 @@
   - translate route 的 `authorizeAiRequest` modelId 从 `'translate-default'` 改为 `clientModel || 'translate-default'`——保持向后兼容
   - parse route 的 `executeAiOperation` modelId 从 `'parse-resume-default'` 改为 `clientModel || 'parse-resume-default'`
 ---
+
+## 2026-08-08 12:40 - US-066
+- 接入模拟面试托管 AI 界面，使用获授权模型选择器和统一点数体系
+- Modified files:
+  - `src/hooks/use-interview-chat.ts`: 移除 `getAIHeaders` 导入和 `x-fingerprint` header；transport 不再设置自定义 headers（session cookie 自动附带）
+  - `src/components/interview/interview-room.tsx`: 添加 ModelSelector（capability='text', size='sm'）、useCredits、useSettingsStore、error toast 映射（INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED/chatError）；移除 fingerprint header 的 fetch
+  - `src/components/interview/control-bar.tsx`: 移除 `getAIHeaders` 导入和 `x-fingerprint`；使用静态 `JSON_HEADERS`
+  - `src/components/interview/interview-setup.tsx`: 移除 `getAIHeaders` 导入和 `x-fingerprint`；使用静态 `JSON_HEADERS`
+  - `src/components/interview/interview-lobby.tsx`: 移除 `x-fingerprint`（列表和删除 fetch）
+  - `src/components/interview/history-comparison.tsx`: 移除 `x-fingerprint`（stats fetch）
+  - `src/components/interview/export-buttons.tsx`: 移除 `x-fingerprint`（PDF export fetch）
+  - `src/components/interview/resume-selector.tsx`: 移除 `x-fingerprint`（resume list fetch）
+  - `src/app/[locale]/interview/[id]/page.tsx`: 移除 `x-fingerprint`（session fetch）
+  - `src/app/[locale]/interview/[id]/report/page.tsx`: 移除 `getAIHeaders`、`useSettingsStore`、`x-fingerprint`；添加 useCredits（报告生成后刷新余额）、error toast 映射
+  - `src/app/api/interview/[id]/chat/route.ts`: 从 body 读取 `model` 字段，传给 gateway 的 `modelId`（回退 `'interview-chat-default'`）
+  - `src/app/api/interview/[id]/report/route.ts`: 从 body 读取 `model` 字段，传给 gateway 的 `modelId`（回退 `'interview-report-default'`）
+  - `messages/zh.json` + `messages/en.json`: 新增 `interview.room` 和 `interview.report` 下的错误 i18n 键
+- AC1 ✅：面试聊天和报告界面不要求 API Key，使用服务端 ModelSelector（capability='text'）
+- AC2 ✅：面试流式消息通过 `executeStreamingOperation` 真实到达后端，消息通过 DB 持久化，刷新后恢复
+- AC3 ✅：报告生成成功后调用 `refreshBalance()`；聊天流式完成后 status transition 检测触发余额刷新
+- AC4 ✅：error toast 按 INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 分别显示不同消息；报告页同样分类显示
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~065 限制）
+- AC7 ✅：所有 fetch 请求不含 x-api-key/x-provider/x-base-url/x-fingerprint headers；transport 不设置自定义 headers
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint 无新增错误（预存 `any` 和 set-state-in-effect 非新引入）
+- **未来迭代的学习：**
+  - 面试聊天 ModelSelector 放在 `MessageInput` 下方，与 control bar 同一区域——用户可以在发送消息前切换模型
+  - `handleSwitchRound` 中的 session fetch 也移除了 fingerprint——middleware 会通过 session cookie 自动认证所有 `/api/interview/*` 路由
+  - 面试相关 API 路由的 `model` 参数现在从 client body 读取，但 gateway 的 `authorizeAiRequest` 已验证模型权限——客户端无法提交未授权 modelId
+  - `x-fingerprint` 是开发模式的 fallback 身份机制，已被正式 session cookie 认证完全替代；所有 interview 前端组件已清理完毕
+  - `getAIHeaders` 返回空对象 `{}`——它仍是 settings-store 的导出但已无实际作用，后续可安全移除
+---
+

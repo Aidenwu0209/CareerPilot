@@ -21,10 +21,7 @@ export function ResumeSelector({ value, onChange }: ResumeSelectorProps) {
   const [resumes, setResumes] = useState<Resume[]>([]);
 
   useEffect(() => {
-    const fp = localStorage.getItem('jade_fingerprint');
-    fetch('/api/resume', {
-      headers: fp ? { 'x-fingerprint': fp } : {},
-    })
+    fetch('/api/resume')
       .then((r) => r.json())
       .then((data) => setResumes(Array.isArray(data) ? data : []))
       .catch(console.error);

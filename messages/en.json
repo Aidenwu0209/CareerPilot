@@ -888,7 +888,12 @@
       "roundComplete": "This round is complete",
       "allComplete": "All interview rounds completed",
       "generateReport": "Generate Report",
-      "generatingReport": "Generating report..."
+      "generatingReport": "Generating report...",
+      "insufficientCredits": "Insufficient credits for this interview message",
+      "rateLimited": "Too many requests, please try again later",
+      "modelNotAllowed": "The selected model is disabled or not available",
+      "accountSuspended": "Account suspended",
+      "chatError": "Failed to send interview message, please retry"
     },
     "report": {
       "title": "Interview Report",
@@ -927,7 +932,12 @@
       "backToLobby": "Back to Lobby",
       "markedForReview": "Marked for Review",
       "usedHint": "Used Hint",
-      "skippedQuestion": "Skipped"
+      "skippedQuestion": "Skipped",
+      "insufficientCredits": "Insufficient credits to generate the report",
+      "rateLimited": "Too many requests, please try again later",
+      "modelNotAllowed": "The selected model is disabled or not available",
+      "accountSuspended": "Account suspended",
+      "reportFailed": "Report generation failed, please try again later"
     },
     "interviewers": {
       "hr": "HR",

@@ -27,10 +27,7 @@ export function InterviewLobby() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
-    const fp = localStorage.getItem('jade_fingerprint');
-    fetch('/api/interview', {
-      headers: fp ? { 'x-fingerprint': fp } : {},
-    })
+    fetch('/api/interview')
       .then((r) => r.json())
       .then((data) => setSessions(data))
       .catch(console.error)
@@ -39,10 +36,8 @@ export function InterviewLobby() {
 
   const handleDelete = async () => {
     if (!deleteId) return;
-    const fp = localStorage.getItem('jade_fingerprint');
     await fetch(`/api/interview/${deleteId}`, {
       method: 'DELETE',
-      headers: fp ? { 'x-fingerprint': fp } : {},
     });
     setSessions((prev) => prev.filter((s) => s.id !== deleteId));
     setDeleteId(null);

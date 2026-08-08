@@ -888,7 +888,12 @@
       "roundComplete": "本轮面试结束",
       "allComplete": "所有面试轮次已完成",
       "generateReport": "生成面试报告",
-      "generatingReport": "正在生成报告..."
+      "generatingReport": "正在生成报告...",
+      "insufficientCredits": "点数不足，无法完成面试消息",
+      "rateLimited": "请求过于频繁，请稍后再试",
+      "modelNotAllowed": "当前模型已停用或无权使用",
+      "accountSuspended": "账号已被冻结",
+      "chatError": "面试消息发送失败，请重试"
     },
     "report": {
       "title": "面试报告",
@@ -927,7 +932,12 @@
       "backToLobby": "返回面试大厅",
       "markedForReview": "标记复习",
       "usedHint": "使用了提示",
-      "skippedQuestion": "已跳过"
+      "skippedQuestion": "已跳过",
+      "insufficientCredits": "点数不足，无法生成面试报告",
+      "rateLimited": "请求过于频繁，请稍后再试",
+      "modelNotAllowed": "当前模型已停用或无权使用",
+      "accountSuspended": "账号已被冻结",
+      "reportFailed": "报告生成失败，请稍后重试"
     },
     "interviewers": {
       "hr": "HR面",

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const { messages, roundId, locale = 'zh' } = await request.json();
+  const { messages, roundId, model, locale = 'zh' } = await request.json();
 
   // AC1: Verify round belongs to this session
   const round = await interviewRepository.findRound(roundId);
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   // AC2: Execute through streaming gateway (pre-flight hold before first byte)
   const result = await executeStreamingOperation({
     context: ctx.context,
-    modelId: 'interview-chat-default',
+    modelId: model || 'interview-chat-default',
     capability: 'text',
     businessCapability: 'interview_chat',
     idempotencyKey: `interview-chat-${ctx.context.actor.userId}-${sessionId}-${roundId}-${Date.now()}`,

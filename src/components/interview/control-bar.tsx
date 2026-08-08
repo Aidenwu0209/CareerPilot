@@ -4,7 +4,8 @@ import { useTranslations, useLocale } from 'next-intl';
 import { SkipForward, Lightbulb, Bookmark, BookmarkCheck, StopCircle, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useInterviewStore } from '@/stores/interview-store';
-import { getAIHeaders } from '@/stores/settings-store';
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 interface ControlBarProps {
   sessionId: string;
@@ -22,14 +23,9 @@ export function useInterviewControls({ sessionId, roundId, lastAssistantMessageI
   const isMarked = lastAssistantMessageId ? markedMessages.has(lastAssistantMessageId) : false;
 
   const sendControl = async (action: string) => {
-    const fp = localStorage.getItem('jade_fingerprint');
     await fetch(`/api/interview/${sessionId}/control`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(fp ? { 'x-fingerprint': fp } : {}),
-        ...getAIHeaders(),
-      },
+      headers: JSON_HEADERS,
       body: JSON.stringify({ action, roundId, locale }),
     });
   };
@@ -58,13 +54,9 @@ export function useInterviewControls({ sessionId, roundId, lastAssistantMessageI
   const handleMark = () => {
     if (!lastAssistantMessageId) return;
     toggleMark(lastAssistantMessageId);
-    const fp = localStorage.getItem('jade_fingerprint');
     fetch(`/api/interview/${sessionId}/mark`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(fp ? { 'x-fingerprint': fp } : {}),
-      },
+      headers: JSON_HEADERS,
       body: JSON.stringify({ messageId: lastAssistantMessageId, marked: !isMarked }),
     });
   };

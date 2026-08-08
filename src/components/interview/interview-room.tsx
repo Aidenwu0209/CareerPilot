@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import type { UIMessage } from 'ai';
 import { useRouter } from '@/i18n/routing';
 import { useInterviewStore } from '@/stores/interview-store';
 import { useInterviewChat } from '@/hooks/use-interview-chat';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { INIT_TRIGGER } from '@/lib/interview/constants';
 import { isRoundViewOnly } from '@/lib/interview/round-status';
 import { ProgressBar } from './progress-bar';
@@ -41,17 +44,57 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
     useInterviewStore();
   const [showTransition, setShowTransition] = useState(false);
   const [isViewingHistory, setIsViewingHistory] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
 
   const currentRound = rounds[currentRoundIndex];
   const interviewerConfig = currentRound?.interviewerConfig as InterviewerConfig;
   const isRoundDone = isRoundViewOnly(currentRound?.status, sessionStatus);
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, resetMessages, sendMessage, setMessages } =
+  const { messages, input, handleInputChange, handleSubmit, isLoading, status, error: chatError, resetMessages, sendMessage, setMessages } =
     useInterviewChat({
       sessionId,
       roundId: currentRound?.id || '',
-      selectedModel: useSettingsStore.getState().aiModel,
+      selectedModel,
     });
+
+  const { refresh: refreshBalance } = useCredits();
+
+  // Refresh balance after a successful streaming response completes
+  const prevStatusRef = useRef(status);
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = status;
+    if ((prev === 'streaming' || prev === 'submitted') && status === 'ready') {
+      refreshBalance();
+    }
+  }, [status, refreshBalance]);
+
+  // Show toast when AI API call fails — map known gateway error codes to specific messages
+  const lastErrorRef = useRef<Error | null>(null);
+  useEffect(() => {
+    if (chatError && chatError !== lastErrorRef.current) {
+      lastErrorRef.current = chatError;
+      const msg = chatError.message || '';
+      if (msg.includes('INSUFFICIENT_CREDITS')) {
+        toast.error(t('insufficientCredits'));
+      } else if (msg.includes('RATE_LIMITED')) {
+        toast.error(t('rateLimited'));
+      } else if (msg.includes('MODEL_NOT_ALLOWED') || msg.includes('MODEL_NOT_FOUND')) {
+        toast.error(t('modelNotAllowed'));
+      } else if (msg.includes('ACCOUNT_SUSPENDED')) {
+        toast.error(t('accountSuspended'));
+      } else {
+        toast.error(t('chatError'));
+      }
+    }
+  }, [chatError, t]);
+
+  const handleModelChange = useCallback((modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  }, []);
 
   // Load initial messages from DB on first render
   const loadedRef = useRef(false);
@@ -108,11 +151,8 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
     setCurrentRoundIndex(index);
 
     // Fetch messages for this round
-    const fp = localStorage.getItem('jade_fingerprint');
     try {
-      const res = await fetch(`/api/interview/${sessionId}`, {
-        headers: fp ? { 'x-fingerprint': fp } : {},
-      });
+      const res = await fetch(`/api/interview/${sessionId}`);
       const { rounds: roundsWithMessages } = await res.json();
       const roundData = roundsWithMessages.find((r: any) => r.id === targetRound.id);
 
@@ -208,6 +248,12 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
             isLoading={isLoading}
             onChange={handleInputChange}
             onSubmit={handleSubmit}
+          />
+          <ModelSelector
+            selectedModel={selectedModel}
+            onModelChange={handleModelChange}
+            capability="text"
+            size="sm"
           />
         </div>
       )}

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const existing = await interviewRepository.findReportBySessionId(sessionId);
   if (existing) return NextResponse.json(existing);
 
-  const { locale = 'zh' } = await request.json();
+  const { locale = 'zh', model } = await request.json();
 
   const roundsWithMessages = await interviewRepository.findAllMessagesBySessionId(sessionId);
 
@@ -166,7 +166,7 @@ DO NOT use alternative names like "comprehensiveScore", "capabilityScores", "dir
   // AC2: Report generation through unified Gateway
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'interview-report-default',
+    modelId: model || 'interview-report-default',
     capability: 'text',
     businessCapability: 'interview_report',
     idempotencyKey: `interview-report-${ctx.context.actor.userId}-${sessionId}`,
