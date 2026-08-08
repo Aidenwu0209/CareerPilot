@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
-import { resolveContext } from '@/lib/auth/context';
+import { resolveServerContext } from '@/lib/auth/server-context';
+import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { db } from '@/lib/db';
 import { organizations, organizationMemberships } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -9,11 +9,11 @@ import { NoPermission } from '@/components/admin/no-permission';
 import { getTranslations } from 'next-intl/server';
 
 export default async function OrgAdminLayout({ children }: { children: React.ReactNode }) {
-  const context = await resolveContext();
+  const context = await resolveServerContext();
   const t = await getTranslations('orgAdmin');
 
   if (!context) {
-    redirect('/login?callbackUrl=/org-admin');
+    return redirectToLogin('/org-admin');
   }
 
   // Super admin can view org-admin if they belong to an org; otherwise deny

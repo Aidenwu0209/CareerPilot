@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
+import {
+  buildFingerprintCookie,
+  FINGERPRINT_STORAGE_KEY,
+} from '@/lib/auth/providers/fingerprint';
 import { generateId } from '@/lib/utils';
 
 export function useFingerprint() {
@@ -16,11 +20,20 @@ export function useFingerprint() {
       return;
     }
 
+    function persistFingerprint(fingerprint: string) {
+      localStorage.setItem(FINGERPRINT_STORAGE_KEY, fingerprint);
+      document.cookie = buildFingerprintCookie(
+        fingerprint,
+        window.location.protocol === 'https:',
+      );
+    }
+
     async function getFingerprint() {
       try {
         // Check localStorage first
-        const stored = localStorage.getItem('jade_fingerprint');
+        const stored = localStorage.getItem(FINGERPRINT_STORAGE_KEY);
         if (stored) {
+          persistFingerprint(stored);
           setFingerprint(stored);
           setIsLoading(false);
           return;
@@ -30,12 +43,12 @@ export function useFingerprint() {
         const result = await fp.get();
         const visitorId = result.visitorId;
 
-        localStorage.setItem('jade_fingerprint', visitorId);
+        persistFingerprint(visitorId);
         setFingerprint(visitorId);
       } catch {
         // Fallback: generate a random ID
         const fallbackId = generateId();
-        localStorage.setItem('jade_fingerprint', fallbackId);
+        persistFingerprint(fallbackId);
         setFingerprint(fallbackId);
       } finally {
         setIsLoading(false);

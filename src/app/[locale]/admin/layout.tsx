@@ -1,16 +1,16 @@
-import { redirect } from 'next/navigation';
-import { resolveContext } from '@/lib/auth/context';
+import { resolveServerContext } from '@/lib/auth/server-context';
+import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { Header } from '@/components/layout/header';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { NoPermission } from '@/components/admin/no-permission';
 import { getTranslations } from 'next-intl/server';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const context = await resolveContext();
+  const context = await resolveServerContext();
   const t = await getTranslations('admin');
 
   if (!context) {
-    redirect('/login?callbackUrl=/admin');
+    return redirectToLogin('/admin');
   }
 
   const isSuperAdmin = context.actor.platformRole === 'super_admin';

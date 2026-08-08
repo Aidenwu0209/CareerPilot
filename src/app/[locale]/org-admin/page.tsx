@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { resolveContext } from '@/lib/auth/context';
+import { resolveServerContext } from '@/lib/auth/server-context';
 import { db } from '@/lib/db';
 import { organizations, organizationMemberships, creditAccounts, creditTransactions } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import { Users, BarChart3 } from 'lucide-react';
 
 export default async function OrgAdminPage() {
   const t = await getTranslations('orgAdmin');
-  const context = await resolveContext();
+  const context = await resolveServerContext();
 
   const userId = context!.actor.userId;
 

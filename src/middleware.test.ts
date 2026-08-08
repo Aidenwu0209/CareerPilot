@@ -54,6 +54,8 @@ function createRequest(
 
 beforeEach(() => {
   vi.resetModules();
+  process.env.AUTH_ENABLED = 'true';
+  Object.assign(process.env, { NODE_ENV: 'test' });
 });
 
 describe('Middleware — API public whitelist', () => {
@@ -197,6 +199,21 @@ describe('Middleware — forged x-fingerprint cannot bypass auth', () => {
   });
 });
 
+describe('Middleware — development fingerprint mode', () => {
+  it('lets route handlers validate fingerprint requests when OAuth is disabled', async () => {
+    process.env.AUTH_ENABLED = 'false';
+    Object.assign(process.env, { NODE_ENV: 'development' });
+    const { default: middleware } = await import('./middleware');
+    const req = createRequest('/api/resume', {
+      headers: { 'x-fingerprint': 'dev-fingerprint-123' },
+    });
+
+    const res = await middleware(req);
+
+    expect(res.status).toBe(200);
+  });
+});
+
 describe('Middleware — page routes (auth enabled)', () => {
   beforeEach(() => {
     process.env.AUTH_ENABLED = 'true';
@@ -224,5 +241,12 @@ describe('Middleware — page routes (auth enabled)', () => {
     const location = res.headers.get('location') || '';
     expect(location).toContain('/zh/login');
     expect(location).toContain('callbackUrl=');
+  });
+});
+
+describe('Middleware — route matcher', () => {
+  it('includes the unprefixed login route so next-intl can localize it', async () => {
+    const { config } = await import('./middleware');
+    expect(config.matcher).toContain('/login');
   });
 });

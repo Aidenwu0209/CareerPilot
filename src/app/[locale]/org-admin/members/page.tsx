@@ -1,14 +1,14 @@
-import { redirect } from 'next/navigation';
-import { resolveContext } from '@/lib/auth/context';
+import { resolveServerContext } from '@/lib/auth/server-context';
+import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { db } from '@/lib/db';
 import { organizations, organizationMemberships } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { MembersManager } from '@/components/org-admin/members-manager';
 
 export default async function OrgAdminMembersPage() {
-  const context = await resolveContext();
+  const context = await resolveServerContext();
   if (!context) {
-    redirect('/login?callbackUrl=/org-admin/members');
+    return redirectToLogin('/org-admin/members');
   }
 
   const userId = context.actor.userId;

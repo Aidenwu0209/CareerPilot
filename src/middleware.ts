@@ -46,10 +46,17 @@ function getSessionToken(request: NextRequest): string | undefined {
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const authEnabled = process.env.AUTH_ENABLED === 'true';
 
   // ── API routes: enforce session cookie except for public whitelist ──
   if (pathname.startsWith('/api/')) {
     if (isPublicApiPath(pathname)) {
+      return NextResponse.next();
+    }
+
+    // Fingerprint auth is a development-only mode. Individual route handlers
+    // resolve and validate the X-Fingerprint header before touching user data.
+    if (!authEnabled && process.env.NODE_ENV !== 'production') {
       return NextResponse.next();
     }
 
@@ -68,7 +75,6 @@ export default async function middleware(request: NextRequest) {
   const response = intlMiddleware(request);
 
   // Only check auth when OAuth is enabled
-  const authEnabled = process.env.AUTH_ENABLED === 'true';
   if (!authEnabled) return response;
 
   if (isPublicPagePath(pathname)) return response;
@@ -89,5 +95,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/(zh|en)/:path*', '/share/:path*', '/api/:path*'],
+  matcher: ['/', '/login', '/(zh|en)/:path*', '/share/:path*', '/api/:path*'],
 };

@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
-import { resolveContext } from '@/lib/auth/context';
+import { resolveServerContext } from '@/lib/auth/server-context';
+import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { db } from '@/lib/db';
 import {
   organizationMemberships,
@@ -21,11 +21,10 @@ import { Link } from '@/i18n/routing';
 
 export default async function AccountPage() {
   const t = await getTranslations('account');
-  const context = await resolveContext();
+  const context = await resolveServerContext();
 
   if (!context) {
-    redirect('/login?callbackUrl=/account');
-    return;
+    return redirectToLogin('/account');
   }
 
   const userId = context.actor.userId;
@@ -39,8 +38,7 @@ export default async function AccountPage() {
   const user = userRows[0];
 
   if (!user) {
-    redirect('/login?callbackUrl=/account');
-    return;
+    return redirectToLogin('/account');
   }
 
   // Fetch org memberships
