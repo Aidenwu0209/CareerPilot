@@ -12,9 +12,12 @@ import { eq, count } from 'drizzle-orm';
 import { Header } from '@/components/layout/header';
 import { ExportButton } from '@/components/account/export-button';
 import { DeleteAccountSection } from '@/components/account/delete-account-section';
+import { ReconsentButton } from '@/components/account/reconsent-button';
 import { Badge } from '@/components/ui/badge';
-import { Building2, Shield, User, Calendar } from 'lucide-react';
+import { Building2, Shield, User, Calendar, FileText, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { getAllCurrentVersions, getUserConsents, checkAllCurrentConsents } from '@/lib/legal/consent-service';
+import { Link } from '@/i18n/routing';
 
 export default async function AccountPage() {
   const t = await getTranslations('account');
@@ -70,6 +73,11 @@ export default async function AccountPage() {
     .select({ value: count() })
     .from(interviewSessions)
     .where(eq(interviewSessions.userId, userId));
+
+  // Fetch legal consent data
+  const currentVersions = getAllCurrentVersions();
+  const userConsents = await getUserConsents(userId);
+  const consentStatus = await checkAllCurrentConsents(userId);
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return '—';
@@ -217,6 +225,104 @@ export default async function AccountPage() {
           </p>
           <div className="mt-4">
             <ExportButton />
+          </div>
+        </div>
+
+        {/* Legal documents & consent section */}
+        <div className="mt-6 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="mb-4 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-zinc-400" />
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+              {t('legal.title')}
+            </h2>
+          </div>
+          <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+            {t('legal.description')}
+          </p>
+
+          {/* Re-consent warning */}
+          {!consentStatus.allConsented && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950/40">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">
+                    {t('legal.reconsentTitle')}
+                  </p>
+                  <p className="mt-1 text-sm text-amber-700 dark:text-amber-300">
+                    {t('legal.reconsentDescription')}
+                  </p>
+                  <div className="mt-3">
+                    <ReconsentButton />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Up-to-date notice */}
+          {consentStatus.allConsented && (
+            <div className="mb-4 flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+              <CheckCircle2 className="h-4 w-4" />
+              {t('legal.upToDate')}
+            </div>
+          )}
+
+          {/* Document versions table */}
+          <div className="space-y-4">
+            {(['privacy_policy', 'terms_of_service'] as const).map((docType) => {
+              const current = currentVersions[docType];
+              const consent = userConsents[docType];
+              const isCurrent = consent?.version === current.version;
+              const docLabel = docType === 'privacy_policy' ? t('legal.privacyPolicy') : t('legal.termsOfService');
+              const docHref = docType === 'privacy_policy' ? '/privacy' : '/terms';
+
+              return (
+                <div
+                  key={docType}
+                  className="rounded-lg border border-zinc-100 p-4 dark:border-zinc-800"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                          {docLabel}
+                        </p>
+                        {isCurrent ? (
+                          <Badge variant="outline" className="text-xs text-green-600 dark:text-green-400">
+                            <CheckCircle2 className="mr-1 h-3 w-3" />
+                            {t('legal.version', { version: current.version })}
+                          </Badge>
+                        ) : (
+                          <Badge variant="destructive" className="text-xs">
+                            {t('legal.notConsented')}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {t('legal.effective')}: {formatDate(current.effectiveDate)}
+                      </p>
+                      {consent ? (
+                        <div className="mt-2 space-y-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                          <p>
+                            {t('legal.consentedAt')}: {formatDate(consent.createdAt)}
+                          </p>
+                          <p>
+                            {t('legal.consentSource')}: {t(`legal.source.${consent.source}` as 'registration')}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                    <Link
+                      href={docHref}
+                      className="shrink-0 text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      {t('legal.viewDocument')}
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

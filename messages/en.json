@@ -1719,6 +1719,32 @@
         "DELETE_FAILED": "Deletion failed. Please try again or contact support.",
         "NETWORK_ERROR": "Network error. Please check your connection and retry."
       }
+    },
+    "legal": {
+      "title": "Legal Documents & Consent",
+      "description": "View current privacy policy and terms of service versions and your consent records.",
+      "currentTitle": "Current Versions",
+      "yourConsent": "Your Consent",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "version": "Version {version}",
+      "effective": "Effective Date",
+      "consentedAt": "Consented At",
+      "consentSource": "Source",
+      "source": {
+        "registration": "Registration",
+        "explicit_reconsent": "Re-consent",
+        "login": "Login"
+      },
+      "notConsented": "Not yet consented",
+      "reconsentTitle": "Re-consent Required",
+      "reconsentDescription": "The privacy policy or terms of service have been updated. You need to consent to the latest versions to continue using the platform.",
+      "reconsentButton": "Consent to Latest Versions",
+      "reconsenting": "Recording consent…",
+      "reconsentSuccess": "Consent records updated",
+      "reconsentFailed": "Action failed, please try again later",
+      "viewDocument": "View Document",
+      "upToDate": "Your consent records are up to date."
     }
   }
 }

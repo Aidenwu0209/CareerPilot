@@ -1719,6 +1719,32 @@
         "DELETE_FAILED": "注销失败，请稍后重试或联系客服。",
         "NETWORK_ERROR": "网络错误，请检查连接后重试。"
       }
+    },
+    "legal": {
+      "title": "法律文档与同意",
+      "description": "查看当前隐私政策和服务条款版本，以及你的同意记录。",
+      "currentTitle": "当前有效版本",
+      "yourConsent": "你的同意记录",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "version": "版本 {version}",
+      "effective": "生效日期",
+      "consentedAt": "同意时间",
+      "consentSource": "来源",
+      "source": {
+        "registration": "注册",
+        "explicit_reconsent": "重新同意",
+        "login": "登录"
+      },
+      "notConsented": "尚未同意",
+      "reconsentTitle": "需要重新同意",
+      "reconsentDescription": "隐私政策或服务条款已更新，你需要同意最新版本才能继续使用。",
+      "reconsentButton": "同意最新版本",
+      "reconsenting": "正在记录同意…",
+      "reconsentSuccess": "同意记录已更新",
+      "reconsentFailed": "操作失败，请稍后重试",
+      "viewDocument": "查看文档",
+      "upToDate": "你的同意记录为最新版本。"
     }
   }
 }
