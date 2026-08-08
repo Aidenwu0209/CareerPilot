@@ -710,6 +710,24 @@
   - `validateModelAccess(modelId)` from `model-catalog.ts` is ready for US-035/US-037 integration — returns `{ ok: true, model }` or `{ ok: false, error: 'MODEL_NOT_ALLOWED' }`
   - When a previous Ralph iteration leaves untracked files for a future story (e.g., `ai-authorization.ts`), do NOT commit them with the current story — leave them for their own story iteration
 
+## 2026-08-08 08:42 - US-037
+- Implemented unified AI Gateway for single-call orchestration
+- New files: `src/lib/ai/gateway.ts` (`executeAiOperation()` gateway), `src/lib/ai/gateway.test.ts` (13 tests)
+- AC1: `GatewayParams<T>` accepts only `{ context, modelId, capability, businessCapability, idempotencyKey, dispatch }` — no client key/provider/baseUrl
+- AC2: Pipeline: authorizeAiRequest → checkRateLimit → create operation → createHold → resolve credentials → create attempt → dispatch → settle/release
+- AC3: Each request creates `aiOperations` record + at least one `aiProviderAttempts` record; attempt tracks model, status, duration, usage
+- AC4: Dispatch context provides decrypted API key internally but result type `T` is caller-defined; error messages sanitized (URLs and keys stripped)
+- AC5: All rejection paths (model/capability/credits/rate-limit/idempotency) return before dispatch is called — verified via `vi.fn()` spy
+- 13 tests: input contract (1), rejection paths (4), operation/attempt tracking (4), data safety (2), full success flow (3) — linter added rate-limit rejection test
+- Typecheck passes, all 947 tests pass (45 files)
+- **未来迭代的学习：**
+  - `executeAiOperation<T>` is generic — the dispatch callback receives `GatewayDispatchContext` (modelIdentifier, providerType, apiKey, baseUrl) and returns `T`
+  - The gateway bridges managed credentials: `resolveProviderCredential(providerId)` decrypts the key, passes it to dispatch, which constructs AI SDK model instances
+  - Idempotency: duplicate `idempotencyKey` → 409 `OPERATION_EXISTS` (caught unique constraint violation)
+  - Settlement caps at hold amount; release credits back full amount on failure
+  - US-038 will add multi-attempt retry logic on top of this gateway
+  - US-039 will add streaming support (the gateway currently only supports non-streaming dispatch)
+
 ## 2026-08-08 08:39 - US-036
 - Implemented AI credit hold, settlement, and release service
 - New files: `src/lib/ai/credit-hold-service.ts` (hold lifecycle service), `src/lib/ai/credit-hold-service.test.ts` (17 tests)
