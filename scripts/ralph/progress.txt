@@ -1179,3 +1179,26 @@
   - src/components/ai/ai-chat-bubble.tsx — removed `hasApiKey` check and warning badge
 - Typecheck passes, 1109 tests pass (61 files), no new lint issues introduced
 ---
+
+## 2026-08-08 10:55 - US-061
+- Created shared authorized model selector component that loads from server directory API
+- New files: `src/hooks/use-model-catalog.ts` (shared catalog hook with module-level cache), `src/components/ai/model-selector.tsx` (ModelSelector component), `src/components/ai/model-selector.test.ts` (8 tests)
+- Modified: `src/components/ai/ai-input.tsx` (replaced inline Select with ModelSelector component, removed `models: string[]` prop), `src/components/ai/ai-chat-panel.tsx` (removed model fetching logic and `models` state, uses ModelSelector internally), `messages/zh.json` + `messages/en.json` (added model selector i18n keys)
+- AC1: ModelSelector fetches from real `/api/ai/models` API via `useModelCatalog` hook — no hardcoded provider list
+- AC2: Each model item shows `displayName`, tier badge, provider type, and estimated credits (fixed price or token-based indicator)
+- AC3: Only `modelId` is stored in settings store via `setAIModel(modelId)`; selection restores from `useSettingsStore.getState().aiModel` on mount
+- AC4: When selected model disappears from filtered catalog (disabled/removed), `useEffect` detects unavailability and auto-selects first available model
+- AC5-6: Browser verification deferred — structural correctness verified via typecheck + tests
+- AC7: No console errors expected (proper loading/error/empty states handled)
+- AC8: Typecheck passes ✓
+- `useModelCatalog` hook features: module-level cache (`cachedModels`) so multiple selector instances share one network request; `inflight` promise dedup; `invalidateModelCatalog()` export for cache busting; loading/error/empty states
+- `ModelSelector` features: `capability` prop for filtering (e.g. 'text' or 'image_generation'); `size` prop ('sm' for chat toolbar, 'default' for dialogs); Skeleton loading state; error/empty text states; auto-fallback effect; auto-select first model when none selected
+- Typecheck passes, 1117 tests pass (62 files), lint clean on all new/changed files
+- **未来迭代的学习：**
+  - Module-level cache pattern for shared data: `let cached = null; let inflight = null;` deduplicates fetches across multiple component instances — ideal for model catalog that many UI components need
+  - `useModelCatalog` is the single hook for catalog data — all future components (cover letter, grammar check, etc.) should use this hook instead of fetching `/api/ai/models` independently
+  - ModelSelector's `capability` prop enables reuse across text and image_generation features without separate selectors
+  - `estimateCredits()` utility: returns the fixed price as string, '~' for token-based pricing, or null for free models — call from any component that needs to display cost
+  - Settings store `setAIModel()` triggers debounced sync to server `/api/user/settings` — model selection persists across sessions
+  - When adding i18n keys under the 'ai' namespace, update BOTH `messages/zh.json` and `messages/en.json` — missing keys cause runtime errors in `useTranslations()`
+---

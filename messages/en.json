@@ -271,7 +271,13 @@
     "apiKeyMissing": "API Key Not Configured",
     "apiKeyMissingHint": "Please configure your AI API Key in Settings before using AI features.",
     "apiKeyMissingBubble": "API Key not configured. Go to Settings.",
-    "goToSettings": "Go to Settings"
+    "goToSettings": "Go to Settings",
+    "modelPlaceholder": "Select model",
+    "modelLoadError": "Failed to load models",
+    "noModelsAvailable": "No models available",
+    "tokenPriced": "Token-based",
+    "credits": "credits",
+    "modelUnavailable": "Selected model is no longer available, switched to default"
   },
   "pdf": {
     "exporting": "Generating PDF...",

@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useEditorStore } from '@/stores/editor-store';
-import { useSettingsStore, getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { useAIChat } from '@/hooks/use-ai-chat';
 import { useMessagePagination } from '@/hooks/use-message-pagination';
 import { AIMessage } from './ai-message';
@@ -44,7 +44,6 @@ function formatTime(date: Date | number | null) {
 /** Headless chat body — reusable in both side panel and floating bubble */
 export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   const t = useTranslations('ai');
-  const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | undefined>(
     () => useSettingsStore.getState().aiModel || undefined
   );
@@ -69,26 +68,11 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     }
   }, [hydrated, settingsModel]);
 
-  // Fetch models from managed gateway (no BYOK headers needed)
-  useEffect(() => {
-    if (!hydrated) return;
-    fetch('/api/ai/models', { headers: getAIHeaders() })
-      .then((res) => res.json())
-      .then((data: { models: { id: string }[] }) => {
-        const ids = data.models.map((m) => m.id);
-        // Ensure user's configured model is always in the list
-        if (settingsModel && !ids.includes(settingsModel)) {
-          ids.unshift(settingsModel);
-        }
-        setModels(ids);
-      })
-      .catch(() => {
-        // Even on error, show user's configured model
-        if (settingsModel) {
-          setModels([settingsModel]);
-        }
-      });
-  }, [hydrated, settingsModel]);
+  // Persist model selection to settings store
+  const handleModelChange = useCallback((modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  }, []);
 
   // Fetch sessions for resumeId; reset state synchronously first so stale
   // sessionsLoaded/activeSessionId can't leak a pendingAiMessage to the wrong resume.
@@ -380,9 +364,8 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
         onChange={handleInputChange}
         onSubmit={handleSubmit}
         isLoading={isLoading}
-        models={models}
         selectedModel={selectedModel}
-        onModelChange={setSelectedModel}
+        onModelChange={handleModelChange}
       />
     </>
   );
