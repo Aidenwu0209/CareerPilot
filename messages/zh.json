@@ -1673,6 +1673,52 @@
       "exporting": "正在生成导出文件…",
       "success": "导出成功，文件已开始下载",
       "failed": "导出失败，请稍后重试"
+    },
+    "delete": {
+      "title": "注销账号",
+      "description": "永久删除你的账号和个人数据。此操作不可撤销。",
+      "startButton": "注销我的账号",
+      "dialogTitle": "确认注销账号",
+      "warningDescription": "你即将开始注销流程。请仔细阅读以下影响，确认后需要通过邮箱验证码重新认证。",
+      "dataWillBeDeleted": "将被删除或撤销的数据",
+      "items": {
+        "resumes": "简历及章节（{count} 份）",
+        "interviews": "模拟面试记录（{count} 份）",
+        "chats": "AI 聊天记录与会话",
+        "shares": "公开分享链接",
+        "auth": "登录凭据（注销后无法再登录）",
+        "memberships": "机构成员资格（{orgs}）"
+      },
+      "retainedNote": "点数流水、审计记录和法律同意记录因合规要求保留，但会匿名化处理，不再包含可识别信息。",
+      "noEmailWarning": "你的账号没有绑定邮箱，无法通过验证码重新认证。请联系客服处理。",
+      "continue": "继续",
+      "cancel": "取消",
+      "back": "返回",
+      "otpRequestDescription": "为了确认是你本人操作，我们需要向 {email} 发送一个一次性验证码。",
+      "sendCode": "发送验证码",
+      "codeSent": "验证码已发送，请查收邮箱。",
+      "enterCode": "我已收到，去输入验证码",
+      "otpEnterDescription": "请输入发送到 {email} 的 6 位验证码。",
+      "otpLabel": "验证码",
+      "resend": "重新发送",
+      "resendIn": "{seconds}秒后可重发",
+      "verifyAndContinue": "验证并继续",
+      "finalWarning": "这是最后一步。确认后你的账号和所有数据将被立即删除，无法恢复。",
+      "typeToConfirm": "请输入 \"{phrase}\" 以确认注销。",
+      "confirmPhrase": "删除我的账号",
+      "acknowledgment": "我理解此操作不可撤销，所有简历、面试、聊天和分享数据将被永久删除。",
+      "confirmDelete": "确认注销",
+      "errors": {
+        "EMAIL_REQUIRED": "你的账号没有绑定邮箱，无法完成注销。请联系客服。",
+        "RATE_LIMITED": "请求过于频繁，请稍后再试。",
+        "OTP_SEND_FAILED": "验证码发送失败，请稍后重试。",
+        "INVALID_OTP": "验证码无效或已过期，请重新输入。",
+        "INVALID_OR_EXPIRED_TOKEN": "确认令牌无效或已过期，请重新开始。",
+        "USER_NOT_FOUND": "用户不存在。",
+        "TOKEN_REQUIRED": "缺少确认令牌。",
+        "DELETE_FAILED": "注销失败，请稍后重试或联系客服。",
+        "NETWORK_ERROR": "网络错误，请检查连接后重试。"
+      }
     }
   }
 }

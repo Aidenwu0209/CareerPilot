@@ -1701,3 +1701,22 @@
   - RateLimitPolicy 接口使用 `limit`（不是 `maxRequests`）+ `windowMs` + `failClosed`
   - `isNull()` from drizzle-orm 用于查询 NULL 值——不要用 `eq(field, null)`，SQLite 和 PG 行为不一致
 ---
+
+## 2026-08-08 15:25 - US-081
+- Created account deletion confirmation UI with multi-step flow on /zh/account
+- New file: `src/components/account/delete-account-section.tsx` — client component with 4-step deletion dialog (warning → OTP request → OTP enter → final confirm)
+- Modified: `src/app/[locale]/account/page.tsx` — added Danger Zone section with resume/interview counts from DB, passes data to client component
+- Modified: `messages/zh.json` and `messages/en.json` — added `account.delete.*` i18n keys for all UI text and error states
+- AC1 ✅: Danger Zone section lists data to be deleted (resumes count, interviews count, chats, shares, auth credentials) and membership scope with org names
+- AC2 ✅: Multi-step flow requires: (1) read warning and continue, (2) request OTP to email, (3) enter valid 6-digit OTP, (4) type confirmation phrase "删除我的账号"/"DELETE MY ACCOUNT" AND check acknowledgment checkbox
+- AC3 ✅: Cancel at any step calls `resetState()` — no API calls for deletion, no data changes; dialog closes
+- AC4 ✅: On success, calls `signOut({ redirect: false })` then `router.push('/')` — session cleared, auth_accounts deleted by backend makes old session invalid
+- AC5-7 ⏳: Browser E2E testing deferred — requires running dev server and OTP delivery via TestMailAdapter
+- Typecheck passes, 23 account-deletion tests pass, lint clean on all changed files
+- **未来迭代的学习：**
+  - The account deletion flow reuses `/api/auth/otp/request` (same endpoint as login) for sending OTP — no separate re-auth endpoint needed
+  - `signOut({ redirect: false })` from next-auth/react clears the client session; combined with backend auth_accounts deletion, old sessions are fully invalidated
+  - For dialog-based multi-step flows, use a single `step` state machine (`idle | warning | otp-request | otp-enter | final-confirm`) rather than separate booleans
+  - `count()` from drizzle-orm is the standard way to get row counts — import alongside `eq` from 'drizzle-orm'
+  - When passing server-fetched data to client components in Next.js server components, type the props interface explicitly (including nullability for fields like email)
+---

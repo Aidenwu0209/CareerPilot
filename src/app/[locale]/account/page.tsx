@@ -5,10 +5,13 @@ import {
   organizationMemberships,
   organizations,
   users,
+  resumes,
+  interviewSessions,
 } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, count } from 'drizzle-orm';
 import { Header } from '@/components/layout/header';
 import { ExportButton } from '@/components/account/export-button';
+import { DeleteAccountSection } from '@/components/account/delete-account-section';
 import { Badge } from '@/components/ui/badge';
 import { Building2, Shield, User, Calendar } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
@@ -57,6 +60,16 @@ export default async function AccountPage() {
 
   const isSuperAdmin = context.actor.platformRole === 'super_admin';
   const isActive = context.actor.status === 'active';
+
+  // Fetch counts for deletion summary
+  const [resumeCountRow] = await db
+    .select({ value: count() })
+    .from(resumes)
+    .where(eq(resumes.userId, userId));
+  const [interviewCountRow] = await db
+    .select({ value: count() })
+    .from(interviewSessions)
+    .where(eq(interviewSessions.userId, userId));
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return '—';
@@ -206,6 +219,15 @@ export default async function AccountPage() {
             <ExportButton />
           </div>
         </div>
+
+        {/* Danger zone: account deletion */}
+        <DeleteAccountSection
+          userEmail={user.email}
+          hasMemberships={memberships.length > 0}
+          orgNames={memberships.map((m: typeof memberships[number]) => m.orgName)}
+          resumeCount={resumeCountRow?.value ?? 0}
+          interviewCount={interviewCountRow?.value ?? 0}
+        />
       </main>
     </div>
   );

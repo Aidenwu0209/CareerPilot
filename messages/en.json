@@ -1673,6 +1673,52 @@
       "exporting": "Generating export file…",
       "success": "Export successful, download started",
       "failed": "Export failed, please try again later"
+    },
+    "delete": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and personal data. This action cannot be undone.",
+      "startButton": "Delete My Account",
+      "dialogTitle": "Confirm Account Deletion",
+      "warningDescription": "You are about to start the deletion process. Please read the impact below carefully. You will need to re-authenticate via email code to proceed.",
+      "dataWillBeDeleted": "Data that will be deleted or revoked",
+      "items": {
+        "resumes": "Resumes and sections ({count})",
+        "interviews": "Mock interview records ({count})",
+        "chats": "AI chat history and sessions",
+        "shares": "Public share links",
+        "auth": "Login credentials (you will not be able to log in again)",
+        "memberships": "Organization memberships ({orgs})"
+      },
+      "retainedNote": "Credit transactions, audit logs, and legal consent records are retained for compliance but anonymized — no personally identifiable information remains.",
+      "noEmailWarning": "Your account has no email address, so re-authentication is not possible. Please contact support.",
+      "continue": "Continue",
+      "cancel": "Cancel",
+      "back": "Back",
+      "otpRequestDescription": "To confirm it's really you, we need to send a one-time code to {email}.",
+      "sendCode": "Send Code",
+      "codeSent": "Code sent. Please check your inbox.",
+      "enterCode": "I received it, enter the code",
+      "otpEnterDescription": "Enter the 6-digit code sent to {email}.",
+      "otpLabel": "Verification Code",
+      "resend": "Resend code",
+      "resendIn": "Resend in {seconds}s",
+      "verifyAndContinue": "Verify and Continue",
+      "finalWarning": "This is the final step. Once confirmed, your account and all data will be permanently deleted and cannot be recovered.",
+      "typeToConfirm": "Type \"{phrase}\" to confirm deletion.",
+      "confirmPhrase": "DELETE MY ACCOUNT",
+      "acknowledgment": "I understand this action is irreversible and all resumes, interviews, chats, and shares will be permanently deleted.",
+      "confirmDelete": "Confirm Deletion",
+      "errors": {
+        "EMAIL_REQUIRED": "Your account has no email address and cannot be deleted here. Please contact support.",
+        "RATE_LIMITED": "Too many requests. Please try again later.",
+        "OTP_SEND_FAILED": "Failed to send verification code. Please try again later.",
+        "INVALID_OTP": "Invalid or expired code. Please try again.",
+        "INVALID_OR_EXPIRED_TOKEN": "Confirmation token is invalid or expired. Please start over.",
+        "USER_NOT_FOUND": "User not found.",
+        "TOKEN_REQUIRED": "Missing confirmation token.",
+        "DELETE_FAILED": "Deletion failed. Please try again or contact support.",
+        "NETWORK_ERROR": "Network error. Please check your connection and retry."
+      }
     }
   }
 }
