@@ -929,3 +929,29 @@
   - The streaming gateway creates exactly one attempt (attempt #1); nested tool calls (generateText inside streamText steps) use the same gateway credentials but are tracked as part of the main stream's usage
   - Tests for streaming routes only need to read one chunk (`await reader.read()`) to verify the stream started — the monitoring runs asynchronously after stream consumption
 ---
+
+### US-046: Resume chat via Gateway (COMPLETED)
+- Migrated `src/app/api/ai/chat/route.ts` from BYOK to unified Gateway using `executeStreamingOperation`
+- Changed `createExecutableTools(resumeId, aiConfig: AIConfig)` → `createExecutableTools(resumeId, modelCtx: ModelBuildContext)` in `src/lib/ai/tools.ts`
+- Nested AI calls in tools (`analyzeJdMatch`, `translateResume`) now use managed credentials via `buildModel(modelCtx)` instead of `getModel(aiConfig)`
+- Tools created inside dispatch callback where `GatewayDispatchContext` is available
+- `onFinish` callback saves ordered parts (text + tool calls) to chat messages
+- Updated `ownership.test.ts` (US-018): added mocks for `@/lib/auth/guards`, `@/lib/ai/gateway`, `@/lib/ai/model-builder`; updated `mockStreamText` to use `toUIMessageStream` instead of `toUIMessageStreamResponse`
+- 6 gateway tests + 28 ownership tests = 34 tests pass
+
+### US-047: Interview chat via Gateway (COMPLETED)
+- Migrated `src/app/api/interview/[id]/chat/route.ts` from BYOK to `executeStreamingOperation` + `buildModel`
+- Cast: `aiResult.toUIMessageStream() as unknown as ReadableStream<Uint8Array>`
+- `onFinish` callback handles business logic (save messages, update rounds) while gateway monitoring handles billing
+- `modelId: 'interview-chat-default'`
+- 5 tests: success streaming, cross-user 404, unauthenticated 401, insufficient credits 422, client header ignored
+
+### US-048: Interview report via Gateway (COMPLETED)
+- Migrated `src/app/api/interview/[id]/report/route.ts` GET + POST
+- POST uses `executeAiOperation` with `buildModel` + `getJsonOptions`
+- GET uses `resolveActiveContext` for auth, verifies session ownership
+- Stable idempotency key: `'interview-report-${userId}-${sessionId}'` for replay safety
+- `modelId: 'interview-report-default'`
+- 6 tests: generate report, GET existing report, cross-user 404, unauthenticated 401, insufficient credits 422, provider failure 502
+- Full suite: 56 files, 1024 tests, all pass; typecheck clean
+---

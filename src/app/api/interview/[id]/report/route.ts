@@ -1,22 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
-import { getModel, extractAIConfig, AIConfigError, getJsonProviderOptions } from '@/lib/ai/provider';
-import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { resolveActiveContext } from '@/lib/auth/guards';
 import { interviewRepository } from '@/lib/db/repositories/interview.repository';
 import { interviewReportSchema } from '@/lib/ai/interview-report-schema';
 import { extractJson } from '@/lib/ai/extract-json';
-import { dbReady } from '@/lib/db';
+import { executeAiOperation } from '@/lib/ai/gateway';
+import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await dbReady;
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
+
   const { id: sessionId } = await params;
-  const fingerprint = getUserIdFromRequest(request);
-  const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
 
   // Verify session belongs to the current user
   const session = await interviewRepository.findSession(sessionId);
-  if (!session || session.userId !== user.id) {
+  if (!session || session.userId !== ctx.context.actor.userId) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
@@ -27,45 +27,45 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    await dbReady;
-    const { id: sessionId } = await params;
-    const fingerprint = getUserIdFromRequest(request);
-    const user = await resolveUser(fingerprint);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
 
-    const session = await interviewRepository.findSession(sessionId);
-    if (!session || session.userId !== user.id) {
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    }
+  const { id: sessionId } = await params;
 
-    const existing = await interviewRepository.findReportBySessionId(sessionId);
-    if (existing) return NextResponse.json(existing);
+  // AC1: Verify session belongs to the current user
+  const session = await interviewRepository.findSession(sessionId);
+  if (!session || session.userId !== ctx.context.actor.userId) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
 
-    const { model: modelId, locale = 'zh' } = await request.json();
-    const aiConfig = extractAIConfig(request);
-    const model = getModel(aiConfig, modelId);
+  // AC5: Return existing report if already generated
+  const existing = await interviewRepository.findReportBySessionId(sessionId);
+  if (existing) return NextResponse.json(existing);
 
-    const roundsWithMessages = await interviewRepository.findAllMessagesBySessionId(sessionId);
+  const { locale = 'zh' } = await request.json();
 
-    const conversationLog = roundsWithMessages.map(({ round, messages }) => {
-      const config = round.interviewerConfig as any;
-      return {
-        interviewerType: round.interviewerType,
-        interviewerName: config.name,
-        roundId: round.id,
-        messages: messages.map((m: { role: string; content: string; metadata: unknown }) => ({
-          role: m.role,
-          content: m.content,
-          metadata: m.metadata,
-        })),
-      };
-    });
+  const roundsWithMessages = await interviewRepository.findAllMessagesBySessionId(sessionId);
 
-    const lang = locale === 'zh' ? '中文' : 'English';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const conversationLog = roundsWithMessages.map(({ round, messages }) => {
+    const config = round.interviewerConfig as any;
+    return {
+      interviewerType: round.interviewerType,
+      interviewerName: config.name,
+      roundId: round.id,
+      messages: messages.map((m: { role: string; content: string; metadata: unknown }) => ({
+        role: m.role,
+        content: m.content,
+        metadata: m.metadata,
+      })),
+    };
+  });
 
-    const reportPrompt = locale === 'zh'
-      ? `你是一位拥有丰富面试评估经验的人才评估专家。请基于以下面试对话记录，对候选人进行系统化、结构化的评估分析，生成专业的面试评估报告。请以 JSON 格式输出。
+  const lang = locale === 'zh' ? '中文' : 'English';
+
+  const reportPrompt = locale === 'zh'
+    ? `你是一位拥有丰富面试评估经验的人才评估专家。请基于以下面试对话记录，对候选人进行系统化、结构化的评估分析，生成专业的面试评估报告。请以 JSON 格式输出。
 
 # 岗位要求
 
@@ -107,7 +107,7 @@ ${JSON.stringify(conversationLog, null, 2)}
 - \`"skipped": true\`：候选人跳过了该问题 → 标注为"已跳过"并相应扣分
 
 请用中文输出报告内容。`
-      : `You are an experienced talent assessment professional. Based on the following interview transcripts, produce a systematic, structured evaluation of the candidate. Output the report in JSON format.
+    : `You are an experienced talent assessment professional. Based on the following interview transcripts, produce a systematic, structured evaluation of the candidate. Output the report in JSON format.
 
 # Job Requirements
 
@@ -150,10 +150,7 @@ List areas for improvement ranked by priority (high/medium/low), each with: desc
 
 Output the report in English.`;
 
-    const { text } = await generateText({
-      model,
-      maxOutputTokens: 16384,
-      system: `You are a professional interview evaluator. Output your evaluation as a single valid JSON object. Do NOT wrap the JSON in markdown code fences. Do NOT wrap the result in an array.
+  const SYSTEM_PROMPT = `You are a professional interview evaluator. Output your evaluation as a single valid JSON object. Do NOT wrap the JSON in markdown code fences. Do NOT wrap the result in an array.
 
 The JSON MUST use EXACTLY these top-level keys (camelCase, English, no translation, no synonyms):
 - "overallScore" (number 0-100)
@@ -162,28 +159,46 @@ The JSON MUST use EXACTLY these top-level keys (camelCase, English, no translati
 - "overallFeedback" (string, 3-5 paragraphs)
 - "improvementPlan" (array of { "priority": "high"|"medium"|"low", "area": string, "description": string, "resources": string[] })
 
-DO NOT use alternative names like "comprehensiveScore", "capabilityScores", "direction", "feedback" instead of "overallFeedback", etc. Field names must match EXACTLY. All fields are REQUIRED.`,
-      prompt: reportPrompt,
-      providerOptions: getJsonProviderOptions(aiConfig),
-    });
+DO NOT use alternative names like "comprehensiveScore", "capabilityScores", "direction", "feedback" instead of "overallFeedback", etc. Field names must match EXACTLY. All fields are REQUIRED.`;
 
-    const report = extractJson(text, interviewReportSchema);
+  // AC2: Report generation through unified Gateway
+  const result = await executeAiOperation({
+    context: ctx.context,
+    modelId: 'interview-report-default',
+    capability: 'text',
+    businessCapability: 'interview_report',
+    idempotencyKey: `interview-report-${ctx.context.actor.userId}-${sessionId}`,
+    dispatch: async (gwCtx) => {
+      const model = buildModel(gwCtx);
+      const aiResult = await generateText({
+        model,
+        maxOutputTokens: 16384,
+        system: SYSTEM_PROMPT,
+        prompt: reportPrompt,
+        providerOptions: getJsonOptions(gwCtx.providerType),
+      });
+      return { text: aiResult.text, usage: aiResult.usage };
+    },
+  });
 
-    const saved = await interviewRepository.createReport({
-      sessionId,
-      overallScore: report.overallScore,
-      dimensionScores: report.dimensionScores,
-      roundEvaluations: report.roundEvaluations,
-      overallFeedback: report.overallFeedback,
-      improvementPlan: report.improvementPlan,
-    });
-
-    return NextResponse.json(saved);
-  } catch (error) {
-    if (error instanceof AIConfigError) {
-      return new Response(JSON.stringify({ error: error.message }), { status: 401 });
-    }
-    console.error('POST /api/interview/[id]/report error:', error);
-    return new Response('Internal server error', { status: 500 });
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, message: result.message },
+      { status: result.status }
+    );
   }
+
+  // AC4: Parse and persist report
+  const report = extractJson(result.data.text, interviewReportSchema);
+
+  const saved = await interviewRepository.createReport({
+    sessionId,
+    overallScore: report.overallScore,
+    dimensionScores: report.dimensionScores,
+    roundEvaluations: report.roundEvaluations,
+    overallFeedback: report.overallFeedback,
+    improvementPlan: report.improvementPlan,
+  });
+
+  return NextResponse.json(saved);
 }

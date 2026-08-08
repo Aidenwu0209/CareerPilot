@@ -29,6 +29,9 @@ const { mockCreateTools } = vi.hoisted(() => ({
   mockCreateTools: vi.fn(() => ({})),
 }));
 
+// Auth context state for gateway-based route
+const ctxState = { userId: null as string | null };
+
 // ── Mock DB with in-memory SQLite ──
 
 vi.mock('@/lib/db', async () => {
@@ -80,6 +83,39 @@ vi.mock('@/lib/ai/tools', () => ({
   createExecutableTools: mockCreateTools,
 }));
 
+// ── Mock gateway modules used by the migrated chat route ──
+
+vi.mock('@/lib/auth/guards', () => ({
+  resolveActiveContext: vi.fn(async () => {
+    if (!ctxState.userId) return null;
+    return {
+      ok: true as const,
+      context: {
+        actor: { userId: ctxState.userId, platformRole: 'user', status: 'active' as const },
+        tenant: { type: 'none' as const, organizationId: null, orgRole: null },
+        billing: { accountOwnerType: 'user' as const, accountOwnerId: ctxState.userId },
+      },
+    };
+  }),
+}));
+
+vi.mock('@/lib/ai/gateway', () => ({
+  executeStreamingOperation: vi.fn(async ({ dispatch }: { dispatch: (ctx: unknown) => Promise<unknown> }) => {
+    const gwCtx = {
+      providerType: 'openai',
+      apiKey: 'test-key',
+      baseUrl: null,
+      modelIdentifier: 'gpt-4',
+    };
+    const result = await dispatch(gwCtx);
+    return { ok: true as const, stream: (result as { stream: ReadableStream<Uint8Array> }).stream };
+  }),
+}));
+
+vi.mock('@/lib/ai/model-builder', () => ({
+  buildModel: vi.fn(() => ({ modelId: 'gpt-4', provider: 'openai' })),
+}));
+
 // ── Import AFTER mocks ──
 
 import { POST as chatPost } from './route';
@@ -106,6 +142,7 @@ async function loginUser(userId: string) {
     [BOB_ID]: { id: BOB_ID, email: 'bob@test.com', name: 'Bob' },
   };
   mockResolveUser.mockResolvedValue(userMap[userId]);
+  ctxState.userId = userId;
 }
 
 function makePostRequest(url: string, body: unknown) {
@@ -136,8 +173,14 @@ beforeEach(async () => {
   // Reset all mocks
   vi.clearAllMocks();
   mockGetFingerprint.mockReturnValue('test-fp');
+  ctxState.userId = null;
   mockStreamText.mockReturnValue({
-    toUIMessageStreamResponse: () => new Response('ok', { status: 200 }),
+    toUIMessageStream: () => new ReadableStream({
+      start(controller) {
+        controller.enqueue(new Uint8Array([1, 2, 3]));
+        controller.close();
+      },
+    }),
   });
 
   // Clean tables (child → parent order)

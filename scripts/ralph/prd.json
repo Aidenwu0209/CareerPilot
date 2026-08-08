@@ -892,7 +892,7 @@
         "Typecheck passes"
       ],
       "priority": 47,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
@@ -911,7 +911,7 @@
         "Typecheck passes"
       ],
       "priority": 48,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false
