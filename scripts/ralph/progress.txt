@@ -571,3 +571,22 @@
   - The `creditRules` table is NOT immutable (no triggers), so tests can clean it with `db.delete()` between cases — unlike `creditTransactions`
   - US-028 (admin adjustment API) and US-031 (org quota API) should reuse the same `resolveActiveContext` + `getOrCreateAccount` pattern for route-level authorization
 ---
+
+## 2026-08-08 08:02 - US-027
+- Implemented super admin user search, detail, and freeze/unfreeze API
+- New files: `src/app/api/admin/users/route.ts` (list/search), `src/app/api/admin/users/[id]/route.ts` (detail), `src/app/api/admin/users/[id]/freeze/route.ts` (freeze/unfreeze), `src/app/api/admin/users/admin-users.test.ts` (13 tests)
+- AC1: Super admin can search by name (LIKE) or exact email, paginated, with balance and org membership summary
+- AC2: Non-super-admin → 403 FORBIDDEN; unauthenticated → 401 AUTH_REQUIRED
+- AC3: Freeze/unfreeze requires `{ action, idempotencyKey }` body; writes sanitized audit event via `recordAuditEvent()`
+- AC4: After freeze, user status set to 'suspended'; US-017 status guard blocks next request
+- AC5: Detail response includes only id/email/name/avatar/role/status/createdAt/balance/accountId/organizations — no resumes, tokens, or AI keys
+- 13 tests covering all ACs: search by email/name (3), 403/401 auth (2), freeze/unfreeze/idempotency (7), sensitive data exclusion (1)
+- Typecheck passes, all 749 tests pass (35 files)
+- **未来迭代的学习：**
+  - SQLite does NOT support `ILIKE` — use `like()` from drizzle-orm instead; SQLite's `LIKE` is case-insensitive for ASCII by default
+  - When cleaning up `users` in tests with immutable FK references (credit_transactions), use `db.run(sql\`PRAGMA foreign_keys = OFF\`)` before deletion, then re-enable with `ON`
+  - The `beforeEach` cleanup now: disable FKs → delete creditTransactions (catch) → delete creditAccounts → delete creditRules → delete users → re-enable FKs
+  - Freeze route checks if target is already in requested state → returns `{ idempotent: true }` without duplicate writes, but still records audit event for traceability
+  - `recordAuditEvent` with `requestId = idempotencyKey` provides DB-level dedup — calling freeze twice with same key returns `{ idempotent: true }` on second call
+  - User search enriches each row with balance (from creditAccounts) and org memberships (from organizationMemberships INNER JOIN organizations)
+  - US-028 (admin credit adjustment) should follow the same super_admin guard pattern and use the same audit event recording
