@@ -1571,3 +1571,27 @@
   - Next.js 动态路由 slug 命名约定：`[id]` 是所有 admin API 路由的统一约定——不要在同一层级混用 `[id]` 和 `[orgId]`
 ---
 ---
+
+## 2026-08-08 14:33 - US-076
+- 创建机构成员与席位管理界面 `/[locale]/org-admin/members`
+- New files:
+  - `src/components/org-admin/members-manager.tsx`: 客户端组件——席位摘要 + 成员列表 + 添加成员 Dialog + 移除成员确认 Dialog
+- Modified files:
+  - `src/app/[locale]/org-admin/members/page.tsx`: 从占位页重写为服务端组件——解析 orgId 并传递给 MembersManager 客户端组件
+  - `messages/zh.json` + `messages/en.json`: 新增 `orgAdmin.members` 命名空间（40+ i18n keys，含 errApi 子字典）
+  - `scripts/ralph/prd.json`: US-076 passes=true
+- AC1 ✅：`/zh/org-admin/members` 只显示本机构 active 成员，含角色 badge（管理员/成员）、状态、加入时间
+- AC2 ✅：添加成员通过精确邮箱 POST /api/organizations/[orgId]/members，成功后 fetchMembers() 刷新列表和席位
+- AC3 ✅：不存在邮箱（USER_NOT_FOUND）、重复成员（ALREADY_MEMBER）、冲突归属（BILLING_CONFLICT）和满席（SEAT_LIMIT_EXCEEDED）均通过 KNOWN_API_ERRORS 映射显示不同明确错误
+- AC4 ✅：移除成员使用 Dialog 确认（destructive 按钮），成功后 toast 提示 + 刷新列表
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~075 限制）
+- AC7 ⏳：同上限制；组件结构清洁，无跨机构数据
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on changed/new files
+- **未来迭代的学习：**
+  - org-admin 页面的 orgId 不在 URL 中——服务端组件需自行查询 `organizationMemberships` + `organizations` 获取 orgId，然后传递给客户端组件
+  - 成员管理 API 位于 `/api/organizations/[orgId]/members`（不是 `/api/org-admin/members`）——GET 返回 `{ members, seats: { used, limit } }`，POST 接受 `{ email }`，DELETE 在 `/members/[userId]`
+  - 成员列表 API 返回所有成员（含 removed 状态）——前端需 `filter(m => m.status === 'active')` 只显示活跃成员
+  - 移除 API 不能移除 org_admin（返回 CANNOT_REMOVE_ADMIN 403）——前端对 org_admin 角色隐藏移除按钮
+  - 添加成员时如果用户之前被移除，API 会重新激活已有 membership（不消耗新席位）——只有全新 membership 才检查席位上限和计费冲突
+  - 服务端组件 + 客户端组件拆分模式：page.tsx 做认证和数据解析（server-side），传 props 给 client component 做 UI 交互
+---

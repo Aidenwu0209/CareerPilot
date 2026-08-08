@@ -1555,6 +1555,53 @@
         "title": "Usage",
         "description": "View organization quota and consumption"
       }
+    },
+    "members": {
+      "title": "Members",
+      "description": "Manage members and seats for {name}",
+      "addMember": "Add Member",
+      "membersTitle": "Member List",
+      "refresh": "Refresh",
+      "seatsFull": "Seat limit reached, cannot add more members",
+      "empty": "No members yet",
+      "loadError": "Failed to load members, please try again",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colRole": "Role",
+      "colJoined": "Joined",
+      "roleAdmin": "Admin",
+      "roleMember": "Member",
+      "remove": "Remove",
+      "fieldEmail": "Email Address",
+      "placeholderEmail": "Enter a registered user's email",
+      "addTitle": "Add Member",
+      "addDescription": "Enter the email of a registered user to add them to {name}",
+      "confirmAdd": "Add",
+      "addSuccess": "Successfully added member {email}",
+      "addFailed": "Failed to add member, please try again",
+      "errEmailRequired": "Please enter an email address",
+      "removeTitle": "Confirm Removal",
+      "removeDescription": "Are you sure you want to remove {name}? They will no longer be able to use organization credits.",
+      "confirmRemove": "Confirm Removal",
+      "removeSuccess": "Removed member {name}",
+      "removeFailed": "Failed to remove member, please try again",
+      "errApi": {
+        "USER_NOT_FOUND": "No registered user found with that email",
+        "ALREADY_MEMBER": "This user is already a member",
+        "SEAT_LIMIT_EXCEEDED": "Organization has reached its seat limit",
+        "BILLING_CONFLICT": "This user already belongs to another organization",
+        "CANNOT_ADD_SUPER_ADMIN": "Super admins cannot be added as organization members",
+        "CANNOT_REMOVE_ADMIN": "Cannot remove organization admins",
+        "ALREADY_REMOVED": "This member has already been removed",
+        "MEMBERSHIP_NOT_FOUND": "Membership not found",
+        "EMAIL_REQUIRED": "An email address is required",
+        "INVALID_BODY": "Invalid request format",
+        "ORG_SUSPENDED": "Organization is suspended",
+        "FORBIDDEN": "You do not have permission to do this",
+        "AUTH_REQUIRED": "Please sign in first"
+      }
     }
   }
 }

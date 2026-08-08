@@ -1555,6 +1555,53 @@
         "title": "用量",
         "description": "查看机构配额和消耗"
       }
+    },
+    "members": {
+      "title": "成员管理",
+      "description": "管理机构「{name}」的成员和席位",
+      "addMember": "添加成员",
+      "membersTitle": "成员列表",
+      "refresh": "刷新",
+      "seatsFull": "席位已满，无法添加新成员",
+      "empty": "暂无成员",
+      "loadError": "加载成员列表失败，请重试",
+      "retry": "重试",
+      "cancel": "取消",
+      "colName": "姓名",
+      "colEmail": "邮箱",
+      "colRole": "角色",
+      "colJoined": "加入时间",
+      "roleAdmin": "管理员",
+      "roleMember": "成员",
+      "remove": "移除",
+      "fieldEmail": "邮箱地址",
+      "placeholderEmail": "输入已注册用户的邮箱",
+      "addTitle": "添加成员",
+      "addDescription": "输入已注册用户的邮箱，将其添加到机构「{name}」",
+      "confirmAdd": "添加",
+      "addSuccess": "已成功添加成员 {email}",
+      "addFailed": "添加成员失败，请重试",
+      "errEmailRequired": "请输入邮箱地址",
+      "removeTitle": "确认移除成员",
+      "removeDescription": "确定要移除 {name} 吗？移除后该成员将无法继续使用机构额度。",
+      "confirmRemove": "确认移除",
+      "removeSuccess": "已移除成员 {name}",
+      "removeFailed": "移除成员失败，请重试",
+      "errApi": {
+        "USER_NOT_FOUND": "未找到该邮箱对应的注册用户",
+        "ALREADY_MEMBER": "该用户已是机构成员",
+        "SEAT_LIMIT_EXCEEDED": "机构席位已满，无法添加更多成员",
+        "BILLING_CONFLICT": "该用户已属于其他机构",
+        "CANNOT_ADD_SUPER_ADMIN": "超级管理员不能被添加为机构成员",
+        "CANNOT_REMOVE_ADMIN": "无法移除机构管理员",
+        "ALREADY_REMOVED": "该成员已被移除",
+        "MEMBERSHIP_NOT_FOUND": "未找到该成员关系",
+        "EMAIL_REQUIRED": "请提供邮箱地址",
+        "INVALID_BODY": "请求格式无效",
+        "ORG_SUSPENDED": "机构已停用",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "请先登录"
+      }
     }
   }
 }
