@@ -1875,3 +1875,22 @@
   - `getTransactions(accountId, { limit })` returns newest-first paginated transactions — use `.filter(t => t.reason === 'consumption')` to find AI consumption entries
 ---
 ---
+
+## 2026-08-08 17:12 - US-088
+- Established comprehensive security, cost, and release regression gate test suite
+- New files in `src/lib/regression-gate/`:
+  - `rejection-zero-side-effects.test.ts` (13 tests) — AC1-3: frozen account, inactive model, insufficient credits, rate limit, model not found, capability mismatch, SSRF guard, legacy BYOK detection, payload limits, provider failure, idempotent replay. All rejection paths assert zero provider calls, zero ledger mutations, zero target writes.
+  - `concurrency-integrity.test.ts` (4 tests) — AC4: concurrent operations cannot overdraft, balances match recomputed transaction sums, each successful operation settled exactly once, idempotent replay does not double-settle.
+  - `secret-leakage-scan.test.ts` (4 tests) — AC5: scans source files for hardcoded API keys (OpenAI/Anthropic/Google/AWS/Bearer), checks .env.example for placeholder-only values, detects real DATABASE_URL passwords in production source, scans dashboard HTML for secrets.
+  - `release-readiness-gate.test.ts` (18 tests) — AC6-7: PG migration files exist and sequential from 0000, expected count matches files, core tables defined. Readiness check returns correct structure with no secret leakage. Backup create/decrypt round-trip works. Balance/FK integrity functions available. Core module smoke tests (gateway, ledger, SSRF, rate limiter, audit, readiness, backup). Project quality scripts exist. i18n supports zh/en.
+- 39 new regression-gate tests, 1272 total tests pass
+- Typecheck passes, lint clean on new files, 0 new lint errors
+- **未来迭代的学习：**
+  - `createHold` with fixed-price models: `calculateActualCost` uses `usage.totalTokens` as proxy for cost, so dispatch results MUST include `{ usage: { totalTokens: N } }` where N >= fixedPrice to get correct settlement — otherwise cost is 0 and the hold is fully refunded
+  - `authorizeAiRequest` checks `account.status === 'frozen'` (credit_accounts.status), NOT `context.actor.status` — to test ACCOUNT_FROZEN, freeze the credit account, not just the user
+  - Gateway creates operation record (Step 3) BEFORE credit hold check (Step 4) — insufficient-credits rejections DO create a failed operation record
+  - `validateModelAccess` checks model status, provider status, and visibility; then capability check is separate — capability mismatch returns CAPABILITY_NOT_SUPPORTED, but nonexistent/inactive model returns MODEL_NOT_ALLOWED
+  - `verifyBalanceIntegrity` and `verifyForeignKeyIntegrity` use PostgreSQL SQL syntax (`$1` params, `::int` casts, `information_schema`) incompatible with SQLite — test with PGlite or just verify function exports
+  - Secret leakage scan: allowlist all `*.test.ts` files since tests legitimately contain test-secret fixtures for assertion purposes; only scan production source files
+  - `createBackup` returns `BackupResult { ok, backup?, error? }` — access `.backup` property to get the `EncryptedBackup` object, not the result itself
+---
