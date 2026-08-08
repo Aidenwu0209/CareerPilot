@@ -870,3 +870,21 @@
   - The gateway handles rate limiting and credit holds — the route no longer needs manual `checkRateLimit`/`rateLimitedResponse` calls
   - The route preserves all PDF processing logic: text extraction (text-based PDF), page-to-image rendering (scanned PDF), image file direct send
   - `MAX_PROMPT_LENGTH * 5` (50,000 chars) used as extracted text length limit — allows multi-page resumes while preventing abuse
+
+## 2026-08-08 09:13 - US-045
+- Migrated multi-section translate route from BYOK to unified AI Gateway building blocks
+- Modified: `src/app/api/ai/translate/route.ts` — replaced `extractAIConfig`/`getModel`/`resolveUser` with composed gateway building blocks: `authorizeAiRequest` + `createHold` + `settleHold`/`releaseHold` + `buildModel`
+- New file: `src/app/api/ai/translate/translate-gateway.test.ts` (7 tests)
+- AC1: Translation validates resumeId and sectionIds belong to current user (404 no-leak)
+- AC2: Multiple section calls share one operation; each real provider request has independent attempt with unique attemptId and sequential attemptNumber
+- AC3: Settlement rules: all success → settleHold with total usage; partial success → settleHold with actual usage (failed sections reported); all fail → releaseHold + operation failed
+- AC4: Same idempotency key → OPERATION_EXISTS (409); no duplicate translations
+- AC5: Insufficient credits → 422 before any concurrent provider call (hold creation fails first)
+- 7 tests: success (1), cross-user 404 (1), unauthenticated (1), insufficient credits (1), partial failure (1), all fail (1), client header ignored (1)
+- Typecheck passes, all 1007 tests pass (53 files)
+- **未来迭代的学习：**
+  - Translate route uses composed gateway building blocks instead of `executeAiOperation` — needed because the route makes N concurrent provider calls under ONE operation
+  - The `attemptSeq` counter (atomic increment) ensures unique attempt numbers across concurrent workers
+  - NDJSON stream must be fully read in tests before checking mock/DB state — the stream's `start` async method drives all work
+  - Settlement caps at hold amount — if actual usage exceeds hold, user pays only hold amount (acceptable for low-cost models)
+  - `settleHold` takes aggregate usage across all sections; `releaseHold` credits back full amount on complete failure
