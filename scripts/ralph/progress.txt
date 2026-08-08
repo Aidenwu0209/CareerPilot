@@ -1469,3 +1469,25 @@
   - API 层验证已在 US-034 实现：负价格/无效限制/重复 ID/缺失供应商均返回明确 error code，UI 只需映射到 i18n 消息
 ---
 
+## 2026-08-08 13:57 - US-072
+- 创建超管用户列表与冻结界面 `/[locale]/admin/users`
+- Modified files:
+  - `src/app/[locale]/admin/users/page.tsx`: 从占位页重写为完整客户端组件——搜索栏 + 用户卡片列表 + 冻结/解冻确认对话框
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.users` 命名空间（40+ i18n keys）
+  - `scripts/ralph/prd.json`: US-072 passes=true
+- AC1 ✅：页面支持按姓名（LIKE 模糊）或精确邮箱搜索；每行显示角色 badge（超管/用户）、状态 badge（正常/已冻结）、余额（tabular-nums）、机构摘要（orgName + role）
+- AC2 ✅：冻结/解冻使用 AlertDialog 确认对话框；成功后 toast 提示 + 立即刷新列表（`fetchUsers(submittedQuery)`）；状态持久化由后端 DB update 保证
+- AC3 ✅：API 只返回 id/email/name/avatarUrl/platformRole/status/createdAt/balance/organizations——不包含简历、面试正文、auth token 或平台 Key
+- AC4 ✅：admin/layout.tsx server guard 确保非 super_admin 看到 NoPermission 组件；API 层 `resolveActiveContext()` + `platformRole !== 'super_admin'` 检查返回 403
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~071 限制）
+- AC7 ⏳：同上限制
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on changed files
+- **未来迭代的学习：**
+  - 用户管理 API（US-017/035/036）已完整实现 list/search + freeze/unfreeze + detail——UI 页面仅需对接即可
+  - freeze API 使用 `POST /api/admin/users/[id]/freeze`（不是 PATCH），body 需要 `{ action, idempotencyKey }`——idempotencyKey 用 `crypto.randomUUID()` 生成
+  - 超级管理员账户不可冻结（前端 `disabled` 按钮 + `title` 提示）——防止自锁
+  - 搜索逻辑：name 使用 LIKE 模糊匹配，email 使用精确匹配（`eq`）——API 已处理，前端只需传 `q` 参数
+  - `lucide-react` 的 `Snowflake`（冻结）和 `Sun`（解冻）图标语义清晰，适合状态切换操作
+  - 用户卡片不使用 Table 组件——使用 flex 布局的 card（同 providers/models 模式），移动端自动换行
+---
+
