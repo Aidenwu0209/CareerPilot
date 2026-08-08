@@ -30,8 +30,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { useEditorStore } from '@/stores/editor-store';
-import { getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 import { setPendingOptimizeMessage } from '@/lib/pending-optimize';
 
 interface JdAnalysisResult {
@@ -266,16 +268,23 @@ function JdAnalysisResultView({ result, jobDescription, t }: { result: JdAnalysi
   );
 }
 
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
 export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDialogProps) {
   const t = useTranslations('jdAnalysis');
+  const tAi = useTranslations('ai');
   const ct = useTranslations('common');
   const router = useRouter();
   const { setShowAiChat, setPendingAiMessage } = useEditorStore();
+  const { refresh: refreshCredits } = useCredits();
   const [jobDescription, setJobDescription] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<JdAnalysisResult | null>(null);
   const [error, setError] = useState('');
   const [isDuplicating, setIsDuplicating] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
 
   // History state
   const [activeTab, setActiveTab] = useState<string>('new');
@@ -286,20 +295,25 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
   const [historyDetailLoading, setHistoryDetailLoading] = useState(false);
   const [deleteToConfirm, setDeleteToConfirm] = useState<string | null>(null);
 
-  const getAuthHeaders = () => {
-    const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-    return {
-      'Content-Type': 'application/json',
-      ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-      ...getAIHeaders(),
-    };
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
   };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('error');
+  }
 
   const fetchHistory = useCallback(async () => {
     setHistoryLoading(true);
     try {
       const res = await fetch(`/api/ai/jd-analysis/history?resumeId=${resumeId}`, {
-        headers: getAuthHeaders(),
+        headers: JSON_HEADERS,
       });
       if (res.ok) {
         setHistory(await res.json());
@@ -324,8 +338,8 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
     try {
       const res = await fetch('/api/ai/jd-analysis', {
         method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ resumeId, jobDescription }),
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ resumeId, jobDescription, model: selectedModel }),
       });
 
       if (!res.ok) {
@@ -335,10 +349,11 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
 
       const data: JdAnalysisResult = await res.json();
       setResult(data);
+      refreshCredits();
       // Refresh history count
       fetchHistory();
     } catch (err: any) {
-      setError(err.message || 'Failed to analyze');
+      setError(mapError(err.message || ''));
     } finally {
       setIsAnalyzing(false);
     }
@@ -393,7 +408,7 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
     try {
       const res = await fetch(`/api/resume/${resumeId}/duplicate`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: JSON_HEADERS,
       });
       if (!res.ok) throw new Error('Failed to duplicate resume');
       const duplicated = await res.json();
@@ -417,7 +432,7 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
     try {
       await fetch(`/api/ai/jd-analysis/history?id=${id}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
+        headers: JSON_HEADERS,
       });
       setHistory((prev) => prev.filter((h) => h.id !== id));
       if (historyDetail) {
@@ -464,6 +479,18 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
                   className="h-[200px] max-h-[200px] overflow-y-auto resize-none text-sm"
                   disabled={isAnalyzing}
                 />
+
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    {tAi('model')}
+                  </label>
+                  <ModelSelector
+                    selectedModel={selectedModel}
+                    onModelChange={handleModelChange}
+                    capability="text"
+                    size="default"
+                  />
+                </div>
 
                 {error && (
                   <div className="flex items-center gap-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-400">
@@ -583,7 +610,7 @@ export function JdAnalysisDialog({ open, onOpenChange, resumeId }: JdAnalysisDia
                             try {
                               // Fetch full detail via individual record endpoint
                               const res = await fetch(`/api/ai/jd-analysis/history?resumeId=${resumeId}&id=${item.id}`, {
-                                headers: getAuthHeaders(),
+                                headers: JSON_HEADERS,
                               });
                               if (res.ok) {
                                 const data = await res.json();

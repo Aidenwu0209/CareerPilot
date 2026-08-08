@@ -5,6 +5,7 @@ import { MAX_PROMPT_LENGTH } from '@/lib/validation/input-limits';
 export const jdAnalysisInputSchema = z.object({
   resumeId: z.string().describe('The ID of the resume to analyze'),
   jobDescription: z.string().min(1).max(MAX_PROMPT_LENGTH).describe('The job description text to match against'),
+  model: z.string().optional().describe('The model ID from the authorized model catalog'),
 });
 
 export type JdAnalysisInput = z.infer<typeof jdAnalysisInputSchema>;

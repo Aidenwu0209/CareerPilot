@@ -397,6 +397,7 @@
     "optimize": "Optimize Resume",
     "optimizeCopy": "Copy & Optimize",
     "copyOptimizeError": "Failed to duplicate resume, please try again",
+    "error": "Analysis failed. Please try again.",
     "pasteJd": "Paste a job description to get started",
     "noResults": "No analysis results available",
     "newAnalysis": "New Analysis",

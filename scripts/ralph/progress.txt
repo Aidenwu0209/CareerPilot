@@ -1267,3 +1267,28 @@
   - API route 中 `modelId: model || 'xxx-default'` 模式保持向后兼容：客户端不传 model 时使用默认值
   - `useCredits` hook 实例是组件局部的——dialog 内的 refresh 只更新 dialog 本地状态；US-068 的全局余额显示需要自己的 useCredits 实例或事件机制
 ---
+
+## 2026-08-08 12:10 - US-064
+- 接入语法检查与 JD 分析界面，使用共享 ModelSelector 和托管点数
+- 修改文件：
+  - `src/lib/ai/grammar-check-schema.ts`：添加 `model: z.string().optional()` 字段
+  - `src/lib/ai/jd-analysis-schema.ts`：添加 `model: z.string().optional()` 字段
+  - `src/app/api/ai/grammar-check/route.ts`：从 body 读取 `model`，传给 gateway 的 `modelId`（回退 `'grammar-check-default'`）
+  - `src/app/api/ai/jd-analysis/route.ts`：从 body 读取 `model`，传给 gateway 的 `modelId`（回退 `'jd-analysis-default'`）
+  - `src/components/editor/grammar-check-dialog.tsx`：移除 `getAIHeaders()` 和 `x-fingerprint` header；添加 ModelSelector、useCredits、useSettingsStore；成功后 refreshCredits()；mapError() 将 INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 映射为本地化消息
+  - `src/components/editor/jd-analysis-dialog.tsx`：同上改造——移除 BYOK 和 fingerprint；添加 ModelSelector、useCredits、useSettingsStore；成功后 refreshCredits()；mapError() 错误映射
+  - `messages/zh.json` + `messages/en.json`：在 `jdAnalysis` 命名空间添加 `error` 键
+- AC1 ✅：语法检查和 JD 分析都使用共享 ModelSelector（capability='text'），不读取本地 AI Key
+- AC2 ✅：成功请求真实到达 `/api/ai/grammar-check` 和 `/api/ai/jd-analysis`，结果和历史记录通过 DB 持久化
+- AC3 ✅：成功后调用 `refreshCredits()` 刷新余额；服务端正确扣点
+- AC4 ✅：mapError() 将不同错误码映射为不同本地化消息（INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED/generic）
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061/062/063 限制）
+- AC7 ✅：请求不含 x-api-key/x-provider/x-base-url/x-fingerprint headers
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint clean（7 个预存 `any` 警告非新引入，git stash 对比确认）
+- **未来迭代的学习：**
+  - `mapError()` + `JSON_HEADERS` + `ModelSelector` + `useCredits` + `useSettingsStore` 五件套已成为非流式 AI 对话框的标准改造模式——US-065/066/067 的翻译、面试、职业照界面可继续复用
+  - Grammar check 对话框的 ModelSelector 放在 `!isChecking` 条件块内，避免检查进行时显示选择器
+  - JD 分析对话框的 ModelSelector 放在 Textarea 之后、error 区域之前
+  - JD 分析之前缺少 `jdAnalysis.error` i18n key，本次补上；grammarCheck.error 已存在
+  - 历史/删除请求只需 `{ 'Content-Type': 'application/json' }` 静态 header——session cookie 自动附带
+---

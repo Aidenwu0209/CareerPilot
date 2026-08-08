@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { resumeId, sectionIds } = parsed.data;
+  const { resumeId, sectionIds, model } = parsed.data;
 
   // Fetch the resume and verify ownership
   const resume = await resumeRepository.findById(resumeId);
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
   // Execute through unified gateway
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'grammar-check-default',
+    modelId: model || 'grammar-check-default',
     capability: 'text',
     businessCapability: 'grammar_check',
     idempotencyKey: `grammar-${ctx.context.actor.userId}-${resumeId}-${Date.now()}`,

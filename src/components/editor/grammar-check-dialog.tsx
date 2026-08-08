@@ -26,8 +26,10 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { useEditorStore } from '@/stores/editor-store';
-import { getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 
 interface GrammarIssue {
   sectionId: string;
@@ -226,13 +228,20 @@ function GrammarCheckResultView({ result, t }: { result: GrammarCheckResult; t: 
   );
 }
 
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
 export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarCheckDialogProps) {
   const t = useTranslations('grammarCheck');
+  const tAi = useTranslations('ai');
   const ct = useTranslations('common');
   const { setShowAiChat, setPendingAiMessage } = useEditorStore();
+  const { refresh: refreshCredits } = useCredits();
   const [isChecking, setIsChecking] = useState(false);
   const [result, setResult] = useState<GrammarCheckResult | null>(null);
   const [error, setError] = useState('');
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
 
   // History state
   const [activeTab, setActiveTab] = useState<string>('new');
@@ -242,20 +251,25 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
   const [historyDetailLoading, setHistoryDetailLoading] = useState(false);
   const [deleteToConfirm, setDeleteToConfirm] = useState<string | null>(null);
 
-  const getAuthHeaders = () => {
-    const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-    return {
-      'Content-Type': 'application/json',
-      ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-      ...getAIHeaders(),
-    };
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
   };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('error');
+  }
 
   const fetchHistory = useCallback(async () => {
     setHistoryLoading(true);
     try {
       const res = await fetch(`/api/ai/grammar-check/history?resumeId=${resumeId}`, {
-        headers: getAuthHeaders(),
+        headers: JSON_HEADERS,
       });
       if (res.ok) {
         setHistory(await res.json());
@@ -278,8 +292,8 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
     try {
       const res = await fetch('/api/ai/grammar-check', {
         method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ resumeId }),
+        headers: JSON_HEADERS,
+        body: JSON.stringify({ resumeId, model: selectedModel }),
       });
 
       if (!res.ok) {
@@ -289,9 +303,10 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
 
       const data: GrammarCheckResult = await res.json();
       setResult(data);
+      refreshCredits();
       fetchHistory();
     } catch (err: any) {
-      setError(err.message || 'Failed to check grammar');
+      setError(mapError(err.message || ''));
     } finally {
       setIsChecking(false);
     }
@@ -330,7 +345,7 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
     try {
       await fetch(`/api/ai/grammar-check/history?id=${id}`, {
         method: 'DELETE',
-        headers: getAuthHeaders(),
+        headers: JSON_HEADERS,
       });
       setHistory((prev) => prev.filter((h) => h.id !== id));
       if (historyDetail) {
@@ -387,6 +402,20 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
                     <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                       {t('checking')}
                     </p>
+                  </div>
+                )}
+
+                {!isChecking && (
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                      {tAi('model')}
+                    </label>
+                    <ModelSelector
+                      selectedModel={selectedModel}
+                      onModelChange={handleModelChange}
+                      capability="text"
+                      size="default"
+                    />
                   </div>
                 )}
 
@@ -489,7 +518,7 @@ export function GrammarCheckDialog({ open, onOpenChange, resumeId }: GrammarChec
                             setHistoryDetailLoading(true);
                             try {
                               const res = await fetch(`/api/ai/grammar-check/history?resumeId=${resumeId}&id=${item.id}`, {
-                                headers: getAuthHeaders(),
+                                headers: JSON_HEADERS,
                               });
                               if (res.ok) {
                                 const data = await res.json();

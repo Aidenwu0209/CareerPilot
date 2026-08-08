@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { resumeId, jobDescription } = parsed.data;
+  const { resumeId, jobDescription, model } = parsed.data;
 
   // Fetch the resume and verify ownership
   const resume = await resumeRepository.findById(resumeId);
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
   // Execute through unified gateway
   const result = await executeAiOperation({
     context: ctx.context,
-    modelId: 'jd-analysis-default',
+    modelId: model || 'jd-analysis-default',
     capability: 'text',
     businessCapability: 'jd_analysis',
     idempotencyKey: `jd-analysis-${ctx.context.actor.userId}-${resumeId}-${Date.now()}`,
