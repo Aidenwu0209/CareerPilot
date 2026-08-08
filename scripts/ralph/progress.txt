@@ -679,6 +679,23 @@
   - `scryptSync` derives a 256-bit key from the master key + per-encryption salt — even if the DB is compromised, each credential needs independent cracking
   - `maskCredential` shows first 2 and last 4 chars with bullets in between — no exact length leak for short keys (≤5 chars fully masked)
 
+## 2026-08-08 08:33 - US-034
+- Implemented model catalog management and user-facing catalog API
+- New files: `src/lib/ai/model-catalog.ts` (`getUserCatalog()` + `validateModelAccess()`), `src/app/api/admin/models/route.ts` (GET list, POST create), `src/app/api/admin/models/[id]/route.ts` (PATCH update), `src/app/api/ai/catalog/route.ts` (GET user catalog), `src/app/api/admin/models/admin-models.test.ts` (18 tests)
+- AC1: Admin can create models with capabilities, limits, tier, pricing; PATCH updates any field
+- AC2: Validation rejects non-existent provider (400), duplicate modelIdentifier per provider (409), negative prices/limits (400)
+- AC3: User catalog returns only active+public models from active providers with capabilities and pricing
+- AC4: Catalog response excludes provider keys, encrypted credentials, base URLs, and internal service URLs
+- AC5: `validateModelAccess()` returns MODEL_NOT_ALLOWED for disabled/private/non-existent models
+- 18 tests: model management (3), field validation (5), user catalog (3), sensitive data exclusion (1), model access validation (4), authorization (2)
+- Typecheck passes, all 898 tests pass (42 files)
+- **未来迭代的学习：**
+  - `model-catalog.ts` separates admin CRUD from user-facing catalog queries — `getUserCatalog()` always filters active+public+active-provider
+  - `validateModelAccess(modelId)` is the gateway for AI operations (US-050 will call this before dispatching requests)
+  - The catalog response shape uses `CatalogModel` interface that explicitly excludes sensitive fields — type safety prevents accidental leakage
+  - Model pricing: `fixedPrice` for per-call (image gen), `tokenPriceInput`/`tokenPriceOutput` for token-based — can coexist on same model
+  - Visibility: 'public' models appear in user catalog; 'private' models are admin-only (internal/testing)
+
 ## 2026-08-08 08:29 - US-033
 - Implemented super admin provider management and connection test API
 - New files: `src/app/api/admin/providers/route.ts` (GET list, POST create), `src/app/api/admin/providers/[id]/route.ts` (GET detail, PATCH update), `src/app/api/admin/providers/[id]/test/route.ts` (POST connection test), `src/app/api/admin/providers/admin-providers.test.ts` (20 tests)
