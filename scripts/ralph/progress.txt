@@ -1442,3 +1442,30 @@
   - 供应商管理 API（US-032/033）已完整实现 CRUD + test + rotate——UI 页面仅需对接即可
   - US-071（模型目录管理界面）可复用此页面的模式：客户端组件 + Dialog 表单 + i18n keys + API 对接
 ---
+
+## 2026-08-08 13:40 - US-071
+- 创建超管模型目录管理界面 `/[locale]/admin/ai/models`
+- New files:
+  - `src/app/[locale]/admin/ai/models/page.tsx`: 完整客户端组件——模型列表 + 新增对话框 + 编辑对话框 + 启停确认
+- Modified files:
+  - `src/components/admin/admin-sidebar.tsx`: 添加模型目录导航项（Boxes 图标）
+  - `src/app/[locale]/admin/page.tsx`: 添加模型目录卡片入口
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.sections.aiModels` 和 `admin.models` 命名空间（80+ i18n keys）
+  - `scripts/ralph/prd.json`: US-071 passes=true
+- AC1 ✅：页面支持新增和编辑模型的供应商、ID、显示名、能力、档位、限制和价格
+- AC2 ✅：负价格、无效 Token/steps 上限、重复 ID 和缺失供应商显示字段错误且不能提交（前端 + API 双重验证）
+- AC3 ✅：启停通过 PATCH /api/admin/models/[id] status=active/disabled；停用后用户目录刷新时反映（US-034 API 已实现）
+- AC4 ✅：admin/layout.tsx server guard 确保非 super_admin 看到 NoPermission 组件；API 层 super_admin 检查已拒绝非授权请求
+- AC5-7 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~070 限制）
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - 模型管理页面位于 `/admin/ai/models`（嵌套在 `ai` 子目录下），与供应商管理 `/admin/ai-providers` 并列——侧栏导航项需要设置 `match: '/admin/ai/models'` 来高亮
+  - `CapabilityToggle` 组件用按钮切换模式实现多选（text/image_generation）——避免引入 checkbox 组件依赖
+  - `lucide-react@0.563.0` 导出 `ImageIcon`（`Image` 的别名）和 `Boxes`——均可直接 import
+  - next-intl 动态 tier 标签必须先检查 key 是否存在于预定义列表中（`TIERS.find()`），否则 `t()` 会抛出 `MISSING_MESSAGE` 错误
+  - 新增模型对话框同时加载供应商列表（`GET /api/admin/providers`）用于选择器——只显示 status='active' 的供应商
+  - 编辑对话框中 `modelIdentifier` 设为只读（disabled Input）——模型标识不可更改，防止破坏现有 operation/attempt 关联
+  - 管理后台 admin/page.tsx 首页卡片布局 `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` 自然支持 4 个卡片——第二行一个卡片靠左
+  - API 层验证已在 US-034 实现：负价格/无效限制/重复 ID/缺失供应商均返回明确 error code，UI 只需映射到 i18n 消息
+---
+
