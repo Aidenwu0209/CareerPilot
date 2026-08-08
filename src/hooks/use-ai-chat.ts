@@ -5,8 +5,7 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useResumeStore } from '@/stores/resume-store';
-import { useSettingsStore, getAIHeaders } from '@/stores/settings-store';
-import { generateId } from '@/lib/utils';
+import { getAIHeaders } from '@/stores/settings-store';
 
 interface UseAIChatOptions {
   resumeId: string;
@@ -107,24 +106,6 @@ export function useAIChat({ resumeId, sessionId, initialMessages, selectedModel 
   const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
-
-    // Check if API key is configured
-    if (!useSettingsStore.getState().aiApiKey) {
-      const userMsg: UIMessage = {
-        id: generateId(),
-        role: 'user',
-        parts: [{ type: 'text', text: input }],
-      };
-      const errorMsg: UIMessage = {
-        id: generateId(),
-        role: 'assistant',
-        parts: [{ type: 'text', text: '__API_KEY_MISSING__' }],
-      };
-      // Keep these messages separate from useChat state so they never get sent to the server
-      setLocalMessages((prev) => [...prev, userMsg, errorMsg]);
-      setInput('');
-      return;
-    }
 
     // Clear local-only messages when user starts a real conversation
     if (localMessages.length > 0) {

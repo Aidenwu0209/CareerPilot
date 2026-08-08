@@ -3,9 +3,9 @@ import { create } from 'zustand';
 export type AIProvider = 'openai' | 'anthropic' | 'gemini';
 
 interface SettingsStore {
-  // AI settings
+  // AI settings (managed server-side, no longer user-configurable via BYOK)
   aiProvider: AIProvider;
-  aiApiKey: string; // stored locally only, never sent to server
+  aiApiKey: string; // always empty — legacy field kept for type compat
   aiBaseURL: string;
   aiModel: string;
   // Editor settings
@@ -26,32 +26,26 @@ interface SettingsStore {
   hydrate: () => void;
 }
 
-const API_KEY_STORAGE_KEY = 'jade_api_key';
-const PROVIDER_CONFIGS_KEY = 'jade_provider_configs';
+// Legacy localStorage keys that must be cleaned up (US-060)
+const LEGACY_STORAGE_KEYS = [
+  'jade_api_key',
+  'jade_provider_configs',
+  'jade_nanobanana_api_key',
+];
 
-interface ProviderConfig {
-  baseURL: string;
-  model: string;
-  apiKey: string;
-}
-
-const PROVIDER_DEFAULTS: Record<AIProvider, ProviderConfig> = {
-  openai: { baseURL: 'https://api.openai.com/v1', model: 'gpt-4o', apiKey: '' },
-  anthropic: { baseURL: 'https://api.anthropic.com', model: 'claude-sonnet-4-20250514', apiKey: '' },
-  gemini: { baseURL: 'https://generativelanguage.googleapis.com/v1beta', model: 'gemini-2.0-flash', apiKey: '' },
-};
-
-function loadProviderConfigs(): Partial<Record<AIProvider, ProviderConfig>> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const raw = localStorage.getItem(PROVIDER_CONFIGS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
-}
-
-function saveProviderConfigs(configs: Partial<Record<AIProvider, ProviderConfig>>) {
+/**
+ * Remove legacy BYOK localStorage entries.
+ * Called once on hydration. Does NOT copy values anywhere.
+ */
+function cleanupLegacyStorage() {
   if (typeof window === 'undefined') return;
-  try { localStorage.setItem(PROVIDER_CONFIGS_KEY, JSON.stringify(configs)); } catch { /* ignore */ }
+  for (const key of LEGACY_STORAGE_KEYS) {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // ignore
+    }
+  }
 }
 
 function getFingerprint(): string | null {
@@ -91,120 +85,65 @@ function syncToServer(state: SettingsStore) {
   }, 500);
 }
 
-function syncProviderConfig(state: SettingsStore) {
-  const configs = loadProviderConfigs();
-  configs[state.aiProvider] = {
-    baseURL: state.aiBaseURL,
-    model: state.aiModel,
-    apiKey: state.aiApiKey,
-  };
-  saveProviderConfigs(configs);
-}
-
-function saveApiKeyLocally(key: string) {
-  if (typeof window === 'undefined') return;
-  try {
-    if (key) {
-      localStorage.setItem(API_KEY_STORAGE_KEY, key);
-    } else {
-      localStorage.removeItem(API_KEY_STORAGE_KEY);
-    }
-  } catch { /* ignore */ }
-}
-
-function loadApiKeyLocally(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return localStorage.getItem(API_KEY_STORAGE_KEY) || '';
-  } catch {
-    return '';
-  }
-}
-
+/**
+ * Returns empty headers — BYOK headers are no longer generated.
+ * Kept as a no-op export so existing callers don't break.
+ * The managed AI gateway resolves provider/model server-side.
+ */
 export function getAIHeaders(): Record<string, string> {
-  const { aiProvider, aiApiKey, aiBaseURL, aiModel } = useSettingsStore.getState();
-  const headers: Record<string, string> = {};
-  if (aiProvider) headers['x-provider'] = aiProvider;
-  if (aiApiKey) headers['x-api-key'] = aiApiKey;
-  if (aiBaseURL) headers['x-base-url'] = aiBaseURL;
-  if (aiModel) headers['x-model'] = aiModel;
-  return headers;
+  return {};
 }
 
-export const useSettingsStore = create<SettingsStore>((set, get) => ({
+export const useSettingsStore = create<SettingsStore>((set) => ({
   aiProvider: 'openai',
   aiApiKey: '',
-  aiBaseURL: 'https://api.openai.com/v1',
-  aiModel: 'gpt-4o',
+  aiBaseURL: '',
+  aiModel: '',
   autoSave: true,
   autoSaveInterval: 500,
   _hydrated: false,
   _syncing: false,
 
   setAIProvider: (provider) => {
-    const { aiProvider: prev, aiBaseURL, aiModel, aiApiKey } = get();
-
-    // Save current provider's config before switching
-    const configs = loadProviderConfigs();
-    configs[prev] = { baseURL: aiBaseURL, model: aiModel, apiKey: aiApiKey };
-    saveProviderConfigs(configs);
-
-    // Restore target provider's cached config, or use defaults
-    const cached = configs[provider];
-    const defaults = PROVIDER_DEFAULTS[provider];
-    const restored = cached || defaults;
-
-    set({
-      aiProvider: provider,
-      aiBaseURL: restored.baseURL,
-      aiModel: restored.model,
-      aiApiKey: restored.apiKey,
-    });
-    saveApiKeyLocally(restored.apiKey);
-    syncToServer(get());
+    set({ aiProvider: provider });
+    syncToServer(useSettingsStore.getState());
   },
 
   setAIApiKey: (key) => {
     set({ aiApiKey: key });
-    saveApiKeyLocally(key);
-    syncProviderConfig(get());
   },
 
   setAIBaseURL: (url) => {
     set({ aiBaseURL: url });
-    syncToServer(get());
-    syncProviderConfig(get());
+    syncToServer(useSettingsStore.getState());
   },
 
   setAIModel: (model) => {
     set({ aiModel: model });
-    syncToServer(get());
-    syncProviderConfig(get());
+    syncToServer(useSettingsStore.getState());
   },
 
   setAutoSave: (enabled) => {
     set({ autoSave: enabled });
-    syncToServer(get());
+    syncToServer(useSettingsStore.getState());
   },
 
   setAutoSaveInterval: (interval) => {
     set({ autoSaveInterval: interval });
-    syncToServer(get());
+    syncToServer(useSettingsStore.getState());
   },
 
   hydrate: async () => {
-    if (get()._hydrated) return;
+    if (useSettingsStore.getState()._hydrated) return;
 
-    // Load API key from localStorage immediately
-    const apiKey = loadApiKeyLocally();
-    set({ aiApiKey: apiKey });
+    // Clean up legacy BYOK localStorage keys (US-060)
+    cleanupLegacyStorage();
 
-    // Load other settings from server
+    // Load settings from server
     try {
       const res = await fetch('/api/user/settings', { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
-        // Backward compat: map legacy 'custom' provider to 'openai'
         const provider = (data.aiProvider === 'custom' || data.aiProvider === 'azure') ? 'openai' : data.aiProvider;
         set({
           ...(provider && { aiProvider: provider }),
@@ -214,8 +153,6 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
           ...(typeof data.autoSaveInterval === 'number' && { autoSaveInterval: data.autoSaveInterval }),
           _hydrated: true,
         });
-        // Seed provider config cache with hydrated values
-        syncProviderConfig(get());
         return;
       }
     } catch { /* fall through */ }

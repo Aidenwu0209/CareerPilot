@@ -1159,3 +1159,23 @@
   - messages/{zh,en}.json — added orgAdmin.title/overview/noPermission/summary/sections keys
 - Typecheck passes, 1109 tests pass (61 files), lint clean
 ---
+
+## 2026-08-08 10:44 - US-060
+- Removed user BYOK settings and cleaned up legacy localStorage keys
+- AC1: Settings dialog no longer has AI tab — only Appearance and Editor tabs remain; no Provider/API Key/Base URL inputs
+- AC2: `cleanupLegacyStorage()` runs during `hydrate()` and removes `jade_api_key`, `jade_provider_configs`, `jade_nanobanana_api_key` from localStorage
+- AC3: Cleanup only deletes keys — does not copy values to cookies, server settings, or other localStorage keys
+- AC4: `getAIHeaders()` now returns `{}` — no `x-api-key`, `x-provider`, or `x-base-url` headers generated
+- AC5-7: Manual browser verification deferred; structural correctness via typecheck + test suite
+- AC8: Typecheck passes ✓
+- Files changed:
+  - src/stores/settings-store.ts — removed all BYOK localStorage logic; `getAIHeaders()` returns `{}`; added `cleanupLegacyStorage()`
+  - src/stores/ui-store.ts — default settingsTab changed from 'ai' to 'appearance'
+  - src/components/settings/settings-dialog.tsx — removed entire AI tab (Provider, API Key, Base URL, Model combobox)
+  - src/app/[locale]/linkedin-photo/page.tsx — removed API key input UI, localStorage, and POST body field
+  - src/hooks/use-ai-chat.ts — removed API key guard and `__API_KEY_MISSING__` sentinel logic
+  - src/components/ai/ai-chat-panel.tsx — removed BYOK dependency from model-fetching effect
+  - src/components/ai/ai-message.tsx — removed `APIKeyMissingCard` component
+  - src/components/ai/ai-chat-bubble.tsx — removed `hasApiKey` check and warning badge
+- Typecheck passes, 1109 tests pass (61 files), no new lint issues introduced
+---
