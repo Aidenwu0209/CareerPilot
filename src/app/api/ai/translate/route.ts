@@ -440,6 +440,7 @@ export async function POST(request: NextRequest) {
           // Partial or full success — settle with actual usage
           await settleHold({
             holdId,
+            model,
             actualUsage: {
               inputTokens: totalInputTokens,
               outputTokens: totalOutputTokens,

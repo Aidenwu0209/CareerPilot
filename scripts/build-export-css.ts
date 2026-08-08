@@ -66,7 +66,7 @@ function extractCandidates(source: string): Set<string> {
  */
 function unwrapLayers(css: string): string {
   // Remove standalone @layer declarations (e.g. '@layer properties;')
-  let result = css.replace(/@layer\s+[^{]+;\s*/g, '');
+  const result = css.replace(/@layer\s+[^{]+;\s*/g, '');
 
   // Unwrap @layer blocks — replace '@layer name { ... }' with just '...'
   let output = '';

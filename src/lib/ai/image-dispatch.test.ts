@@ -1,0 +1,69 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { dispatchManagedImageEdit } from './image-dispatch';
+import type { GatewayDispatchContext } from './gateway';
+
+const baseContext: GatewayDispatchContext = {
+  modelIdentifier: 'image-model',
+  providerType: 'google',
+  apiKey: 'managed-secret',
+  baseUrl: null,
+  operationId: 'operation-1',
+  modelId: 'model-1',
+};
+
+afterEach(() => vi.unstubAllGlobals());
+
+describe('managed image dispatch', () => {
+  it('dispatches Google image edits with managed headers and usage', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: 'done' }, { inlineData: { mimeType: 'image/png', data: 'result' } }] } }],
+      usageMetadata: { promptTokenCount: 12, candidatesTokenCount: 8, totalTokenCount: 20 },
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await dispatchManagedImageEdit(baseContext, {
+      prompt: 'professional headshot', mimeType: 'image/jpeg', base64Data: 'source', aspectRatio: '4:3',
+    });
+
+    expect(result.image).toBe('data:image/png;base64,result');
+    expect(result.usage?.totalTokens).toBe(20);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toContain('generativelanguage.googleapis.com');
+    expect((init.headers as Record<string, string>)['x-goog-api-key']).toBe('managed-secret');
+    expect(String(init.body)).not.toContain('managed-secret');
+  });
+
+  it('dispatches OpenAI image edits through the catalog provider', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      data: [{ b64_json: 'edited-image', revised_prompt: 'refined' }],
+      output_format: 'png',
+      usage: { input_tokens: 40, output_tokens: 60, total_tokens: 100 },
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await dispatchManagedImageEdit(
+      { ...baseContext, providerType: 'openai', modelIdentifier: 'gpt-image-1.5' },
+      { prompt: 'professional headshot', mimeType: 'image/jpeg', base64Data: 'source', aspectRatio: '16:9' },
+    );
+
+    expect(result.image).toBe('data:image/png;base64,edited-image');
+    expect(result.usage).toEqual({ inputTokens: 40, outputTokens: 60, totalTokens: 100 });
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe('https://api.openai.com/v1/images/edits');
+    expect((init.headers as Record<string, string>).Authorization).toBe('Bearer managed-secret');
+    expect(JSON.parse(String(init.body))).toMatchObject({
+      model: 'gpt-image-1.5', size: '1536x1024', input_fidelity: 'high',
+    });
+  });
+
+  it('rejects unsupported and non-allowlisted providers', async () => {
+    await expect(dispatchManagedImageEdit(
+      { ...baseContext, providerType: 'anthropic' },
+      { prompt: 'x', mimeType: 'image/png', base64Data: 'x' },
+    )).rejects.toThrow('IMAGE_PROVIDER_UNSUPPORTED');
+    await expect(dispatchManagedImageEdit(
+      { ...baseContext, providerType: 'openai', baseUrl: 'https://evil.example.com' },
+      { prompt: 'x', mimeType: 'image/png', base64Data: 'x' },
+    )).rejects.toThrow('UPSTREAM_URL_NOT_ALLOWED');
+  });
+});

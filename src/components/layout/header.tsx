@@ -12,6 +12,7 @@ import { useUIStore } from '@/stores/ui-store';
 import { useTranslations } from 'next-intl';
 import { useNavContext } from '@/hooks/use-nav-context';
 import { cn } from '@/lib/utils';
+import { useBrand } from './brand-provider';
 
 const NAV_ITEMS: { href: string; i18nKey: string; match: string; tourId?: string }[] = [
   { href: '/dashboard', i18nKey: 'dashboard.nav', match: '/dashboard' },
@@ -24,6 +25,7 @@ export function Header() {
   const t = useTranslations();
   const pathname = usePathname();
   const { navContext } = useNavContext();
+  const { branding } = useBrand();
 
   // Build role-based nav items
   const roleItems: { href: string; i18nKey: string; match: string }[] = [];
@@ -40,7 +42,14 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link href="/dashboard" className="flex items-center gap-1">
-            <Image src="/logo.svg" alt="CareerPilot" width={160} height={36} priority />
+            {branding.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- tenant-controlled HTTPS/relative logo is validated server-side
+              <img src={branding.logoUrl} alt={branding.productName} className="h-9 max-w-40 object-contain" />
+            ) : branding.productName !== 'CareerPilot' ? (
+              <span className="max-w-40 truncate text-lg font-bold tracking-tight text-brand">{branding.productName}</span>
+            ) : (
+              <Image src="/logo.svg" alt="CareerPilot" width={160} height={36} priority />
+            )}
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {allItems.map((item) => {

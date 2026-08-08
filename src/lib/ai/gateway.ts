@@ -283,6 +283,7 @@ export async function executeAiOperation<T>(
       await settleHold({
         holdId: holdResult.hold.id,
         actualUsage: extractUsageMetrics(result),
+        model,
       });
 
       // Cache result for idempotent replay (if small enough)
@@ -579,6 +580,7 @@ export async function executeStreamingOperation(
     attemptId,
     startTime,
     timeoutMs,
+    model,
   });
 
   return {
@@ -601,8 +603,9 @@ function wrapStreamWithMonitoring(params: {
   attemptId: string;
   startTime: number;
   timeoutMs: number;
+  model: import('@/lib/ai/model-catalog').CatalogModel;
 }): ReadableStream<Uint8Array> {
-  const { originalStream, getUsage, holdId, operationId, attemptId, startTime, timeoutMs } = params;
+  const { originalStream, getUsage, holdId, operationId, attemptId, startTime, timeoutMs, model } = params;
 
   let settled = false;
   const reader = originalStream.getReader();
@@ -625,7 +628,7 @@ function wrapStreamWithMonitoring(params: {
       .set({ status: 'succeeded', durationMs, completedAt: new Date(), usage })
       .where(eq(aiProviderAttempts.id, attemptId));
 
-    await settleHold({ holdId, actualUsage: usage });
+    await settleHold({ holdId, actualUsage: usage, model });
 
     await db.update(aiOperations)
       .set({ status: 'succeeded' })

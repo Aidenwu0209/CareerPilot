@@ -1123,6 +1123,10 @@
       "description": "You do not have super admin privileges to access this page."
     },
     "sections": {
+      "operations": {
+        "title": "Operations & Alerts",
+        "description": "Monitor AI reliability, credit usage, cost estimates, and audit activity"
+      },
       "users": {
         "title": "Users & Credits",
         "description": "Manage users, freeze accounts, adjust credits"
@@ -1143,6 +1147,29 @@
         "title": "Credit Rules",
         "description": "Configure registration grants and daily limits"
       }
+    },
+    "operations": {
+      "title": "Operations & Alerts",
+      "description": "A 24-hour reliability view and 30-day usage view for platform operations.",
+      "alerts": "Active alerts",
+      "operations24h": "AI operations · 24h",
+      "successRate24h": "Success rate · 24h",
+      "latency24h": "Average latency · 24h",
+      "credits30d": "Net credits · 30d",
+      "staleHolds": "Expired active holds",
+      "estimatedCost": "Estimated 30-day provider cost: {cost}. Configure AI_COST_PER_CREDIT to calibrate this estimate.",
+      "topModels": "Top models · 30d",
+      "topUsers": "Top users · 30d",
+      "recentAudit": "Recent audit activity",
+      "model": "Model",
+      "user": "User",
+      "calls": "Calls",
+      "failures": "Failures",
+      "time": "Time",
+      "action": "Action",
+      "result": "Result",
+      "summary": "Summary",
+      "empty": "No activity in this period"
     },
     "providers": {
       "title": "Provider Management",
@@ -1571,7 +1598,25 @@
       "usage": {
         "title": "Usage",
         "description": "View organization quota and consumption"
+      },
+      "branding": {
+        "title": "Branding",
+        "description": "Configure your organization name, logo, and product color"
       }
+    },
+    "branding": {
+      "title": "Organization Branding",
+      "description": "Customize the authenticated product experience for members of your organization.",
+      "productName": "Product name",
+      "tagline": "Tagline",
+      "logoUrl": "Logo URL (HTTPS or local path)",
+      "primaryColor": "Primary color",
+      "loading": "Loading branding…",
+      "save": "Save branding",
+      "saving": "Saving…",
+      "saved": "Branding saved. Refresh to preview it across the product.",
+      "loadError": "Could not load branding settings.",
+      "saveError": "Could not save branding settings. Check the values and try again."
     },
     "members": {
       "title": "Members",

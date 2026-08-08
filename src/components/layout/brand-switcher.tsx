@@ -11,8 +11,10 @@ const OPTIONS: { id: Brand; swatch: string }[] = [
 ];
 
 export function BrandSwitcher() {
-  const { brand, setBrand } = useBrand();
+  const { brand, setBrand, managedBranding } = useBrand();
   const t = useTranslations('brand');
+
+  if (managedBranding) return null;
 
   return (
     <div className="flex items-center justify-between gap-2 px-2 py-1.5">

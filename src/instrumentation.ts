@@ -11,6 +11,10 @@ export async function register() {
   // Node.js runtime. Next.js also evaluates instrumentation for Edge bundles,
   // where importing the DB adapters would emit runtime errors for fs/path.
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+  if (
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build'
+  ) return;
 
   const { assertEnvOrExit } = await import('./lib/env');
   assertEnvOrExit();

@@ -257,6 +257,7 @@ export const organizations = pgTable(
     name: text('name').notNull(),
     status: text('status').notNull().default('active'),
     seatLimit: integer('seat_limit').notNull().default(0),
+    branding: text('branding').notNull().default('{}'),
     createdBy: text('created_by').notNull().references(() => users.id),
     createdAt: integer('created_at').notNull().default(epochNow),
     updatedAt: integer('updated_at').notNull().default(epochNow),

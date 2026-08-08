@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Users, Cpu, Boxes, Building2, Menu, Coins } from 'lucide-react';
+import { LayoutDashboard, Users, Cpu, Boxes, Building2, Menu, Coins, Activity } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/admin', i18nKey: 'admin.overview', match: '/admin', icon: LayoutDashboard, exact: true },
+  { href: '/admin/operations', i18nKey: 'admin.sections.operations.title', match: '/admin/operations', icon: Activity },
   { href: '/admin/users', i18nKey: 'admin.sections.users.title', match: '/admin/users', icon: Users },
   { href: '/admin/credits/rules', i18nKey: 'admin.sections.creditRules.title', match: '/admin/credits/rules', icon: Coins },
   { href: '/admin/ai-providers', i18nKey: 'admin.sections.aiProviders.title', match: '/admin/ai-providers', icon: Cpu },

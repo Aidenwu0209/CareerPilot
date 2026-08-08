@@ -225,18 +225,16 @@ describe('AC3: Settlement', () => {
     // Balance after hold: 100 - 50 = 50
     expect(await getBalance(account.id)).toBe(50);
 
-    // Settle with usage = 20
+    // Fixed-price models charge the configured fixed price on success.
     const result = await settleHold({
       holdId: hold.id,
       actualUsage: { totalTokens: 20 },
+      model,
     });
 
-    expect(result.settledAmount).toBeLessThanOrEqual(50);
+    expect(result.settledAmount).toBe(50);
     expect(result.idempotent).toBe(false);
-
-    // Excess should be credited back
-    const balance = await getBalance(account.id);
-    expect(balance).toBeGreaterThanOrEqual(50); // At least the held balance returned excess
+    expect(await getBalance(account.id)).toBe(50);
   });
 
   it('settles with zero usage, releasing full hold', async () => {
@@ -254,13 +252,12 @@ describe('AC3: Settlement', () => {
     const result = await settleHold({
       holdId: hold.id,
       actualUsage: { totalTokens: 0 },
+      model,
     });
 
-    expect(result.settledAmount).toBe(0);
-    expect(result.releasedAmount).toBe(40);
-
-    // Balance restored to 100
-    expect(await getBalance(account.id)).toBe(100);
+    expect(result.settledAmount).toBe(40);
+    expect(result.releasedAmount).toBe(0);
+    expect(await getBalance(account.id)).toBe(60);
   });
 
   it('does not credit back more than hold amount', async () => {
@@ -277,10 +274,38 @@ describe('AC3: Settlement', () => {
     const result = await settleHold({
       holdId: hold.id,
       actualUsage: { totalTokens: 100 },
+      model,
     });
 
     expect(result.settledAmount).toBeLessThanOrEqual(30);
     expect(result.releasedAmount).toBe(0);
+  });
+
+  it('settles token pricing per 1,000 input and output tokens', async () => {
+    const account = await getOrCreateAccount('user', 'u1');
+    creditAccount({ accountId: account.id, amount: 100, reason: 'manual_credit', idempotencyKey: 'grant-token', operatorId: 'system' });
+    await seedOperation('op-token', 'u1', account.id);
+
+    const model = makeModel({
+      fixedPrice: 2,
+      tokenPriceInput: 10,
+      tokenPriceOutput: 30,
+      inputTokenLimit: 2000,
+      outputTokenLimit: 1000,
+    });
+    const { hold } = await createHold({
+      accountId: account.id, operationId: 'op-token', model, actorId: 'u1', idempotencyKey: 'hold-token',
+    });
+
+    const result = await settleHold({
+      holdId: hold.id,
+      actualUsage: { inputTokens: 500, outputTokens: 100 },
+      model,
+    });
+
+    // 2 fixed + ceil(500*10/1000) + ceil(100*30/1000) = 10 credits.
+    expect(result.settledAmount).toBe(10);
+    expect(await getBalance(account.id)).toBe(90);
   });
 });
 
@@ -379,11 +404,11 @@ describe('AC5: Idempotency and concurrency safety', () => {
     });
 
     // First settle
-    const r1 = await settleHold({ holdId: hold.id, actualUsage: { totalTokens: 10 } });
+    const r1 = await settleHold({ holdId: hold.id, actualUsage: { totalTokens: 10 }, model });
     expect(r1.idempotent).toBe(false);
 
     // Second settle — idempotent
-    const r2 = await settleHold({ holdId: hold.id, actualUsage: { totalTokens: 20 } });
+    const r2 = await settleHold({ holdId: hold.id, actualUsage: { totalTokens: 20 }, model });
     expect(r2.idempotent).toBe(true);
     expect(r2.settledAmount).toBe(r1.settledAmount);
   });
@@ -400,7 +425,7 @@ describe('AC5: Idempotency and concurrency safety', () => {
 
     await releaseHold({ holdId: hold.id, reason: 'provider_failure' });
 
-    await expect(settleHold({ holdId: hold.id, actualUsage: { totalTokens: 5 } }))
+    await expect(settleHold({ holdId: hold.id, actualUsage: { totalTokens: 5 }, model }))
       .rejects.toThrow();
   });
 

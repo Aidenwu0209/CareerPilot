@@ -164,9 +164,11 @@ describe('US-049: LinkedIn photo via gateway', () => {
     const res = await POST(makeRequest(VALID_BODY, { 'x-api-key': 'sk-forged', 'x-provider': 'openai' }));
 
     expect(res.status).toBe(200);
-    // Verify the fetch URL uses the managed key, not the client key
+    // Verify the provider request uses the managed key in a header, never the URL.
     const fetchUrl = fetchSpy.mock.calls[0][0];
-    expect(String(fetchUrl)).toContain('key=test-api-key');
+    const fetchInit = fetchSpy.mock.calls[0][1] as RequestInit;
+    expect((fetchInit.headers as Record<string, string>)['x-goog-api-key']).toBe('test-api-key');
+    expect(String(fetchUrl)).not.toContain('key=');
     expect(String(fetchUrl)).not.toContain('sk-forged');
   });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Users, BarChart3, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, BarChart3, Menu, Palette } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/org-admin', i18nKey: 'orgAdmin.overview', match: '/org-admin', icon: LayoutDashboard, exact: true },
   { href: '/org-admin/members', i18nKey: 'orgAdmin.sections.members.title', match: '/org-admin/members', icon: Users },
   { href: '/org-admin/usage', i18nKey: 'orgAdmin.sections.usage.title', match: '/org-admin/usage', icon: BarChart3 },
+  { href: '/org-admin/branding', i18nKey: 'orgAdmin.sections.branding.title', match: '/org-admin/branding', icon: Palette },
 ];
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {

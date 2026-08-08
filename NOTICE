@@ -1,0 +1,13 @@
+CareerPilot
+Copyright 2026 Aidenwu0209 and CareerPilot contributors
+
+This product is licensed under the Apache License, Version 2.0. A copy of
+the license is included in the LICENSE file.
+
+CareerPilot includes third-party open-source software. Each dependency
+remains subject to its own license and attribution terms; the authoritative
+dependency list is recorded in package.json and pnpm-lock.yaml.
+
+This distribution contains modifications for managed AI credentials,
+commercial credit accounting, organization administration, security,
+operations monitoring, and organization branding.

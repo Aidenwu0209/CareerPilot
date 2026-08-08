@@ -44,6 +44,8 @@ export interface HoldParams {
 export interface SettleParams {
   holdId: string;
   actualUsage: UsageMetrics;
+  /** Pricing snapshot captured when the hold was created. */
+  model: CatalogModel;
   operatorId?: string;
 }
 
@@ -202,7 +204,7 @@ export async function settleHold(params: SettleParams): Promise<{
   }
 
   // Calculate actual cost from usage
-  const actualCost = calculateActualCost(params.actualUsage, hold);
+  const actualCost = calculateActualCost(params.actualUsage, params.model, hold.holdAmount);
 
   // Credit back the excess
   const excess = Math.max(0, hold.holdAmount - actualCost);
@@ -334,25 +336,35 @@ async function getHold(holdId: string): Promise<HoldRecord | null> {
   };
 }
 
-function calculateActualCost(usage: UsageMetrics, hold: HoldRecord): number {
-  // For zero-amount holds (free models), cost is always 0
-  if (hold.holdAmount === 0) return 0;
+export function calculateActualCost(
+  usage: UsageMetrics,
+  model: CatalogModel,
+  holdAmount = calculateHoldAmount(model),
+): number {
+  if (holdAmount === 0) return 0;
 
-  // Without model pricing info on the hold, we use usage tokens with
-  // a proportional calculation: actualCost = min(usage.cost, holdAmount)
-  // The actual token prices are stored in the operation's ruleSnapshot.
-  // For now, we calculate based on usage percentages.
-  //
-  // A more precise implementation would load the model pricing from the
-  // operation's linked model, but that requires a join. The gateway (US-037)
-  // will pass the model info to settleHold, which can then calculate exact cost.
-  //
-  // For US-036, we accept usage and calculate proportionally:
-  // If the caller knows the exact cost, they can set totalTokens which
-  // gets converted via the model's token prices.
+  const inputTokens = Math.max(0, usage.inputTokens ?? 0);
+  const outputTokens = Math.max(0, usage.outputTokens ?? 0);
+  const knownSplit = usage.inputTokens !== undefined || usage.outputTokens !== undefined;
 
-  // Cap at holdAmount — never charge more than what was held
-  return Math.min(hold.holdAmount, Math.max(0, usage.totalTokens ?? 0));
+  // Fixed price is charged once per successful operation. Token prices are
+  // credits per 1,000 tokens and must never be confused with the raw count.
+  let actualCost = Math.max(0, model.fixedPrice ?? 0);
+  if (knownSplit) {
+    actualCost += Math.ceil((inputTokens * Math.max(0, model.tokenPriceInput ?? 0)) / 1000);
+    actualCost += Math.ceil((outputTokens * Math.max(0, model.tokenPriceOutput ?? 0)) / 1000);
+  } else if ((usage.totalTokens ?? 0) > 0) {
+    // Some providers only return a total. Use the higher configured rate so
+    // settlement is conservative without charging one credit per raw token.
+    const fallbackRate = Math.max(
+      Math.max(0, model.tokenPriceInput ?? 0),
+      Math.max(0, model.tokenPriceOutput ?? 0),
+    );
+    actualCost += Math.ceil((Math.max(0, usage.totalTokens ?? 0) * fallbackRate) / 1000);
+  }
+
+  // The pre-authorized hold is the maximum charge for this operation.
+  return Math.min(holdAmount, actualCost);
 }
 
 function debitForHold(params: {

@@ -9,11 +9,9 @@ import {
 } from '@/lib/validation/input-limits';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { warnLegacyByok } from '@/lib/ai/legacy-detect';
+import { dispatchManagedImageEdit } from '@/lib/ai/image-dispatch';
 
 export const maxDuration = 60;
-
-const GEMINI_ENDPOINT =
-  'https://generativelanguage.googleapis.com/v1beta/models';
 
 export async function POST(request: NextRequest) {
   await warnLegacyByok(request);
@@ -76,83 +74,12 @@ export async function POST(request: NextRequest) {
     capability: 'image_generation',
     businessCapability: 'linkedin_photo',
     idempotencyKey: `linkedin-photo-${ctx.context.actor.userId}-${Date.now()}`,
-    dispatch: async (gwCtx) => {
-      const endpoint = `${GEMINI_ENDPOINT}/${gwCtx.modelIdentifier}:generateContent?key=${encodeURIComponent(gwCtx.apiKey)}`;
-
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: finalPrompt },
-                {
-                  inlineData: {
-                    mimeType,
-                    data: base64Data,
-                  },
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            responseModalities: ['TEXT', 'IMAGE'],
-          },
-        }),
-      });
-
-      if (!res.ok) {
-        const errBody = await res.text();
-        const err = new Error(`Gemini API error: ${res.status}`);
-        // Attach sanitized detail for logging, but don't expose to client
-        console.error('Gemini API error:', res.status, errBody.slice(0, 200));
-        throw err;
-      }
-
-      const data = await res.json();
-      const parts = data?.candidates?.[0]?.content?.parts;
-
-      if (!parts || parts.length === 0) {
-        const candidate = data?.candidates?.[0];
-        const finishReason = candidate?.finishReason ?? candidate?.finish_reason;
-        if (finishReason === 'SAFETY') {
-          return {
-            image: '',
-            text: null,
-            safetyFiltered: true,
-            usage: { totalTokens: 1 },
-          };
-        }
-        throw new Error('No content in Gemini response');
-      }
-
-      // Extract image and text from parts
-      let resultImage: string | null = null;
-      let resultText: string | null = null;
-
-      for (const part of parts) {
-        const inlineData = part.inlineData ?? part.inline_data;
-        if (inlineData) {
-          const mime = inlineData.mimeType ?? inlineData.mime_type ?? 'image/png';
-          resultImage = `data:${mime};base64,${inlineData.data}`;
-        }
-        if (part.text) {
-          resultText = part.text;
-        }
-      }
-
-      if (!resultImage) {
-        throw new Error('No image in Gemini response');
-      }
-
-      // Return result with usage info for gateway settlement
-      return {
-        image: resultImage,
-        text: resultText,
-        usage: { totalTokens: 1 },
-      };
-    },
+    dispatch: (gwCtx) => dispatchManagedImageEdit(gwCtx, {
+      prompt: finalPrompt,
+      mimeType,
+      base64Data,
+      aspectRatio,
+    }),
   });
 
   if (!result.ok) {

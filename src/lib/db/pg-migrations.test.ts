@@ -127,7 +127,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         pg,
         `SELECT count(*)::int as cnt FROM drizzle."__drizzle_migrations"`
       );
-      expect(rows[0].cnt).toBe(12);
+      expect(rows[0].cnt).toBe(getAllMigrationTags().length);
     });
 
     it('should create all 26 expected tables in public schema', async () => {
@@ -464,7 +464,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       const trackingCount = await query<{ cnt: number }>(
         pg, `SELECT count(*)::int as cnt FROM drizzle."__drizzle_migrations"`
       );
-      expect(trackingCount[0].cnt).toBe(12);
+      expect(trackingCount[0].cnt).toBe(getAllMigrationTags().length);
     });
   });
 
@@ -719,7 +719,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         .filter((f) => f.endsWith('.sql'))
         .sort();
 
-      expect(sqlFiles.length).toBe(12);
+      expect(sqlFiles.length).toBe(getAllMigrationTags().length);
 
       const journalTags = getAllMigrationTags();
       const fileTags = sqlFiles.map((f) => f.replace('.sql', ''));

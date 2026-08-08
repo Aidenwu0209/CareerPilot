@@ -10,6 +10,7 @@ export const organizations = sqliteTable('organizations', {
   name: text('name').notNull(),
   status: text('status', { enum: ['active', 'suspended'] }).notNull().default('active'),
   seatLimit: integer('seat_limit').notNull().default(0),
+  branding: text('branding', { mode: 'json' }).notNull().default('{}'),
   createdBy: text('created_by').notNull().references(() => users.id),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

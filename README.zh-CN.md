@@ -101,7 +101,9 @@
 - **求职信生成** — 基于简历和 JD 的 AI 定制求职信，可选语气（正式 / 友好 / 自信）
 - **语法与写作检查** — 检测弱动词、模糊描述和语法问题，返回质量评分
 - **多语言翻译** — 支持 10 种语言互译，保留专业术语原文
-- **灵活 AI 供应商** — 支持 OpenAI、Anthropic 及自定义 API 端点；用户在应用内自行配置密钥
+- **平台托管 AI 供应商** — 超级管理员统一配置并加密保存 OpenAI、Anthropic、Google 凭证；终端用户只选择获准模型
+- **商业化点数体系** — 个人与机构账户支持预占、按次/按 Token 结算、不可变流水与限额
+- **多供应商图片编辑** — 职业照可按托管模型目录选择 Google 或 OpenAI 图片模型
 
 ### 模拟面试
 
@@ -170,7 +172,7 @@ docker run -d -p 3000:3000 \
 
 > **`AUTH_SECRET`** 为必填项，用于会话加密。通过 `openssl rand -base64 32` 生成。
 
-> **AI 配置：** 无需服务端 AI 环境变量。每位用户在应用内的 **设置 > AI** 中自行配置 API Key、Base URL 和模型。
+> **AI 配置：** 供应商凭证由超级管理员统一配置，并使用 `AI_CREDENTIAL_MASTER_KEY` 加密。终端用户不会填写或获得供应商密钥。
 
 <details>
 <summary>使用 PostgreSQL</summary>
@@ -231,7 +233,7 @@ DB_TYPE=sqlite
 AUTH_ENABLED=false
 ```
 
-> **AI 配置：** 无需服务端环境变量。每位用户在应用内的 **设置 > AI** 中自行配置 API Key、Base URL 和模型。
+> **AI 配置：** 请在 **管理后台 > AI 供应商** 中配置加密凭证，再通过托管模型目录发布可用模型。
 
 查看 `.env.example` 了解所有可用选项（Google OAuth、PostgreSQL 等）。
 
@@ -418,7 +420,7 @@ CareerPilot 内置 **50 套专业设计模板**，覆盖多种风格和行业需
 <details>
 <summary><b>AI 配置是如何工作的？</b></summary>
 
-CareerPilot 不需要在服务端配置 AI API 密钥。每位用户在应用内的 **设置 > AI** 中自行配置 AI 供应商（OpenAI、Anthropic 或自定义端点）、API Key 和模型。API 密钥仅存储在浏览器的 localStorage 中，不会发送到服务端存储。
+CareerPilot 使用平台托管 AI 凭证。超级管理员在管理后台配置供应商凭证，凭证会加密存储，且只在受控的服务端请求中短暂解密；终端用户仅能看到获准模型和公开的点数价格。
 
 </details>
 
@@ -432,7 +434,7 @@ CareerPilot 不需要在服务端配置 AI API 密钥。每位用户在应用内
 <details>
 <summary><b>不使用 OAuth 时认证如何工作？</b></summary>
 
-当 `AUTH_ENABLED=false`（默认）时，CareerPilot 使用 FingerprintJS 进行浏览器指纹识别。系统为每个浏览器生成唯一的指纹 ID 作为用户标识。无需登录界面 — 用户可以直接开始创建简历。
+本地开发设置 `AUTH_ENABLED=false` 时可使用浏览器指纹进行零配置演示；生产环境会拒绝该模式，必须设置 `AUTH_ENABLED=true` 并使用邮箱/OAuth 认证。
 
 </details>
 

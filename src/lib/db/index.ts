@@ -4,6 +4,9 @@ import { PostgreSQLAdapter } from './adapters/postgresql';
 import type { DatabaseAdapter } from './adapter';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isBuildPhase =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.npm_lifecycle_event === 'build';
 
 let adapter: DatabaseAdapter;
 
@@ -23,9 +26,15 @@ if (config.db.type === 'postgresql') {
 // In production, initialization failures MUST reject the promise so that
 // readiness checks fail and the deployment layer stops routing traffic.
 // In development, we catch and log to keep the DX smooth.
-const _initPromise = isProduction
-  ? adapter.initialize()
-  : adapter.initialize().catch((e) => console.error('[DB] Initialize failed:', e));
+// Next.js imports server modules while collecting route metadata. Database
+// availability is a runtime readiness concern, so builds must stay offline and
+// deterministic. `pnpm start` does not carry the build lifecycle marker and
+// still performs the fail-closed production initialization below.
+const _initPromise = isBuildPhase
+  ? Promise.resolve()
+  : isProduction
+    ? adapter.initialize()
+    : adapter.initialize().catch((e) => console.error('[DB] Initialize failed:', e));
 
 /** Await this before any DB operation to ensure tables exist */
 export const dbReady = _initPromise;

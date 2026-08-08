@@ -1,11 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { Users, Cpu, Boxes, Building2, Coins } from 'lucide-react';
+import { Users, Cpu, Boxes, Building2, Coins, Activity } from 'lucide-react';
 
 export default async function AdminPage() {
   const t = await getTranslations('admin');
 
   const cards = [
+    { href: '/admin/operations', icon: Activity, title: t('sections.operations.title'), description: t('sections.operations.description') },
     { href: '/admin/users', icon: Users, title: t('sections.users.title'), description: t('sections.users.description') },
     { href: '/admin/credits/rules', icon: Coins, title: t('sections.creditRules.title'), description: t('sections.creditRules.description') },
     { href: '/admin/ai-providers', icon: Cpu, title: t('sections.aiProviders.title'), description: t('sections.aiProviders.description') },

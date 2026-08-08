@@ -101,7 +101,9 @@ The following resume sections support Markdown syntax:
 - **Cover Letter Generation** — AI-tailored cover letter based on resume and JD, with tone selection (formal / friendly / confident)
 - **Grammar & Writing Check** — Detect weak verbs, vague descriptions, and grammar issues; returns a quality score
 - **Translation** — Translate resume content across 10 languages while preserving technical terms
-- **Flexible AI Provider** — Supports OpenAI, Anthropic, and custom API endpoints; each user configures their own key in-app
+- **Managed AI Providers** — Super administrators configure encrypted OpenAI, Anthropic, and Google credentials; end users only select approved models
+- **Commercial Credits** — Personal and organization accounts support pre-authorization, per-call/per-token settlement, immutable ledgers, and limits
+- **Multi-provider Image Editing** — Professional photos can use approved Google or OpenAI image models from the managed catalog
 
 ### Mock Interview
 
@@ -170,7 +172,7 @@ Open [http://localhost:3000](http://localhost:3000). Database auto-migrates and 
 
 > **`AUTH_SECRET`** is required for session encryption. Generate one with `openssl rand -base64 32`.
 
-> **AI Configuration:** No server-side AI env vars needed. Each user configures their own API Key, Base URL, and Model in **Settings > AI** within the app.
+> **AI Configuration:** Provider credentials are configured by a super administrator and encrypted with `AI_CREDENTIAL_MASTER_KEY`. End users never enter or receive provider keys.
 
 <details>
 <summary>With PostgreSQL</summary>
@@ -231,7 +233,7 @@ DB_TYPE=sqlite
 AUTH_ENABLED=false
 ```
 
-> **AI Configuration:** No server-side env vars needed. Each user configures their own API Key, Base URL, and Model in **Settings > AI** within the app.
+> **AI Configuration:** Configure providers and encrypted credentials in **Admin > AI Providers**, then publish approved models through the managed catalog.
 
 See `.env.example` for all available options (Google OAuth, PostgreSQL, etc.).
 
@@ -418,7 +420,7 @@ Contributions are welcome! Here's how to get started:
 <details>
 <summary><b>How does AI configuration work?</b></summary>
 
-CareerPilot does not require server-side AI API keys. Each user configures their own AI provider (OpenAI, Anthropic, or custom endpoint), API key, and model in **Settings > AI** within the app. API keys are stored in the browser's local storage and are never sent to the server for storage.
+CareerPilot uses platform-managed AI credentials. A super administrator configures provider credentials in the admin console; they are encrypted at rest and resolved only for bounded server-side requests. End users only see approved models and public credit pricing.
 
 </details>
 
@@ -432,7 +434,7 @@ Yes. Set the `DB_TYPE` environment variable to `sqlite` or `postgresql`. SQLite 
 <details>
 <summary><b>How does authentication work without OAuth?</b></summary>
 
-When `AUTH_ENABLED=false` (default), CareerPilot uses browser fingerprinting via FingerprintJS. A unique fingerprint ID is generated for each browser and used as the user identifier. No login screen is shown — users can start building resumes immediately.
+When `AUTH_ENABLED=false` in local development, CareerPilot can use browser fingerprinting for a zero-config demo. Production startup rejects this mode and requires `AUTH_ENABLED=true` with email/OAuth authentication.
 
 </details>
 

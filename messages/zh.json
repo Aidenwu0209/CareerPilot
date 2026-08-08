@@ -1123,6 +1123,10 @@
       "description": "您没有超级管理员权限，无法访问此页面。"
     },
     "sections": {
+      "operations": {
+        "title": "运营监控与告警",
+        "description": "监控 AI 稳定性、点数消耗、成本估算和审计活动"
+      },
       "users": {
         "title": "用户与点数",
         "description": "管理用户、冻结账户、调整点数"
@@ -1143,6 +1147,29 @@
         "title": "点数规则",
         "description": "配置注册赠点和个人每日上限"
       }
+    },
+    "operations": {
+      "title": "运营监控与告警",
+      "description": "汇总平台近 24 小时可靠性与近 30 天用量，辅助日常运营决策。",
+      "alerts": "当前告警",
+      "operations24h": "AI 调用 · 24 小时",
+      "successRate24h": "成功率 · 24 小时",
+      "latency24h": "平均延迟 · 24 小时",
+      "credits30d": "净消耗点数 · 30 天",
+      "staleHolds": "已过期未结算预占",
+      "estimatedCost": "近 30 天供应商成本估算：{cost}。可通过 AI_COST_PER_CREDIT 校准估算系数。",
+      "topModels": "模型调用排行 · 30 天",
+      "topUsers": "用户调用排行 · 30 天",
+      "recentAudit": "最近审计活动",
+      "model": "模型",
+      "user": "用户",
+      "calls": "调用次数",
+      "failures": "失败次数",
+      "time": "时间",
+      "action": "操作",
+      "result": "结果",
+      "summary": "摘要",
+      "empty": "当前时段暂无数据"
     },
     "providers": {
       "title": "供应商管理",
@@ -1571,7 +1598,25 @@
       "usage": {
         "title": "用量",
         "description": "查看机构配额和消耗"
+      },
+      "branding": {
+        "title": "机构品牌",
+        "description": "配置机构名称、Logo 与产品主色"
       }
+    },
+    "branding": {
+      "title": "机构品牌配置",
+      "description": "为机构成员定制登录后的产品名称、Logo 和主色。",
+      "productName": "产品名称",
+      "tagline": "品牌标语",
+      "logoUrl": "Logo 地址（HTTPS 或站内路径）",
+      "primaryColor": "品牌主色",
+      "loading": "正在加载品牌配置…",
+      "save": "保存品牌配置",
+      "saving": "正在保存…",
+      "saved": "品牌配置已保存，刷新页面后可查看全局效果。",
+      "loadError": "品牌配置加载失败。",
+      "saveError": "保存失败，请检查输入后重试。"
     },
     "members": {
       "title": "成员管理",

@@ -292,6 +292,11 @@ export const RATE_LIMIT_POLICIES = {
     windowMs: 60 * 1000,
     failClosed: true, // high-cost PDF processing
   },
+  sharePassword: {
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+    failClosed: true, // public password verification must resist brute force
+  },
 } as const;
 
 /**

@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { organizations, organizationMemberships, creditAccounts, creditTransactions } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { Link } from '@/i18n/routing';
-import { Users, BarChart3 } from 'lucide-react';
+import { Users, BarChart3, Palette } from 'lucide-react';
 
 export default async function OrgAdminPage() {
   const t = await getTranslations('orgAdmin');
@@ -84,6 +84,7 @@ export default async function OrgAdminPage() {
   const cards = [
     { href: '/org-admin/members', icon: Users, title: t('sections.members.title'), description: t('sections.members.description') },
     { href: '/org-admin/usage', icon: BarChart3, title: t('sections.usage.title'), description: t('sections.usage.description') },
+    { href: '/org-admin/branding', icon: Palette, title: t('sections.branding.title'), description: t('sections.branding.description') },
   ] as const;
 
   return (
