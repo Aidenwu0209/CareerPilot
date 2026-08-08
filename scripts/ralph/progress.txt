@@ -728,6 +728,25 @@
   - US-038 will add multi-attempt retry logic on top of this gateway
   - US-039 will add streaming support (the gateway currently only supports non-streaming dispatch)
 
+## 2026-08-08 08:49 - US-038
+- Extended AI Gateway with multi-attempt retry and idempotent replay
+- Modified: `src/lib/ai/gateway.ts` — added retry loop, idempotency replay, enhanced sanitizer
+- Modified: `src/lib/ai/gateway.test.ts` — updated for retry behavior (maxRetries:1 for single-attempt tests, enableReplay:false for uniqueness test)
+- New file: `src/lib/ai/gateway-retry.test.ts` (13 tests for US-038 ACs)
+- AC1: Each provider request creates separate `aiProviderAttempts` with incrementing `attemptNumber`, linked to same operation
+- AC2: Retry count from `params.maxRetries ?? model.maxSteps ?? 3`; explicit param overrides model config; parse failures don't cause infinite loops
+- AC3: Same idempotency key → checks existing operation first; if succeeded + small result, returns cached data without calling dispatch or deducting credits
+- AC4: Each attempt saves `usage` (tokens), `status`, `durationMs`, `errorMessage`; all-attempts-fail releases full hold
+- AC5: Error sanitizer redacts URLs, API keys (sk-, AIza, sk-ant-), SSNs, emails, Bearer tokens, password/secret/key assignments, quoted content; truncates to 100 chars
+- 13 tests: multi-attempt creation (2), retry limit (3), idempotent replay (2), per-attempt tracking (3), sensitive data (3)
+- Typecheck passes, all 961 tests pass (46 files)
+- **未来迭代的学习：**
+  - `maxRetries` parameter: explicit > model.maxSteps > default(3) — callers can override per-call
+  - Idempotent replay stores result in `aiOperations.metadata` JSON column if ≤10KB serialized — larger results skip caching
+  - `enableReplay: false` disables replay, making duplicate keys return 409 instead of cached result
+  - The retry loop catches ALL errors from dispatch — no distinction between transient and permanent failures yet; US-050+ may add error classification
+  - Sanitizer truncation to 100 chars prevents most prompt content leakage while preserving error type identification
+
 ## 2026-08-08 08:39 - US-036
 - Implemented AI credit hold, settlement, and release service
 - New files: `src/lib/ai/credit-hold-service.ts` (hold lifecycle service), `src/lib/ai/credit-hold-service.test.ts` (17 tests)

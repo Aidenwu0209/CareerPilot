@@ -1,8 +1,11 @@
 /**
- * Unified AI Gateway (US-037)
+ * Unified AI Gateway (US-037 + US-038)
  *
  * Single entry point for all server-side AI calls. Orchestrates the full
  * pipeline: authorization → rate limit → credit hold → provider call → settlement.
+ *
+ * US-037: Single-call gateway
+ * US-038: Multi-attempt with controlled retry + idempotent replay
  *
  * Design principles:
  * - AC1: Accepts only modelId + business input; no client key/provider/baseUrl
@@ -36,6 +39,10 @@ export interface GatewayParams<T> {
   idempotencyKey: string;
   /** The dispatch function that performs the actual AI call. */
   dispatch: (ctx: GatewayDispatchContext) => Promise<T>;
+  /** Max retry attempts on dispatch failure (default: from model.maxSteps or 3). */
+  maxRetries?: number;
+  /** Whether to cache and replay results for duplicate idempotency keys (default: true). */
+  enableReplay?: boolean;
 }
 
 export interface GatewayDispatchContext {
@@ -116,7 +123,37 @@ export async function executeAiOperation<T>(
     };
   }
 
-  // ── Step 3: Create operation record ──
+  // ── Step 3: Create operation record (or replay existing) ──
+  // Check for existing operation with same idempotency key (AC3: idempotent replay)
+  const existingOp = await db
+    .select()
+    .from(aiOperations)
+    .where(eq(aiOperations.idempotencyKey, idempotencyKey))
+    .limit(1);
+
+  if (existingOp.length > 0) {
+    const op = existingOp[0];
+    if (op.status === 'succeeded' && params.enableReplay !== false) {
+      // Return cached result from metadata
+      const meta = typeof op.metadata === 'string' ? JSON.parse(op.metadata) : (op.metadata ?? {});
+      if (meta.cachedResult !== undefined) {
+        return {
+          ok: true,
+          data: meta.cachedResult as T,
+          operationId: op.id,
+          attemptId: meta.lastAttemptId ?? '',
+        };
+      }
+    }
+    // Operation exists but didn't succeed or no cached result
+    return {
+      ok: false,
+      status: 409,
+      error: 'OPERATION_EXISTS',
+      message: 'An operation with this idempotency key already exists.',
+    };
+  }
+
   const operationId = crypto.randomUUID();
   try {
     await db.insert(aiOperations).values({
@@ -128,7 +165,6 @@ export async function executeAiOperation<T>(
       idempotencyKey,
     });
   } catch {
-    // Unique constraint violation — duplicate idempotency key
     return {
       ok: false,
       status: 409,
@@ -199,87 +235,125 @@ export async function executeAiOperation<T>(
     };
   }
 
-  // ── Step 6: Create provider attempt record ──
-  const attemptId = crypto.randomUUID();
-  const startTime = Date.now();
-  await db.insert(aiProviderAttempts).values({
-    id: attemptId,
-    operationId,
-    modelId: model.id,
-    attemptNumber: 1,
-    status: 'in_progress',
-  });
+  // ── Step 6: Multi-attempt retry loop (US-038) ──
+  const maxRetries = params.maxRetries ?? model.maxSteps ?? 3;
+  let lastAttemptId = '';
+  let lastError: Error | null = null;
 
-  // ── Step 7: Execute dispatch ──
-  try {
-    const result = await dispatch({
-      modelIdentifier: model.modelIdentifier,
-      providerType,
-      apiKey,
-      baseUrl,
-    });
+  for (let attemptNum = 1; attemptNum <= maxRetries; attemptNum++) {
+    const attemptId = crypto.randomUUID();
+    const startTime = Date.now();
 
-    const durationMs = Date.now() - startTime;
-
-    // Mark attempt as succeeded
-    await db.update(aiProviderAttempts)
-      .set({
-        status: 'succeeded',
-        durationMs,
-        completedAt: new Date(),
-        usage: extractUsage(result),
-      })
-      .where(eq(aiProviderAttempts.id, attemptId));
-
-    // Settle the hold — actual cost from usage
-    await settleHold({
-      holdId: holdResult.hold.id,
-      actualUsage: extractUsageMetrics(result),
-    });
-
-    // Mark operation as succeeded
-    await db.update(aiOperations)
-      .set({ status: 'succeeded' })
-      .where(eq(aiOperations.id, operationId));
-
-    return {
-      ok: true,
-      data: result,
+    // Create attempt record
+    await db.insert(aiProviderAttempts).values({
+      id: attemptId,
       operationId,
-      attemptId,
-    };
-  } catch (err) {
-    const durationMs = Date.now() - startTime;
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      modelId: model.id,
+      attemptNumber: attemptNum,
+      status: 'in_progress',
+    });
 
-    // Mark attempt as failed
-    await db.update(aiProviderAttempts)
-      .set({
-        status: 'failed',
-        durationMs,
-        completedAt: new Date(),
-        errorMessage: sanitizeErrorMessage(errorMessage),
-      })
-      .where(eq(aiProviderAttempts.id, attemptId));
+    try {
+      const result = await dispatch({
+        modelIdentifier: model.modelIdentifier,
+        providerType,
+        apiKey,
+        baseUrl,
+      });
 
-    // Release the hold
-    await releaseHold({ holdId: holdResult.hold.id, reason: 'provider_failure' });
+      const durationMs = Date.now() - startTime;
 
-    // Mark operation as failed
-    await db.update(aiOperations)
-      .set({ status: 'failed' })
-      .where(eq(aiOperations.id, operationId));
+      // Mark attempt as succeeded with usage
+      await db.update(aiProviderAttempts)
+        .set({
+          status: 'succeeded',
+          durationMs,
+          completedAt: new Date(),
+          usage: extractUsage(result),
+        })
+        .where(eq(aiProviderAttempts.id, attemptId));
 
-    return {
-      ok: false,
-      status: 502,
-      error: 'PROVIDER_ERROR',
-      message: 'AI provider call failed.',
-    };
+      // Settle the hold — actual cost from usage
+      await settleHold({
+        holdId: holdResult.hold.id,
+        actualUsage: extractUsageMetrics(result),
+      });
+
+      // Cache result for idempotent replay (if small enough)
+      const cachedResult = tryCacheResult(result);
+
+      // Mark operation as succeeded
+      await db.update(aiOperations)
+        .set({
+          status: 'succeeded',
+          metadata: cachedResult !== null
+            ? JSON.stringify({ cachedResult, lastAttemptId: attemptId })
+            : '{}',
+        })
+        .where(eq(aiOperations.id, operationId));
+
+      return {
+        ok: true,
+        data: result,
+        operationId,
+        attemptId,
+      };
+    } catch (err) {
+      const durationMs = Date.now() - startTime;
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+
+      // Mark attempt as failed with sanitized error
+      await db.update(aiProviderAttempts)
+        .set({
+          status: 'failed',
+          durationMs,
+          completedAt: new Date(),
+          errorMessage: sanitizeErrorMessage(errorMessage),
+        })
+        .where(eq(aiProviderAttempts.id, attemptId));
+
+      lastAttemptId = attemptId;
+      lastError = err instanceof Error ? err : new Error(String(err));
+
+      // Continue to next retry attempt (if any remain)
+    }
   }
+
+  // All attempts exhausted — release hold and fail operation
+  await releaseHold({ holdId: holdResult.hold.id, reason: 'provider_failure' });
+
+  await db.update(aiOperations)
+    .set({ status: 'failed' })
+    .where(eq(aiOperations.id, operationId));
+
+  return {
+    ok: false,
+    status: 502,
+    error: 'PROVIDER_ERROR',
+    message: `AI provider call failed after ${maxRetries} attempts.`,
+  };
 }
 
 // ── Helpers ──
+
+/** Max size for cached results (10KB serialized). Larger results are not cached. */
+const MAX_CACHE_SIZE = 10_000;
+
+/**
+ * Try to cache a result for idempotent replay.
+ * Returns the result if it's small enough to cache, or null if too large.
+ */
+function tryCacheResult(result: unknown): unknown {
+  try {
+    const serialized = JSON.stringify(result);
+    if (serialized.length <= MAX_CACHE_SIZE) {
+      return JSON.parse(serialized); // Deep clone via parse
+    }
+  } catch {
+    // Non-serializable result — don't cache
+  }
+  return null;
+}
 
 /**
  * Extract usage metrics from a dispatch result.
@@ -309,15 +383,29 @@ function extractUsageMetrics(result: unknown): { inputTokens?: number; outputTok
 
 /**
  * Sanitize error messages to prevent leaking internal details.
- * Removes URLs, API keys, and internal paths.
+ * Removes URLs, API keys, SSNs, emails, tokens, and other sensitive patterns.
+ * Truncates aggressively to prevent prompt/resume content from leaking.
+ *
+ * AC5: Logs must not contain full prompts, resume text, or sensitive values.
  */
 function sanitizeErrorMessage(message: string): string {
   // Remove anything that looks like a URL
   let sanitized = message.replace(/https?:\/\/[^\s]+/g, '[url]');
   // Remove anything that looks like an API key
+  sanitized = sanitized.replace(/sk-ant-[a-zA-Z0-9_-]+/g, '[key]');
   sanitized = sanitized.replace(/sk-[a-zA-Z0-9_-]+/g, '[key]');
   sanitized = sanitized.replace(/AIza[a-zA-Z0-9_-]+/g, '[key]');
-  // Truncate
-  if (sanitized.length > 200) sanitized = sanitized.substring(0, 200) + '...';
+  // Remove SSN patterns
+  sanitized = sanitized.replace(/\d{3}-\d{2}-\d{4}/g, '[redacted]');
+  // Remove email addresses
+  sanitized = sanitized.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[email]');
+  // Remove Bearer tokens
+  sanitized = sanitized.replace(/Bearer\s+[a-zA-Z0-9._-]+/gi, '[token]');
+  // Redact password/key/secret assignments (e.g., "password is hunter2", "key: abc123")
+  sanitized = sanitized.replace(/(password|secret|token|key|credential)\s*(?:is|:)\s*[^\s,;]+/gi, '$1: [redacted]');
+  // Redact quoted content that might be prompt/resume text
+  sanitized = sanitized.replace(/"[^"]{20,}"/g, '[quoted content]');
+  // Truncate to 100 chars — short enough to prevent most prompt content from leaking
+  if (sanitized.length > 100) sanitized = sanitized.substring(0, 100) + '...';
   return sanitized;
 }

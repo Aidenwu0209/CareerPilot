@@ -260,6 +260,7 @@ describe('AC3: Operation and attempt records', () => {
       capability: 'text',
       businessCapability: 'chat',
       idempotencyKey: 'test-op-3',
+      maxRetries: 1,
       dispatch: async () => { throw new Error('Provider error'); },
     });
 
@@ -289,18 +290,18 @@ describe('AC3: Operation and attempt records', () => {
     });
     expect(r1.ok).toBe(true);
 
-    // Second call with same idempotency key should fail on unique constraint
+    // Second call with same idempotency key — replay disabled, should reject
     const r2 = await executeAiOperation({
       context: makeContext('u1'),
       modelId: 'm1',
       capability: 'text',
       businessCapability: 'chat',
       idempotencyKey: 'unique-op-1',
+      enableReplay: false,
       dispatch: async () => 'result2',
     });
 
-    // The operation insert will fail due to unique constraint
-    // This is expected behavior — callers must use unique idempotency keys
+    // With replay disabled, duplicate idempotency key is rejected
     expect(r2.ok).toBe(false);
   });
 });
