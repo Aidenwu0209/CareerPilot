@@ -14,7 +14,7 @@ const MAX_ROUNDS = 10;
 const MAX_MESSAGES = MAX_ROUNDS * 2;
 
 export async function POST(request: NextRequest) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

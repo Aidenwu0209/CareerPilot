@@ -19,7 +19,7 @@ import { warnLegacyByok } from '@/lib/ai/legacy-detect';
  * AC4: Response never includes provider keys or internal service URLs.
  */
 export async function GET(request: Request) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   // Verify authentication and active status before any provider calls
   const ctx = await resolveActiveContext(getUserIdFromRequest(request));
   if (ctx === null) {

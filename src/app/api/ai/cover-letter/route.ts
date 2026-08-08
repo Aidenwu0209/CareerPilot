@@ -67,7 +67,7 @@ function parseCoverLetter(text: string): CoverLetterOutput {
 }
 
 export async function POST(request: NextRequest) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   // ── Auth + status guard ──
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });

@@ -87,7 +87,7 @@ async function runWithConcurrency<T, R>(
 }
 
 export async function POST(request: NextRequest) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

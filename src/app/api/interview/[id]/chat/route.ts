@@ -9,7 +9,7 @@ import { buildModel } from '@/lib/ai/model-builder';
 import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;

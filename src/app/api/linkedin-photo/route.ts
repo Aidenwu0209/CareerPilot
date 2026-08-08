@@ -16,7 +16,7 @@ const GEMINI_ENDPOINT =
   'https://generativelanguage.googleapis.com/v1beta/models';
 
 export async function POST(request: NextRequest) {
-  warnLegacyByok(request);
+  await warnLegacyByok(request);
   // Verify authentication and active status before any external calls
   const ctx = await resolveActiveContext(getUserIdFromRequest(request));
   if (!ctx) {
