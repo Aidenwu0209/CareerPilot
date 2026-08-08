@@ -35,6 +35,10 @@
 - User status enum: `['active', 'suspended', 'deleted']` — guards reject any status !== 'active'; tests mocking `resolveUser` must include `platformRole` and `status` fields in the returned user object
 - Account deletion pattern: anonymize user row (email/name/fingerprint=null, status='deleted') + hard-delete business data (resumes, interviews) + keep immutable records (audit_events, legal_consents, credit_transactions) referencing the anonymized row — cannot hard-delete users because immutable tables have FK constraints
 - HMAC-signed confirmation tokens: stateless pattern using `AUTH_SECRET` — payload `userId:expiresAt:nonce` + HMAC-SHA256 signature, verified with `timingSafeEqual`; no DB table needed for one-time semantics when the underlying operation is idempotent
+- Backup module: `src/lib/backup/` — `types.ts` (config + interfaces), `backup-service.ts` (createBackup, encryptData, decryptData, verifyBackupIntegrity, pruneOldBackups), `restore-service.ts` (restoreFromBackup, verifyBalanceIntegrity, verifyForeignKeyIntegrity, verifyRowCounts, recordDrill); uses `BackupQueryable` interface compatible with both PGlite (tests) and postgres npm client (prod)
+- AES-256-GCM encryption pattern: `crypto.createHash('sha256').update(key).digest()` normalises any-length key to 32 bytes; `encryptData()` returns `{iv, authTag, data}` as base64; GCM auth tag detects tampering and wrong keys
+- Backup restore uses `SET session_replication_role = 'replica'` to temporarily disable FK triggers + immutability triggers during bulk data load — standard PostgreSQL approach used by pg_restore
+- Post-restore verification dynamically discovers FK constraints from `information_schema` and checks each for orphaned records; balance recompute sums `credit_transactions.delta` per account and compares to stored `credit_accounts.balance`
 
 ---
 
@@ -1756,4 +1760,19 @@
   - In test helpers, rejected promises passed as deps trigger unhandled-rejection warnings before `checkReadiness` can await them — attach a noop `.catch(() => {})` to register a rejection handler without resolving
   - Health checklist field names like `"secrets"` contain the substring "secret" — when asserting no-leak, check specific credential values (e.g. `s3cr3tP@ssW0rd`) not generic words that match field names
   - Readiness deps use `MigrationQueryable` interface (minimal `execute` method) instead of `any` to satisfy `@typescript-eslint/no-explicit-any`
+---
+
+## 2026-08-08 16:05 - US-084
+- Implemented encrypted PostgreSQL backup and restore verification service
+- New files: `src/lib/backup/types.ts` (config, interfaces, table ordering), `src/lib/backup/backup-service.ts` (createBackup, encryptData, decryptData, verifyBackupIntegrity, pruneOldBackups), `src/lib/backup/restore-service.ts` (restoreFromBackup, verifyBalanceIntegrity, verifyForeignKeyIntegrity, verifyRowCounts, recordDrill), `src/lib/backup/backup-service.test.ts` (27 tests)
+- Modified: `.env.example` (added BACKUP_ENABLED, BACKUP_DESTINATION, BACKUP_RETENTION_DAYS, BACKUP_OWNER_EMAIL, BACKUP_ENCRYPTION_KEY, BACKUP_SCHEDULE), `src/app/api/health/route.ts` (enriched backup checklist with destination/retention/owner/encryptionKey/configIssues)
+- 27 tests covering: AC1 encrypted backup creation + no plaintext leakage + no app secrets in backup; AC2 config validation (missing fields, short key, key reuse, invalid email, parse); AC3 full restore into isolated PGlite (users, resumes, orgs, balances, transactions, AI ops, holds, audits, consents); AC4 balance recompute diff=0 + FK integrity check (13+ constraints) + row count match; AC5 RPO/RTO recording + drill record + failure notification with owner email; encryption round-trip + wrong key rejection + tamper detection + checksum verification
+- Typecheck passes, tests pass (27/27 + existing 12 health tests), lint clean on new files
+- **未来迭代的学习：**
+  - `BackupQueryable` interface should NOT use generics — `query(sql, params): Promise<Record<string, unknown>[]>` is cleaner than `query<T>` because the adapter function signature matches exactly without variance issues
+  - PGlite query results are typed as `unknown` without explicit type parameter — always pass `pg.query<T>(sql, params)` for direct PGlite calls, or cast to typed array for BackupQueryable calls
+  - `validateBackupConfig` should accept `Record<string, string | undefined>` not `NodeJS.ProcessEnv` — Next.js's ProcessEnv type marks NODE_ENV as required, breaking partial-object tests
+  - AES-256-GCM via Node crypto: `createCipheriv('aes-256-gcm', key, iv)` → `cipher.getAuthTag()`; decrypt side must `decipher.setAuthTag(tag)` before `final()` — GCM detects tampering and wrong keys automatically
+  - `SET session_replication_role = 'replica'` in PGlite/PostgreSQL disables ALL triggers including immutability triggers — safe for restore because we TRUNCATE+INSERT all data from backup; must reset to 'origin' after
+  - To simulate connection failures in tests, create a mock `BackupQueryable` that throws — don't close PGlite instances because afterEach will try to close them again
 ---
