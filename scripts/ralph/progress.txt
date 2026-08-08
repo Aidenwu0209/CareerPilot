@@ -710,6 +710,23 @@
   - `validateModelAccess(modelId)` from `model-catalog.ts` is ready for US-035/US-037 integration — returns `{ ok: true, model }` or `{ ok: false, error: 'MODEL_NOT_ALLOWED' }`
   - When a previous Ralph iteration leaves untracked files for a future story (e.g., `ai-authorization.ts`), do NOT commit them with the current story — leave them for their own story iteration
 
+## 2026-08-08 08:39 - US-036
+- Implemented AI credit hold, settlement, and release service
+- New files: `src/lib/ai/credit-hold-service.ts` (hold lifecycle service), `src/lib/ai/credit-hold-service.test.ts` (17 tests)
+- AC1: `calculateHoldAmount()` computes max hold for fixed-price (`fixedPrice`) and token-based (`inputTokens * tokenPriceInput / 1000 + outputTokens * tokenPriceOutput / 1000`)
+- AC2: Insufficient balance → `InsufficientCreditsError` from atomic `postTransaction` before provider call; balance unchanged
+- AC3: `settleHold()` calculates actual cost from usage, credits back excess via `refund` reason; hold marked `settled`
+- AC4: `releaseHold()` credits back full amount on failure/cancel; `releaseExpiredHolds()` compensation job releases stale holds
+- AC5: `postTransaction` uses `BEGIN IMMEDIATE` for concurrency safety; idempotent status checks prevent double-settle/double-release
+- 17 tests: hold calculation (5), insufficient balance (3), settlement (3), release (3), idempotency/concurrency (3)
+- Typecheck passes, all 934 tests pass (44 files)
+- **未来迭代的学习：**
+  - Hold = debit (reason: `consumption`) + creditHolds record; settlement = credit back excess (reason: `refund`)
+  - Zero-cost models (free) skip the debit — create a zero-amount hold record without touching the ledger
+  - `creditHolds.status` transitions: `active` → `settled` (success) | `released` (failure/cancel) | `expired` (compensation)
+  - Settlement caps actual cost at hold amount — never charges more than reserved
+  - US-037 (AI gateway) will call `createHold()` before provider dispatch and `settleHold()`/`releaseHold()` based on result
+
 ## 2026-08-08 08:36 - US-035
 - Implemented AI billing account resolution and model authorization service
 - New files: `src/lib/ai/ai-authorization.ts` (`authorizeAiRequest()` service), `src/lib/ai/ai-authorization.test.ts` (19 tests)
