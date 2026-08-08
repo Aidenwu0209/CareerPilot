@@ -1776,3 +1776,26 @@
   - `SET session_replication_role = 'replica'` in PGlite/PostgreSQL disables ALL triggers including immutability triggers — safe for restore because we TRUNCATE+INSERT all data from backup; must reset to 'origin' after
   - To simulate connection failures in tests, create a mock `BackupQueryable` that throws — don't close PGlite instances because afterEach will try to close them again
 ---
+
+## 2026-08-08 16:20 - US-085
+- Implemented E2E formal authentication closed-loop verification tests
+- New file: `src/lib/auth/e2e-auth.test.ts` (17 tests covering all 6 ACs)
+- AC1: Full registration flow — OTP request → verify → user creation → legal consent → session token creation → decode verification
+- AC2: DB integrity — exactly one user identity, one email auth account, one credit account, one registration_grant transaction
+- AC3: Session persistence — same userId across multiple token decodes, stable role/status claims
+- AC4: Logout/session invalidation — empty cookie decodes to null, user still exists but can't access protected API
+- AC5: Invalid/expired/replayed OTP — all return clear errors, no user created, error messages don't leak registration status
+- AC6: Forged x-fingerprint — production mode rejects fingerprint auth (getUserIdFromRequest, resolveUser, no user creation), dev mode allows it
+- Additional: registration grant idempotency in full flow, session token security (no secrets, unforgeable without AUTH_SECRET)
+- Used unique-email-per-test pattern to avoid conflicts with immutable tables (legal_consents, credit_transactions have triggers that block DELETE)
+- For AC6 fingerprint tests: used vi.doMock to mock config/db dependencies to avoid next-auth → next/server import chain
+- Typecheck passes, all 1217 tests pass (17 new), lint clean on new file
+- Browser verification deferred: no running dev server detected; the integration tests cover the full auth lifecycle at the service/API level
+- **未来迭代的学习：**
+  - `legal_consents` and `credit_transactions` tables are immutable (SQLite triggers block DELETE) — cannot clean them in beforeEach; use unique emails per test instead
+  - `credit_transactions.account_id` uses `ON DELETE restrict` — can't delete credit accounts that have transactions either
+  - `vi.resetModules()` + `await import('./helpers')` re-imports the full module chain including `next-auth` which needs `next/server` — use `vi.doMock` to mock `./config`, `@/lib/config`, `@/lib/db`, and `@/lib/db/repositories/user.repository` before re-importing
+  - `decode()` from `next-auth/jwt` throws (not returns null) when decryption key doesn't match — wrap in try-catch for wrong-secret tests
+  - `helpers.ts` module-level `const isProduction = process.env.NODE_ENV === 'production'` is fixed at import time — changing `NODE_ENV` after import requires `vi.resetModules()` + dynamic import
+  - The `@/lib/db` vi.mock async factory creates a new in-memory SQLite on each factory execution — after `vi.resetModules()`, re-imported modules get a fresh DB instance
+---
