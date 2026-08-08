@@ -75,6 +75,7 @@ export function Header() {
             onClick={() => openModal('settings')}
             className="cursor-pointer text-zinc-500"
             title={t('settings.title')}
+            aria-label={t('settings.title')}
           >
             <Settings className="h-4 w-4" />
           </Button>
@@ -83,7 +84,7 @@ export function Header() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-10 w-10">
+                <Button variant="ghost" size="icon" className="h-10 w-10" aria-label={t('common.menu')}>
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>

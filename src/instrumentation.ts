@@ -7,6 +7,11 @@
  * @see https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation
  */
 export async function register() {
+  // Database initialization and fail-closed environment checks require the
+  // Node.js runtime. Next.js also evaluates instrumentation for Edge bundles,
+  // where importing the DB adapters would emit runtime errors for fs/path.
+  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+
   const { assertEnvOrExit } = await import('./lib/env');
   assertEnvOrExit();
 

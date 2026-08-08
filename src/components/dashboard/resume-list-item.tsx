@@ -126,6 +126,7 @@ export function ResumeListItem({ resume, onDelete, onDuplicate, onRename }: Resu
         <DropdownMenuTrigger
           className="cursor-pointer rounded-md p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           onClick={(e) => e.stopPropagation()}
+          aria-label={`${t('common.moreActions')}: ${resume.title}`}
         >
           <MoreVertical className="h-4 w-4 text-zinc-400" />
         </DropdownMenuTrigger>

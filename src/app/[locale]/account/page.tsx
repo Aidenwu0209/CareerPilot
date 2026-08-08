@@ -109,7 +109,7 @@ export default async function AccountPage() {
             </div>
             <div className="min-w-0 flex-1">
               <h2 className="truncate text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {user.name || t('unnamed')}
+                {!user.name || user.name === 'Anonymous User' ? t('unnamed') : user.name}
               </h2>
               <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
                 {user.email || '—'}

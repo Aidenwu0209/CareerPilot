@@ -86,11 +86,9 @@ export class SmtpMailAdapter implements MailAdapter {
   async sendOTP(email: string, code: string): Promise<void> {
     const cfg = this.getConfig();
 
-    // Dynamic import of nodemailer — loaded only when actually sending.
-    // nodemailer is an optional peer dependency, not installed by default.
-    let nodemailer: { createTransport: (opts: Record<string, unknown>) => { sendMail: (opts: Record<string, unknown>) => Promise<unknown> } };
+    // Load the SMTP client only when an email is actually sent.
+    let nodemailer: typeof import('nodemailer');
     try {
-      // @ts-expect-error — nodemailer may not be installed
       nodemailer = await import('nodemailer');
     } catch {
       throw new Error(

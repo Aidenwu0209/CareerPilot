@@ -25,7 +25,10 @@ export function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="cursor-pointer rounded-full outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-zinc-400">
+      <DropdownMenuTrigger
+        className="cursor-pointer rounded-full outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-zinc-400"
+        aria-label={tNav('account')}
+      >
         <Avatar className="h-8 w-8">
           {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={user.name || ''} />}
           <AvatarFallback className="bg-zinc-200 text-zinc-600 text-xs">

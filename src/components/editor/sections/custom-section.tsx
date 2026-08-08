@@ -42,13 +42,13 @@ export function CustomSection({ section, onUpdate }: Props) {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-zinc-400">#{index + 1}</span>
-              <Button variant="ghost" size="sm" className="h-7 cursor-pointer p-1 text-zinc-400 hover:text-red-500" onClick={() => removeItem(index)}>
+              <Button variant="ghost" size="sm" className="h-7 cursor-pointer p-1 text-zinc-400 hover:text-red-500" onClick={() => removeItem(index)} aria-label={t('removeItem')}>
                 <X className="h-3.5 w-3.5" />
               </Button>
             </div>
             <FieldWrapper>
-              <EditableText label="Title" value={item.title} onChange={(v) => updateItem(index, { title: v })} />
-              <EditableText label="Date" value={item.date || ''} onChange={(v) => updateItem(index, { date: v })} />
+              <EditableText label={t('customTitle')} value={item.title} onChange={(v) => updateItem(index, { title: v })} />
+              <EditableText label={t('customDate')} value={item.date || ''} onChange={(v) => updateItem(index, { date: v })} />
             </FieldWrapper>
             <EditableRichText label={t('description')} value={item.description} onChange={(v) => updateItem(index, { description: v })} />
           </div>

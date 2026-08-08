@@ -13,7 +13,9 @@
     "back": "Back",
     "search": "Search",
     "noData": "No data",
-    "rename": "Rename"
+    "rename": "Rename",
+    "moreActions": "More actions",
+    "menu": "Menu"
   },
   "auth": {
     "login": "Log in",
@@ -151,9 +153,17 @@
       "grammarCheck": "Grammar",
       "share": "Share",
       "import": "Import",
+      "backToDashboard": "Back to dashboard",
+      "more": "More tools",
+      "zoomOut": "Zoom out preview",
+      "zoomIn": "Zoom in preview",
       "previewError": "Preview failed to render — the content may be malformed. Edit it on the left to fix, or undo the recent AI changes."
     },
     "aiPolish": "AI Polish",
+    "showSection": "Show section",
+    "hideSection": "Hide section",
+    "removeSection": "Remove section",
+    "dragSection": "Drag to reorder section",
     "invalidSectionContent": "This section has invalid data. Please use AI to regenerate the content.",
     "sidebar": {
       "sections": "Sections",
@@ -200,6 +210,8 @@
       "endDate": "End Date",
       "current": "Present",
       "description": "Description",
+      "customTitle": "Title",
+      "customDate": "Date",
       "highlights": "Highlights",
       "institution": "Institution",
       "degree": "Degree",
@@ -227,6 +239,7 @@
       "qrUrlInvalid": "Please enter a valid URL",
       "addItem": "Add Item",
       "removeItem": "Remove Item",
+      "uploadAvatar": "Upload avatar",
       "clear": "Clear",
       "dateDisplay": "{month} {year}",
       "months": {
@@ -855,6 +868,7 @@
       "titleLabel": "Interview Title",
       "titlePlaceholder": "e.g., Senior Frontend Engineer Interview",
       "startInterview": "Start Interview",
+      "createFailed": "Failed to create the interview. Please try again.",
       "custom": {
         "title": "Custom Interviewer",
         "name": "Name",

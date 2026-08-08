@@ -45,7 +45,7 @@ export function SkillsSection({ section, onUpdate }: Props) {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <EditableText label={t('skillCategory')} value={cat.name} onChange={(v) => updateCategory(index, { name: v })} />
-              <Button variant="ghost" size="sm" className="mt-5 h-7 cursor-pointer p-1 text-zinc-400 hover:text-red-500" onClick={() => removeCategory(index)}>
+              <Button variant="ghost" size="sm" className="mt-5 h-7 cursor-pointer p-1 text-zinc-400 hover:text-red-500" onClick={() => removeCategory(index)} aria-label={t('removeItem')}>
                 <X className="h-3.5 w-3.5" />
               </Button>
             </div>

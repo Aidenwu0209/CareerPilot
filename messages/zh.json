@@ -13,7 +13,9 @@
     "back": "返回",
     "search": "搜索",
     "noData": "暂无数据",
-    "rename": "重命名"
+    "rename": "重命名",
+    "moreActions": "更多操作",
+    "menu": "菜单"
   },
   "auth": {
     "login": "登录",
@@ -151,9 +153,17 @@
       "grammarCheck": "语法检查",
       "share": "分享",
       "import": "导入",
+      "backToDashboard": "返回工作台",
+      "more": "更多功能",
+      "zoomOut": "缩小预览",
+      "zoomIn": "放大预览",
       "previewError": "预览渲染失败，可能是内容格式有误。请在左侧编辑修复，或撤销最近的 AI 修改。"
     },
     "aiPolish": "AI 润色",
+    "showSection": "显示模块",
+    "hideSection": "隐藏模块",
+    "removeSection": "删除模块",
+    "dragSection": "拖动模块排序",
     "invalidSectionContent": "该模块数据异常，请使用 AI 重新生成内容",
     "sidebar": {
       "sections": "简历模块",
@@ -200,6 +210,8 @@
       "endDate": "结束时间",
       "current": "至今",
       "description": "描述",
+      "customTitle": "标题",
+      "customDate": "日期",
       "highlights": "亮点",
       "institution": "学校",
       "degree": "学位",
@@ -227,6 +239,7 @@
       "qrUrlInvalid": "请输入有效的链接地址",
       "addItem": "添加条目",
       "removeItem": "删除条目",
+      "uploadAvatar": "上传头像",
       "clear": "清除",
       "dateDisplay": "{year}年{month}",
       "months": {
@@ -855,6 +868,7 @@
       "titleLabel": "面试标题",
       "titlePlaceholder": "如：高级前端工程师面试",
       "startInterview": "开始面试",
+      "createFailed": "面试创建失败，请稍后重试",
       "custom": {
         "title": "自定义面试官",
         "name": "面试官名称",
