@@ -1123,6 +1123,10 @@
       "organizations": {
         "title": "Organizations",
         "description": "Create orgs, assign seats and quota"
+      },
+      "creditRules": {
+        "title": "Credit Rules",
+        "description": "Configure registration grants and daily limits"
       }
     },
     "providers": {
@@ -1221,6 +1225,7 @@
       "confirmUnfreezeDesc": "Once unfrozen, {name} will regain normal access.",
       "cancel": "Cancel",
       "confirm": "Confirm",
+      "viewDetails": "Details",
       "errApi": {
         "INVALID_ACTION": "Invalid action type",
         "IDEMPOTENCY_KEY_REQUIRED": "Missing idempotency key",
@@ -1229,6 +1234,85 @@
         "FORBIDDEN": "You do not have permission to perform this action",
         "AUTH_REQUIRED": "Authentication required"
       }
+    },
+    "userDetail": {
+      "title": "User Details",
+      "backToUsers": "Back to Users",
+      "balance": "Balance",
+      "createdAt": "Joined",
+      "orgs": "Organizations",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "roleAdmin": "Admin",
+      "roleUser": "User",
+      "addCredits": "Add Credits",
+      "deductCredits": "Deduct Credits",
+      "refresh": "Refresh",
+      "transactionHistory": "Transaction History",
+      "colTime": "Time",
+      "colType": "Type",
+      "colAmount": "Amount",
+      "colBalanceAfter": "Balance After",
+      "colNote": "Note",
+      "empty": "No transactions yet",
+      "loadError": "Failed to load",
+      "retry": "Retry",
+      "prev": "Previous",
+      "next": "Next",
+      "addTitle": "Add Credits",
+      "deductTitle": "Deduct Credits",
+      "adjustDescription": "Adjusting credits for {name}",
+      "fieldAmount": "Amount",
+      "fieldNote": "Note (required)",
+      "placeholderAmountAdd": "Enter a positive integer",
+      "placeholderAmountDeduct": "Enter a positive integer",
+      "placeholderNote": "Enter the reason for adjustment",
+      "confirmAdd": "Confirm Add",
+      "confirmDeduct": "Confirm Deduct",
+      "cancel": "Cancel",
+      "adjustSuccess": "Adjusted ({amount})",
+      "adjustFailed": "Adjustment failed",
+      "errInvalidAmount": "Please enter a non-zero integer",
+      "errNoteRequired": "Please enter a note",
+      "reasons": {
+        "registrationGrant": "Registration Grant",
+        "manualCredit": "Manual Credit",
+        "manualDebit": "Manual Debit",
+        "consumption": "Consumption",
+        "refund": "Refund",
+        "adjustment": "Adjustment"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "Amount must be a non-zero integer",
+        "REASON_REQUIRED": "Note is required",
+        "IDEMPOTENCY_KEY_REQUIRED": "Missing idempotency key",
+        "INSUFFICIENT_CREDITS": "Insufficient credits, debit would result in negative balance",
+        "USER_NOT_FOUND": "User not found",
+        "INVALID_BODY": "Invalid request body",
+        "FORBIDDEN": "You do not have permission to perform this action",
+        "AUTH_REQUIRED": "Authentication required"
+      }
+    },
+    "creditRules": {
+      "title": "Credit Rules",
+      "description": "Configure registration grants and daily spending limits",
+      "refresh": "Refresh",
+      "save": "Save",
+      "fieldValue": "Value",
+      "ruleRegistrationGrant": "Registration Grant",
+      "ruleRegistrationGrantDesc": "Credits awarded to new users upon first authentication",
+      "ruleDailyLimitPersonal": "Personal Daily Limit",
+      "ruleDailyLimitPersonalDesc": "Maximum daily AI consumption for personal accounts",
+      "ruleDailyLimitOrg": "Organization Daily Limit",
+      "ruleDailyLimitOrgDesc": "Maximum daily AI consumption for organization accounts",
+      "ruleUnknown": "Unknown Rule",
+      "empty": "No rules configured",
+      "loadError": "Failed to load rules",
+      "retry": "Retry",
+      "saveSuccess": "Rule updated",
+      "errInvalidValue": "Please enter a non-negative integer",
+      "errSaveFailed": "Failed to save",
+      "hintFutureOnly": "Rule changes only affect future events and do not retroactively apply to past transactions."
     },
     "models": {
       "title": "Model Catalog Management",

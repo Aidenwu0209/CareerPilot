@@ -1123,6 +1123,10 @@
       "organizations": {
         "title": "机构",
         "description": "创建机构、分配席位与配额"
+      },
+      "creditRules": {
+        "title": "点数规则",
+        "description": "配置注册赠点和个人每日上限"
       }
     },
     "providers": {
@@ -1221,6 +1225,7 @@
       "confirmUnfreezeDesc": "解冻后，{name} 将恢复正常的访问权限。",
       "cancel": "取消",
       "confirm": "确认",
+      "viewDetails": "详情",
       "errApi": {
         "INVALID_ACTION": "操作类型无效",
         "IDEMPOTENCY_KEY_REQUIRED": "缺少幂等键",
@@ -1229,6 +1234,85 @@
         "FORBIDDEN": "无权限执行此操作",
         "AUTH_REQUIRED": "需要登录"
       }
+    },
+    "userDetail": {
+      "title": "用户详情",
+      "backToUsers": "返回用户列表",
+      "balance": "余额",
+      "createdAt": "注册时间",
+      "orgs": "机构",
+      "statusActive": "正常",
+      "statusSuspended": "已冻结",
+      "roleAdmin": "超管",
+      "roleUser": "用户",
+      "addCredits": "充值",
+      "deductCredits": "扣减",
+      "refresh": "刷新",
+      "transactionHistory": "流水记录",
+      "colTime": "时间",
+      "colType": "类型",
+      "colAmount": "变动",
+      "colBalanceAfter": "变动后余额",
+      "colNote": "备注",
+      "empty": "暂无流水记录",
+      "loadError": "加载失败，请稍后重试",
+      "retry": "重试",
+      "prev": "上一页",
+      "next": "下一页",
+      "addTitle": "充值点数",
+      "deductTitle": "扣减点数",
+      "adjustDescription": "正在为 {name} 调整点数",
+      "fieldAmount": "数量",
+      "fieldNote": "备注（必填）",
+      "placeholderAmountAdd": "输入正整数",
+      "placeholderAmountDeduct": "输入正整数",
+      "placeholderNote": "请输入调整原因，例如：补偿测试消费",
+      "confirmAdd": "确认充值",
+      "confirmDeduct": "确认扣减",
+      "cancel": "取消",
+      "adjustSuccess": "调账成功（{amount}）",
+      "adjustFailed": "调账失败",
+      "errInvalidAmount": "请输入非零整数",
+      "errNoteRequired": "请填写备注",
+      "reasons": {
+        "registrationGrant": "注册赠点",
+        "manualCredit": "人工充值",
+        "manualDebit": "人工扣减",
+        "consumption": "消费",
+        "refund": "退款",
+        "adjustment": "调整"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "金额必须是非零整数",
+        "REASON_REQUIRED": "请填写备注",
+        "IDEMPOTENCY_KEY_REQUIRED": "缺少幂等键",
+        "INSUFFICIENT_CREDITS": "余额不足，扣减会导致负余额",
+        "USER_NOT_FOUND": "用户不存在",
+        "INVALID_BODY": "请求格式无效",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "需要登录"
+      }
+    },
+    "creditRules": {
+      "title": "点数规则",
+      "description": "配置注册赠点和每日消费上限",
+      "refresh": "刷新",
+      "save": "保存",
+      "fieldValue": "值",
+      "ruleRegistrationGrant": "注册赠点",
+      "ruleRegistrationGrantDesc": "新用户首次完成注册认证时获得的点数",
+      "ruleDailyLimitPersonal": "个人每日上限",
+      "ruleDailyLimitPersonalDesc": "个人账户每日 AI 消费点数上限",
+      "ruleDailyLimitOrg": "机构每日上限",
+      "ruleDailyLimitOrgDesc": "机构账户每日 AI 消费点数上限",
+      "ruleUnknown": "未知规则",
+      "empty": "暂无规则",
+      "loadError": "加载规则失败",
+      "retry": "重试",
+      "saveSuccess": "规则已更新",
+      "errInvalidValue": "请输入非负整数",
+      "errSaveFailed": "保存失败",
+      "hintFutureOnly": "规则变更仅影响后续事件，不会追溯已发生的业务。"
     },
     "models": {
       "title": "模型目录管理",

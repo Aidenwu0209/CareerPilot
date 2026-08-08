@@ -1491,3 +1491,31 @@
   - 用户卡片不使用 Table 组件——使用 flex 布局的 card（同 providers/models 模式），移动端自动换行
 ---
 
+
+## 2026-08-08 14:10 - US-073
+- 创建超管用户调账与点数规则界面
+- New files:
+  - `src/app/api/admin/users/[id]/transactions/route.ts`: 超管查看指定用户分页流水 API（super_admin guard + getTransactions）
+  - `src/app/[locale]/admin/users/[id]/page.tsx`: 用户详情页——余额卡片 + 分页流水表格 + 充值/扣减 Dialog（必填备注、非零整数校验、INSUFFICIENT_CREDITS 映射）
+  - `src/app/[locale]/admin/credits/rules/page.tsx`: 点数规则管理页——注册赠点、个人每日上限、机构每日上限的查看和编辑
+- Modified files:
+  - `src/components/admin/admin-sidebar.tsx`: 添加点数规则导航项（Coins 图标）
+  - `src/app/[locale]/admin/page.tsx`: 添加点数规则卡片入口
+  - `src/app/[locale]/admin/users/page.tsx`: 每行添加"详情"链接跳转到用户详情页
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.userDetail`（40+ keys）、`admin.creditRules`（20+ keys）、`admin.sections.creditRules`、`admin.users.viewDetails`
+  - `scripts/ralph/prd.json`: US-073 passes=true
+- AC1 ✅：`/zh/admin/users/[id]` 显示余额、分页流水（时间/类型/变动/变动后余额/备注），不显示简历或业务正文
+- AC2 ✅：调账 Dialog 要求非零整数 + 必填备注 + 确认按钮；成功后 fetchUser() + fetchTransactions() 刷新
+- AC3 ✅：0、空备注前端拦截；API 层（US-028 已实现）验证并返回 INVALID_AMOUNT/REASON_REQUIRED/INSUFFICIENT_CREDITS；幂等键防止重复流水
+- AC4 ✅：`/zh/admin/credits/rules` 可查看和编辑注册赠点、个人/机构每日上限；PUT API（US-028 已实现）验证非负整数
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~072 限制）
+- AC7 ⏳：同上限制；组件结构清洁，无副作用
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - 管理端用户详情页使用 `useParams<{ id: string }>()` 获取动态路由参数——Next.js 16 的 `params` 是 `Promise` 但 `useParams()` hook 在客户端组件中同步返回
+  - 管理端查看其他用户流水的 API 模式：`GET /api/admin/users/[id]/transactions`——复用 `getOrCreateAccount('user', targetId)` + `getTransactions()`，与用户自助 API `/api/credits/transactions` 使用相同的 ledger 函数
+  - 调账 Dialog 使用 `adjustDir` state 区分充值/扣减——共享同一个 Dialog 组件，通过 `adjustDir` 控制标题、按钮文案和 amount 正负
+  - 点数规则页面使用 draft state（`Record<string, string>`）跟踪每个规则字段的编辑值——`hasChanged = draft !== current` 控制 Save 按钮的 disabled 状态
+  - 点数规则 API（US-028 已实现）的 PUT 创建新版本并停用旧版本——`v{version}` badge 和 fetchRules() 刷新后自动反映
+  - 用户列表页的"详情"链接使用 `Link` from `@/i18n/routing`——自动添加 locale 前缀
+---

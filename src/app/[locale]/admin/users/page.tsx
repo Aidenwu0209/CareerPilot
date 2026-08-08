@@ -27,8 +27,10 @@ import {
   Loader2,
   ShieldCheck,
   User as UserIcon,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from '@/i18n/routing';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -286,6 +288,12 @@ export default function AdminUsersPage() {
 
                   {/* Right: actions */}
                   <div className="flex items-center gap-2">
+                    <Link href={`/admin/users/${user.id}`}>
+                      <Button variant="ghost" size="sm" className="gap-1 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200">
+                        {t('viewDetails')}
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </Link>
                     <Button
                       variant="outline"
                       size="sm"
