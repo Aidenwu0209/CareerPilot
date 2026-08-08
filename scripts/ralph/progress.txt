@@ -1799,3 +1799,34 @@
   - `helpers.ts` module-level `const isProduction = process.env.NODE_ENV === 'production'` is fixed at import time — changing `NODE_ENV` after import requires `vi.resetModules()` + dynamic import
   - The `@/lib/db` vi.mock async factory creates a new in-memory SQLite on each factory execution — after `vi.resetModules()`, re-imported modules get a fresh DB instance
 ---
+
+## 2026-08-08 16:40 - US-086
+- Validated ToC managed AI end-to-end closed loop with 8 integration tests
+- New file: `src/lib/ai/e2e-toc-ai.test.ts` — comprehensive E2E test covering all 7 ACs
+- AC1-AC3: Full lifecycle — OTP registration → legal consent → funded account → AI gateway operation → single settlement
+  - Dispatch receives managed API key (`test-managed-api-key`) — no client key/provider/baseURL
+  - Exactly one `ai_operations` (status=succeeded), one `ai_provider_attempts` (status=succeeded)
+  - One `credit_holds` (status=settled, holdAmount=fixedPrice)
+  - Balance reduced by exact fixedPrice; consumption transaction references operation ID
+- AC4: Persistence — re-querying operation, attempts, balance, transactions yields same values
+  - Idempotent replay with same idempotencyKey does not double-charge or create duplicate operations
+- AC5: Insufficient credits — drains account to 0, attempts operation with fixedPrice=100
+  - Returns `{ ok: false, error: 'INSUFFICIENT_CREDITS', status: 422 }`
+  - dispatch never called, zero provider attempts, zero consumption transactions, balance unchanged
+- AC6: Cross-user isolation — registers two users, user A performs AI operation
+  - User B cannot see user A's resume (DB query returns empty)
+  - User B has zero operations, zero consumption transactions, unchanged balance
+  - User B's data export (`collectUserData`) does not contain user A's userId, resume, result text, or email
+- AC7: No sensitive data leakage
+  - Operation metadata, attempt records, and credit transactions don't contain `test-managed-api-key`, `AI_CREDENTIAL_MASTER_KEY`
+  - Failed provider attempts store sanitized error messages (strips URLs, API keys, Bearer tokens)
+- Integration: Registration grant enables first AI operation — new user can immediately consume managed AI
+- Typecheck passes, 1225 tests pass (68 files, 8 new), lint clean on new file
+- **未来迭代的学习：**
+  - In-memory SQLite is shared across all describe blocks in a single test file — use `onConflictDoNothing()` on seed helpers or `beforeAll` (not `beforeEach`) for provider/model seeding
+  - `typeof array[number]` pattern provides the element type for Drizzle query results — use it to annotate `.find()` and `.filter()` callbacks to avoid implicit `any`
+  - The gateway caches dispatch return values in `aiOperations.metadata` as `cachedResult` — dispatch functions must not include sensitive fields in return objects
+  - `sanitizeErrorMessage()` in gateway.ts strips `sk-ant-*`, `sk-*`, `AIza*` patterns, URLs, Bearer tokens, and truncates to 100 chars — verified by AC7 error sanitization test
+  - For balance assertions in cross-user tests, always capture `balanceBefore` BEFORE the operation, not after — the account state changes in-place
+  - `debitAccount()` from `@/lib/credits/ledger` is the simplest way to drain test accounts — takes `amount` (positive) not `delta` (negative)
+---
