@@ -660,3 +660,21 @@
   - `getTransactions(accountId, options)` returns `TransactionRecord[]` directly — not wrapped in `{ transactions: [...] }`
   - The `organizations.createdBy` column has FK to `users.id` — test seed functions must create the creator user before the org, or pass `createdBy` explicitly
   - Super admin can adjust any org's credits; org admin cannot (prevents self-dealing)
+
+## 2026-08-08 08:26 - US-032
+- Implemented provider credential encryption and rotation service
+- New files: `src/lib/crypto/credential-crypto.ts` (encryption, decryption, masking, rotation), `src/lib/crypto/credential-crypto.test.ts` (34 tests), `src/app/api/admin/providers/[id]/credentials/route.ts` (GET masked info), `src/app/api/admin/providers/[id]/credentials/rotate/route.ts` (POST rotate)
+- AC1: Uses `AI_CREDENTIAL_MASTER_KEY` (already validated in env.ts); supports pluggable `CredentialKeyAdapter` for KMS integration; independent from `AUTH_SECRET`
+- AC2: AES-256-GCM with per-encryption random IV + salt; DB stores only JSON blobs `{v, iv, salt, tag, data}`; `resolveProviderCredential()` provides short-lived decrypted values
+- AC3: `rotateProviderCredential()` increments `credentialVersion`, encrypts new plaintext, preserves provider `status`; never logs plaintext
+- AC4: `getProviderCredentialInfo()` returns masked credential (`sk••••••cdef`), version, and lastValidatedAt; never exposes plaintext
+- AC5: Missing `AI_CREDENTIAL_MASTER_KEY` → `CredentialCryptoError` thrown; tampered ciphertext fails GCM auth tag verification; malformed blobs rejected
+- 34 tests: key source (5), plaintext isolation (6), rotation (6), masked info (7), fail-closed (8), round-trip (3)
+- Typecheck passes, all 861 tests pass (40 files)
+- **未来迭代的学习：**
+  - The `aiProviders` table already had `encryptedCredentials` and `credentialVersion` columns — no new table needed for US-032
+  - `AI_CREDENTIAL_MASTER_KEY` is already validated in `src/lib/env.ts` with production checks (required, ≥32 chars, ≠ AUTH_SECRET)
+  - AES-256-GCM provides authenticated encryption — tampered ciphertext fails at `decipher.final()` during auth tag verification
+  - The `CredentialKeyAdapter` interface allows production KMS integration (AWS KMS, Vault) without changing application code
+  - `scryptSync` derives a 256-bit key from the master key + per-encryption salt — even if the DB is compromised, each credential needs independent cracking
+  - `maskCredential` shows first 2 and last 4 chars with bullets in between — no exact length leak for short keys (≤5 chars fully masked)
