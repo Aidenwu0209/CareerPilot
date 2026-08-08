@@ -1641,3 +1641,29 @@
   - 导出文件名格式 `careerpilot-export-{userId前8位}-{timestamp}.json`——不可猜测
   - `Content-Disposition: attachment; filename="..."` 触发浏览器下载
 ---
+
+## 2026-08-08 15:05 - US-079
+- 创建账号资料与数据导出界面 `/[locale]/account`
+- New files:
+  - `src/app/[locale]/account/page.tsx`: 服务端组件——resolveContext 认证 + 显示用户资料（姓名/邮箱/角色 badge/状态 badge/认证类型/userId/注册时间）+ 机构 membership 列表（名称/slug/角色/状态）+ 数据导出按钮
+  - `src/components/account/export-button.tsx`: 客户端组件——idle/exporting/success/error 四态按钮，防止并发导出（state guard），blob 下载 + Content-Disposition 文件名解析
+- Modified files:
+  - `src/components/layout/user-menu.tsx`: 头像下拉菜单新增"账号"链接（DropdownMenuItem asChild + Link from @/i18n/routing）
+  - `messages/zh.json` + `messages/en.json`: 新增 `nav.account` + `account.*` 命名空间（30+ i18n keys）
+  - `scripts/ralph/prd.json`: US-079 passes=true
+- AC1 ✅：`/zh/account` 显示姓名、邮箱、认证类型 badge、平台角色 badge、账号状态 badge 和机构 membership 摘要（名称/slug/角色/状态）
+- AC2 ✅：导出按钮调用 `POST /api/account/export`（US-078 已实现），返回 JSON blob 并通过 `<a download>` 触发浏览器下载
+- AC3 ✅：ExportButton 使用 state guard（`if (state === 'exporting') return`）防止并发导出；idle/exporting/success/error 四态有明确 UI
+- AC4 ✅：下载内容由 US-078 的 `collectUserData(userId)` 保证只包含当前用户数据
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~078 限制）
+- AC7 ⏳：同上限制；组件结构清洁，无副作用
+- AC8 ✅：Typecheck passes, 1141 tests pass (64 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - 账号页使用服务端组件模式：`resolveContext()` 认证 → `db.select().from(users)` 获取用户详情 → `db.select().from(organizationMemberships).innerJoin(organizations)` 获取机构列表——与 admin/org-admin 布局的认证模式一致
+  - `getTranslations` 必须从 `next-intl/server` 导入（不是 `next-intl`）——服务端组件中使用
+  - `redirect` 必须从 `next/navigation` 导入（不是 `@/i18n/routing`）——后者要求 `{ href, locale }` 对象参数，前者接受字符串路径
+  - 文件下载模式：`fetch()` → `res.blob()` → `URL.createObjectURL()` → `document.createElement('a')` → `a.download = filename` → `a.click()` → `URL.revokeObjectURL()` ——从 Content-Disposition header 解析文件名
+  - ExportButton 防并发模式：state guard 在函数入口检查 `state === 'exporting'` 后直接 return——不需要 ref 锁或 disable 属性之外的逻辑
+  - UserMenu 下拉菜单中添加链接使用 `<DropdownMenuItem asChild>` + `<Link>` from `@/i18n/routing`——自动添加 locale 前缀
+  - `memberships.map((m: typeof memberships[number]) => ...)` 显式类型标注避免 implicit any——Drizzle 查询返回的数组元素类型可以通过 `typeof array[number]` 获取
+---
