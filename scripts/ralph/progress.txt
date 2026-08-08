@@ -710,6 +710,23 @@
   - `validateModelAccess(modelId)` from `model-catalog.ts` is ready for US-035/US-037 integration — returns `{ ok: true, model }` or `{ ok: false, error: 'MODEL_NOT_ALLOWED' }`
   - When a previous Ralph iteration leaves untracked files for a future story (e.g., `ai-authorization.ts`), do NOT commit them with the current story — leave them for their own story iteration
 
+## 2026-08-08 08:36 - US-035
+- Implemented AI billing account resolution and model authorization service
+- New files: `src/lib/ai/ai-authorization.ts` (`authorizeAiRequest()` service), `src/lib/ai/ai-authorization.test.ts` (19 tests)
+- AC1: Personal users → personal credit account; org members → org credit account via `getOrCreateAccount(billing.accountOwnerType, billing.accountOwnerId)`
+- AC2: Ambiguous billing (null org ID), frozen account, disabled/private/non-existent model → stable typed error codes
+- AC3: Model validated via `validateModelAccess()` + capability array check (`text` / `image_generation`)
+- AC4: `AiAuthorizationParams` type only accepts `{ context, modelId, capability }` — no balance/price/provider/baseUrl fields exist
+- AC5: All rejections return before any credit hold or provider fetch — pure authorization gate
+- 19 tests: account resolution (3), error cases (6), capability matching (6), client-value exclusion (2), pre-call guarantee (2)
+- Typecheck passes, all 917 tests pass (43 files)
+- **未来迭代的学习：**
+  - `authorizeAiRequest()` is the pre-flight gate for US-036 (hold/settlement) and US-037 (AI gateway) — call before any provider interaction
+  - The return type `AiAuthResult` is a discriminated union — callers must check `result.ok` before accessing `result.data`
+  - Account is auto-created via `getOrCreateAccount` if it doesn't exist — no separate "ensure account" step needed
+  - Capability check is array-based: `model.capabilities.includes(requestedCapability)` — supports multi-capability models
+  - The service does NOT make any external calls — pure DB + type checks, fast and side-effect-free on rejection
+
 ## 2026-08-08 08:29 - US-033
 - Implemented super admin provider management and connection test API
 - New files: `src/app/api/admin/providers/route.ts` (GET list, POST create), `src/app/api/admin/providers/[id]/route.ts` (GET detail, PATCH update), `src/app/api/admin/providers/[id]/test/route.ts` (POST connection test), `src/app/api/admin/providers/admin-providers.test.ts` (20 tests)
