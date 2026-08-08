@@ -21,7 +21,27 @@
     "loginWithGoogle": "Sign in with Google",
     "welcomeBack": "Welcome back",
     "loginDescription": "Sign in to manage your resumes",
-    "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy"
+    "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
+    "otp": {
+      "emailLabel": "Email Address",
+      "sendCode": "Send Code",
+      "codeLabel": "Verification Code",
+      "codeSentTo": "Code sent to {email}",
+      "verify": "Verify",
+      "resend": "Resend Code",
+      "resendIn": "Resend available in {seconds}s",
+      "changeEmail": "Change Email",
+      "errors": {
+        "invalidEmail": "Please enter a valid email address",
+        "rateLimited": "Too many requests, please try again later",
+        "invalidCode": "Incorrect verification code",
+        "expired": "Code has expired, please request a new one",
+        "used": "Code has already been used, please request a new one",
+        "serverError": "Service temporarily unavailable, please try again"
+      }
+    },
+    "or": "or",
+    "agreeTermsLinks": "By signing in, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>"
   },
   "dashboard": {
     "nav": "Dashboard",
@@ -210,9 +230,18 @@
       "clear": "Clear",
       "dateDisplay": "{month} {year}",
       "months": {
-        "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
-        "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
-        "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+        "10": "Oct",
+        "11": "Nov",
+        "12": "Dec",
+        "01": "Jan",
+        "02": "Feb",
+        "03": "Mar",
+        "04": "Apr",
+        "05": "May",
+        "06": "Jun",
+        "07": "Jul",
+        "08": "Aug",
+        "09": "Sep"
       }
     }
   },
@@ -891,5 +920,125 @@
       "leader": "Leader",
       "custom": "Custom"
     }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "version": "Version",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "August 1, 2026",
+      "back": "Back to Home",
+      "sections": {
+        "intro": {
+          "title": "Introduction",
+          "body": "CareerPilot (hereinafter \"we\") respects and protects user privacy. This Privacy Policy explains how we collect, use, store, and protect your personal information. By using this service, you agree to the data practices described in this policy."
+        },
+        "collection": {
+          "title": "Information We Collect",
+          "body": "We collect only the information necessary to provide our services, including:",
+          "items": {
+            "account": "Account information: registration email, display name, and avatar",
+            "resume": "Resume content: resume data you actively create and edit",
+            "usage": "Usage records: AI call logs, credit transactions, and activity logs",
+            "cookies": "Technical information: session cookies and basic browser information"
+          }
+        },
+        "use": {
+          "title": "How We Use Information",
+          "body": "The information we collect is used solely for the following purposes:",
+          "items": {
+            "service": "Providing and maintaining core features such as resume editing, AI optimization, and mock interviews",
+            "ai": "Sending your resume content to platform-managed AI models for processing",
+            "security": "Detecting and preventing fraud, abuse, and unauthorized access",
+            "communication": "Sending you service notifications and important updates"
+          }
+        },
+        "sharing": {
+          "title": "Information Sharing",
+          "body": "We do not sell, rent, or trade your personal information. Information may be shared only when: you give explicit consent; required by law or government authorities; necessary to protect the legitimate rights of the platform and its users. Organization administrators may view aggregated usage data for their organization but cannot access your resume content, interview transcripts, or full prompts."
+        },
+        "retention": {
+          "title": "Data Retention",
+          "body": "Your personal data is retained while your account is active. After account deletion, business data is cascade-deleted according to the data graph; financial and security records required by law are anonymized."
+        },
+        "rights": {
+          "title": "Your Rights",
+          "body": "You have the following rights regarding your personal information:",
+          "items": {
+            "access": "Access: view your personal data and usage details",
+            "export": "Export: download a complete copy of your personal data",
+            "delete": "Delete: close your account and delete associated data",
+            "revoke": "Revoke: withdraw granted organization membership"
+          }
+        },
+        "security": {
+          "title": "Data Security",
+          "body": "We protect your data using encrypted transmission (HTTPS), encrypted storage (key encryption), least-privilege access, and regular audits. AI provider credentials are encrypted with a separate master key; regular APIs and management logs never return plaintext keys."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "body": "If you have any questions about this Privacy Policy, please contact: <email>support@careerpilot.app</email>"
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "version": "Version",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "August 1, 2026",
+      "back": "Back to Home",
+      "sections": {
+        "acceptance": {
+          "title": "Acceptance of Terms",
+          "body": "By using the CareerPilot service, you agree to these Terms of Service. If you do not agree with any terms, please stop using the service."
+        },
+        "accounts": {
+          "title": "Account Registration",
+          "body": "You must register with a valid email address and are responsible for all activities under your account. Registering multiple accounts for abuse is prohibited. The platform reserves the right to suspend accounts that violate these terms."
+        },
+        "credits": {
+          "title": "Credits and Quota",
+          "body": "Individual users receive credits through registration grants or platform adjustments. Organization users use credits allocated to their organization. All AI calls deduct credits according to published platform rules. Credits are non-transferable, non-refundable, and cannot be redeemed for cash unless otherwise specified."
+        },
+        "ai": {
+          "title": "AI-Generated Content",
+          "body": "AI-generated resume content, interview evaluations, and suggestions are for reference only. The platform does not guarantee the accuracy, completeness, or suitability of AI outputs. Users should review all AI-generated content themselves."
+        },
+        "orgUsage": {
+          "title": "Organization Usage",
+          "body": "Organization administrators may manage their organization members and seats, and view aggregated usage data. Administrators cannot access members resume content, interview transcripts, or full prompts. AI consumption by organization members is deducted from the organization quota."
+        },
+        "prohibited": {
+          "title": "Prohibited Conduct",
+          "body": "You must not engage in the following activities:",
+          "items": {
+            "abuse": "Abusing AI interfaces, including automated mass requests, scraping, or exceeding reasonable usage",
+            "reverse": "Reverse engineering, decompiling, or attempting to obtain source code of the platform",
+            "unauthorized": "Accessing other users resumes, interviews, or account data without authorization",
+            "illegal": "Using the service for any illegal or infringing activities"
+          }
+        },
+        "disclaimer": {
+          "title": "Disclaimer",
+          "body": "The service is provided \"as is\" without any express or implied warranties. The platform does not guarantee the availability, reliability, or accuracy of the service."
+        },
+        "liability": {
+          "title": "Limitation of Liability",
+          "body": "To the maximum extent permitted by applicable law, the platform shall not be liable for any indirect, incidental, special, or consequential damages."
+        },
+        "changes": {
+          "title": "Changes to Terms",
+          "body": "The platform reserves the right to modify these terms at any time. Material changes will be communicated through notifications or login prompts. Continued use of the service constitutes acceptance of the modified terms."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "body": "If you have any questions about these Terms of Service, please contact: <email>support@careerpilot.app</email>"
+        }
+      }
+    }
+  },
+  "nav": {
+    "admin": "Admin",
+    "orgAdmin": "Org Admin"
   }
 }
