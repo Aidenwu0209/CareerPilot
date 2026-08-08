@@ -747,6 +747,23 @@
   - The retry loop catches ALL errors from dispatch — no distinction between transient and permanent failures yet; US-050+ may add error classification
   - Sanitizer truncation to 100 chars prevents most prompt content leakage while preserving error type identification
 
+## 2026-08-08 08:56 - US-040
+- Migrated cover letter route from BYOK to unified AI Gateway
+- Modified: `src/app/api/ai/cover-letter/route.ts` — replaced `extractAIConfig`/`getModel` with `executeAiOperation` gateway; added `buildModel()` helper for AI SDK model construction
+- New file: `src/app/api/ai/cover-letter/cover-letter-gateway.test.ts` (6 tests)
+- AC1: Resume ownership verified (404 no-leak) before gateway dispatch
+- AC2: Success generates cover letter with operation, attempt, usage, and settlement
+- AC3: Client x-api-key/x-provider/x-base-url headers ignored — gateway uses managed credentials exclusively
+- AC4: Insufficient credits → 422; cross-user resume → 404; provider failure → 502; no result created on any failure
+- AC5: 6 tests cover success, cross-user 404, unauthenticated 401, insufficient credits 422, provider failure 502, client header ignored
+- Typecheck passes, all 974 tests pass (48 files)
+- **未来迭代的学习：**
+  - The `buildModel()` helper creates AI SDK model instances from gateway dispatch context — shared pattern for US-041 through US-044 migrations
+  - The route no longer reads any HTTP headers for AI configuration — only body fields (resumeId, jobDescription, tone, language) are accepted
+  - Model ID `'cover-letter-default'` must exist in the admin-managed catalog (`aiModels` table) with status='active', visibility='public'
+  - `parseCoverLetter()` and prompt generation logic preserved unchanged from the original route — only the AI call path changed
+  - The gateway handles idempotency keys automatically using `cover-letter-${userId}-${resumeId}-${timestamp}` pattern
+
 ## 2026-08-08 08:53 - US-039
 - Implemented streaming AI gateway with cancellation support
 - Modified: `src/lib/ai/gateway.ts` — added `executeStreamingOperation()` + `wrapStreamWithMonitoring()`
