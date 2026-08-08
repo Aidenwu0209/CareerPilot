@@ -7,7 +7,7 @@ import { organizations } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 /**
- * POST /api/admin/organizations/[orgId]/adjust
+ * POST /api/admin/organizations/[id]/adjust
  *
  * Super admin: adjust an organization's credit balance.
  *
@@ -19,7 +19,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ orgId: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const ctx = await resolveActiveContext();
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
@@ -29,11 +29,11 @@ export async function POST(
     return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   }
 
-  const { orgId } = await params;
+  const { id } = await params;
   const adminId = ctx.context.actor.userId;
 
   // Verify org exists
-  const org = await db.select({ id: organizations.id, name: organizations.name }).from(organizations).where(eq(organizations.id, orgId)).limit(1);
+  const org = await db.select({ id: organizations.id, name: organizations.name }).from(organizations).where(eq(organizations.id, id)).limit(1);
   if (org.length === 0) {
     return NextResponse.json({ error: 'ORG_NOT_FOUND' }, { status: 404 });
   }
@@ -57,7 +57,7 @@ export async function POST(
     return NextResponse.json({ error: 'IDEMPOTENCY_KEY_REQUIRED' }, { status: 400 });
   }
 
-  const account = await getOrCreateAccount('organization', orgId);
+  const account = await getOrCreateAccount('organization', id);
 
   try {
     let result;
@@ -87,7 +87,7 @@ export async function POST(
       actorId: adminId,
       action: 'org.credit.adjust',
       targetType: 'organization',
-      targetId: orgId,
+      targetId: id,
       requestId: idempotencyKey,
       result: 'success',
       summary: `Adjusted ${amount > 0 ? '+' : ''}${amount} for org '${org[0].name}': ${reason}`,
@@ -95,7 +95,7 @@ export async function POST(
     });
 
     return NextResponse.json({
-      organizationId: orgId,
+      organizationId: id,
       balance: result.account.balance,
       transaction: isIdempotent ? null : {
         id: result.transaction.id,

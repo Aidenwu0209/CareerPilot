@@ -61,8 +61,14 @@ vi.mock('@/lib/auth/guards', () => ({
 // --- Imports ---
 import { GET as getBalance } from './balance/route';
 import { GET as getTransactions } from './transactions/route';
-import { POST as adjustOrgCredits } from '@/app/api/admin/organizations/[orgId]/adjust/route';
+import { POST as _adjustOrgCredits } from '@/app/api/admin/organizations/[id]/adjust/route';
 import { db } from '@/lib/db';
+
+/** Adapter: the admin route uses [id] param, but test calls pass { orgId }. */
+async function adjustOrgCredits(req: Request, ctx: { params: Promise<{ orgId: string }> }) {
+  const { orgId } = await ctx.params;
+  return _adjustOrgCredits(req, { params: Promise.resolve({ id: orgId }) });
+}
 import { users, organizations, organizationMemberships, creditAccounts, creditTransactions } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 

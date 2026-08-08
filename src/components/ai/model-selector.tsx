@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import {
   Select,
   SelectContent,
@@ -46,19 +47,24 @@ export function ModelSelector({
   const prevUnavailable = useRef(false);
 
   // AC4: When the selected model becomes unavailable (disabled/removed),
-  // auto-fallback to the first available model and show a notification
+  // auto-fallback to the first available model and show a clear notification
   useEffect(() => {
     if (selectedUnavailable && !prevUnavailable.current) {
       prevUnavailable.current = true;
       const fallback = filtered[0];
       if (fallback) {
         onModelChange(fallback.id);
+        toast.warning(t('modelUnavailable'), {
+          description: fallback.displayName,
+        });
+      } else {
+        toast.warning(t('modelUnavailable'));
       }
     }
     if (!selectedUnavailable) {
       prevUnavailable.current = false;
     }
-  }, [selectedUnavailable, filtered, onModelChange]);
+  }, [selectedUnavailable, filtered, onModelChange, t]);
 
   // Auto-select first model if nothing is selected
   useEffect(() => {
