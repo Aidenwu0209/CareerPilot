@@ -853,3 +853,20 @@
   - The generate-resume route has retry logic inside the dispatch callback for JSON mode fallback — preserved unchanged from original
   - Model IDs (`generate-resume-default`, `grammar-check-default`, `jd-analysis-default`) must exist in the admin-managed catalog
   - The jd-analysis route persists results via `analysisRepository.createJdAnalysis()` and grammar-check via `analysisRepository.createGrammarCheck()` — both create history records with scores
+
+## 2026-08-08 09:07 - US-044
+- Migrated resume parse route from BYOK to unified AI Gateway
+- Modified: `src/app/api/resume/parse/route.ts` — replaced `extractAIConfig`/`getModel`/`resolveUser` with `executeAiOperation` + `buildModel` + `resolveActiveContext`; removed manual rate limiting (gateway handles it)
+- New file: `src/app/api/resume/parse/resume-parse-gateway.test.ts` (8 tests)
+- AC1: Resume parse only calls model through unified Gateway
+- AC2: Server-side limits enforced: file type (ALLOWED_UPLOAD_MIME), file size (MAX_FILE_SIZE 10MB), PDF pages (MAX_PDF_PAGES 30), extracted text length (MAX_PROMPT_LENGTH * 5), max tokens (16384)
+- AC3: Over-limit, insufficient credits, invalid file → no provider call, no credit deduction, no resume created
+- AC4: Success creates resume + sections for current user with operation tracked, usage recorded, and settlement completed
+- AC5: 8 tests cover valid PDF (text-based), fake MIME, oversized file, too many pages, insufficient credits, provider failure, unauthenticated, no file
+- Typecheck passes, all 1000 tests pass (52 files)
+- **未来迭代的学习：**
+  - The parse route uses `resolveActiveContext()` instead of `resolveUser()` — gateway-compatible auth context
+  - mupdf mock must use `(): { asText: () => string }` return type annotation to avoid literal type narrowing errors
+  - The gateway handles rate limiting and credit holds — the route no longer needs manual `checkRateLimit`/`rateLimitedResponse` calls
+  - The route preserves all PDF processing logic: text extraction (text-based PDF), page-to-image rendering (scanned PDF), image file direct send
+  - `MAX_PROMPT_LENGTH * 5` (50,000 chars) used as extracted text length limit — allows multi-page resumes while preventing abuse
