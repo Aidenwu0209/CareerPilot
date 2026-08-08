@@ -1067,7 +1067,9 @@
   },
   "nav": {
     "admin": "Admin",
-    "orgAdmin": "Org Admin"
+    "orgAdmin": "Org Admin",
+    "personalCredits": "Personal Credits",
+    "orgCredits": "Organization Credits"
   },
   "admin": {
     "title": "Admin Console",

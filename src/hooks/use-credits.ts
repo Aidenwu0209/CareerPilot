@@ -1,48 +1,34 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useCreditsStore, type BillingScope } from '@/stores/credits-store';
 
 interface CreditsState {
   balance: number | null;
   accountId: string | null;
-  billingScope: { type: 'personal' | 'organization'; id?: string } | null;
+  billingScope: BillingScope | null;
   loading: boolean;
   error: boolean;
+  refresh: () => Promise<void>;
 }
 
 /**
  * Fetches the current user's credit balance from /api/credits/balance.
- * Call refresh() after AI operations to keep the displayed balance in sync.
+ *
+ * Backed by a shared Zustand store — all components using this hook share
+ * the same state. Call `refresh()` after AI operations to sync every
+ * consumer (including the navigation balance widget).
  */
-export function useCredits() {
-  const [state, setState] = useState<CreditsState>({
-    balance: null,
-    accountId: null,
-    billingScope: null,
-    loading: true,
-    error: false,
-  });
+export function useCredits(): CreditsState {
+  const { balance, accountId, billingScope, loading, error, fetched, refresh } =
+    useCreditsStore();
 
-  const refresh = useCallback(async () => {
-    try {
-      const res = await fetch('/api/credits/balance');
-      if (!res.ok) throw new Error('balance fetch failed');
-      const data = await res.json();
-      setState({
-        balance: data.balance,
-        accountId: data.accountId,
-        billingScope: data.billingScope,
-        loading: false,
-        error: false,
-      });
-    } catch {
-      setState((prev) => ({ ...prev, loading: false, error: true }));
-    }
-  }, []);
-
+  // Initial fetch — only fires once across all consumers
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    if (!fetched && !loading) {
+      refresh();
+    }
+  }, [fetched, loading, refresh]);
 
-  return { ...state, refresh };
+  return { balance, accountId, billingScope, loading, error, refresh };
 }

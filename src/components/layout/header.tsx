@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Settings, Menu } from 'lucide-react';
 import { LocaleSwitcher } from './locale-switcher';
 import { UserMenu } from './user-menu';
+import { NavBalance } from './nav-balance';
 import { Link, usePathname } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -66,6 +67,7 @@ export function Header() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <NavBalance />
           <LocaleSwitcher />
           <Button
             variant="ghost"

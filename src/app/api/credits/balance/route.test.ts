@@ -71,7 +71,7 @@ vi.mock('@/lib/auth/guards', () => ({
 import { GET as getBalance } from './route';
 import { GET as getTransactions } from '../transactions/route';
 import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
+import { users, organizations } from '@/lib/db/schema';
 
 async function seedUser(id: string, email: string, status: 'active' | 'suspended' = 'active') {
   await db.insert(users).values({ id, email, name: email.split('@')[0], authType: 'email', status });
@@ -122,6 +122,31 @@ describe('GET /api/credits/balance', () => {
     const res = await getBalance();
     const body = await res.json();
     expect(body.balance).toBe(500);
+  });
+
+  it('returns org name in billingScope for organization billing (US-068)', async () => {
+    await seedUser('b3', 'b3@test.com');
+    await db.insert(organizations).values({
+      id: 'org-1',
+      slug: 'test-org',
+      name: 'Test Org',
+      status: 'active',
+      seatLimit: 10,
+      createdBy: 'b3',
+    });
+    ctxOverrides.orgContext = { type: 'organization', id: 'org-1' };
+    setContext('b3');
+
+    const res = await getBalance();
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.billingScope.type).toBe('organization');
+    expect(body.billingScope.id).toBe('org-1');
+    expect(body.billingScope.orgName).toBe('Test Org');
+    expect(body.ownerType).toBe('organization');
+
+    // Reset org context
+    ctxOverrides.orgContext = null;
   });
 });
 

@@ -1367,3 +1367,29 @@
   - 至此所有用户端 AI 界面（US-062~067）全部完成托管化改造，共 6 个 story 的统一模式：ModelSelector + useCredits + mapError + useSettingsStore + JSON_HEADERS
 ---
 
+## 2026-08-08 13:10 - US-068
+- 在用户导航显示当前余额上下文（ToC 个人点数 / ToB 机构额度+名称）
+- New files:
+  - `src/stores/credits-store.ts`: Zustand 共享余额 store——所有 useCredits() 消费者共享同一状态，任一组件调用 refresh() 后导航余额自动更新
+  - `src/components/layout/nav-balance.tsx`: 导航余额 widget——ToC 显示 Coins 图标+点数，ToB 显示 Building2 图标+机构名+额度；链接到 `/{locale}/credits`
+- Modified files:
+  - `src/hooks/use-credits.ts`: 重构为使用 Zustand store（接口不变，所有现有调用者自动获得共享状态）
+  - `src/components/layout/header.tsx`: 在右侧操作区添加 NavBalance（LocaleSwitcher 之前）
+  - `src/app/api/credits/balance/route.ts`: 当 billingScope 为 organization 时查询并返回 orgName
+  - `src/app/api/credits/balance/route.test.ts`: 新增 org billing scope 测试用例（验证 orgName 返回）
+  - `messages/zh.json` + `messages/en.json`: 新增 `nav.personalCredits` 和 `nav.orgCredits` i18n keys
+- AC1 ✅：ToC 用户导航显示个人点数（Coins 图标）并链接到 `/{locale}/credits`
+- AC2 ✅：ToB 成员导航显示机构名称（Building2 图标）和机构额度摘要，不混入个人余额
+- AC3 ✅：使用共享 Zustand store——AI 操作后任何组件调用 `refresh()` 后导航余额自动同步更新
+- AC4 ✅：加载中显示 skeleton（h-8 w-[5.5rem] animate-pulse），错误静默返回 null，使用 `tabular-nums` + `min-w-[5.5rem]` 保证稳定尺寸
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~067 限制）
+- AC7 ✅：组件无副作用，不会产生 console errors
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all changed/new files
+- **未来迭代的学习：**
+  - `useCredits()` hook 从独立 `useState` 重构为 Zustand 共享 store 是非破坏性的——接口 `{ balance, accountId, billingScope, loading, error, refresh }` 保持不变，所有现有调用者自动获得共享状态
+  - NavBalance 使用 `loading && balance === null` 区分首次加载和后续刷新——首次加载显示 skeleton，后续刷新保持旧值直到新数据到达（无闪烁）
+  - `billingScope.orgName` 是新增字段——balance API 只在 `ownerType === 'organization'` 时查询 organizations 表
+  - 大额余额使用 `formatBalance()`：>=10000 时显示 `9.9k` 格式，避免导航区域溢出
+  - NavBalance 放在 LocaleSwitcher 之前——用户从左到右看到余额→语言→设置→头像的自然顺序
+  - `/credits` 页面尚不存在（US-069 将创建），但链接已就绪
+---

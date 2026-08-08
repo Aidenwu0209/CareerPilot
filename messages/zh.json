@@ -1067,7 +1067,9 @@
   },
   "nav": {
     "admin": "管理后台",
-    "orgAdmin": "机构管理"
+    "orgAdmin": "机构管理",
+    "personalCredits": "个人点数",
+    "orgCredits": "机构额度"
   },
   "admin": {
     "title": "管理后台",
