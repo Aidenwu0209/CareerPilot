@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { Users, Cpu, Building2 } from 'lucide-react';
+import { Users, Cpu, Boxes, Building2 } from 'lucide-react';
 
 export default async function AdminPage() {
   const t = await getTranslations('admin');
@@ -8,6 +8,7 @@ export default async function AdminPage() {
   const cards = [
     { href: '/admin/users', icon: Users, title: t('sections.users.title'), description: t('sections.users.description') },
     { href: '/admin/ai-providers', icon: Cpu, title: t('sections.aiProviders.title'), description: t('sections.aiProviders.description') },
+    { href: '/admin/ai/models', icon: Boxes, title: t('sections.aiModels.title'), description: t('sections.aiModels.description') },
     { href: '/admin/organizations', icon: Building2, title: t('sections.organizations.title'), description: t('sections.organizations.description') },
   ] as const;
 

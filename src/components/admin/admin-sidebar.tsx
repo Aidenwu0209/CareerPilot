@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Users, Cpu, Building2, Menu } from 'lucide-react';
+import { LayoutDashboard, Users, Cpu, Boxes, Building2, Menu } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin', i18nKey: 'admin.overview', match: '/admin', icon: LayoutDashboard, exact: true },
   { href: '/admin/users', i18nKey: 'admin.sections.users.title', match: '/admin/users', icon: Users },
   { href: '/admin/ai-providers', i18nKey: 'admin.sections.aiProviders.title', match: '/admin/ai-providers', icon: Cpu },
+  { href: '/admin/ai/models', i18nKey: 'admin.sections.aiModels.title', match: '/admin/ai/models', icon: Boxes },
   { href: '/admin/organizations', i18nKey: 'admin.sections.organizations.title', match: '/admin/organizations', icon: Building2 },
 ];
 
