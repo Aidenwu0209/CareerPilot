@@ -1595,3 +1595,49 @@
   - 添加成员时如果用户之前被移除，API 会重新激活已有 membership（不消耗新席位）——只有全新 membership 才检查席位上限和计费冲突
   - 服务端组件 + 客户端组件拆分模式：page.tsx 做认证和数据解析（server-side），传 props 给 client component 做 UI 交互
 ---
+
+## 2026-08-08 14:45 - US-077
+- 实现了机构额度与用量界面（org-admin overview + usage dashboard）
+- 更改的文件：
+  - `src/app/[locale]/org-admin/page.tsx` — 概览页增加"已用额度"和"剩余额度"双指标（grid 从 4 列改为 5 列），查询 credit_transactions 汇总 consumption 类型的 ABS(delta)
+  - `src/app/[locale]/org-admin/usage/page.tsx` — 从纯占位 stub 改为 server component，解析 orgId 后渲染 `<UsageDashboard>`
+  - `src/components/org-admin/usage-dashboard.tsx` — 新建 client component：日期范围筛选 + 汇总卡片（消费/剩余/操作数）+ 成员消费表 + 模型用量表 + 加载/错误/空状态
+  - `messages/zh.json` + `messages/en.json` — 新增 `orgAdmin.usage.*` 翻译键和 `orgAdmin.summary.quotaUsed/quotaRemaining`
+- 数据源：复用 US-051 的 `GET /api/organizations/[orgId]/usage` API，已包含按成员和模型聚合 + 时间范围过滤
+- 安全性：页面只读，无调岗功能；API 响应只含聚合数据和 email/name，不含 prompt、简历、面试正文或平台 Key；跨机构访问由 `resolveOrgAdmin` 守卫拒绝
+- 空状态：所选时间范围无消费记录时显示 Inbox 图标和空状态提示
+- Typecheck passes, 1120/1120 tests pass, lint clean on new files
+- **未来迭代的学习：**
+  - org-admin overview 页面现在展示 5 列指标（grid-cols-5），新增 "已用额度" 从 `credit_transactions` 的 `reason='consumption'` 类型汇总 `SUM(ABS(delta))`
+  - Usage dashboard client component 模式与 members-manager 一致：server page 解析 orgId → client component fetch API
+  - 日期筛选使用原生 `<Input type="date">`，无第三方 date picker 组件
+  - 用量 API 的 `byMember` 返回 `operations/succeeded/failed`，`byModel` 返回 `attempts/succeeded/failed` — 两者的粒度不同（operation vs attempt）
+  - 表格列使用 CSS grid 布局，移动端 2 列、桌面端完整列数，与 members-manager 保持一致
+  - `hasData` 判断基于 `summary.totalOperations > 0`，空时间范围会显示空状态而非空表格
+  - 浏览器验证（agent-browser）需要手动执行——本迭代未运行浏览器测试
+---
+
+## 2026-08-08 14:55 - US-078
+- 实现了用户全量数据导出服务
+- New files:
+  - `src/lib/export/user-data-export.ts`: 导出服务核心——`collectUserData(userId)` 收集用户全部自有数据
+  - `src/app/api/account/export/route.ts`: POST 端点——session 保护，返回可下载的 JSON
+  - `src/lib/export/user-data-export.test.ts`: 17 个服务层测试
+  - `src/app/api/account/export/route.test.ts`: 4 个 API 路由测试
+- AC1 ✅：导出包含用户资料、settings、authAccounts（去除 token）、简历与章节、分享、聊天会话与消息、JD 分析、语法检查、面试会话/轮次/消息/报告、个人信用账户与流水、组织 membership（含 org name/slug）、法律同意记录、AI 操作记录
+- AC2 ✅：导出 JSON 包含 `schemaVersion: 1`、`generatedAt` ISO 时间戳和命名数据集合；空集合返回空数组 `[]`
+- AC3 ✅：不包含其他用户数据（通过 userId 过滤）；不包含 accessToken/refreshToken；不包含 aiProviders/aiModels/creditRules/emailOtps
+- AC4 ✅：端点受 session 保护（middleware 强制 `/api/*` 需要 cookie）；退出后 cookie 被删除，返回 401；文件名含随机 userId 片段和时间戳，不可猜测
+- AC5 ✅：每个数据集合使用 `safeCollect()` 独立 try/catch，失败记录到 `errors` 数组；不中断整个导出
+- AC6-7 ⏳：浏览器 E2E 受限（同前序 story 限制）；UI 界面将在 US-079 实现
+- Typecheck passes, 1141 tests pass (64 files), lint clean on new files
+- **未来迭代的学习：**
+  - 数据导出模式：每个 `safeCollect` 返回 `T | []`（成功返回数据，失败返回空数组 + push error）——保证部分失败不影响其他集合
+  - `inArray` 查询需要先检查数组非空（空 `inArray` 会生成 `IN ()` 语法错误）
+  - `authAccounts` 导出必须去掉 `accessToken` 和 `refreshToken` 字段——只保留 provider/providerAccountId/tokenType/expiresAt/scope/createdAt
+  - `organizationMemberships` 导出时 enrich org name/slug（不含 createdBy 等管理信息）——用户有权看到自己所属机构的基本信息
+  - `creditAccounts` 查询先用 `ownerType='user'` 过滤再在内存中按 `ownerId=userId` 过滤——避免 `inArray` 嵌套
+  - AI operations 只导出 `actorId=userId` 的记录——不含 prompt 或简历正文（这些在业务表中）
+  - 导出文件名格式 `careerpilot-export-{userId前8位}-{timestamp}.json`——不可猜测
+  - `Content-Disposition: attachment; filename="..."` 触发浏览器下载
+---
