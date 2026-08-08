@@ -907,3 +907,25 @@
   - `attemptNumber` must use an atomic counter (`++seq`) incremented BEFORE any async work — using a counter incremented in onSettled causes duplicate-number race conditions under concurrency
   - NDJSON streaming pattern: the translate route keeps the streaming response for progress reporting, with gateway steps (auth, hold, settle) happening before/after the stream
   - The translate route strips base64 avatar from personal_info sections before sending to AI, then merges it back after translation — preserved from original implementation
+
+## 2026-08-08 09:23 - US-046
+- Migrated resume chat route and AI tools from BYOK to unified streaming Gateway
+- Modified: `src/app/api/ai/chat/route.ts` — replaced extractAIConfig/getModel/resolveUser with executeStreamingOperation + buildModel + resolveActiveContext
+- Modified: `src/lib/ai/tools.ts` — replaced getModel/getJsonProviderOptions/AIConfig with buildModel/getJsonOptions/ModelBuildContext
+- New file: `src/app/api/ai/chat/resume-chat-gateway.test.ts` (6 tests)
+- AC1: executeStreamingOperation enforces auth, rate limit, credit hold, and credential resolution before first stream byte
+- AC2: streamText dispatch creates one operation + one attempt via gateway; multi-step tools (jdAnalysis, translateSection) share the same operation via gateway context credentials
+- AC3: Tools created only with verifiedResumeId — AI tools can only read/modify the resume belonging to the current user
+- AC4: wrapStreamWithMonitoring in gateway handles normal completion (settle), provider failure (release), and client disconnect (release)
+- AC5: Gateway idempotency key prevents duplicate operations; user messages saved before streaming
+- Fixed test mock: added `tool` and `generateText` exports to 'ai' mock (tools.ts imports both, but original mock only had streamText/convertToModelMessages/stepCountIs)
+- 6 tests: success streaming, cross-user 404, unauthenticated 401, insufficient credits 422, client header ignored, no-resumeId (no tools)
+- Typecheck passes, 1023 tests pass total (54 files), lint clean on new/changed files (pre-existing `any` errors in tools.ts unchanged)
+- **未来迭代的学习：**
+  - When mocking the 'ai' module for routes that import tools.ts, must export `tool` and `generateText` in addition to `streamText` — tools.ts calls `tool()` at module-eval time to define tool schemas
+  - `executeStreamingOperation` is the streaming counterpart to `executeAiOperation` — it wraps the caller's stream with monitoring that auto-settles on completion and auto-releases on failure/disconnect
+  - The `getUsage` callback in `StreamingDispatchResult` is called by monitoring when the stream completes — use `cachedUsage` pattern to capture from `onFinish` callback
+  - `aiResult.toUIMessageStream()` returns a UI message stream that must be cast to `ReadableStream<Uint8Array>` for the gateway wrapper
+  - The streaming gateway creates exactly one attempt (attempt #1); nested tool calls (generateText inside streamText steps) use the same gateway credentials but are tracked as part of the main stream's usage
+  - Tests for streaming routes only need to read one chunk (`await reader.read()`) to verify the stream started — the monitoring runs asynchronously after stream consumption
+---
