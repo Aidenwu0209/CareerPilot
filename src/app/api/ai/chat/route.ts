@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
   if (!ctx.ok) return ctx.response;
 
-  const { messages, resumeId, sessionId } = await request.json();
+  const { messages, resumeId, sessionId, model } = await request.json();
 
   // Validate message count and per-message length
   if (Array.isArray(messages)) {
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
   // AC1+AC2: Execute through streaming gateway (pre-flight hold before first byte)
   const result = await executeStreamingOperation({
     context: ctx.context,
-    modelId: 'resume-chat-default',
+    modelId: model || 'resume-chat-default',
     capability: 'text',
     businessCapability: 'resume_chat',
     idempotencyKey: `resume-chat-${ctx.context.actor.userId}-${sessionId ?? 'no-session'}-${Date.now()}`,

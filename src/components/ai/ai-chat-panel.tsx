@@ -11,6 +11,7 @@ import { useEditorStore } from '@/stores/editor-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useAIChat } from '@/hooks/use-ai-chat';
 import { useMessagePagination } from '@/hooks/use-message-pagination';
+import { useCredits } from '@/hooks/use-credits';
 import { AIMessage } from './ai-message';
 import { AIInput } from './ai-input';
 
@@ -25,10 +26,7 @@ interface AIChatContentProps {
   hideTitle?: boolean;
 }
 
-function getHeaders(): Record<string, string> {
-  const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return fp ? { 'x-fingerprint': fp, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
-}
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 function formatTime(date: Date | number | null) {
   if (!date) return '';
@@ -84,8 +82,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     resetPagination();
 
     let cancelled = false;
-    const headers = getHeaders();
-    fetch(`/api/ai/chat/sessions?resumeId=${resumeId}`, { headers })
+    fetch(`/api/ai/chat/sessions?resumeId=${resumeId}`, { headers: JSON_HEADERS })
       .then((res) => res.json())
       .then(async (data: { sessions: ChatSession[] }) => {
         if (cancelled) return;
@@ -112,11 +109,10 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   }, [resumeId]);
 
   const createNewSession = useCallback(async (isInitial = false) => {
-    const headers = getHeaders();
     try {
       const res = await fetch('/api/ai/chat/sessions', {
         method: 'POST',
-        headers,
+        headers: JSON_HEADERS,
         body: JSON.stringify({ resumeId }),
       });
       const data = await res.json();
@@ -144,9 +140,8 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   }, [activeSessionId, loadInitial]);
 
   const deleteSession = useCallback(async (sessionId: string) => {
-    const headers = getHeaders();
     try {
-      await fetch(`/api/ai/chat/sessions/${sessionId}`, { method: 'DELETE', headers });
+      await fetch(`/api/ai/chat/sessions/${sessionId}`, { method: 'DELETE', headers: JSON_HEADERS });
     } catch (err) {
       console.error('Failed to delete session:', err);
       return;
@@ -175,17 +170,37 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     selectedModel,
   });
 
-  // Show toast when AI API call fails
+  const { refresh: refreshBalance } = useCredits();
+
+  // Refresh balance after a successful streaming response completes
+  const prevStatusRef = useRef(status);
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = status;
+    // When status transitions from streaming/submitted to ready, the AI call succeeded
+    if ((prev === 'streaming' || prev === 'submitted') && status === 'ready') {
+      refreshBalance();
+    }
+  }, [status, refreshBalance]);
+
+  // Show toast when AI API call fails — map known gateway error codes to specific messages
   const lastErrorRef = useRef<Error | null>(null);
   useEffect(() => {
     if (chatError && chatError !== lastErrorRef.current) {
       lastErrorRef.current = chatError;
-      const msg = chatError.message || t('errorMessage');
-      // Show a user-friendly message for common errors
-      if (msg.includes('ETIMEDOUT') || msg.includes('Cannot connect')) {
-        toast.error(t('errorMessage'), { description: 'API 连接超时，请检查网络或 API 配置' });
+      const msg = chatError.message || '';
+      if (msg.includes('INSUFFICIENT_CREDITS')) {
+        toast.error(t('insufficientCredits'), { description: t('insufficientCreditsHint') });
+      } else if (msg.includes('RATE_LIMITED')) {
+        toast.error(t('rateLimited'), { description: t('rateLimitedHint') });
+      } else if (msg.includes('MODEL_NOT_ALLOWED') || msg.includes('MODEL_NOT_FOUND')) {
+        toast.error(t('modelNotAllowed'), { description: t('modelNotAllowedHint') });
+      } else if (msg.includes('ACCOUNT_SUSPENDED')) {
+        toast.error(t('accountSuspended'), { description: t('accountSuspendedHint') });
+      } else if (msg.includes('ETIMEDOUT') || msg.includes('Cannot connect') || msg.includes('Failed to fetch')) {
+        toast.error(t('errorMessage'), { description: t('networkErrorHint') });
       } else if (msg.includes('No tool call found')) {
-        toast.error(t('errorMessage'), { description: 'AI 模型返回了无效的工具调用，请重试' });
+        toast.error(t('errorMessage'), { description: t('invalidToolCallHint') });
       } else {
         toast.error(t('errorMessage'), { description: msg.length > 200 ? msg.slice(0, 200) + '...' : msg });
       }

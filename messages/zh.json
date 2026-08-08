@@ -277,7 +277,17 @@
     "noModelsAvailable": "暂无可用模型",
     "tokenPriced": "按量计费",
     "credits": "点",
-    "modelUnavailable": "所选模型已不可用，已切换到默认模型"
+    "modelUnavailable": "所选模型已不可用，已切换到默认模型",
+    "insufficientCredits": "点数不足",
+    "insufficientCreditsHint": "你的点数余额不足，无法完成此操作",
+    "rateLimited": "请求过于频繁",
+    "rateLimitedHint": "请稍后再试",
+    "modelNotAllowed": "模型不可用",
+    "modelNotAllowedHint": "当前模型已停用或无权使用，请选择其他模型",
+    "accountSuspended": "账号已冻结",
+    "accountSuspendedHint": "你的账号已被冻结，请联系管理员",
+    "networkErrorHint": "网络连接异常，请检查网络后重试",
+    "invalidToolCallHint": "AI 模型返回了无效的工具调用，请重试"
   },
   "pdf": {
     "exporting": "正在生成 PDF...",

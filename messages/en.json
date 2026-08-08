@@ -277,7 +277,17 @@
     "noModelsAvailable": "No models available",
     "tokenPriced": "Token-based",
     "credits": "credits",
-    "modelUnavailable": "Selected model is no longer available, switched to default"
+    "modelUnavailable": "Selected model is no longer available, switched to default",
+    "insufficientCredits": "Insufficient Credits",
+    "insufficientCreditsHint": "You don't have enough credits to complete this action",
+    "rateLimited": "Too Many Requests",
+    "rateLimitedHint": "Please try again later",
+    "modelNotAllowed": "Model Unavailable",
+    "modelNotAllowedHint": "This model is disabled or not authorized, please choose another",
+    "accountSuspended": "Account Suspended",
+    "accountSuspendedHint": "Your account has been suspended, please contact support",
+    "networkErrorHint": "Network connection error, please check your connection and retry",
+    "invalidToolCallHint": "The AI model returned an invalid tool call, please retry"
   },
   "pdf": {
     "exporting": "Generating PDF...",

@@ -1187,7 +1187,7 @@
         "Typecheck passes"
       ],
       "priority": 62,
-      "passes": false,
+      "passes": true,
       "notes": "",
       "retryCount": 0,
       "blocked": false

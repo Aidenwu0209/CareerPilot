@@ -30,6 +30,8 @@
 - SSRF guard: `src/lib/security/ssrf-guard.ts` — `validateUpstreamUrl(url)` checks HTTPS + approved domain allowlist; `sanitizeUpstreamUrl(url, fallback)` returns URL or fallback; `SSRF_SAFE_FETCH_OPTIONS` with `redirect:'error'`; approved domains: api.openai.com, api.anthropic.com, generativelanguage.googleapis.com
 - Audit service: `src/lib/audit/audit-service.ts` — `recordAuditEvent()` is the single entry point for all audit events; auto-sanitizes summaries (rejects API keys, auth headers, JWT, multi-line doc text); idempotent dedup via `idempotent:true` + `requestId`; query via `queryAuditEvents()` (filter by actor/target/action/tenant/time); audit_events table is immutable (triggers block UPDATE/DELETE)
 - Next.js dynamic route slug naming: all sibling dynamic segments at the same path level MUST use the same slug name (e.g. `[id]` and `[orgId]` under `organizations/` causes a build error). Use `[id]` as the convention for all admin API routes
+- Credit balance: `useCredits()` hook (`src/hooks/use-credits.ts`) fetches from `/api/credits/balance` and exposes `refresh()` — call after AI operations to sync displayed balance
+- AI chat transport: `DefaultChatTransport` in `use-ai-chat.ts` sends only `{ resumeId, model, sessionId }` in body — no sensitive headers; session cookie handles auth automatically
 
 ---
 
@@ -1217,4 +1219,27 @@
   - 测试中 `vi.mock('sonner', ...)` 需要在文件顶部使用 `vi.hoisted` 或直接定义 spy 变量
   - Dev server 中 OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码；需要通过浏览器 OTP UI 流程或添加测试辅助端点
   - `next-auth/jwt` 的 `encode()` 创建的 token 在 `AUTH_SECRET` 为默认占位值时可能与服务器解密不兼容
+---
+
+## 2026-08-08 11:55 - US-062
+- 接入简历编辑器托管聊天界面，使用共享模型选择器并通过统一 AI Gateway 调用
+- 修改文件：
+  - `src/app/api/ai/chat/route.ts`：从请求体读取 `model` 字段并传给 gateway（之前硬编码 `'resume-chat-default'`）
+  - `src/hooks/use-ai-chat.ts`：移除 `x-fingerprint` header 和 `getAIHeaders()` 引用；transport 仅发送 `{ resumeId, model, sessionId }`
+  - `src/components/ai/ai-chat-panel.tsx`：移除 `getHeaders()` 函数（读取 `jade_fingerprint`），改用静态 `JSON_HEADERS`；添加余额刷新（流式结束后调用 `useCredits().refresh()`）；改进错误 toast 映射（INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 各有独立消息）
+  - `messages/zh.json` + `messages/en.json`：新增 10 个错误相关 i18n key
+- 新文件：`src/hooks/use-credits.ts`（个人余额 hook，提供 `refresh()` 供 AI 操作后刷新）
+- AC1 ✅：编辑器聊天使用共享 ModelSelector，transport body 仅包含 modelId/resumeId/sessionId + messages（无敏感 headers）
+- AC2 ✅：流式响应完成后通过 `useCredits().refresh()` 刷新余额（status: streaming→ready 检测）
+- AC3 ✅：错误 toast 按 INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 分别显示不同消息，不再显示 "API Key 未配置"
+- AC4 ✅：模型选择通过 `useSettingsStore.setAIModel()` 持久化，聊天消息通过 DB session 持久化
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061 限制）
+- AC7 ✅：transport 无自定义 headers，不发送 x-api-key/x-provider/x-base-url/x-fingerprint；dev server 页面无控制台错误
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint clean on changed files
+- **未来迭代的学习：**
+  - `useCredits` hook 是余额显示的统一入口——后续 US-068（导航余额显示）和 US-069（点数流水页）都应复用此 hook
+  - AI SDK 的 `DefaultChatTransport` 不需要显式 headers——fetch 默认带 Content-Type，session cookie 由浏览器自动附带
+  - 网关错误码（INSUFFICIENT_CREDITS 等）会出现在 AI SDK error.message 中，可通过 `msg.includes()` 模式匹配实现分类 toast
+  - 检测流式完成：跟踪 `useChat` 的 `status` ref，当从 'streaming'/'submitted' 变为 'ready' 时触发副作用
+  - Chat route 的 `model` 参数现在从 client body 读取，但 gateway 的 `authorizeAiRequest` 已验证模型权限——客户端无法提交未授权 modelId
 ---

@@ -5,7 +5,6 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useResumeStore } from '@/stores/resume-store';
-import { getAIHeaders } from '@/stores/settings-store';
 
 interface UseAIChatOptions {
   resumeId: string;
@@ -29,12 +28,6 @@ export function useAIChat({ resumeId, sessionId, initialMessages, selectedModel 
       new DefaultChatTransport({
         api: '/api/ai/chat',
         body: () => ({ resumeId, model: modelRef.current, sessionId: sessionIdRef.current }),
-        // headers must be a function — useChat never updates the transport ref,
-        // so a static object would freeze stale values from before store hydration.
-        headers: () => {
-          const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-          return { ...(fp ? { 'x-fingerprint': fp } : {}), ...getAIHeaders() };
-        },
       }),
     [resumeId]
   );
@@ -56,10 +49,7 @@ export function useAIChat({ resumeId, sessionId, initialMessages, selectedModel 
       // Cancel any pending autosave to prevent overwriting server data
       if (store._saveTimeout) clearTimeout(store._saveTimeout);
 
-      const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-      const res = await fetch(`/api/resume/${resumeId}`, {
-        headers: fp ? { 'x-fingerprint': fp } : {},
-      });
+      const res = await fetch(`/api/resume/${resumeId}`);
       if (res.ok) {
         const resume = await res.json();
         useResumeStore.getState().setResume(resume);
