@@ -32,8 +32,13 @@ import { Link } from '@/i18n/routing';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { Resume } from '@/types/resume';
+import { ModelSelector } from '@/components/ai/model-selector';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
 const ASPECT_RATIOS = [
   { label: '1:1', value: '1:1', desc: 'LinkedIn / WeChat' },
@@ -41,17 +46,6 @@ const ASPECT_RATIOS = [
   { label: '2:3', value: '2:3', desc: 'Portrait' },
   { label: '4:3', value: '4:3', desc: 'Landscape' },
 ];
-
-function getHeaders() {
-  const fingerprint =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('jade_fingerprint')
-      : null;
-  return {
-    'Content-Type': 'application/json',
-    ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-  };
-}
 
 function resizeImage(file: File, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -120,6 +114,27 @@ function resizeDataUrl(
 
 export default function LinkedInPhotoPage() {
   const t = useTranslations('linkedinPhoto');
+  const tAi = useTranslations('ai');
+  const { refresh: refreshCredits } = useCredits();
+
+  // Model selection
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('errorGenerate');
+  }
 
   // Upload
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -154,7 +169,7 @@ export default function LinkedInPhotoPage() {
     setPrompt(t('promptDefault'));
 
     // Fetch resume list
-    fetch('/api/resume', { headers: getHeaders() })
+    fetch('/api/resume')
       .then((res) => (res.ok ? res.json() : []))
       .then((data: Resume[]) => {
         setResumes(data);
@@ -293,29 +308,29 @@ export default function LinkedInPhotoPage() {
     try {
       const res = await fetch('/api/linkedin-photo', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: JSON_HEADERS,
         body: JSON.stringify({
           image: uploadedImage,
           prompt,
           requirements: requirements.trim(),
           aspectRatio,
+          model: selectedModel,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.error === 'invalid_key') {
-          toast.error(t('errorInvalidKey'));
-        } else if (data.error === 'safety_filtered') {
+        if (data.error === 'safety_filtered') {
           toast.error(t('errorSafety'));
         } else {
-          toast.error(t('errorGenerate'));
+          toast.error(mapError(data.error || ''));
         }
         return;
       }
 
       setResultImage(data.image);
+      refreshCredits();
     } catch {
       toast.error(t('errorGenerate'));
     } finally {
@@ -342,9 +357,7 @@ export default function LinkedInPhotoPage() {
 
     try {
       // 1. Fetch the target resume to find personalInfo section
-      const resumeRes = await fetch(`/api/resume/${selectedResumeId}`, {
-        headers: getHeaders(),
-      });
+      const resumeRes = await fetch(`/api/resume/${selectedResumeId}`);
       if (!resumeRes.ok) {
         toast.error(t('setAsAvatarNoResume'));
         return;
@@ -370,7 +383,7 @@ export default function LinkedInPhotoPage() {
 
       const putRes = await fetch(`/api/resume/${selectedResumeId}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: JSON_HEADERS,
         body: JSON.stringify({ sections: updatedSections }),
       });
 
@@ -628,6 +641,19 @@ export default function LinkedInPhotoPage() {
               placeholder={t('requirementsPlaceholder')}
               rows={3}
               className="text-sm"
+            />
+          </div>
+
+          {/* Model selector */}
+          <div className="flex items-center gap-3">
+            <Label className="text-sm font-medium text-zinc-500">
+              {tAi('model')}
+            </Label>
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={handleModelChange}
+              capability="image_generation"
+              size="default"
             />
           </div>
 

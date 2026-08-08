@@ -1347,3 +1347,23 @@
   - `getAIHeaders` 返回空对象 `{}`——它仍是 settings-store 的导出但已无实际作用，后续可安全移除
 ---
 
+## 2026-08-08 12:50 - US-067
+- 接入职业照托管生图界面，使用获授权生图模型选择器和统一点数体系
+- Modified files:
+  - `src/app/[locale]/linkedin-photo/page.tsx`: 移除 `getHeaders()` 函数（`x-fingerprint`），替换为静态 `JSON_HEADERS`；添加 ModelSelector（capability='image_generation', size='default'）、useCredits、useSettingsStore、mapError()；generate body 添加 `model` 字段；成功后 refreshCredits()；移除 `errorInvalidKey` 错误分支（不再有 BYOK）；所有 fetch 调用移除 fingerprint headers
+  - `src/app/api/linkedin-photo/route.ts`: 从 body 读取 `model` 字段，传给 `executeAiOperation` 的 `modelId`（回退 `'linkedin-photo-default'`）
+- AC1 ✅：`/zh/linkedin-photo` 移除 API Key 输入（US-060 已完成），使用生图模型选择器（capability='image_generation'）
+- AC2 ✅：上传有效图片并提交后，请求真实到达 `/api/linkedin-photo` 托管生图后端，body 不包含 apiKey
+- AC3 ✅：成功图片显示后调用 `refreshCredits()` 更新余额；服务端正确扣点
+- AC4 ✅：mapError() 将 INSUFFICIENT_CREDITS/RATE_LIMITED/MODEL_NOT_ALLOWED/ACCOUNT_SUSPENDED 映射为不同本地化消息；safety_filtered 保持专用错误消息
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~066 限制）
+- AC7 ✅：所有 fetch 请求不含 x-api-key/x-provider/x-base-url/x-fingerprint headers；body 不含 apiKey 字段
+- AC8 ✅：Typecheck passes, 1119 tests pass (62 files), lint 无新增错误（3 个预存 `<img>` warnings 非新引入）
+- **未来迭代的学习：**
+  - 职业照页面的 ModelSelector 使用 `capability='image_generation'`——与文本模型选择器区分，只显示生图模型
+  - `size='default'` 而非 `'sm'`——职业照页面有更多空间，默认大小更易点击
+  - 职业照 API 的 `safety_filtered` 错误码有专用 UI 消息（`errorSafety`），不应被 mapError() 覆盖
+  - `errorInvalidKey` i18n key 不再被使用但保留在 messages 文件中——无实际副作用
+  - 至此所有用户端 AI 界面（US-062~067）全部完成托管化改造，共 6 个 story 的统一模式：ModelSelector + useCredits + mapError + useSettingsStore + JSON_HEADERS
+---
+

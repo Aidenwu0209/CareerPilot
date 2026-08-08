@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     return ctx.response;
   }
 
-  const { image, prompt, requirements, aspectRatio } = await request.json();
+  const { image, prompt, requirements, aspectRatio, model } = await request.json();
 
   if (!image || typeof image !== 'string') {
     return NextResponse.json(
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     safetyFiltered?: boolean;
   }>({
     context: ctx.context,
-    modelId: 'linkedin-photo-default',
+    modelId: model || 'linkedin-photo-default',
     capability: 'image_generation',
     businessCapability: 'linkedin_photo',
     idempotencyKey: `linkedin-photo-${ctx.context.actor.userId}-${Date.now()}`,
