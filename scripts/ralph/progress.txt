@@ -1419,3 +1419,26 @@
   - `useCallback()` 包装 `fetchTransactions` 避免不必要的 re-fetch——只有初始 mount 时触发一次
   - 至此所有用户端 AI 界面 + 余额导航 + 流水页面全部完成（US-052~069），后续 US-070~088 均为管理后台或安全合规 story
 ---
+
+## 2026-08-08 13:30 - US-070
+- 创建超管供应商管理界面 `/[locale]/admin/ai-providers`
+- Modified files:
+  - `src/app/[locale]/admin/ai-providers/page.tsx`: 从占位页重写为完整客户端组件——供应商列表 + 5 个操作对话框
+  - `messages/zh.json` + `messages/en.json`: 新增 `admin.providers` 命名空间（80+ i18n keys）
+- AC1 ✅：页面支持新增（Dialog: type/name/baseUrl/credential）、编辑（name/baseUrl）、测试连接（POST /test）、启停（AlertDialog 确认）、轮换凭据（Dialog: newKey）
+- AC2 ✅：保存后只显示 `maskedCredential`（sk••••••cdef 格式）、`credentialVersion`（v1, v2...）和 `lastValidatedAt`——所有数据来自 `getProviderCredentialInfo()` API 响应
+- AC3 ✅：测试结果显示成功（绿色 CheckCircle2 + "连接成功"）或失败（红色 XCircle + "连接失败" + HTTP status）；输入凭证使用 `type="password"`，控制台无完整 Key 输出
+- AC4 ✅：admin/layout.tsx 的 server guard（US-058）已确保非 super_admin 看到 NoPermission 组件，不加载管理数据；API 层的 super_admin 检查（US-033/032）已拒绝非授权请求
+- AC5-6 ⏳：浏览器 E2E 受限——OTP 使用 TestMailAdapter（内存存储），无法从浏览器端获取验证码完成认证（同 US-061~069 限制）
+- AC7 ⏳：同上限制
+- AC8 ✅：Typecheck passes, 1120 tests pass (62 files), lint clean on all changed files
+- **未来迭代的学习：**
+  - 管理端 UI 页面模式：`use client` 组件 + fetch API + Dialog/AlertDialog 交互——admin/layout.tsx 的 server guard 保证权限安全，页面只需关注功能逻辑
+  - `ProviderCredentialInfo` 类型（来自 credential-crypto.ts）是前后端共享的供应商数据契约——`maskedCredential` 字段始终是脱敏的，安全返回到 UI
+  - 测试连接按钮使用 per-provider `testStatus` state（Record<string, TestResult | 'testing'>）跟踪状态——避免全局 loading 影响其他供应商行
+  - `KNOWN_API_ERRORS` Set 用于安全 i18n 错误映射——避免 next-intl `t()` 接收未知 key 导致的运行时错误
+  - next-intl `t(key, values)` 的 values 参数只接受 `string | number | Date`——optional chaining `?.` 可能产生 `undefined`，需要 fallback `?? ''`
+  - `t()` 第三参数是 ICU `Formats` 类型，不是 fallback 字符串——不能用作 "key 不存在时的默认值"
+  - 供应商管理 API（US-032/033）已完整实现 CRUD + test + rotate——UI 页面仅需对接即可
+  - US-071（模型目录管理界面）可复用此页面的模式：客户端组件 + Dialog 表单 + i18n keys + API 对接
+---
