@@ -133,9 +133,8 @@ export async function POST(request: NextRequest) {
   }
 
   // AC1: Validate sectionIds ALL belong to this resume
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allSections = sectionIds
-    ? workingSections.filter((s: any) => sectionIds.includes(s.id))
+    ? workingSections.filter((s: { id: string }) => sectionIds.includes(s.id))
     : workingSections;
 
   if (sectionIds && sectionIds.length > 0) {

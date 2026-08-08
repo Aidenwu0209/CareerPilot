@@ -888,3 +888,22 @@
   - NDJSON stream must be fully read in tests before checking mock/DB state — the stream's `start` async method drives all work
   - Settlement caps at hold amount — if actual usage exceeds hold, user pays only hold amount (acceptable for low-cost models)
   - `settleHold` takes aggregate usage across all sections; `releaseHold` credits back full amount on complete failure
+
+## 2026-08-08 09:15 - US-045
+- Migrated multi-section translate route from BYOK to unified Gateway with multi-call dispatch
+- Modified: `src/app/api/ai/translate/route.ts` — replaced extractAIConfig/getModel/resolveUser with manual gateway pipeline (authorizeAiRequest → rate limit → create operation → credit hold → resolve credentials → concurrent section calls with individual attempt records → settle/release)
+- Modified: `src/lib/ai/gateway.ts` — extended `GatewayDispatchContext` with `operationId` and `modelId` fields to enable multi-call dispatches to record sub-attempts
+- New file: `src/app/api/ai/translate/translate-gateway.test.ts` (7 tests)
+- AC1: Resume ownership verified (404 no-leak); explicit sectionIds ownership check added (rejects sectionIds from other resumes)
+- AC2: Multiple section calls share one ai_operations record; each section creates an independent ai_provider_attempts record with unique attemptNumber (atomic counter)
+- AC3: All-success → settle with actual usage; partial success → settle with aggregated tokens; all-fail → release hold and mark operation failed
+- AC4: Idempotency key prevents duplicate operations (OPERATION_EXISTS 409 on replay)
+- AC5: Insufficient credits → 422 before any concurrent provider call (hold creation fails first)
+- Fixed race condition: `attemptSeq` atomic counter replaces `completed + 1` for unique attempt numbers under concurrency
+- Typecheck passes, all 1007 tests pass (53 files)
+- **未来迭代的学习：**
+  - For multi-call operations (translate, chat with tools), inline gateway steps may be preferable to `executeAiOperation` — the gateway's single-dispatch retry loop doesn't fit multi-call patterns well
+  - `GatewayDispatchContext` now includes `operationId` and `modelId` — dispatches that need to record sub-attempts can use these
+  - `attemptNumber` must use an atomic counter (`++seq`) incremented BEFORE any async work — using a counter incremented in onSettled causes duplicate-number race conditions under concurrency
+  - NDJSON streaming pattern: the translate route keeps the streaming response for progress reporting, with gateway steps (auth, hold, settle) happening before/after the stream
+  - The translate route strips base64 avatar from personal_info sections before sending to AI, then merges it back after translation — preserved from original implementation

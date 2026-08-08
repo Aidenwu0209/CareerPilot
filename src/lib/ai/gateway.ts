@@ -54,6 +54,10 @@ export interface GatewayDispatchContext {
   apiKey: string;
   /** Base URL for the provider (null = use SDK default). */
   baseUrl: string | null;
+  /** Operation ID — allows multi-call dispatches to record sub-attempts. */
+  operationId: string;
+  /** Catalog model ID — for sub-attempt records. */
+  modelId: string;
 }
 
 export interface GatewayResult<T> {
@@ -259,6 +263,8 @@ export async function executeAiOperation<T>(
         providerType,
         apiKey,
         baseUrl,
+        operationId,
+        modelId: model.id,
       });
 
       const durationMs = Date.now() - startTime;
@@ -552,7 +558,7 @@ export async function executeStreamingOperation(
   // ── Call dispatch to get the stream ──
   let dispatchResult: StreamingDispatchResult;
   try {
-    dispatchResult = await dispatch({ modelIdentifier: model.modelIdentifier, providerType, apiKey, baseUrl });
+    dispatchResult = await dispatch({ modelIdentifier: model.modelIdentifier, providerType, apiKey, baseUrl, operationId, modelId: model.id });
   } catch {
     // Dispatch creation failed — release hold, mark failure
     await db.update(aiProviderAttempts)
