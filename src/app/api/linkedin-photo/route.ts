@@ -7,176 +7,162 @@ import {
   MAX_SHORT_TEXT_LENGTH,
   sanitizedError,
 } from '@/lib/validation/input-limits';
-import {
-  checkRateLimit,
-  rateLimitedResponse,
-  RATE_LIMIT_POLICIES,
-  rateLimitKey,
-} from '@/lib/rate-limit/rate-limit';
+import { executeAiOperation } from '@/lib/ai/gateway';
 
 export const maxDuration = 60;
 
 const GEMINI_ENDPOINT =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent';
+  'https://generativelanguage.googleapis.com/v1beta/models';
 
 export async function POST(request: NextRequest) {
-  try {
-    // Verify authentication and active status before any external calls
-    const ctx = await resolveActiveContext(getUserIdFromRequest(request));
-    if (!ctx) {
-      return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
-    }
-    if (!ctx.ok) {
-      return ctx.response;
-    }
+  // Verify authentication and active status before any external calls
+  const ctx = await resolveActiveContext(getUserIdFromRequest(request));
+  if (!ctx) {
+    return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  }
+  if (!ctx.ok) {
+    return ctx.response;
+  }
 
-    // Rate limit: per-user, fail-closed for high-cost image generation
-    const rlResult = await checkRateLimit(
-      rateLimitKey('linkedin-photo', 'user', ctx.context.actor.userId),
-      RATE_LIMIT_POLICIES.linkedinPhoto,
-    );
-    if (!rlResult.allowed) {
-      return rateLimitedResponse(rlResult.retryAfter);
-    }
+  const { image, prompt, requirements, aspectRatio } = await request.json();
 
-    const { image, prompt, requirements, aspectRatio, apiKey } = await request.json();
-
-    if (!apiKey || typeof apiKey !== 'string') {
-      return NextResponse.json(
-        { error: 'API Key is required' },
-        { status: 400 }
-      );
-    }
-
-    if (!image || typeof image !== 'string') {
-      return NextResponse.json(
-        { error: 'Image is required' },
-        { status: 400 }
-      );
-    }
-
-    // Validate image size and MIME type before sending to provider
-    const imageCheck = validateBase64Image(image);
-    if (!imageCheck.ok) {
-      return sanitizedError(imageCheck.error);
-    }
-
-    // Validate prompt lengths before concatenation
-    if (typeof prompt === 'string') {
-      const promptCheck = validatePromptLength(prompt);
-      if (!promptCheck.ok) return sanitizedError(promptCheck.error);
-    }
-    if (typeof requirements === 'string') {
-      const reqCheck = validatePromptLength(requirements, MAX_SHORT_TEXT_LENGTH);
-      if (!reqCheck.ok) return sanitizedError(reqCheck.error);
-    }
-
-    // Build final prompt with aspect ratio and requirements
-    let finalPrompt = prompt;
-    if (aspectRatio && aspectRatio !== '1:1') {
-      finalPrompt += `\n\nOutput image aspect ratio: ${aspectRatio} (width:height).`;
-    }
-    if (requirements) {
-      finalPrompt += `\n\nAdditional requirements: ${requirements}`;
-    }
-
-    // Extract base64 data and mime type from data URL
-    const dataUrlMatch = image.match(/^data:(image\/[\w+]+);base64,([\s\S]+)$/);
-    const mimeType = dataUrlMatch ? dataUrlMatch[1] : 'image/jpeg';
-    const base64Data = dataUrlMatch ? dataUrlMatch[2] : image;
-
-    // Gemini REST API accepts both camelCase and snake_case in requests,
-    // but we use camelCase to match the canonical proto-JSON format.
-    const res = await fetch(`${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: finalPrompt },
-              {
-                inlineData: {
-                  mimeType,
-                  data: base64Data,
-                },
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          responseModalities: ['TEXT', 'IMAGE'],
-        },
-      }),
-    });
-
-    if (!res.ok) {
-      const errBody = await res.text();
-      console.error('Gemini API error:', res.status, errBody);
-
-      if (res.status === 400 || res.status === 403) {
-        return NextResponse.json(
-          { error: 'invalid_key', detail: errBody },
-          { status: 400 }
-        );
-      }
-
-      return NextResponse.json(
-        { error: 'generate_failed', detail: errBody },
-        { status: res.status }
-      );
-    }
-
-    const data = await res.json();
-    const parts = data?.candidates?.[0]?.content?.parts;
-
-    if (!parts || parts.length === 0) {
-      // Check for safety filtering (handle both camelCase and snake_case)
-      const candidate = data?.candidates?.[0];
-      const finishReason = candidate?.finishReason ?? candidate?.finish_reason;
-      if (finishReason === 'SAFETY') {
-        return NextResponse.json(
-          { error: 'safety_filtered' },
-          { status: 400 }
-        );
-      }
-      console.error('Gemini empty response:', JSON.stringify(data).slice(0, 500));
-      return NextResponse.json(
-        { error: 'generate_failed', detail: 'No content in response' },
-        { status: 500 }
-      );
-    }
-
-    // Extract image and text from parts
-    // Handle both camelCase (inlineData/mimeType) and snake_case (inline_data/mime_type)
-    let resultImage: string | null = null;
-    let resultText: string | null = null;
-
-    for (const part of parts) {
-      const inlineData = part.inlineData ?? part.inline_data;
-      if (inlineData) {
-        const mime = inlineData.mimeType ?? inlineData.mime_type ?? 'image/png';
-        resultImage = `data:${mime};base64,${inlineData.data}`;
-      }
-      if (part.text) {
-        resultText = part.text;
-      }
-    }
-
-    if (!resultImage) {
-      console.error('Gemini no image in parts:', JSON.stringify(parts.map((p: Record<string, unknown>) => Object.keys(p))));
-      return NextResponse.json(
-        { error: 'generate_failed', detail: 'No image in response' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ image: resultImage, text: resultText });
-  } catch (err) {
-    console.error('LinkedIn photo generation error:', err);
+  if (!image || typeof image !== 'string') {
     return NextResponse.json(
-      { error: 'generate_failed', detail: String(err) },
-      { status: 500 }
+      { error: 'Image is required' },
+      { status: 400 }
     );
   }
+
+  // Validate image size and MIME type before sending to provider
+  const imageCheck = validateBase64Image(image);
+  if (!imageCheck.ok) {
+    return sanitizedError(imageCheck.error);
+  }
+
+  // Validate prompt lengths before concatenation
+  if (typeof prompt === 'string') {
+    const promptCheck = validatePromptLength(prompt);
+    if (!promptCheck.ok) return sanitizedError(promptCheck.error);
+  }
+  if (typeof requirements === 'string') {
+    const reqCheck = validatePromptLength(requirements, MAX_SHORT_TEXT_LENGTH);
+    if (!reqCheck.ok) return sanitizedError(reqCheck.error);
+  }
+
+  // Build final prompt with aspect ratio and requirements
+  let finalPrompt = prompt || 'Generate a professional headshot from this photo.';
+  if (aspectRatio && aspectRatio !== '1:1') {
+    finalPrompt += `\n\nOutput image aspect ratio: ${aspectRatio} (width:height).`;
+  }
+  if (requirements) {
+    finalPrompt += `\n\nAdditional requirements: ${requirements}`;
+  }
+
+  // Extract base64 data and mime type from data URL
+  const dataUrlMatch = image.match(/^data:(image\/[\w+]+);base64,([\s\S]+)$/);
+  const mimeType = dataUrlMatch ? dataUrlMatch[1] : 'image/jpeg';
+  const base64Data = dataUrlMatch ? dataUrlMatch[2] : image;
+
+  // AC1+AC2+AC3: Execute through unified gateway (auth, rate limit, hold, managed credentials)
+  const result = await executeAiOperation<{
+    image: string;
+    text: string | null;
+    safetyFiltered?: boolean;
+  }>({
+    context: ctx.context,
+    modelId: 'linkedin-photo-default',
+    capability: 'image_generation',
+    businessCapability: 'linkedin_photo',
+    idempotencyKey: `linkedin-photo-${ctx.context.actor.userId}-${Date.now()}`,
+    dispatch: async (gwCtx) => {
+      const endpoint = `${GEMINI_ENDPOINT}/${gwCtx.modelIdentifier}:generateContent?key=${encodeURIComponent(gwCtx.apiKey)}`;
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: finalPrompt },
+                {
+                  inlineData: {
+                    mimeType,
+                    data: base64Data,
+                  },
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            responseModalities: ['TEXT', 'IMAGE'],
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        const errBody = await res.text();
+        const err = new Error(`Gemini API error: ${res.status}`);
+        // Attach sanitized detail for logging, but don't expose to client
+        console.error('Gemini API error:', res.status, errBody.slice(0, 200));
+        throw err;
+      }
+
+      const data = await res.json();
+      const parts = data?.candidates?.[0]?.content?.parts;
+
+      if (!parts || parts.length === 0) {
+        const candidate = data?.candidates?.[0];
+        const finishReason = candidate?.finishReason ?? candidate?.finish_reason;
+        if (finishReason === 'SAFETY') {
+          return {
+            image: '',
+            text: null,
+            safetyFiltered: true,
+            usage: { totalTokens: 1 },
+          };
+        }
+        throw new Error('No content in Gemini response');
+      }
+
+      // Extract image and text from parts
+      let resultImage: string | null = null;
+      let resultText: string | null = null;
+
+      for (const part of parts) {
+        const inlineData = part.inlineData ?? part.inline_data;
+        if (inlineData) {
+          const mime = inlineData.mimeType ?? inlineData.mime_type ?? 'image/png';
+          resultImage = `data:${mime};base64,${inlineData.data}`;
+        }
+        if (part.text) {
+          resultText = part.text;
+        }
+      }
+
+      if (!resultImage) {
+        throw new Error('No image in Gemini response');
+      }
+
+      // Return result with usage info for gateway settlement
+      return {
+        image: resultImage,
+        text: resultText,
+        usage: { totalTokens: 1 },
+      };
+    },
+  });
+
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, message: result.message },
+      { status: result.status }
+    );
+  }
+
+  if (result.data.safetyFiltered) {
+    return NextResponse.json({ error: 'safety_filtered' }, { status: 400 });
+  }
+
+  return NextResponse.json({ image: result.data.image, text: result.data.text });
 }

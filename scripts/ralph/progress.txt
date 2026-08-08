@@ -955,3 +955,15 @@
 - 6 tests: generate report, GET existing report, cross-user 404, unauthenticated 401, insufficient credits 422, provider failure 502
 - Full suite: 56 files, 1024 tests, all pass; typecheck clean
 ---
+
+### US-049: 迁移职业照生图到统一 Gateway (COMPLETED)
+- Migrated `src/app/api/linkedin-photo/route.ts` from BYOK to `executeAiOperation`
+- Removed client-supplied `apiKey` from request body — uses managed credentials via gateway
+- Uses raw `fetch()` to Gemini REST API inside dispatch callback (AI SDK doesn't support image generation modality)
+- Gateway provides `gwCtx.apiKey` and `gwCtx.modelIdentifier` for the REST call
+- `modelId: 'linkedin-photo-default'`, `capability: 'image_generation'`
+- Safety filter handled as return value (not exception) to avoid gateway retry
+- Sanitized error handling: provider errors don't leak API keys or raw error bodies
+- Updated `auth.test.ts` (US-020): added gateway module mocks, seeded provider/model/credits
+- 8 gateway tests + 6 auth tests = 14 tests; full suite: 57 files, 1032 tests
+---
