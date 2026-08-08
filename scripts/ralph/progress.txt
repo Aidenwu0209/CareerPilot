@@ -1829,4 +1829,49 @@
   - `sanitizeErrorMessage()` in gateway.ts strips `sk-ant-*`, `sk-*`, `AIza*` patterns, URLs, Bearer tokens, and truncates to 100 chars — verified by AC7 error sanitization test
   - For balance assertions in cross-user tests, always capture `balanceBefore` BEFORE the operation, not after — the account state changes in-place
   - `debitAccount()` from `@/lib/credits/ledger` is the simplest way to drain test accounts — takes `amount` (positive) not `delta` (negative)
+
+## 2026-08-08 16:55 - US-087
+- Validated ToB organization quota end-to-end closed loop with 8 integration tests
+- New file: `src/lib/ai/e2e-tob-org.test.ts` — comprehensive E2E test covering all 7 ACs
+- AC1: Super admin creates org → allocates quota (1000 credits) → assigns org admin + member
+  - Verifies org account exists with correct balance, memberships are active
+- AC2: Org admin adds a registered member within seat limit
+  - Two active memberships (admin + member) verified
+- AC3: Member completes AI optimization through gateway
+  - `dispatch` receives managed API key (`test-managed-api-key`) — no client key/provider/baseURL
+  - Org quota decreased by fixedPrice (15); personal balance unchanged
+  - Operation `billingAccountId` points to org account; `actorId` is the member
+  - Consumption transaction on org account references operation ID
+  - Personal account has zero consumption transactions
+- AC4: Org usage totals match ledger consumption sum
+  - Two members perform 3 total operations (2 + 1); ledger total = 3 × 20 = 60
+  - By-member breakdown: member1 has 2 ops, member2 has 1 op
+  - By-model breakdown: all attempts reference same modelId
+  - Final balance = initial quota - ledger total
+- AC5: Cross-organization isolation
+  - Org B has zero operations billed to its account
+  - Org B ledger has zero consumption transactions
+  - Org B membership list doesn't contain Org A members
+  - Org B member's data export doesn't contain Org A's operationId, result text, member ID, account ID, or resume
+  - Org B balance unchanged; Org A balance correctly reduced
+- AC6: Quota exhaustion + member removal
+  - Insufficient quota (10 available, 500 needed) → `INSUFFICIENT_CREDITS` (422), dispatch never called, zero attempts, balance unchanged
+  - After member removal (status='removed'), new operation billed to org fails (falls back to personal context with 0 balance → INSUFFICIENT_CREDITS)
+  - Org balance unchanged after removal; no new ops billed to org
+- AC7: No sensitive data leakage
+  - Operation metadata, attempts, credit transactions, and holds don't contain `test-managed-api-key` or `AI_CREDENTIAL_MASTER_KEY`
+  - Failed attempts sanitize error messages (strips `sk-ant-*`, URLs)
+- Supplementary: Suspended org billing isolation
+  - Member of suspended org falls back to personal context (org excluded from active membership query)
+  - Org balance unchanged; zero operations billed to suspended org
+- Typecheck passes, 1233 tests pass (69 files, 8 new), lint clean on new file
+- Browser verification deferred: no running dev server detected; integration tests cover full ToB org quota lifecycle at service level
+- **未来迭代的学习：**
+  - `users.authType` is NOT NULL — always include `authType: 'email'` (or 'oauth'/'fingerprint') when seeding test users directly via DB insert
+  - Org billing context is determined by `RequestContext.billing`: `{ accountOwnerType: 'organization', accountOwnerId: orgId }` — tests construct this manually via `makeOrgContext(userId, orgId, role)`
+  - When a membership status changes to 'removed' or org status to 'suspended', `resolveContextForUser()` automatically excludes it from active query, causing fallback to personal context — test this by using `makePersonalContext()` after the status change
+  - `creditAccount()` from `@/lib/credits/ledger` takes positive `amount` (not delta) for increasing org quota — use it to initialize org accounts in tests
+  - For cross-org isolation tests, always verify: (1) billingAccountId queries return empty for wrong org, (2) ledger transactions don't leak, (3) data export doesn't contain other org's data, (4) balances are unchanged
+  - `getTransactions(accountId, { limit })` returns newest-first paginated transactions — use `.filter(t => t.reason === 'consumption')` to find AI consumption entries
+---
 ---
