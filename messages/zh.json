@@ -1544,7 +1544,9 @@
       "seats": "席位",
       "seatsUsed": "已用",
       "seatsTotal": "总数",
-      "credits": "额度余额"
+      "credits": "额度余额",
+      "quotaUsed": "已用额度",
+      "quotaRemaining": "剩余额度"
     },
     "sections": {
       "members": {
@@ -1602,6 +1604,37 @@
         "FORBIDDEN": "无权限执行此操作",
         "AUTH_REQUIRED": "请先登录"
       }
+    },
+    "usage": {
+      "title": "用量分析",
+      "description": "查看机构「{name}」的额度消费和用量明细",
+      "refresh": "刷新",
+      "loadError": "加载用量数据失败，请重试",
+      "retry": "重试",
+      "dateFrom": "开始日期",
+      "dateTo": "结束日期",
+      "apply": "应用",
+      "summary": {
+        "totalConsumed": "本期消费",
+        "remaining": "剩余额度",
+        "operations": "消费次数"
+      },
+      "byMember": {
+        "title": "成员消费",
+        "colName": "姓名",
+        "colOperations": "操作数",
+        "colSucceeded": "成功",
+        "colFailed": "失败"
+      },
+      "byModel": {
+        "title": "模型用量",
+        "colModel": "模型",
+        "colAttempts": "调用数",
+        "colSucceeded": "成功",
+        "colFailed": "失败"
+      },
+      "empty": "所选时间范围内暂无消费记录",
+      "noData": "暂无数据"
     }
   }
 }

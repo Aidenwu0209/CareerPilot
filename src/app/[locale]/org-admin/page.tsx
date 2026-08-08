@@ -1,8 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { resolveContext } from '@/lib/auth/context';
 import { db } from '@/lib/db';
-import { organizations, organizationMemberships, creditAccounts } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { organizations, organizationMemberships, creditAccounts, creditTransactions } from '@/lib/db/schema';
+import { eq, and, sql } from 'drizzle-orm';
 import { Link } from '@/i18n/routing';
 import { Users, BarChart3 } from 'lucide-react';
 
@@ -46,9 +46,12 @@ export default async function OrgAdminPage() {
 
   const seatsUsed = memberCount.length;
 
-  // Get org credit balance
+  // Get org credit balance and total consumed
   const creditAccount = await db
-    .select({ balance: creditAccounts.balance })
+    .select({
+      balance: creditAccounts.balance,
+      accountId: creditAccounts.id,
+    })
     .from(creditAccounts)
     .where(
       and(
@@ -59,6 +62,23 @@ export default async function OrgAdminPage() {
     .limit(1);
 
   const creditBalance = creditAccount[0]?.balance ?? 0;
+  const accountId = creditAccount[0]?.accountId;
+
+  let totalConsumed = 0;
+  if (accountId) {
+    const consumed = await db
+      .select({
+        total: sql<number>`COALESCE(SUM(ABS(${creditTransactions.delta})), 0)`,
+      })
+      .from(creditTransactions)
+      .where(
+        and(
+          eq(creditTransactions.accountId, accountId),
+          eq(creditTransactions.reason, 'consumption'),
+        ),
+      );
+    totalConsumed = Number(consumed[0]?.total ?? 0);
+  }
   const isActive = org.orgStatus === 'active';
 
   const cards = [
@@ -74,7 +94,7 @@ export default async function OrgAdminPage() {
 
       {/* Org summary */}
       <div className="mt-6 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-4 sm:grid-cols-5">
           <div>
             <dt className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               {t('summary.orgName')}
@@ -101,9 +121,17 @@ export default async function OrgAdminPage() {
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              {t('summary.credits')}
+              {t('summary.quotaUsed')}
             </dt>
-            <dd className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
+              {totalConsumed.toLocaleString()}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              {t('summary.quotaRemaining')}
+            </dt>
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-zinc-900 dark:text-zinc-100">
               {creditBalance.toLocaleString()}
             </dd>
           </div>

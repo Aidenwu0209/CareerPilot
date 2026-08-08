@@ -1544,7 +1544,9 @@
       "seats": "Seats",
       "seatsUsed": "Used",
       "seatsTotal": "Total",
-      "credits": "Credit Balance"
+      "credits": "Credit Balance",
+      "quotaUsed": "Quota Used",
+      "quotaRemaining": "Quota Remaining"
     },
     "sections": {
       "members": {
@@ -1602,6 +1604,37 @@
         "FORBIDDEN": "You do not have permission to do this",
         "AUTH_REQUIRED": "Please sign in first"
       }
+    },
+    "usage": {
+      "title": "Usage Analytics",
+      "description": "View quota consumption and usage details for {name}",
+      "refresh": "Refresh",
+      "loadError": "Failed to load usage data, please try again",
+      "retry": "Retry",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "apply": "Apply",
+      "summary": {
+        "totalConsumed": "Period Consumption",
+        "remaining": "Remaining Quota",
+        "operations": "Operations"
+      },
+      "byMember": {
+        "title": "Member Usage",
+        "colName": "Name",
+        "colOperations": "Operations",
+        "colSucceeded": "Succeeded",
+        "colFailed": "Failed"
+      },
+      "byModel": {
+        "title": "Model Usage",
+        "colModel": "Model",
+        "colAttempts": "Calls",
+        "colSucceeded": "Succeeded",
+        "colFailed": "Failed"
+      },
+      "empty": "No consumption records in the selected time range",
+      "noData": "No data available"
     }
   }
 }
