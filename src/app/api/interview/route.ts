@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   await dbReady;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const sessions = await interviewRepository.findSessionsByUserId(user.id);
   return NextResponse.json(sessions);
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   await dbReady;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const body = await request.json();
   const { jobDescription, jobTitle, resumeId, interviewers } = body;

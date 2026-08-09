@@ -35,6 +35,7 @@ import type { Resume } from '@/types/resume';
 import { ModelSelector } from '@/components/ai/model-selector';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useCredits } from '@/hooks/use-credits';
+import { ApiResponseError, readJsonResponse } from '@/lib/http/json-client';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -170,7 +171,7 @@ export default function LinkedInPhotoPage() {
 
     // Fetch resume list
     fetch('/api/resume')
-      .then((res) => (res.ok ? res.json() : []))
+      .then((response) => readJsonResponse<Resume[]>(response))
       .then((data: Resume[]) => {
         setResumes(data);
         if (data.length > 0) setSelectedResumeId(data[0].id);
@@ -318,21 +319,17 @@ export default function LinkedInPhotoPage() {
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.error === 'safety_filtered') {
-          toast.error(t('errorSafety'));
-        } else {
-          toast.error(mapError(data.error || ''));
-        }
-        return;
-      }
+      const data = await readJsonResponse<{ image: string }>(res);
 
       setResultImage(data.image);
       refreshCredits();
-    } catch {
-      toast.error(t('errorGenerate'));
+    } catch (error) {
+      const errorCode = error instanceof ApiResponseError ? error.code : '';
+      if (errorCode === 'safety_filtered') {
+        toast.error(t('errorSafety'));
+      } else {
+        toast.error(mapError(errorCode));
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -362,7 +359,7 @@ export default function LinkedInPhotoPage() {
         toast.error(t('setAsAvatarNoResume'));
         return;
       }
-      const resume: Resume = await resumeRes.json();
+      const resume = await readJsonResponse<Resume>(resumeRes);
       const personalInfo = resume.sections.find(
         (s) => s.type === 'personal_info'
       );

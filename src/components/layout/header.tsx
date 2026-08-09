@@ -48,7 +48,14 @@ export function Header() {
             ) : branding.productName !== 'CareerPilot' ? (
               <span className="max-w-40 truncate text-lg font-bold tracking-tight text-brand">{branding.productName}</span>
             ) : (
-              <Image src="/logo.svg" alt="CareerPilot" width={160} height={36} priority />
+              <Image
+                src="/logo.svg"
+                alt="CareerPilot"
+                width={280}
+                height={48}
+                priority
+                className="h-auto w-40"
+              />
             )}
           </Link>
           <nav className="hidden md:flex items-center gap-1">

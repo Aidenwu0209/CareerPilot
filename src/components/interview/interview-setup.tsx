@@ -8,8 +8,9 @@ import { JDInput } from './jd-input';
 import { ResumeSelector } from './resume-selector';
 import { InterviewerPicker } from './interviewer-picker';
 import { useRouter } from '@/i18n/routing';
-import type { InterviewerConfig } from '@/types/interview';
+import type { InterviewerConfig, InterviewSession } from '@/types/interview';
 import { AlertCircle, Mic } from 'lucide-react';
+import { readJsonResponse } from '@/lib/http/json-client';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
@@ -42,8 +43,7 @@ export function InterviewSetup() {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to create interview');
-      const { session } = await res.json();
+      const { session } = await readJsonResponse<{ session: InterviewSession }>(res);
       router.push(`/interview/${session.id}`);
     } catch (err) {
       console.error('Failed to create interview:', err);

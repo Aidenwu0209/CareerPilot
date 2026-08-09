@@ -2,6 +2,7 @@ import { auth } from './config';
 import { config } from '@/lib/config';
 import { dbReady } from '@/lib/db';
 import { userRepository } from '@/lib/db/repositories/user.repository';
+import { FINGERPRINT_COOKIE_NAME } from './providers/fingerprint';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -42,5 +43,26 @@ export async function resolveUser(fingerprint?: string | null) {
 export function getUserIdFromRequest(request: Request): string | null {
   // In production, the x-fingerprint header is never trusted for auth.
   if (isProduction) return null;
-  return request.headers.get('x-fingerprint') || null;
+
+  const headerFingerprint = request.headers.get('x-fingerprint');
+  if (headerFingerprint) return headerFingerprint;
+
+  // Browser requests do not all add the development-only header. The
+  // fingerprint hook persists the same value as a SameSite cookie, so use it
+  // as a fallback to avoid first-render races after identity initialization.
+  const cookieHeader = request.headers.get('cookie');
+  if (!cookieHeader) return null;
+
+  const cookie = cookieHeader
+    .split(';')
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${FINGERPRINT_COOKIE_NAME}=`));
+  if (!cookie) return null;
+
+  const encodedValue = cookie.slice(FINGERPRINT_COOKIE_NAME.length + 1);
+  try {
+    return decodeURIComponent(encodedValue) || null;
+  } catch {
+    return null;
+  }
 }

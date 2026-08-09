@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { RadarChart } from './radar-chart';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { HistoryStats, DimensionScore, InterviewReport } from '@/types/interview';
 
 interface HistoryComparisonProps {
@@ -24,7 +25,7 @@ export function HistoryComparison({ currentReport }: HistoryComparisonProps) {
 
   useEffect(() => {
     fetch('/api/interview/history/stats')
-      .then((r) => r.json())
+      .then((response) => readJsonResponse<HistoryStats>(response))
       .then(setStats)
       .catch(console.error);
   }, []);

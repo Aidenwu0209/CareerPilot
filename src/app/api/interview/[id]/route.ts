@@ -8,7 +8,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(id);
   if (!session || session.userId !== user.id) {
@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   const { id } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(id);
   if (!session || session.userId !== user.id) {
@@ -55,7 +55,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   const { id } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(id);
   if (!session || session.userId !== user.id) {

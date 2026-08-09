@@ -9,7 +9,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { id: sessionId } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(sessionId);
   if (!session || session.userId !== user.id) {

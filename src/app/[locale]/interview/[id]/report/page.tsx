@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { InterviewReportView } from '@/components/interview/interview-report';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCredits } from '@/hooks/use-credits';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewReport, InterviewSession } from '@/types/interview';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
@@ -21,7 +22,10 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
 
   useEffect(() => {
     fetch(`/api/interview/${id}`, { headers: JSON_HEADERS })
-      .then((r) => r.json())
+      .then((response) => readJsonResponse<{
+        session: InterviewSession;
+        report: InterviewReport | null;
+      }>(response))
       .then(({ session: s, report: r }) => {
         setSession(s);
         if (r) {
@@ -33,10 +37,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             headers: JSON_HEADERS,
             body: JSON.stringify({ locale: document.documentElement.lang || 'zh' }),
           })
-            .then((res) => {
-              if (!res.ok) return res.json().then((err) => { throw new Error(err.error || 'REPORT_FAILED'); });
-              return res.json();
-            })
+            .then((response) => readJsonResponse<InterviewReport>(response))
             .then((data) => {
               setReport(data);
               refreshBalance();

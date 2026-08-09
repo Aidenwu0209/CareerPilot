@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   await dbReady;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const reportsWithSessions = await interviewRepository.findReportsByUserId(user.id);
 

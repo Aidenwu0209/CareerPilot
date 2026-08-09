@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const fingerprint = getUserIdFromRequest(request);
     const user = await resolveUser(fingerprint);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+    if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
     const resumeId = request.nextUrl.searchParams.get('resumeId');
     if (!resumeId) return new Response('Missing resumeId', { status: 400 });
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   try {
     const fingerprint = getUserIdFromRequest(request);
     const user = await resolveUser(fingerprint);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+    if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
     const { resumeId } = await request.json();
     if (!resumeId) return new Response('Missing resumeId', { status: 400 });

@@ -189,6 +189,23 @@ beforeEach(async () => {
   });
 });
 
+describe('Interview API authentication response', () => {
+  it('returns a JSON AUTH_REQUIRED response instead of plain text', async () => {
+    mockResolveUser.mockResolvedValue(null);
+    const req = makePostRequest('/api/interview', {
+      jobDescription: 'Frontend Developer',
+      jobTitle: 'Frontend Dev',
+      interviewers: [{ type: 'technical', name: 'Tech' }],
+    });
+
+    const res = await interviewPost(req);
+
+    expect(res.status).toBe(401);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    await expect(res.json()).resolves.toEqual({ error: 'AUTH_REQUIRED' });
+  });
+});
+
 // ═══════════════════════════════════════════════════
 // AC1: POST /api/interview — resumeId ownership
 // ═══════════════════════════════════════════════════

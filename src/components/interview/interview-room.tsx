@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { UIMessage } from 'ai';
+import { readJsonResponse } from '@/lib/http/json-client';
 import { useRouter } from '@/i18n/routing';
 import { useInterviewStore } from '@/stores/interview-store';
 import { useInterviewChat } from '@/hooks/use-interview-chat';
@@ -153,7 +154,7 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
     // Fetch messages for this round
     try {
       const res = await fetch(`/api/interview/${sessionId}`);
-      const { rounds: roundsWithMessages } = await res.json();
+      const { rounds: roundsWithMessages } = await readJsonResponse<{ rounds: any[] }>(res);
       const roundData = roundsWithMessages.find((r: any) => r.id === targetRound.id);
 
       if (roundData?.messages?.length > 0) {

@@ -1,5 +1,6 @@
 import { Header } from '@/components/layout/header';
 import { SettingsDialog } from '@/components/settings/settings-dialog';
+import { AuthGuard } from '@/components/auth/auth-guard';
 
 export default function LinkedInPhotoLayout({
   children,
@@ -9,7 +10,9 @@ export default function LinkedInPhotoLayout({
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-background">
       <Header />
-      <main className="mx-auto max-w-7xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <AuthGuard>{children}</AuthGuard>
+      </main>
       <SettingsDialog />
     </div>
   );

@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { InterviewCard } from './interview-card';
 import { Link } from '@/i18n/routing';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewSession } from '@/types/interview';
 
 export function InterviewLobby() {
@@ -28,7 +29,7 @@ export function InterviewLobby() {
 
   useEffect(() => {
     fetch('/api/interview')
-      .then((r) => r.json())
+      .then((response) => readJsonResponse<InterviewSession[]>(response))
       .then((data) => setSessions(data))
       .catch(console.error)
       .finally(() => setLoading(false));

@@ -48,6 +48,17 @@ describe('getUserIdFromRequest — production hardening', () => {
     expect(getUserIdFromRequest(request)).toBeNull();
   });
 
+  it('returns null in production regardless of fingerprint cookie', async () => {
+    Object.assign(process.env, { NODE_ENV: 'production' });
+    const { getUserIdFromRequest } = await import('./helpers');
+
+    const request = new Request('http://localhost/api/resume', {
+      headers: { cookie: 'jade_fingerprint=forged-cookie-fp' },
+    });
+
+    expect(getUserIdFromRequest(request)).toBeNull();
+  });
+
   it('returns fingerprint in development when header is present', async () => {
     Object.assign(process.env, { NODE_ENV: 'development' });
     const { getUserIdFromRequest } = await import('./helpers');
@@ -59,7 +70,30 @@ describe('getUserIdFromRequest — production hardening', () => {
     expect(getUserIdFromRequest(request)).toBe('dev-fp-456');
   });
 
-  it('returns null in development when header is absent', async () => {
+  it('falls back to the development fingerprint cookie when the header is absent', async () => {
+    Object.assign(process.env, { NODE_ENV: 'development' });
+    const { getUserIdFromRequest } = await import('./helpers');
+
+    const request = new Request('http://localhost/api/resume', {
+      headers: { cookie: 'theme=dark; jade_fingerprint=cookie-fp-789' },
+    });
+    expect(getUserIdFromRequest(request)).toBe('cookie-fp-789');
+  });
+
+  it('prefers the explicit development header over the cookie', async () => {
+    Object.assign(process.env, { NODE_ENV: 'development' });
+    const { getUserIdFromRequest } = await import('./helpers');
+
+    const request = new Request('http://localhost/api/resume', {
+      headers: {
+        'x-fingerprint': 'header-fp',
+        cookie: 'jade_fingerprint=cookie-fp',
+      },
+    });
+    expect(getUserIdFromRequest(request)).toBe('header-fp');
+  });
+
+  it('returns null in development when neither header nor cookie is present', async () => {
     Object.assign(process.env, { NODE_ENV: 'development' });
     const { getUserIdFromRequest } = await import('./helpers');
 

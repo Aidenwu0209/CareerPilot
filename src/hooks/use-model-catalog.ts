@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from './use-auth';
+import { readJsonResponse } from '@/lib/http/json-client';
 
 export interface CatalogModelInfo {
   id: string;
@@ -25,40 +27,43 @@ interface UseModelCatalogResult {
 
 /**
  * Shared hook that fetches the server-side managed model catalog.
- * Caches the result in a module-level variable so multiple components
- * (chat panel, editor dialogs, etc.) share a single network request.
+ * Caches the result per authenticated user so multiple components share one
+ * request without leaking a previous account's plan-scoped model catalog.
  */
-let cachedModels: CatalogModelInfo[] | null = null;
-let inflight: Promise<CatalogModelInfo[]> | null = null;
+let cachedCatalog: { userId: string; models: CatalogModelInfo[] } | null = null;
+let inflight: { userId: string; promise: Promise<CatalogModelInfo[]> } | null = null;
 
-async function fetchCatalog(): Promise<CatalogModelInfo[]> {
-  if (cachedModels) return cachedModels;
-  if (inflight) return inflight;
+async function fetchCatalog(userId: string): Promise<CatalogModelInfo[]> {
+  if (cachedCatalog?.userId === userId) return cachedCatalog.models;
+  if (inflight?.userId === userId) return inflight.promise;
 
-  inflight = fetch('/api/ai/models')
-    .then((res) => {
-      if (!res.ok) throw new Error('catalog fetch failed');
-      return res.json();
-    })
+  const promise = fetch('/api/ai/models')
+    .then((response) => readJsonResponse<{ models: CatalogModelInfo[] }>(response))
     .then((data: { models: CatalogModelInfo[] }) => {
-      cachedModels = data.models ?? [];
-      return cachedModels;
+      const models = data.models ?? [];
+      cachedCatalog = { userId, models };
+      return models;
     })
     .finally(() => {
-      inflight = null;
+      if (inflight?.userId === userId) inflight = null;
     });
 
-  return inflight;
+  inflight = { userId, promise };
+  return promise;
 }
 
 /** Allow other modules to bust the cache when model state changes. */
 export function invalidateModelCatalog() {
-  cachedModels = null;
+  cachedCatalog = null;
 }
 
 export function useModelCatalog(): UseModelCatalogResult {
-  const [models, setModels] = useState<CatalogModelInfo[]>(cachedModels ?? []);
-  const [loading, setLoading] = useState(cachedModels === null);
+  const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const userId = user?.id ?? null;
+  const [models, setModels] = useState<CatalogModelInfo[]>([]);
+  const [loadedUserId, setLoadedUserId] = useState<string | null>(null);
+  const [settledUserId, setSettledUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const mountedRef = useRef(true);
 
@@ -66,14 +71,30 @@ export function useModelCatalog(): UseModelCatalogResult {
     mountedRef.current = true;
     let cancelled = false;
 
-    fetchCatalog()
+    if (authLoading) {
+      return () => {
+        mountedRef.current = false;
+      };
+    }
+
+    if (!isAuthenticated || !userId) {
+      return () => {
+        mountedRef.current = false;
+      };
+    }
+
+    fetchCatalog(userId)
       .then((result) => {
         if (cancelled || !mountedRef.current) return;
         setModels(result);
+        setLoadedUserId(userId);
+        setSettledUserId(userId);
+        setError(false);
         setLoading(false);
       })
       .catch(() => {
         if (cancelled || !mountedRef.current) return;
+        setSettledUserId(userId);
         setError(true);
         setLoading(false);
       });
@@ -82,9 +103,15 @@ export function useModelCatalog(): UseModelCatalogResult {
       cancelled = true;
       mountedRef.current = false;
     };
-  }, []);
+  }, [authLoading, isAuthenticated, userId]);
 
-  return { models, loading, error };
+  const catalogBelongsToCurrentUser = loadedUserId === userId;
+
+  return {
+    models: catalogBelongsToCurrentUser ? models : [],
+    loading: authLoading || (isAuthenticated && (settledUserId !== userId || loading)),
+    error: !authLoading && (!isAuthenticated || error),
+  };
 }
 
 /**

@@ -10,7 +10,7 @@ export async function GET(
   try {
     const fingerprint = getUserIdFromRequest(request);
     const user = await resolveUser(fingerprint);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+    if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
     const { sessionId } = await params;
 
@@ -43,7 +43,7 @@ export async function DELETE(
   try {
     const fingerprint = getUserIdFromRequest(request);
     const user = await resolveUser(fingerprint);
-    if (!user) return new Response('Unauthorized', { status: 401 });
+    if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
     const { sessionId } = await params;
 
