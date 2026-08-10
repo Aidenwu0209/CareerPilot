@@ -2,21 +2,26 @@
 
 # CareerPilot
 
-**AI 驱动的智能简历生成器**
+**面向简历、面试与职业形象的开源 AI 求职平台**
 
-拖拽编辑、实时 AI 优化、50 套专业模板、多格式导出，轻松打造高质量简历。
+在一个双语平台中完成专业简历制作、模拟面试、职业照生成与托管 AI 服务运营。
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)](#docker-%E9%83%A8%E7%BD%B2%E6%8E%A8%E8%8D%90)
+[![质量检查](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml/badge.svg?branch=develop%2Fcareerpilot)](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml)
 
-[English](./README.md)
+[English](./README.md) · [快速开始](#快速开始) · [商业化运维指南](docs/commercial-operations.zh-CN.md) · [参与贡献](CONTRIBUTING.md)
 
 </div>
 
 ---
+
+CareerPilot 覆盖从简历制作、JD 匹配到模拟面试与职业照生成的求职流程。项目支持使用 SQLite 自托管开发、使用 PostgreSQL 进行生产部署，并提供可选的商业化能力，包括托管模型、点数、套餐、支付、退款、对账和运营告警。
+
+> **项目状态：** `main` 为稳定分支，`develop/careerpilot` 保存最新开发版本。外部 AI、支付、邮件、存储与监控服务需要部署者自行提供凭证并完成配置。
 
 ## 截图展示
 
@@ -101,9 +106,9 @@
 - **求职信生成** — 基于简历和 JD 的 AI 定制求职信，可选语气（正式 / 友好 / 自信）
 - **语法与写作检查** — 检测弱动词、模糊描述和语法问题，返回质量评分
 - **多语言翻译** — 支持 10 种语言互译，保留专业术语原文
-- **平台托管 AI 供应商** — 超级管理员统一配置并加密保存 OpenAI、Anthropic、Google 凭证；终端用户只选择获准模型
+- **平台托管 AI 供应商** — 超级管理员统一配置加密凭证，并发布获准的 GPT、Claude、GLM 与 DeepSeek 模型
 - **商业化点数体系** — 个人与机构账户支持预占、按次/按 Token 结算、不可变流水与限额
-- **多供应商图片编辑** — 职业照可按托管模型目录选择 Google 或 OpenAI 图片模型
+- **多供应商图片编辑** — 职业照支持获准的 Gemini、GPT 与 ERNIE 生图模型；GPT 商品可分别设置 1K 与 4K 档位
 
 ### 模拟面试
 
@@ -147,7 +152,7 @@
 | 状态管理 | Zustand |
 | 数据库 | Drizzle ORM (SQLite / PostgreSQL) |
 | 认证 | NextAuth.js v5 + FingerprintJS |
-| AI | Vercel AI SDK v6 + OpenAI / Anthropic |
+| AI | Vercel AI SDK v6 + 托管 GPT / Claude / GLM / DeepSeek / Gemini / ERNIE 供应商 |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | 国际化 | next-intl |
 | 数据校验 | Zod v4 |
@@ -208,8 +213,8 @@ docker run -d -p 3000:3000 \
 
 #### 环境要求
 
-- Node.js 18+
-- pnpm 9+
+- Node.js 22（推荐，与 CI 保持一致）
+- pnpm 10.29.2
 
 #### 安装
 
@@ -407,13 +412,9 @@ CareerPilot 内置 **50 套专业设计模板**，覆盖多种风格和行业需
 
 ## 参与贡献
 
-欢迎贡献代码！请按照以下步骤：
+欢迎参与贡献。开发流程、必要检查和 Pull Request 要求请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-1. Fork 本仓库
-2. 创建功能分支：`git checkout -b feat/your-feature`
-3. 提交更改：`git commit -m 'feat: add your feature'`
-4. 推送分支：`git push origin feat/your-feature`
-5. 提交 Pull Request
+使用问题请参阅 [SUPPORT.md](SUPPORT.md)；安全漏洞请按照 [SECURITY.md](SECURITY.md) 私下报告；参与仓库协作即表示同意遵守 [行为准则](CODE_OF_CONDUCT.md)。
 
 ## 常见问题
 

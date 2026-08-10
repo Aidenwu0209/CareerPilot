@@ -2,21 +2,26 @@
 
 # CareerPilot
 
-**AI-Powered Smart Resume Builder**
+**Open-source AI career platform for resumes, interviews, and professional profiles**
 
-Build professional resumes with drag-and-drop editing, real-time AI optimization, 50 templates, and multi-format export.
+Build professional resumes, practice mock interviews, generate professional photos, and operate managed AI services from one bilingual platform.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)](#docker-recommended)
+[![Quality Gate](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml/badge.svg?branch=develop%2Fcareerpilot)](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml)
 
-[中文文档](./README.zh-CN.md)
+[中文文档](./README.zh-CN.md) · [Quick Start](#getting-started) · [Operations Guide](docs/commercial-operations.zh-CN.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
 ---
+
+CareerPilot covers the job-seeking workflow from resume creation and JD matching to mock interviews and professional photo generation. It supports self-hosted development with SQLite, production deployment with PostgreSQL, and an optional commercial layer for managed models, credits, plans, payments, refunds, reconciliation, and operational alerts.
+
+> **Project status:** `main` is the stable branch. `develop/careerpilot` contains the latest development work. External AI, payment, email, storage, and monitoring services require your own credentials and configuration.
 
 ## Screenshots
 
@@ -101,9 +106,9 @@ The following resume sections support Markdown syntax:
 - **Cover Letter Generation** — AI-tailored cover letter based on resume and JD, with tone selection (formal / friendly / confident)
 - **Grammar & Writing Check** — Detect weak verbs, vague descriptions, and grammar issues; returns a quality score
 - **Translation** — Translate resume content across 10 languages while preserving technical terms
-- **Managed AI Providers** — Super administrators configure encrypted OpenAI, Anthropic, and Google credentials; end users only select approved models
+- **Managed AI Providers** — Super administrators publish approved GPT, Claude, GLM, and DeepSeek models with encrypted credentials
 - **Commercial Credits** — Personal and organization accounts support pre-authorization, per-call/per-token settlement, immutable ledgers, and limits
-- **Multi-provider Image Editing** — Professional photos can use approved Google or OpenAI image models from the managed catalog
+- **Multi-provider Image Editing** — Professional photos support approved Gemini, GPT, and ERNIE image models; GPT products can be priced as separate 1K and 4K tiers
 
 ### Mock Interview
 
@@ -147,7 +152,7 @@ The following resume sections support Markdown syntax:
 | State | Zustand |
 | Database | Drizzle ORM (SQLite / PostgreSQL) |
 | Auth | NextAuth.js v5 + FingerprintJS |
-| AI | Vercel AI SDK v6 + OpenAI / Anthropic |
+| AI | Vercel AI SDK v6 + managed GPT / Claude / GLM / DeepSeek / Gemini / ERNIE providers |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | i18n | next-intl |
 | Validation | Zod v4 |
@@ -208,8 +213,8 @@ docker run -d -p 3000:3000 \
 
 #### Prerequisites
 
-- Node.js 18+
-- pnpm 9+
+- Node.js 22 (recommended; matches CI)
+- pnpm 10.29.2
 
 #### Installation
 
@@ -407,13 +412,9 @@ CareerPilot includes **50 professionally designed resume templates** covering a 
 
 ## Contributing
 
-Contributions are welcome! Here's how to get started:
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, required checks, and pull request guidelines.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Commit your changes: `git commit -m 'feat: add your feature'`
-4. Push to the branch: `git push origin feat/your-feature`
-5. Open a Pull Request
+For help, see [SUPPORT.md](SUPPORT.md). Please report security vulnerabilities privately according to [SECURITY.md](SECURITY.md). All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## FAQ
 
