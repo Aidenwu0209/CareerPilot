@@ -109,7 +109,7 @@ describe('POST /api/account/export', () => {
     expect(res.headers.get('Content-Disposition')).toContain('attachment');
 
     const body = await res.json();
-    expect(body.schemaVersion).toBe(1);
+    expect(body.schemaVersion).toBe(2);
     expect(body.generatedAt).toBeTruthy();
     expect(body.user.id).toBe('exp-user');
     expect(body.resumes).toHaveLength(1);

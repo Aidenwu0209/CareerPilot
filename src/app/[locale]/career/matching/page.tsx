@@ -1,0 +1,246 @@
+import { AlertTriangle, CheckCircle2, ExternalLink, FileQuestion, SearchCheck, ShieldCheck, Target } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { redirectToLogin } from '@/lib/auth/login-redirect';
+import { resolveServerContext } from '@/lib/auth/server-context';
+import { getCareerMatch, getCareerOverview, listOccupations } from '@/lib/career/service';
+import { Link } from '@/i18n/routing';
+import {
+  CareerMetricCard,
+  CareerPageHeader,
+  CareerSection,
+  EvidenceBadge,
+  StatusPill,
+} from '@/components/career/career-shell';
+import { Button } from '@/components/ui/button';
+
+function formatDate(value: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(
+    new Date(value),
+  );
+}
+
+export default async function CareerMatchingPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ occupationCode?: string | string[] }>;
+}) {
+  const [{ locale }, query, t, context] = await Promise.all([
+    params,
+    searchParams.then((value) =>
+      typeof value.occupationCode === 'string' ? value.occupationCode : undefined,
+    ),
+    getTranslations('career'),
+    resolveServerContext(),
+  ]);
+  if (!context) return redirectToLogin('/career/matching');
+
+  const [overview, occupations] = await Promise.all([
+    getCareerOverview(context.actor.userId),
+    listOccupations(),
+  ]);
+  const selectedCode = query ?? overview.primaryGoal?.occupationCode;
+  const match = await getCareerMatch(context.actor.userId, selectedCode);
+  const confidence = match.totalWeight > 0 ? Math.round((match.knownWeight / match.totalWeight) * 100) : null;
+  const isPrimaryGoal = overview.primaryGoal?.occupationCode === match.occupation.code;
+
+  return (
+    <div className="space-y-6 sm:space-y-8">
+      <CareerPageHeader
+        eyebrow={t('matching.eyebrow')}
+        title={t('matching.title')}
+        description={t('matching.description')}
+        action={
+          <Button asChild variant="outline" className="w-full sm:w-auto">
+            <Link href={`/career/jobs/${match.occupation.code}`}>{t('matching.viewOccupation')}</Link>
+          </Button>
+        }
+      />
+
+      <form method="get" className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 sm:flex-row sm:items-end">
+        <label htmlFor="matching-occupation" className="min-w-0 flex-1">
+          <span className="mb-2 block text-sm font-medium text-zinc-800 dark:text-zinc-200">{t('matching.selectLabel')}</span>
+          <select
+            id="matching-occupation"
+            name="occupationCode"
+            defaultValue={match.occupation.code}
+            className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
+          >
+            {occupations.map((occupation) => (
+              <option key={occupation.code} value={occupation.code}>{occupation.name} · {occupation.category}</option>
+            ))}
+          </select>
+        </label>
+        <Button type="submit" className="bg-brand hover:bg-brand-hover">{t('matching.recalculate')}</Button>
+      </form>
+
+      <section className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950 p-5 text-white dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusPill tone={isPrimaryGoal ? 'positive' : 'neutral'}>
+                {isPrimaryGoal ? t('matching.primaryGoal') : t('matching.comparison')}
+              </StatusPill>
+              <span className="text-xs text-zinc-400">{match.algorithmVersion}</span>
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold">{match.occupation.name}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-300">{match.occupation.summary}</p>
+          </div>
+          <div className="shrink-0 text-left sm:text-right">
+            <p className="text-xs text-zinc-400">{t('metrics.match')}</p>
+            <p className="mt-1 text-4xl font-bold tabular-nums">
+              {match.score === null ? t('common.unknown') : `${match.score}%`}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label={t('matching.metricsLabel')} className="grid gap-3 sm:grid-cols-3">
+        <CareerMetricCard
+          label={t('metrics.match')}
+          value={match.score}
+          suffix="%"
+          description={t('metrics.matchDescription')}
+          unknownLabel={t('common.insufficientEvidence')}
+          icon={Target}
+        />
+        <CareerMetricCard
+          label={t('metrics.evidenceCoverage')}
+          value={match.evidenceCoverage}
+          suffix="%"
+          description={t('metrics.evidenceCoverageDescription')}
+          unknownLabel={t('common.insufficientEvidence')}
+          icon={SearchCheck}
+        />
+        <CareerMetricCard
+          label={t('matching.confidence')}
+          value={confidence}
+          suffix="%"
+          description={t('matching.confidenceDescription')}
+          unknownLabel={t('common.insufficientEvidence')}
+          icon={ShieldCheck}
+        />
+      </section>
+
+      <CareerSection title={t('matching.breakdown.title')} description={t('matching.breakdown.description')}>
+        <div className="space-y-3">
+          {match.dimensionBreakdown.map((item) => {
+            const StateIcon = item.state === 'met' ? CheckCircle2 : item.state === 'gap' ? AlertTriangle : FileQuestion;
+            return (
+              <details
+                key={`${item.dimension}-${item.abilityCode}`}
+                className="group rounded-lg border border-zinc-200 bg-white open:border-brand/30 dark:border-zinc-800 dark:bg-zinc-950"
+              >
+                <summary className="flex cursor-pointer list-none flex-col gap-3 px-4 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 [&::-webkit-details-marker]:hidden sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <span
+                      className={
+                        item.state === 'met'
+                          ? 'mt-0.5 text-emerald-600 dark:text-emerald-300'
+                          : item.state === 'gap'
+                            ? 'mt-0.5 text-amber-600 dark:text-amber-300'
+                            : 'mt-0.5 text-zinc-400'
+                      }
+                    >
+                      <StateIcon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-medium text-zinc-900 dark:text-zinc-100">{item.abilityName}</h3>
+                        <StatusPill tone={item.state === 'met' ? 'positive' : item.state === 'gap' ? 'warning' : 'neutral'}>
+                          {t(`matchState.${item.state}`)}
+                        </StatusPill>
+                        {item.requirement.required ? <EvidenceBadge>{t('matching.breakdown.required')}</EvidenceBadge> : null}
+                      </div>
+                      <p className="mt-1 text-sm leading-5 text-zinc-500 dark:text-zinc-400">{item.requirement.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3 text-sm tabular-nums">
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      {t('matching.breakdown.studentScore', {
+                        score: item.studentScore === null ? t('common.unknown') : item.studentScore,
+                      })}
+                    </span>
+                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                      {t('matching.breakdown.targetScore', { score: item.requirement.targetScore })}
+                    </span>
+                    <span className="text-zinc-400 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                  </div>
+                </summary>
+
+                <div className="grid gap-4 border-t border-zinc-200 bg-zinc-50 px-4 py-4 dark:border-zinc-800 dark:bg-zinc-900/70 lg:grid-cols-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                      {t('matching.breakdown.requirementLabel')}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-zinc-700 dark:text-zinc-300">{item.requirement.description}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                      {t('matching.breakdown.evidenceLabel')}
+                    </p>
+                    {item.studentEvidence.length > 0 ? (
+                      <ul className="mt-2 space-y-2">
+                        {item.studentEvidence.map((evidence) => (
+                          <li key={evidence.id} className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">
+                            <span className="font-medium">{evidence.title}</span>
+                            <span className="block text-xs text-zinc-500 dark:text-zinc-400">{evidence.excerpt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="mt-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">{t('matching.breakdown.noEvidence')}</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                      {t('matching.breakdown.actionLabel')}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-zinc-700 dark:text-zinc-300">{item.action}</p>
+                    <p className="mt-2 text-xs font-medium text-brand">
+                      {item.gap === null
+                        ? t('matching.breakdown.gapUnknown')
+                        : item.gap > 0
+                          ? t('matching.breakdown.gapValue', { gap: item.gap })
+                          : t('matching.breakdown.noGap')}
+                    </p>
+                  </div>
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </CareerSection>
+
+      <CareerSection title={t('matching.sources.title')} description={t('matching.sources.description')}>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {match.citations.map((citation) => (
+            <a
+              key={citation.id}
+              href={citation.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-lg border border-zinc-200 p-4 transition-colors hover:border-brand/30 hover:bg-brand/5 dark:border-zinc-800 dark:hover:bg-brand/10"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-medium text-zinc-800 dark:text-zinc-200">{citation.title}</p>
+                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                    {citation.sourceLabel} · {formatDate(citation.verifiedAt, locale)}
+                  </p>
+                </div>
+                <ExternalLink className="h-4 w-4 shrink-0 text-zinc-400" aria-hidden="true" />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-zinc-500 dark:text-zinc-400">{citation.excerpt}</p>
+            </a>
+          ))}
+        </div>
+      </CareerSection>
+
+      <p className="text-xs leading-5 text-zinc-400">
+        {t('matching.generatedAt', { date: formatDate(match.generatedAt, locale) })}
+      </p>
+    </div>
+  );
+}

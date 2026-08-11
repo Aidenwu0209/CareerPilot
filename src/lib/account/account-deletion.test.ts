@@ -63,6 +63,22 @@ import { creditAccounts } from '@/lib/db/schema-credits';
 import { emailOtps } from '@/lib/db/schema';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
 import { createHash, createHmac } from 'crypto';
+import {
+  careerProfiles,
+  careerAbilities,
+  careerEvidence,
+  careerGoals,
+  careerTasks,
+  careerProfileSnapshots,
+  careerGuidanceNotes,
+  careerMatches,
+  educationRoleAssignments,
+  teacherStudentAssignments,
+  occupations,
+  occupationRequirements,
+  occupationRelations,
+  careerKnowledgeDocuments,
+} from '@/lib/db/schema-career';
 
 // ── Helpers ──
 
@@ -161,8 +177,83 @@ async function createTestCreditAccount(userId: string, balance: number = 100) {
   return accountId;
 }
 
+async function createTestCareerData(
+  userId: string,
+  teacherId: string,
+  organizationId: string,
+) {
+  await db.insert(careerProfiles).values({ userId, headline: 'Frontend developer' });
+  await db.insert(careerAbilities).values({
+    userId,
+    code: 'frontend-engineering',
+    name: 'Frontend engineering',
+    dimension: 'professional_skills',
+    score: 78,
+  });
+  await db.insert(careerEvidence).values({
+    userId,
+    abilityCode: 'frontend-engineering',
+    sourceType: 'project',
+    title: 'Portfolio project',
+  });
+  const goalId = crypto.randomUUID();
+  await db.insert(careerGoals).values({
+    id: goalId,
+    userId,
+    occupationCode: 'OCC-DELETE-BOUNDARY',
+    confirmedBy: teacherId,
+  });
+  await db.insert(careerTasks).values({
+    userId,
+    goalId,
+    occupationCode: 'OCC-DELETE-BOUNDARY',
+    title: 'Complete portfolio',
+    assignedBy: teacherId,
+  });
+  await db.insert(careerProfileSnapshots).values({
+    userId,
+    version: 1,
+    abilities: [{ code: 'frontend-engineering', score: 78 }],
+  });
+  await db.insert(careerMatches).values({
+    userId,
+    goalId,
+    occupationCode: 'OCC-DELETE-BOUNDARY',
+    score: 70,
+  });
+  await db.insert(educationRoleAssignments).values([
+    { organizationId, userId, role: 'student' },
+    { organizationId, userId, role: 'teacher' },
+    { organizationId, userId: teacherId, role: 'teacher' },
+  ]);
+  await db.insert(teacherStudentAssignments).values({
+    organizationId,
+    teacherUserId: teacherId,
+    studentUserId: userId,
+  });
+  await db.insert(careerGuidanceNotes).values({
+    userId,
+    teacherId,
+    content: 'Student-facing guidance',
+  });
+}
+
 beforeEach(async () => {
   // Clean all tables in dependency order
+  await db.delete(teacherStudentAssignments);
+  await db.delete(careerGuidanceNotes);
+  await db.delete(careerMatches);
+  await db.delete(careerTasks);
+  await db.delete(careerProfileSnapshots);
+  await db.delete(careerEvidence);
+  await db.delete(careerAbilities);
+  await db.delete(careerGoals);
+  await db.delete(careerProfiles);
+  await db.delete(educationRoleAssignments);
+  await db.delete(occupationRequirements);
+  await db.delete(occupationRelations);
+  await db.delete(careerKnowledgeDocuments);
+  await db.delete(occupations);
   await db.delete(chatMessages);
   await db.delete(chatSessions);
   await db.delete(resumeShares);
@@ -367,6 +458,82 @@ describe('deleteUserData', () => {
     expect(rows[0].fingerprint).toBeNull();
     expect(rows[0].avatarUrl).toBeNull();
     expect(rows[0].status).toBe('deleted');
+  });
+
+  it('deletes private career data and both directions of teacher-linked records', async () => {
+    const userId = await createTestUser();
+    const teacherId = await createTestUser();
+    const otherStudentId = await createTestUser();
+    const organizationId = await createTestOrg(userId);
+
+    await db.insert(occupations).values({
+      code: 'OCC-DELETE-BOUNDARY',
+      name: 'Frontend Developer',
+      category: 'Engineering',
+      summary: 'Builds web user interfaces.',
+      description: 'Shared occupation catalog entry.',
+      entryLevel: 'Junior',
+    });
+    await db.insert(careerKnowledgeDocuments).values({
+      id: 'shared-career-document',
+      occupationCode: 'OCC-DELETE-BOUNDARY',
+      title: 'Shared occupation guide',
+      content: 'Shared RAG knowledge must survive user deletion.',
+      sourceLabel: 'Test source',
+      sourceUrl: 'https://example.com/shared-career-guide',
+    });
+    await createTestCareerData(userId, teacherId, organizationId);
+
+    // The deleting user is also a teacher for another student. This direction
+    // must be removed independently of their own student assignment.
+    await db.insert(educationRoleAssignments).values({
+      organizationId,
+      userId: otherStudentId,
+      role: 'student',
+    });
+    await db.insert(teacherStudentAssignments).values({
+      organizationId,
+      teacherUserId: userId,
+      studentUserId: otherStudentId,
+    });
+    await db.insert(careerGuidanceNotes).values({
+      userId: otherStudentId,
+      teacherId: userId,
+      content: 'Teacher-authored guidance for another student',
+    });
+
+    await deleteUserData(userId);
+
+    expect(await db.select().from(careerProfiles).where(eq(careerProfiles.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerAbilities).where(eq(careerAbilities.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerEvidence).where(eq(careerEvidence.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerGoals).where(eq(careerGoals.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerTasks).where(eq(careerTasks.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerProfileSnapshots).where(eq(careerProfileSnapshots.userId, userId))).toHaveLength(0);
+    expect(await db.select().from(careerMatches).where(eq(careerMatches.userId, userId))).toHaveLength(0);
+
+    const guidance = await db.select().from(careerGuidanceNotes);
+    expect(guidance.find((note: typeof careerGuidanceNotes.$inferSelect) => (
+      note.userId === userId || note.teacherId === userId
+    ))).toBeUndefined();
+
+    const assignments = await db.select().from(teacherStudentAssignments);
+    expect(assignments.find((assignment: typeof teacherStudentAssignments.$inferSelect) => (
+      assignment.teacherUserId === userId || assignment.studentUserId === userId
+    ))).toBeUndefined();
+
+    const educationRoles = await db
+      .select()
+      .from(educationRoleAssignments)
+      .where(eq(educationRoleAssignments.userId, userId));
+    expect(educationRoles).toHaveLength(2);
+    expect(educationRoles.every((role: typeof educationRoleAssignments.$inferSelect) => (
+      role.status === 'removed'
+    ))).toBe(true);
+
+    // Shared occupation graph/RAG catalog is not user-owned and must survive.
+    expect(await db.select().from(occupations).where(eq(occupations.code, 'OCC-DELETE-BOUNDARY'))).toHaveLength(1);
+    expect(await db.select().from(careerKnowledgeDocuments).where(eq(careerKnowledgeDocuments.id, 'shared-career-document'))).toHaveLength(1);
   });
 
   it('is idempotent — calling twice does not error', async () => {

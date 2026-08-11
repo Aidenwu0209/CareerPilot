@@ -16,6 +16,7 @@ import { useBrand } from './brand-provider';
 
 const NAV_ITEMS: { href: string; i18nKey: string; match: string; tourId?: string }[] = [
   { href: '/dashboard', i18nKey: 'dashboard.nav', match: '/dashboard' },
+  { href: '/career', i18nKey: 'career.nav', match: '/career' },
   { href: '/templates', i18nKey: 'templates.nav', match: '/templates', tourId: 'dash-templates' },
   { href: '/interview', i18nKey: 'interview.nav', match: '/interview' },
 ];
@@ -34,6 +35,9 @@ export function Header() {
   }
   if (navContext?.isOrgAdmin) {
     roleItems.push({ href: '/org-admin', i18nKey: 'nav.orgAdmin', match: '/org-admin' });
+  }
+  if (navContext?.isTeacher) {
+    roleItems.push({ href: '/teacher', i18nKey: 'nav.teacher', match: '/teacher' });
   }
   const allItems = [...NAV_ITEMS, ...roleItems];
 

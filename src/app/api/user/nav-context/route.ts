@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { db } from '@/lib/db';
-import { organizationMemberships, organizations } from '@/lib/db/schema';
+import { educationRoleAssignments, organizationMemberships, organizations } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 
 /**
@@ -40,10 +40,45 @@ export async function GET() {
 
   const isOrgAdmin = memberships.length > 0;
 
+  const educationRoles = await db
+    .select({
+      orgId: educationRoleAssignments.organizationId,
+      role: educationRoleAssignments.role,
+    })
+    .from(educationRoleAssignments)
+    .innerJoin(
+      organizationMemberships,
+      and(
+        eq(organizationMemberships.organizationId, educationRoleAssignments.organizationId),
+        eq(organizationMemberships.userId, educationRoleAssignments.userId),
+        eq(organizationMemberships.status, 'active'),
+      ),
+    )
+    .innerJoin(
+      organizations,
+      and(
+        eq(organizations.id, educationRoleAssignments.organizationId),
+        eq(organizations.status, 'active'),
+      ),
+    )
+    .where(
+      and(
+        eq(educationRoleAssignments.userId, userId),
+        eq(educationRoleAssignments.status, 'active'),
+      ),
+    );
+
+  const teacherRole = educationRoles.find(
+    (assignment: { orgId: string; role: string }) =>
+      assignment.role === 'teacher' || assignment.role === 'counselor',
+  );
+
   return NextResponse.json({
     platformRole,
     isOrgAdmin,
+    isTeacher: Boolean(teacherRole),
     orgId: memberships[0]?.orgId ?? null,
     orgName: memberships[0]?.orgName ?? null,
+    teacherOrgId: teacherRole?.orgId ?? null,
   });
 }

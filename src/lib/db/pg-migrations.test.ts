@@ -130,7 +130,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       expect(rows[0].cnt).toBe(getAllMigrationTags().length);
     });
 
-    it('should create all 36 expected tables in public schema', async () => {
+    it('should create all 50 expected tables in public schema', async () => {
       pg = await createPglite();
       const db = drizzle(pg);
 
@@ -145,14 +145,19 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       const expectedTables = [
         'ai_models', 'ai_operations', 'ai_provider_attempts', 'ai_providers',
         'alert_deliveries', 'alert_events', 'audit_events', 'auth_accounts',
-        'billing_plans', 'chat_messages', 'chat_sessions',
+        'billing_plans', 'career_abilities', 'career_evidence', 'career_goals',
+        'career_guidance_notes', 'career_knowledge_documents', 'career_matches',
+        'career_profile_snapshots', 'career_profiles', 'career_tasks',
+        'chat_messages', 'chat_sessions',
         'credit_accounts', 'credit_holds', 'credit_rules', 'credit_transactions',
-        'email_otps', 'grammar_checks', 'interview_messages', 'interview_reports',
+        'education_role_assignments', 'email_otps', 'grammar_checks',
+        'interview_messages', 'interview_reports',
         'interview_rounds', 'interview_sessions', 'jd_analyses',
-        'legal_consents', 'organization_memberships', 'organizations',
+        'legal_consents', 'occupation_relations', 'occupation_requirements',
+        'occupations', 'organization_memberships', 'organizations',
         'payment_orders', 'payment_refunds', 'payment_webhook_events',
         'plan_model_access', 'reconciliation_items', 'reconciliation_runs',
-        'resume_sections', 'resume_shares', 'resumes', 'users',
+        'resume_sections', 'resume_shares', 'resumes', 'teacher_student_assignments', 'users',
         'user_entitlements',
       ];
 

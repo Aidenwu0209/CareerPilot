@@ -732,3 +732,232 @@ export const emailOtps = pgTable(
     ipIdx: index('email_otps_ip_address_idx').on(table.ipAddress),
   }),
 );
+
+// ── Career development, occupation graph, and cited knowledge ──
+
+export const careerProfiles = pgTable('career_profiles', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  headline: text('headline').notNull().default(''),
+  summary: text('summary').notNull().default(''),
+  stage: text('stage').notNull().default('exploring'),
+  completeness: integer('completeness').notNull().default(0),
+  evidenceCoverage: integer('evidence_coverage').notNull().default(0),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userIdx: index('career_profiles_user_id_idx').on(table.userId),
+  stageIdx: index('career_profiles_stage_idx').on(table.stage),
+}));
+
+export const careerAbilities = pgTable('career_abilities', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  code: text('code').notNull(),
+  name: text('name').notNull(),
+  dimension: text('dimension').notNull(),
+  score: integer('score'),
+  confidence: integer('confidence'),
+  evidenceCount: integer('evidence_count').notNull().default(0),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userCodeUnique: unique('career_abilities_user_id_code_unique').on(table.userId, table.code),
+  userIdx: index('career_abilities_user_id_idx').on(table.userId),
+  userDimensionIdx: index('career_abilities_user_id_dimension_idx').on(table.userId, table.dimension),
+}));
+
+export const careerEvidence = pgTable('career_evidence', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  abilityCode: text('ability_code').notNull(),
+  sourceType: text('source_type').notNull(),
+  sourceId: text('source_id'),
+  title: text('title').notNull(),
+  excerpt: text('excerpt').notNull().default(''),
+  sourceUrl: text('source_url'),
+  status: text('status').notNull().default('pending'),
+  reviewedBy: text('reviewed_by').references(() => users.id, { onDelete: 'set null' }),
+  reviewReason: text('review_reason').notNull().default(''),
+  reviewedAt: integer('reviewed_at'),
+  occurredAt: integer('occurred_at'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  sourceAbilityUnique: unique('career_evidence_source_type_source_id_ability_code_unique').on(table.sourceType, table.sourceId, table.abilityCode),
+  userIdx: index('career_evidence_user_id_idx').on(table.userId),
+  userAbilityIdx: index('career_evidence_user_id_ability_code_idx').on(table.userId, table.abilityCode),
+  statusIdx: index('career_evidence_status_idx').on(table.status),
+}));
+
+export const occupations = pgTable('occupations', {
+  code: text('code').primaryKey(),
+  name: text('name').notNull(),
+  category: text('category').notNull(),
+  summary: text('summary').notNull(),
+  description: text('description').notNull(),
+  entryLevel: text('entry_level').notNull(),
+  active: integer('active').notNull().default(1),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  categoryIdx: index('occupations_category_idx').on(table.category),
+  activeIdx: index('occupations_active_idx').on(table.active),
+}));
+
+export const occupationRequirements = pgTable('occupation_requirements', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  occupationCode: text('occupation_code').notNull().references(() => occupations.code, { onDelete: 'cascade' }),
+  abilityCode: text('ability_code').notNull(),
+  abilityName: text('ability_name').notNull(),
+  dimension: text('dimension').notNull(),
+  targetScore: integer('target_score').notNull(),
+  weight: integer('weight').notNull().default(1),
+  required: integer('required').notNull().default(1),
+  description: text('description').notNull().default(''),
+}, (table) => ({
+  occupationAbilityUnique: unique('occupation_requirements_occupation_code_ability_code_unique').on(table.occupationCode, table.abilityCode),
+  occupationIdx: index('occupation_requirements_occupation_code_idx').on(table.occupationCode),
+  abilityIdx: index('occupation_requirements_ability_code_idx').on(table.abilityCode),
+}));
+
+export const occupationRelations = pgTable('occupation_relations', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  fromCode: text('from_code').notNull().references(() => occupations.code, { onDelete: 'cascade' }),
+  toCode: text('to_code').notNull().references(() => occupations.code, { onDelete: 'cascade' }),
+  relationType: text('relation_type').notNull(),
+  description: text('description').notNull().default(''),
+}, (table) => ({
+  relationUnique: unique('occupation_relations_from_code_to_code_relation_type_unique').on(table.fromCode, table.toCode, table.relationType),
+  fromIdx: index('occupation_relations_from_code_idx').on(table.fromCode),
+  toIdx: index('occupation_relations_to_code_idx').on(table.toCode),
+}));
+
+export const careerKnowledgeDocuments = pgTable('career_knowledge_documents', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  occupationCode: text('occupation_code').references(() => occupations.code, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  sourceLabel: text('source_label').notNull(),
+  sourceUrl: text('source_url').notNull(),
+  publishedAt: integer('published_at'),
+  verifiedAt: integer('verified_at').notNull().default(epochNow),
+  metadata: text('metadata').notNull().default('{}'),
+}, (table) => ({
+  occupationIdx: index('career_knowledge_documents_occupation_code_idx').on(table.occupationCode),
+  sourceIdx: index('career_knowledge_documents_source_label_idx').on(table.sourceLabel),
+}));
+
+export const careerGoals = pgTable('career_goals', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  occupationCode: text('occupation_code').notNull().references(() => occupations.code),
+  isPrimary: integer('is_primary').notNull().default(0),
+  status: text('status').notNull().default('active'),
+  targetDate: integer('target_date'),
+  rationale: text('rationale').notNull().default(''),
+  preferences: text('preferences').notNull().default('{}'),
+  teacherConfirmationStatus: text('teacher_confirmation_status').notNull().default('unreviewed'),
+  confirmedBy: text('confirmed_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userIdx: index('career_goals_user_id_idx').on(table.userId),
+  userStatusIdx: index('career_goals_user_id_status_idx').on(table.userId, table.status),
+  occupationIdx: index('career_goals_occupation_code_idx').on(table.occupationCode),
+}));
+
+export const careerTasks = pgTable('career_tasks', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  goalId: text('goal_id').references(() => careerGoals.id, { onDelete: 'set null' }),
+  occupationCode: text('occupation_code').references(() => occupations.code, { onDelete: 'set null' }),
+  abilityCode: text('ability_code'),
+  title: text('title').notNull(),
+  description: text('description').notNull().default(''),
+  reason: text('reason').notNull().default(''),
+  completionCriteria: text('completion_criteria').notNull().default(''),
+  category: text('category').notNull().default('learn'),
+  status: text('status').notNull().default('todo'),
+  dueAt: integer('due_at'),
+  completedAt: integer('completed_at'),
+  assignedBy: text('assigned_by').references(() => users.id, { onDelete: 'set null' }),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userIdx: index('career_tasks_user_id_idx').on(table.userId),
+  userStatusIdx: index('career_tasks_user_id_status_idx').on(table.userId, table.status),
+  goalIdx: index('career_tasks_goal_id_idx').on(table.goalId),
+  dueIdx: index('career_tasks_due_at_idx').on(table.dueAt),
+}));
+
+export const careerProfileSnapshots = pgTable('career_profile_snapshots', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  abilities: text('abilities').notNull(),
+  trigger: text('trigger').notNull().default('manual'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userVersionUnique: unique('career_profile_snapshots_user_id_version_unique').on(table.userId, table.version),
+  userCreatedIdx: index('career_profile_snapshots_user_id_created_at_idx').on(table.userId, table.createdAt),
+}));
+
+export const careerGuidanceNotes = pgTable('career_guidance_notes', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  teacherId: text('teacher_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  visibility: text('visibility').notNull().default('student'),
+  content: text('content').notNull(),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userCreatedIdx: index('career_guidance_notes_user_id_created_at_idx').on(table.userId, table.createdAt),
+  teacherIdx: index('career_guidance_notes_teacher_id_idx').on(table.teacherId),
+}));
+
+export const careerMatches = pgTable('career_matches', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  goalId: text('goal_id').references(() => careerGoals.id, { onDelete: 'set null' }),
+  occupationCode: text('occupation_code').notNull().references(() => occupations.code, { onDelete: 'cascade' }),
+  score: integer('score'),
+  evidenceCoverage: integer('evidence_coverage').notNull().default(0),
+  knownWeight: integer('known_weight').notNull().default(0),
+  totalWeight: integer('total_weight').notNull().default(0),
+  breakdown: text('breakdown').notNull().default('[]'),
+  citations: text('citations').notNull().default('[]'),
+  algorithmVersion: text('algorithm_version').notNull().default('career-match-v1'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userOccupationIdx: index('career_matches_user_id_occupation_code_idx').on(table.userId, table.occupationCode),
+  userCreatedIdx: index('career_matches_user_id_created_at_idx').on(table.userId, table.createdAt),
+}));
+
+export const educationRoleAssignments = pgTable('education_role_assignments', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  role: text('role').notNull(),
+  status: text('status').notNull().default('active'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  orgUserRoleUnique: unique('education_role_assignments_organization_id_user_id_role_unique').on(table.organizationId, table.userId, table.role),
+  orgRoleIdx: index('education_role_assignments_organization_id_role_idx').on(table.organizationId, table.role),
+  userStatusIdx: index('education_role_assignments_user_id_status_idx').on(table.userId, table.status),
+}));
+
+export const teacherStudentAssignments = pgTable('teacher_student_assignments', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  teacherUserId: text('teacher_user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  studentUserId: text('student_user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  status: text('status').notNull().default('active'),
+  accessLevel: text('access_level').notNull().default('guide'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  orgTeacherStudentUnique: unique('teacher_student_assignments_org_teacher_student_unique').on(table.organizationId, table.teacherUserId, table.studentUserId),
+  teacherStatusIdx: index('teacher_student_assignments_teacher_user_id_status_idx').on(table.teacherUserId, table.status),
+  studentStatusIdx: index('teacher_student_assignments_student_user_id_status_idx').on(table.studentUserId, table.status),
+  orgStatusIdx: index('teacher_student_assignments_organization_id_status_idx').on(table.organizationId, table.status),
+}));

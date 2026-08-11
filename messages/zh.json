@@ -1087,6 +1087,7 @@
   "nav": {
     "admin": "管理后台",
     "orgAdmin": "机构管理",
+    "teacher": "教师指导",
     "personalCredits": "个人点数",
     "orgCredits": "机构额度",
     "account": "账号"
@@ -1825,6 +1826,505 @@
       "reconsentFailed": "操作失败，请稍后重试",
       "viewDocument": "查看文档",
       "upToDate": "你的同意记录为最新版本。"
+    }
+  },
+  "career": {
+    "nav": "职业发展",
+    "subnav": {
+      "label": "职业发展中心导航",
+      "overview": "驾驶舱",
+      "profile": "职业画像",
+      "goals": "职业目标",
+      "jobs": "岗位知识",
+      "matching": "人岗匹配",
+      "path": "成长路径"
+    },
+    "common": {
+      "notSet": "未设置",
+      "insufficientEvidence": "证据不足",
+      "goalRequired": "请先设置目标",
+      "unknown": "未知",
+      "pendingReview": "待确认",
+      "viewDetails": "查看详情",
+      "viewPath": "查看路径",
+      "viewAll": "查看全部"
+    },
+    "error": {
+      "title": "暂时无法加载职业发展数据",
+      "description": "数据可能仍在同步，请稍后重试。已保存的简历和职业档案不会受到影响。",
+      "retry": "重新加载"
+    },
+    "stage": {
+      "exploring": "探索方向",
+      "targeting": "明确目标",
+      "preparing": "能力准备",
+      "applying": "求职申请"
+    },
+    "taskStatus": {
+      "todo": "待开始",
+      "in_progress": "进行中",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "taskCategory": {
+      "explore": "职业探索",
+      "learn": "知识学习",
+      "practice": "实践训练",
+      "portfolio": "作品材料",
+      "application": "求职申请"
+    },
+    "evidenceStatus": {
+      "pending": "待确认",
+      "verified": "已确认",
+      "rejected": "已退回"
+    },
+    "evidenceSource": {
+      "resume": "简历",
+      "project": "项目",
+      "interview": "模拟面试",
+      "certificate": "证书",
+      "course": "课程",
+      "teacher": "教师指导",
+      "task": "成长任务",
+      "manual": "学生补充"
+    },
+    "teacherConfirmation": {
+      "unreviewed": "教师未确认",
+      "confirmed": "教师已确认",
+      "needs_revision": "需要调整"
+    },
+    "goalStatus": {
+      "draft": "草稿",
+      "active": "进行中",
+      "achieved": "已达成",
+      "archived": "已归档"
+    },
+    "relationType": {
+      "progresses_to": "晋升方向",
+      "transfers_to": "转岗方向",
+      "related_to": "相关岗位"
+    },
+    "pathStageStatus": {
+      "locked": "尚未开始",
+      "current": "当前阶段",
+      "completed": "已完成"
+    },
+    "matchState": {
+      "met": "已满足",
+      "gap": "存在差距",
+      "unknown": "待补充"
+    },
+    "metrics": {
+      "readiness": "就业准备度",
+      "readinessDescription": "综合材料、实践和求职准备状态",
+      "match": "岗位匹配度",
+      "matchDescription": "基于结构化岗位要求与当前证据计算",
+      "profileCompleteness": "画像完整度",
+      "profileCompletenessDescription": "六维画像中已形成有效记录的覆盖情况",
+      "evidenceCoverage": "证据覆盖率",
+      "evidenceCoverageDescription": "有可追溯材料支撑的能力要求比例"
+    },
+    "overview": {
+      "eyebrow": "学生职业驾驶舱",
+      "title": "看清目标、差距与下一步",
+      "description": "把简历、项目、面试和教师指导汇入同一份职业发展档案，持续记录真实成长。",
+      "viewMatch": "查看人岗匹配",
+      "chooseGoal": "选择目标岗位",
+      "primaryGoal": "主目标岗位",
+      "targetDate": "目标日期：{date}",
+      "goalFallback": "补充选择理由后，系统和教师可以给出更贴合你的成长建议。",
+      "manageGoal": "管理目标",
+      "indicatorsLabel": "职业发展核心指标",
+      "noGoal": {
+        "title": "先选一个主目标，规划才有方向",
+        "description": "从人工审核的岗位知识中选择目标，系统会据此生成匹配解释、阶段里程碑和成长任务。",
+        "action": "选择目标岗位"
+      },
+      "abilities": {
+        "title": "六维职业画像",
+        "description": "当前 {total} 个维度中有 {known} 个已获得证据",
+        "evidenceCount": "{count} 条证据"
+      },
+      "milestone": {
+        "title": "下一里程碑",
+        "noGoal": "设置目标后生成",
+        "due": "计划于 {date} 前完成",
+        "noDate": "尚未设置完成日期",
+        "empty": "目标设置后，这里会显示当前阶段和下一里程碑。"
+      },
+      "tasks": {
+        "title": "本周成长任务",
+        "description": "优先完成最能缩小岗位差距的行动",
+        "due": "截止 {date}",
+        "empty": "当前没有待办任务。设置目标后系统会生成可执行建议。"
+      },
+      "changes": {
+        "title": "近期能力变化",
+        "description": "每一次变化都保留证据和原因",
+        "empty": "还没有已确认的能力变化，新材料会先进入待确认状态。"
+      },
+      "guidance": {
+        "title": "教师最新指导",
+        "description": "仅展示对学生公开的指导记录",
+        "empty": "暂无教师公开指导，你仍可按成长路径继续推进。"
+      }
+    },
+    "profile": {
+      "eyebrow": "职业画像",
+      "title": "能力不是一个分数，而是一组可核验的证据",
+      "description": "查看六维能力、材料来源、可信度和变化记录；未知数据保持未知，不会被当作零分。",
+      "updated": "更新于 {date}",
+      "defaultHeadline": "职业方向仍在探索",
+      "defaultSummary": "补充简历、项目和面试材料后，系统将生成更完整的职业画像。",
+      "qualityLabel": "画像质量指标",
+      "evidenceTotal": "证据总数",
+      "evidenceTotalDescription": "当前画像关联的可追溯材料数量",
+      "dimensions": {
+        "title": "六维能力详情",
+        "description": "展开能力项可以查看评分依据、来源状态和更新时间。",
+        "abilityCount": "{count} 个能力项",
+        "dimensionScore": "{name}综合得分",
+        "noAbilities": "该维度尚未形成具体能力项，请补充相关材料。"
+      },
+      "abilities": {
+        "evidenceCount": "{count} 条证据",
+        "confidence": "置信度：{value}",
+        "updated": "更新于 {date}",
+        "noEvidence": "尚无可核验材料，因此该能力保持“证据不足”。"
+      },
+      "changes": {
+        "title": "能力变化时间线",
+        "description": "只记录由新增且已确认的证据引起的变化。",
+        "scoreChange": "{from} → {to}",
+        "empty": "暂无已确认的能力变化记录。"
+      }
+    },
+    "goals": {
+      "eyebrow": "职业目标",
+      "title": "把方向变成可跟踪的目标",
+      "description": "选择主目标岗位，补充目标时间与偏好；修改会保留历史，不覆盖过去的选择。",
+      "exploreJobs": "先探索岗位",
+      "current": {
+        "title": "当前主目标",
+        "description": "匹配、路径和成长任务都以主目标为基准。",
+        "primary": "主目标",
+        "noRationale": "尚未填写选择该岗位的理由。",
+        "targetDate": "目标日期",
+        "status": "目标状态",
+        "industries": "行业偏好",
+        "cities": "城市偏好",
+        "organizationTypes": "组织类型",
+        "emptyTitle": "还没有主目标",
+        "emptyDescription": "从右侧选择一个岗位，系统将据此生成匹配和成长路径。"
+      },
+      "form": {
+        "title": "设置主目标",
+        "editTitle": "调整主目标",
+        "description": "目标改变会影响后续匹配和成长任务，请根据真实意向填写。",
+        "occupation": "目标岗位",
+        "occupationHelp": "第一版岗位均来自人工审核的演示知识目录。",
+        "targetDate": "期望达成日期",
+        "rationale": "选择理由",
+        "rationalePlaceholder": "例如：我喜欢用技术解决真实问题，并希望从前端开发开始积累产品实践……",
+        "rationaleHelp": "教师会参考该理由判断目标是否适合你的经历和偏好。",
+        "preferences": "职业偏好",
+        "industries": "行业",
+        "cities": "城市",
+        "organizationTypes": "组织类型",
+        "commaSeparated": "多个值用逗号分隔",
+        "saving": "正在保存…",
+        "update": "保存调整",
+        "create": "创建目标",
+        "saved": "职业目标已保存",
+        "noOccupations": "岗位知识目录暂不可用，请稍后重试。",
+        "errors": {
+          "occupationRequired": "请选择一个目标岗位",
+          "saveFailed": "目标保存失败，请稍后重试"
+        }
+      }
+    },
+    "jobs": {
+      "eyebrow": "岗位知识与职业图谱",
+      "title": "先理解岗位，再决定方向",
+      "description": "查看岗位职责、能力要求、晋升与转岗关系，以及经过核验的知识来源。",
+      "searchPlaceholder": "搜索岗位名称、类别或关键词",
+      "searchLabel": "搜索岗位知识",
+      "searchAction": "搜索",
+      "resultFor": "“{query}”找到 {count} 个岗位",
+      "resultCount": "共 {count} 个岗位",
+      "clearSearch": "清除搜索",
+      "listLabel": "岗位知识列表",
+      "matchScore": "匹配 {score}%",
+      "viewOccupation": "查看岗位详情",
+      "empty": {
+        "title": "没有找到相关岗位",
+        "description": "尝试使用更短的岗位名称或类别关键词。"
+      }
+    },
+    "jobDetail": {
+      "back": "返回岗位知识",
+      "matchAction": "评估我的匹配度",
+      "code": "岗位代码：{code}",
+      "entryLevel": "入门层级：{level}",
+      "requirements": {
+        "title": "岗位能力要求",
+        "description": "权重和目标分用于确定性匹配，缺少学生证据时不会按零分处理。",
+        "required": "必要能力",
+        "preferred": "加分能力",
+        "target": "{name}目标要求",
+        "weight": "匹配权重 {weight}"
+      },
+      "graph": {
+        "title": "职业关系",
+        "description": "了解该岗位的晋升、转岗与相关方向。",
+        "empty": "暂未收录该岗位的职业关系。"
+      },
+      "sources": {
+        "title": "知识来源",
+        "description": "岗位解释来自可追溯资料，不由模型凭空生成。",
+        "verified": "核验于 {date}",
+        "empty": "当前岗位资料不足，暂不提供无来源结论。"
+      }
+    },
+    "matching": {
+      "eyebrow": "可解释人岗匹配",
+      "title": "知道差多少，也知道为什么",
+      "description": "结构化规则负责评分，证据决定可信度；RAG 仅用于检索、解释和引用。",
+      "viewOccupation": "查看岗位知识",
+      "selectLabel": "选择要评估的岗位",
+      "recalculate": "查看匹配",
+      "primaryGoal": "当前主目标",
+      "comparison": "岗位对比",
+      "metricsLabel": "匹配结果指标",
+      "confidence": "结果置信度",
+      "confidenceDescription": "已知要求权重占全部要求权重的比例",
+      "breakdown": {
+        "title": "要求—证据—差距—行动",
+        "description": "展开每项要求，查看学生材料和下一步建议。",
+        "required": "必要要求",
+        "studentScore": "当前：{score}",
+        "targetScore": "目标：{score}",
+        "requirementLabel": "岗位要求",
+        "evidenceLabel": "学生证据",
+        "noEvidence": "尚无可支持该能力的材料。",
+        "actionLabel": "差距与行动",
+        "gapUnknown": "证据不足，暂不计算差距",
+        "gapValue": "距离目标还差 {gap} 分",
+        "noGap": "当前证据已达到目标要求"
+      },
+      "sources": {
+        "title": "本次解释引用",
+        "description": "引用只解释结果，不参与或修改结构化分数。"
+      },
+      "generatedAt": "结果生成于 {date}"
+    },
+    "path": {
+      "eyebrow": "成长路径",
+      "title": "把岗位差距转成今天可以做的事",
+      "description": "按阶段推进任务，提交成果后先形成待确认材料，确认后才会更新职业画像。",
+      "manageGoal": "管理目标",
+      "goalLabel": "目标岗位",
+      "targetDate": "目标日期：{date}",
+      "stageProgress": "第 {current} / {total} 阶段",
+      "timelineLabel": "职业成长阶段",
+      "taskDue": "截止 {date}",
+      "noTasks": "该阶段暂未安排成长任务。",
+      "startTask": "开始任务",
+      "completeTask": "标记完成",
+      "taskStarted": "任务已开始",
+      "taskCompleted": "任务已完成，相关成果仍需作为证据确认",
+      "taskUpdateFailed": "任务状态更新失败，请稍后重试",
+      "empty": {
+        "title": "设置目标后生成成长路径",
+        "description": "成长路径会连接当前准备阶段、目标岗位阶段和可选后续方向。",
+        "action": "设置职业目标"
+      }
+    }
+  },
+  "teacherWorkbench": {
+    "nav": {
+      "label": "教师指导",
+      "menu": "打开教师导航",
+      "queue": "工作队列",
+      "students": "学生列表"
+    },
+    "access": {
+      "denied": {
+        "title": "无法访问教师工作台",
+        "description": "当前账号没有有效的教师或职业指导教师角色。教师权限不会从机构管理员身份自动获得。"
+      },
+      "unconfigured": {
+        "title": "教师工作台尚未配置",
+        "description": "请联系学校管理员分配教育角色和学生指导关系后再试。"
+      },
+      "action": "返回学生首页"
+    },
+    "queue": {
+      "eyebrow": "教师指导",
+      "pageTitle": "今日指导工作台",
+      "pageDescription": "优先处理需要确认、逾期或发生明显变化的学生，再进入个人档案完成指导闭环。",
+      "content": {
+        "sectionTitle": "待处理队列",
+        "sectionDescription": "按需要采取行动的原因聚合，不以泛化统计代替具体工作。",
+        "emptyTitle": "当前没有待处理事项",
+        "emptyDescription": "已分配学生出现新材料、目标变化或任务异常时会显示在这里。",
+        "viewStudents": "查看需要关注的学生",
+        "studentSectionTitle": "最近需要关注",
+        "studentSectionDescription": "从队列直接进入学生档案，查看证据、路径并创建下一步任务。",
+        "viewAllStudents": "查看全部学生",
+        "openStudent": "打开学生档案",
+        "noTarget": "尚未设置目标岗位",
+        "matchScore": "岗位匹配",
+        "evidenceCoverage": "证据覆盖",
+        "pendingItems": "{count} 项待处理",
+        "queues": {
+          "evidence_review": { "title": "材料待确认", "description": "确认或退回学生提交的能力证据" },
+          "goal_change": { "title": "目标变更", "description": "检查目标调整与成长路径影响" },
+          "overdue_task": { "title": "逾期任务", "description": "跟进超过截止日期的成长任务" },
+          "match_decline": { "title": "匹配下降", "description": "定位匹配分下降的证据与差距" },
+          "recent_progress": { "title": "近期进步", "description": "查看新证据带来的能力变化" }
+        }
+      }
+    },
+    "students": {
+      "eyebrow": "指导范围",
+      "pageTitle": "我的学生",
+      "pageDescription": "这里只展示当前学校中已分配给你的学生；搜索和筛选不会扩大数据权限。",
+      "content": {
+        "searchLabel": "搜索学生",
+        "searchPlaceholder": "姓名、专业、年级或目标岗位",
+        "statusLabel": "状态",
+        "targetLabel": "目标岗位",
+        "allStatuses": "全部状态",
+        "allTargets": "全部岗位",
+        "status": { "attention": "需要关注", "on_track": "进展正常", "progress": "近期进步" },
+        "noTarget": "尚未设置目标岗位",
+        "matchScore": "匹配度",
+        "evidenceCoverage": "证据覆盖",
+        "taskProgress": "任务进度",
+        "pendingItems": "{count} 项待处理",
+        "openStudent": "查看并指导",
+        "emptyTitle": "没有符合条件的学生",
+        "emptyDescription": "尝试清除筛选；如果仍为空，请由学校管理员检查指导分配。",
+        "clearFilters": "清除筛选"
+      }
+    },
+    "detail": {
+      "back": "返回学生列表",
+      "noTarget": "尚未设置目标岗位",
+      "status": { "attention": "需要关注", "on_track": "进展正常", "progress": "近期进步" },
+      "metrics": {
+        "matchScore": "岗位匹配度",
+        "evidenceCoverage": "证据覆盖率",
+        "profileCompleteness": "画像完整度",
+        "nextMilestone": "下一里程碑",
+        "insufficient": "证据不足"
+      },
+      "tabs": { "overview": "概览", "profile": "画像与证据", "goals": "目标与路径", "tasks": "成长任务", "guidance": "指导记录" },
+      "overview": {
+        "title": "学生概览",
+        "description": "聚焦当前风险、能力变化和下一步行动。",
+        "attentionTitle": "待确认材料",
+        "attentionDescription": "需要教师填写理由后确认或退回的证据。",
+        "progressTitle": "能力变化",
+        "progressDescription": "本期有明确证据支撑的正向变化。",
+        "nextActionTitle": "进行中任务",
+        "nextActionDescription": "仍需学生完成或教师跟进的成长任务。",
+        "noMilestone": "尚未生成里程碑"
+      },
+      "profile": {
+        "abilityTitle": "六维能力画像",
+        "abilityDescription": "分值与证据分开呈现；证据不足不会按零分处理。",
+        "level": "当前得分",
+        "evidenceCount": "证据数量",
+        "change": "近期变化",
+        "noLevel": "证据不足",
+        "evidenceTitle": "能力证据",
+        "evidenceDescription": "核对来源、能力关联和状态后再确认，不允许无理由修改结果。",
+        "noEvidenceTitle": "暂无能力证据",
+        "noEvidenceDescription": "学生提交材料或任务成果后，待确认记录会出现在这里。",
+        "ability": "关联能力",
+        "source": "证据来源",
+        "sourceTypes": { "resume": "简历", "interview": "面试报告", "project": "项目实践", "certificate": "证书材料", "teacher": "教师意见", "student": "学生自述" },
+        "evidenceStatus": { "pending": "待确认", "confirmed": "已确认", "rejected": "已退回" },
+        "review": {
+          "trigger": "审核证据",
+          "title": "确认能力证据",
+          "description": "确认或退回都必须填写理由；结果会进入学生可见的变化说明。",
+          "reasonLabel": "审核理由",
+          "reasonPlaceholder": "说明证据为何能够或不能支撑该项能力",
+          "confirm": "确认并生成画像快照",
+          "reject": "退回学生补充",
+          "submitting": "提交中…",
+          "success": "证据审核已保存",
+          "error": "保存失败，请稍后重试"
+        }
+      },
+      "goals": {
+        "goalTitle": "职业目标",
+        "goalDescription": "查看主目标、备选目标、目标时间与审核状态。",
+        "primary": "主目标",
+        "alternative": "备选目标",
+        "targetDate": "目标时间",
+        "noDate": "未设置",
+        "goalStatus": { "active": "进行中", "pending_review": "待审核", "archived": "已归档" },
+        "pathTitle": "成长路径",
+        "pathDescription": "把岗位差距转换为阶段、里程碑和可执行任务。",
+        "milestone": "阶段里程碑",
+        "pathStatus": { "completed": "已完成", "current": "当前阶段", "upcoming": "后续阶段" },
+        "emptyTitle": "尚未形成目标路径",
+        "emptyDescription": "学生设置职业目标后，系统才能围绕岗位差距生成成长路径。"
+      },
+      "tasks": {
+        "title": "成长任务",
+        "description": "任务需要关联能力、原因、截止时间和可验证的完成标准。",
+        "ability": "关联能力",
+        "dueDate": "截止时间",
+        "noDueDate": "未设置",
+        "criteria": "完成标准",
+        "assignedBy": "分派人",
+        "status": { "todo": "待开始", "in_progress": "进行中", "submitted": "成果待确认", "completed": "已完成", "overdue": "已逾期" },
+        "emptyTitle": "暂无成长任务",
+        "emptyDescription": "可从页面顶部创建与能力差距直接关联的任务。"
+      },
+      "guidance": {
+        "title": "指导记录",
+        "description": "学生可见指导与教师私有备注明确分开，按时间保留历史。",
+        "studentVisible": "学生可见",
+        "privateNote": "教师私有备注",
+        "emptyTitle": "暂无指导记录",
+        "emptyDescription": "添加第一条公开指导或教师私有备注。"
+      },
+      "actions": {
+        "guidance": {
+          "trigger": "添加指导意见",
+          "title": "添加指导意见",
+          "description": "选择可见范围；教师私有备注不会返回学生端。",
+          "visibilityLabel": "可见范围",
+          "studentVisible": "学生可见指导",
+          "privateNote": "教师私有备注",
+          "contentLabel": "指导内容",
+          "contentPlaceholder": "写明观察、判断依据和建议的下一步行动",
+          "submit": "保存指导"
+        },
+        "task": {
+          "trigger": "创建成长任务",
+          "title": "创建成长任务",
+          "description": "将一个明确能力差距转化为可验证的行动。",
+          "nameLabel": "任务名称",
+          "namePlaceholder": "例如：完成并部署一个响应式作品页",
+          "abilityLabel": "关联能力",
+          "dueDateLabel": "截止时间",
+          "reasonLabel": "创建原因",
+          "reasonPlaceholder": "说明它对应哪个岗位差距或证据缺口",
+          "criteriaLabel": "完成标准",
+          "criteriaPlaceholder": "说明需要提交什么成果，教师如何判断完成",
+          "submit": "分派任务"
+        },
+        "submitting": "提交中…",
+        "success": "已保存并更新学生档案",
+        "error": "保存失败，请稍后重试"
+      }
     }
   }
 }

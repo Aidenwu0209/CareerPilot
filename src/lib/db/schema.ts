@@ -177,3 +177,20 @@ export {
 export {
   emailOtps,
 } from './schema-email-otp';
+
+export {
+  careerProfiles,
+  careerAbilities,
+  careerEvidence,
+  occupations,
+  occupationRequirements,
+  occupationRelations,
+  careerKnowledgeDocuments,
+  careerGoals,
+  careerTasks,
+  careerProfileSnapshots,
+  careerGuidanceNotes,
+  careerMatches,
+  educationRoleAssignments,
+  teacherStudentAssignments,
+} from './schema-career';

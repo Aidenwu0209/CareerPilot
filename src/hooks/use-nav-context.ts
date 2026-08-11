@@ -6,8 +6,10 @@ import { useAuth } from './use-auth';
 interface NavContext {
   platformRole: 'super_admin' | 'user';
   isOrgAdmin: boolean;
+  isTeacher: boolean;
   orgId: string | null;
   orgName: string | null;
+  teacherOrgId: string | null;
 }
 
 /**

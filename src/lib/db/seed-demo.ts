@@ -1,4 +1,21 @@
-import { users, resumes, resumeSections } from './schema';
+import {
+  careerAbilities,
+  careerEvidence,
+  careerGoals,
+  careerGuidanceNotes,
+  careerProfiles,
+  careerProfileSnapshots,
+  careerTasks,
+  educationRoleAssignments,
+  occupations,
+  organizationMemberships,
+  organizations,
+  resumeSections,
+  resumes,
+  teacherStudentAssignments,
+  users,
+} from './schema';
+import { DEMO_OCCUPATIONS } from '@/lib/career/catalog';
 
 /**
  * Seed a demo-fingerprint user with a sample resume.
@@ -11,6 +28,7 @@ export async function seedDemoUser(db: any) {
     name: '陈思远',
     authType: 'fingerprint',
     fingerprint: 'demo-fingerprint',
+    settings: { program: '软件工程', cohort: '2027 届' },
   });
 
   const resumeId = crypto.randomUUID();
@@ -172,5 +190,189 @@ export async function seedDemoUser(db: any) {
     } as any);
   }
 
-  console.log('[DB] Auto-seed complete: demo user created');
+  // The demo seed also exposes the smallest auditable career-development loop:
+  // reviewed occupation knowledge -> student evidence/profile -> goal/tasks ->
+  // explicitly assigned teacher guidance. It is only used for a fresh local DB.
+  const teacherId = crypto.randomUUID();
+  const organizationId = crypto.randomUUID();
+  const goalId = crypto.randomUUID();
+
+  await db.insert(users).values({
+    id: teacherId,
+    name: '周老师',
+    authType: 'fingerprint',
+    fingerprint: 'teacher-demo-fingerprint',
+  });
+
+  await db.insert(organizations).values({
+    id: organizationId,
+    slug: 'careerpilot-demo-school',
+    name: 'CareerPilot 演示学院',
+    status: 'active',
+    seatLimit: 50,
+    createdBy: teacherId,
+  });
+
+  await db.insert(organizationMemberships).values([
+    { organizationId, userId, role: 'member', status: 'active' },
+    { organizationId, userId: teacherId, role: 'member', status: 'active' },
+  ]);
+  await db.insert(educationRoleAssignments).values([
+    { organizationId, userId, role: 'student', status: 'active' },
+    { organizationId, userId: teacherId, role: 'teacher', status: 'active' },
+  ]);
+  await db.insert(teacherStudentAssignments).values({
+    organizationId,
+    teacherUserId: teacherId,
+    studentUserId: userId,
+    status: 'active',
+    accessLevel: 'guide',
+  });
+
+  for (const occupation of DEMO_OCCUPATIONS) {
+    await db.insert(occupations).values({
+      code: occupation.code,
+      name: occupation.name,
+      category: occupation.category,
+      summary: occupation.summary,
+      description: occupation.description,
+      entryLevel: occupation.entryLevel,
+      active: true,
+    });
+  }
+
+  await db.insert(careerProfiles).values({
+    userId,
+    headline: '面向前端工程方向的软件工程学生',
+    summary: '已完成响应式 Web 项目，正在补充测试、部署和面试表达证据。',
+    stage: 'preparing',
+    completeness: 78,
+    evidenceCoverage: 67,
+  });
+
+  const abilitySeeds = [
+    { code: 'software_fundamentals', name: '软件工程基础', dimension: 'domain_knowledge', score: 68, confidence: 78, evidenceCount: 1 },
+    { code: 'web_frontend', name: 'Web 前端基础', dimension: 'professional_skills', score: 76, confidence: 88, evidenceCount: 2 },
+    { code: 'project_delivery', name: '项目交付', dimension: 'project_practice', score: 64, confidence: 72, evidenceCount: 1 },
+    { code: 'problem_solving', name: '问题分析与解决', dimension: 'general_competencies', score: 70, confidence: 74, evidenceCount: 1 },
+    { code: 'portfolio', name: '作品与成果证明', dimension: 'job_readiness', score: 58, confidence: 62, evidenceCount: 1 },
+    { code: 'continuous_learning', name: '持续学习', dimension: 'growth_potential', score: 73, confidence: 70, evidenceCount: 1 },
+  ] as const;
+  await db.insert(careerAbilities).values(abilitySeeds.map((ability) => ({ userId, ...ability })));
+
+  await db.insert(careerEvidence).values([
+    {
+      userId,
+      abilityCode: 'web_frontend',
+      sourceType: 'project',
+      sourceId: resumeId,
+      title: 'CareerPilot 响应式前端项目',
+      excerpt: '使用 Next.js、React 与 TypeScript 完成多端页面和实时预览，并记录个人贡献。',
+      status: 'verified',
+      occurredAt: new Date(),
+    },
+    {
+      userId,
+      abilityCode: 'project_delivery',
+      sourceType: 'resume',
+      sourceId: resumeId,
+      title: '项目交付经历',
+      excerpt: '具备从需求拆解、实现到部署的项目经历，部署地址仍待教师确认。',
+      status: 'pending',
+      occurredAt: new Date(),
+    },
+    {
+      userId,
+      abilityCode: 'problem_solving',
+      sourceType: 'project',
+      sourceId: resumeId,
+      title: '性能问题定位与优化',
+      excerpt: '通过性能监控定位加载瓶颈，并给出可复核的优化结果。',
+      status: 'verified',
+      occurredAt: new Date(),
+    },
+    {
+      userId,
+      abilityCode: 'portfolio',
+      sourceType: 'resume',
+      sourceId: resumeId,
+      title: '前端作品材料',
+      excerpt: '简历已呈现项目结构、技术栈与个人职责。',
+      status: 'verified',
+      occurredAt: new Date(),
+    },
+  ]);
+
+  const targetDate = new Date();
+  targetDate.setMonth(targetDate.getMonth() + 9);
+  await db.insert(careerGoals).values({
+    id: goalId,
+    userId,
+    occupationCode: 'J-FE-001',
+    isPrimary: true,
+    status: 'active',
+    targetDate,
+    rationale: '希望从真实 Web 产品切入软件工程职业路径，并持续积累可展示的项目成果。',
+    preferences: { industries: ['软件与互联网'], cities: ['成都', '深圳'], organizationTypes: ['成长型团队'] },
+    teacherConfirmationStatus: 'unreviewed',
+  });
+
+  const taskDueSoon = new Date();
+  taskDueSoon.setDate(taskDueSoon.getDate() + 7);
+  const taskDueLater = new Date();
+  taskDueLater.setDate(taskDueLater.getDate() + 21);
+  await db.insert(careerTasks).values([
+    {
+      userId,
+      goalId,
+      occupationCode: 'J-FE-001',
+      abilityCode: 'testing',
+      title: '为核心组件补充自动化测试',
+      description: '提交测试代码、覆盖的关键场景和一次可复核的测试运行结果。',
+      reason: '自动化测试是目标岗位当前最明显的证据缺口。',
+      completionCriteria: '新增至少 3 个关键场景测试并保存一次通过的运行结果。',
+      category: 'practice',
+      status: 'in_progress',
+      dueAt: taskDueSoon,
+    },
+    {
+      userId,
+      goalId,
+      occupationCode: 'J-FE-001',
+      abilityCode: 'portfolio',
+      title: '整理前端项目作品说明',
+      description: '用问题、行动、结果结构说明个人贡献，并附可访问的演示或截图。',
+      reason: '将已有项目转换为招聘方可快速核验的作品证据。',
+      completionCriteria: '提交项目链接、三段式个人贡献说明和至少一张关键界面截图。',
+      category: 'portfolio',
+      status: 'todo',
+      dueAt: taskDueLater,
+      assignedBy: teacherId,
+    },
+  ]);
+
+  const previousAbilities = abilitySeeds.map((ability) => ({
+    code: ability.code,
+    name: ability.name,
+    dimension: ability.dimension,
+    score: ability.score === 76 ? 69 : ability.score,
+  }));
+  const currentAbilities = abilitySeeds.map((ability) => ({
+    code: ability.code,
+    name: ability.name,
+    dimension: ability.dimension,
+    score: ability.score,
+  }));
+  await db.insert(careerProfileSnapshots).values([
+    { userId, version: 1, abilities: previousAbilities, trigger: '导入示例简历并完成首次结构化' },
+    { userId, version: 2, abilities: currentAbilities, trigger: '前端项目证据已确认' },
+  ]);
+  await db.insert(careerGuidanceNotes).values({
+    userId,
+    teacherId,
+    visibility: 'student',
+    content: '你的前端基础和问题分析已有证据支撑。下一步优先补齐自动化测试与可访问部署证据。',
+  });
+
+  console.log('[DB] Auto-seed complete: demo student, career profile, and assigned teacher created');
 }

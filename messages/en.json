@@ -1087,6 +1087,7 @@
   "nav": {
     "admin": "Admin",
     "orgAdmin": "Org Admin",
+    "teacher": "Teacher Guidance",
     "personalCredits": "Personal Credits",
     "orgCredits": "Organization Credits",
     "account": "Account"
@@ -1825,6 +1826,505 @@
       "reconsentFailed": "Action failed, please try again later",
       "viewDocument": "View Document",
       "upToDate": "Your consent records are up to date."
+    }
+  },
+  "career": {
+    "nav": "Career Development",
+    "subnav": {
+      "label": "Career development navigation",
+      "overview": "Overview",
+      "profile": "Career Profile",
+      "goals": "Goals",
+      "jobs": "Occupation Knowledge",
+      "matching": "Job Match",
+      "path": "Growth Path"
+    },
+    "common": {
+      "notSet": "Not set",
+      "insufficientEvidence": "Insufficient evidence",
+      "goalRequired": "Choose a goal first",
+      "unknown": "Unknown",
+      "pendingReview": "Pending review",
+      "viewDetails": "View details",
+      "viewPath": "View path",
+      "viewAll": "View all"
+    },
+    "error": {
+      "title": "Career development data is temporarily unavailable",
+      "description": "Your data may still be syncing. Try again shortly. Saved resumes and career records are not affected.",
+      "retry": "Reload"
+    },
+    "stage": {
+      "exploring": "Exploring",
+      "targeting": "Setting a direction",
+      "preparing": "Building capabilities",
+      "applying": "Applying"
+    },
+    "taskStatus": {
+      "todo": "To do",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "taskCategory": {
+      "explore": "Career exploration",
+      "learn": "Learning",
+      "practice": "Practice",
+      "portfolio": "Portfolio",
+      "application": "Application"
+    },
+    "evidenceStatus": {
+      "pending": "Pending",
+      "verified": "Verified",
+      "rejected": "Returned"
+    },
+    "evidenceSource": {
+      "resume": "Resume",
+      "project": "Project",
+      "interview": "Mock interview",
+      "certificate": "Certificate",
+      "course": "Course",
+      "teacher": "Teacher guidance",
+      "task": "Growth task",
+      "manual": "Student entry"
+    },
+    "teacherConfirmation": {
+      "unreviewed": "Not reviewed by teacher",
+      "confirmed": "Confirmed by teacher",
+      "needs_revision": "Needs revision"
+    },
+    "goalStatus": {
+      "draft": "Draft",
+      "active": "Active",
+      "achieved": "Achieved",
+      "archived": "Archived"
+    },
+    "relationType": {
+      "progresses_to": "Progression",
+      "transfers_to": "Transition",
+      "related_to": "Related occupation"
+    },
+    "pathStageStatus": {
+      "locked": "Not started",
+      "current": "Current stage",
+      "completed": "Completed"
+    },
+    "matchState": {
+      "met": "Met",
+      "gap": "Gap",
+      "unknown": "More evidence needed"
+    },
+    "metrics": {
+      "readiness": "Career readiness",
+      "readinessDescription": "Overall status across materials, practice, and application readiness",
+      "match": "Occupation match",
+      "matchDescription": "Calculated from structured requirements and current evidence",
+      "profileCompleteness": "Profile completeness",
+      "profileCompletenessDescription": "Coverage of valid records across the six profile dimensions",
+      "evidenceCoverage": "Evidence coverage",
+      "evidenceCoverageDescription": "Share of ability requirements supported by traceable evidence"
+    },
+    "overview": {
+      "eyebrow": "Student career overview",
+      "title": "See your goal, gaps, and next step",
+      "description": "Bring resumes, projects, interviews, and teacher guidance into one career record that reflects real progress.",
+      "viewMatch": "View occupation match",
+      "chooseGoal": "Choose a target occupation",
+      "primaryGoal": "Primary goal",
+      "targetDate": "Target date: {date}",
+      "goalFallback": "Explain why this occupation matters to you so the system and your teacher can provide better guidance.",
+      "manageGoal": "Manage goal",
+      "indicatorsLabel": "Career development indicators",
+      "noGoal": {
+        "title": "Choose a primary goal to give your plan a direction",
+        "description": "Select an occupation from the reviewed catalog to generate a match explanation, milestones, and growth tasks.",
+        "action": "Choose target occupation"
+      },
+      "abilities": {
+        "title": "Six-dimension career profile",
+        "description": "{known} of {total} dimensions currently have evidence",
+        "evidenceCount": "{count} evidence items"
+      },
+      "milestone": {
+        "title": "Next milestone",
+        "noGoal": "Generated after you set a goal",
+        "due": "Planned for completion by {date}",
+        "noDate": "No target date yet",
+        "empty": "Your current stage and next milestone will appear after you set a goal."
+      },
+      "tasks": {
+        "title": "This week's growth tasks",
+        "description": "Prioritize actions that close the most important occupation gaps",
+        "due": "Due {date}",
+        "empty": "No tasks yet. Set a goal to generate actionable recommendations."
+      },
+      "changes": {
+        "title": "Recent ability changes",
+        "description": "Every change keeps its evidence and reason",
+        "empty": "No confirmed ability changes yet. New materials first enter review."
+      },
+      "guidance": {
+        "title": "Latest teacher guidance",
+        "description": "Only guidance shared with the student is shown",
+        "empty": "No public teacher guidance yet. You can keep working through your growth path."
+      }
+    },
+    "profile": {
+      "eyebrow": "Career profile",
+      "title": "Ability is more than a score—it is a set of verifiable evidence",
+      "description": "Review six dimensions, sources, confidence, and change history. Unknown data stays unknown and is never treated as zero.",
+      "updated": "Updated {date}",
+      "defaultHeadline": "Career direction is still being explored",
+      "defaultSummary": "Add resume, project, and interview materials to build a more complete career profile.",
+      "qualityLabel": "Profile quality indicators",
+      "evidenceTotal": "Evidence items",
+      "evidenceTotalDescription": "Traceable materials linked to the current profile",
+      "dimensions": {
+        "title": "Six-dimension details",
+        "description": "Expand an ability to see its evidence, source status, and update time.",
+        "abilityCount": "{count} abilities",
+        "dimensionScore": "Overall {name} score",
+        "noAbilities": "No specific abilities have been recorded in this dimension yet."
+      },
+      "abilities": {
+        "evidenceCount": "{count} evidence items",
+        "confidence": "Confidence: {value}",
+        "updated": "Updated {date}",
+        "noEvidence": "No verifiable material is available, so this ability remains marked as insufficient evidence."
+      },
+      "changes": {
+        "title": "Ability change timeline",
+        "description": "Only changes caused by new, verified evidence are recorded.",
+        "scoreChange": "{from} → {to}",
+        "empty": "No confirmed ability changes yet."
+      }
+    },
+    "goals": {
+      "eyebrow": "Career goals",
+      "title": "Turn a direction into a trackable goal",
+      "description": "Choose a primary occupation, target date, and preferences. Updates keep their history instead of overwriting past choices.",
+      "exploreJobs": "Explore occupations first",
+      "current": {
+        "title": "Current primary goal",
+        "description": "Matching, paths, and growth tasks use the primary goal as their baseline.",
+        "primary": "Primary goal",
+        "noRationale": "No reason for choosing this occupation has been added yet.",
+        "targetDate": "Target date",
+        "status": "Goal status",
+        "industries": "Industry preferences",
+        "cities": "City preferences",
+        "organizationTypes": "Organization types",
+        "emptyTitle": "No primary goal yet",
+        "emptyDescription": "Choose an occupation on the right to generate a match and growth path."
+      },
+      "form": {
+        "title": "Set a primary goal",
+        "editTitle": "Adjust primary goal",
+        "description": "Changing the goal affects matching and growth tasks, so use your real intentions.",
+        "occupation": "Target occupation",
+        "occupationHelp": "The first release uses a manually reviewed demonstration catalog.",
+        "targetDate": "Desired target date",
+        "rationale": "Reason for choosing it",
+        "rationalePlaceholder": "For example: I enjoy solving real problems with technology and want to build product experience through frontend development…",
+        "rationaleHelp": "Your teacher can use this reason to judge whether the goal fits your experience and preferences.",
+        "preferences": "Career preferences",
+        "industries": "Industries",
+        "cities": "Cities",
+        "organizationTypes": "Organization types",
+        "commaSeparated": "Separate multiple values with commas",
+        "saving": "Saving…",
+        "update": "Save changes",
+        "create": "Create goal",
+        "saved": "Career goal saved",
+        "noOccupations": "The occupation catalog is temporarily unavailable. Try again later.",
+        "errors": {
+          "occupationRequired": "Choose a target occupation",
+          "saveFailed": "Unable to save the goal. Try again later."
+        }
+      }
+    },
+    "jobs": {
+      "eyebrow": "Occupation knowledge and career graph",
+      "title": "Understand an occupation before choosing a direction",
+      "description": "Review responsibilities, ability requirements, progression and transition paths, and verified sources.",
+      "searchPlaceholder": "Search occupations, categories, or keywords",
+      "searchLabel": "Search occupation knowledge",
+      "searchAction": "Search",
+      "resultFor": "{count} occupations found for “{query}”",
+      "resultCount": "{count} occupations",
+      "clearSearch": "Clear search",
+      "listLabel": "Occupation knowledge list",
+      "matchScore": "{score}% match",
+      "viewOccupation": "View occupation",
+      "empty": {
+        "title": "No occupations found",
+        "description": "Try a shorter occupation name or category keyword."
+      }
+    },
+    "jobDetail": {
+      "back": "Back to occupation knowledge",
+      "matchAction": "Evaluate my match",
+      "code": "Occupation code: {code}",
+      "entryLevel": "Entry level: {level}",
+      "requirements": {
+        "title": "Ability requirements",
+        "description": "Weights and target scores drive deterministic matching. Missing student evidence is never treated as zero.",
+        "required": "Required",
+        "preferred": "Preferred",
+        "target": "Target for {name}",
+        "weight": "Match weight {weight}"
+      },
+      "graph": {
+        "title": "Career relationships",
+        "description": "Explore progression, transition, and related directions.",
+        "empty": "No career relationships are recorded for this occupation yet."
+      },
+      "sources": {
+        "title": "Knowledge sources",
+        "description": "Occupation explanations come from traceable sources, not model invention.",
+        "verified": "Verified {date}",
+        "empty": "Source material is insufficient, so no unsupported conclusion is provided."
+      }
+    },
+    "matching": {
+      "eyebrow": "Explainable occupation matching",
+      "title": "See the size of the gap—and the reason behind it",
+      "description": "Structured rules determine scores and evidence determines confidence. RAG is used only for retrieval, explanation, and citations.",
+      "viewOccupation": "View occupation knowledge",
+      "selectLabel": "Choose an occupation to evaluate",
+      "recalculate": "View match",
+      "primaryGoal": "Current primary goal",
+      "comparison": "Occupation comparison",
+      "metricsLabel": "Match result indicators",
+      "confidence": "Result confidence",
+      "confidenceDescription": "Known requirement weight as a share of total requirement weight",
+      "breakdown": {
+        "title": "Requirement → evidence → gap → action",
+        "description": "Expand each requirement to review student evidence and next-step advice.",
+        "required": "Required",
+        "studentScore": "Current: {score}",
+        "targetScore": "Target: {score}",
+        "requirementLabel": "Occupation requirement",
+        "evidenceLabel": "Student evidence",
+        "noEvidence": "No material currently supports this ability.",
+        "actionLabel": "Gap and action",
+        "gapUnknown": "Insufficient evidence; gap not calculated",
+        "gapValue": "{gap} points below the target",
+        "noGap": "Current evidence meets the target"
+      },
+      "sources": {
+        "title": "Sources used in this explanation",
+        "description": "Citations explain the result but never change the structured score."
+      },
+      "generatedAt": "Generated {date}"
+    },
+    "path": {
+      "eyebrow": "Growth path",
+      "title": "Turn occupation gaps into actions you can take today",
+      "description": "Move through tasks by stage. Completed work first becomes pending evidence and changes the career profile only after verification.",
+      "manageGoal": "Manage goal",
+      "goalLabel": "Target occupation",
+      "targetDate": "Target date: {date}",
+      "stageProgress": "Stage {current} of {total}",
+      "timelineLabel": "Career growth stages",
+      "taskDue": "Due {date}",
+      "noTasks": "No growth tasks are assigned to this stage yet.",
+      "startTask": "Start task",
+      "completeTask": "Mark complete",
+      "taskStarted": "Task started",
+      "taskCompleted": "Task completed. Related work still needs evidence verification.",
+      "taskUpdateFailed": "Unable to update the task. Try again later.",
+      "empty": {
+        "title": "Set a goal to generate a growth path",
+        "description": "The path connects your current preparation stage, target occupation, and optional future directions.",
+        "action": "Set career goal"
+      }
+    }
+  },
+  "teacherWorkbench": {
+    "nav": {
+      "label": "Teacher Guidance",
+      "menu": "Open teacher navigation",
+      "queue": "Work Queue",
+      "students": "Students"
+    },
+    "access": {
+      "denied": {
+        "title": "Teacher workspace unavailable",
+        "description": "This account has no active teacher or career counselor role. Organization administration does not grant teacher access."
+      },
+      "unconfigured": {
+        "title": "Teacher workspace is not configured",
+        "description": "Ask a school administrator to assign an education role and student guidance relationships."
+      },
+      "action": "Return to student home"
+    },
+    "queue": {
+      "eyebrow": "Teacher guidance",
+      "pageTitle": "Today's guidance workspace",
+      "pageDescription": "Prioritize students who need review, have overdue work, or show meaningful changes, then complete guidance in their record.",
+      "content": {
+        "sectionTitle": "Action queue",
+        "sectionDescription": "Items are grouped by the action they require, not by generic statistics.",
+        "emptyTitle": "No pending items",
+        "emptyDescription": "New evidence, goal changes, and task exceptions from assigned students will appear here.",
+        "viewStudents": "View students needing attention",
+        "studentSectionTitle": "Recently needs attention",
+        "studentSectionDescription": "Open a student record from the queue to review evidence, paths, and create the next task.",
+        "viewAllStudents": "View all students",
+        "openStudent": "Open student record",
+        "noTarget": "No target occupation",
+        "matchScore": "Job match",
+        "evidenceCoverage": "Evidence coverage",
+        "pendingItems": "{count} pending items",
+        "queues": {
+          "evidence_review": { "title": "Evidence review", "description": "Confirm or return ability evidence submitted by students" },
+          "goal_change": { "title": "Goal changed", "description": "Review how a goal adjustment affects the growth path" },
+          "overdue_task": { "title": "Overdue tasks", "description": "Follow up on growth tasks past their due date" },
+          "match_decline": { "title": "Match declined", "description": "Locate the evidence and gaps behind a lower match score" },
+          "recent_progress": { "title": "Recent progress", "description": "Review ability changes supported by new evidence" }
+        }
+      }
+    },
+    "students": {
+      "eyebrow": "Guidance scope",
+      "pageTitle": "My students",
+      "pageDescription": "Only students assigned to you in the current school are shown; search and filters never expand data access.",
+      "content": {
+        "searchLabel": "Search students",
+        "searchPlaceholder": "Name, major, year, or target occupation",
+        "statusLabel": "Status",
+        "targetLabel": "Target occupation",
+        "allStatuses": "All statuses",
+        "allTargets": "All occupations",
+        "status": { "attention": "Needs attention", "on_track": "On track", "progress": "Recent progress" },
+        "noTarget": "No target occupation",
+        "matchScore": "Match",
+        "evidenceCoverage": "Evidence coverage",
+        "taskProgress": "Task progress",
+        "pendingItems": "{count} pending items",
+        "openStudent": "View and guide",
+        "emptyTitle": "No students match these filters",
+        "emptyDescription": "Clear the filters; if the list remains empty, ask a school administrator to check guidance assignments.",
+        "clearFilters": "Clear filters"
+      }
+    },
+    "detail": {
+      "back": "Back to students",
+      "noTarget": "No target occupation",
+      "status": { "attention": "Needs attention", "on_track": "On track", "progress": "Recent progress" },
+      "metrics": {
+        "matchScore": "Job match",
+        "evidenceCoverage": "Evidence coverage",
+        "profileCompleteness": "Profile completeness",
+        "nextMilestone": "Next milestone",
+        "insufficient": "Insufficient evidence"
+      },
+      "tabs": { "overview": "Overview", "profile": "Profile & Evidence", "goals": "Goals & Path", "tasks": "Growth Tasks", "guidance": "Guidance History" },
+      "overview": {
+        "title": "Student overview",
+        "description": "Focus on current risks, ability changes, and next actions.",
+        "attentionTitle": "Evidence awaiting review",
+        "attentionDescription": "Evidence that requires a teacher's reason before confirmation or return.",
+        "progressTitle": "Ability changes",
+        "progressDescription": "Positive changes supported by explicit evidence this period.",
+        "nextActionTitle": "Active tasks",
+        "nextActionDescription": "Growth tasks still awaiting student completion or teacher follow-up.",
+        "noMilestone": "No milestone yet"
+      },
+      "profile": {
+        "abilityTitle": "Six-dimension ability profile",
+        "abilityDescription": "Scores and evidence are separate; missing evidence is never treated as zero.",
+        "level": "Current score",
+        "evidenceCount": "Evidence count",
+        "change": "Recent change",
+        "noLevel": "Insufficient evidence",
+        "evidenceTitle": "Ability evidence",
+        "evidenceDescription": "Verify source, ability link, and status before confirmation. Results require a reason.",
+        "noEvidenceTitle": "No ability evidence",
+        "noEvidenceDescription": "Pending evidence appears after students submit materials or task results.",
+        "ability": "Related ability",
+        "source": "Evidence source",
+        "sourceTypes": { "resume": "Resume", "interview": "Interview report", "project": "Project", "certificate": "Certificate", "teacher": "Teacher input", "student": "Student self-report" },
+        "evidenceStatus": { "pending": "Pending", "confirmed": "Confirmed", "rejected": "Returned" },
+        "review": {
+          "trigger": "Review evidence",
+          "title": "Confirm ability evidence",
+          "description": "Confirmation and return both require a reason; the result is included in the student's visible change explanation.",
+          "reasonLabel": "Review reason",
+          "reasonPlaceholder": "Explain why this evidence does or does not support the ability",
+          "confirm": "Confirm and create profile snapshot",
+          "reject": "Return for revision",
+          "submitting": "Submitting…",
+          "success": "Evidence review saved",
+          "error": "Unable to save. Try again later."
+        }
+      },
+      "goals": {
+        "goalTitle": "Career goals",
+        "goalDescription": "Review primary and alternative goals, target dates, and review status.",
+        "primary": "Primary",
+        "alternative": "Alternative",
+        "targetDate": "Target date",
+        "noDate": "Not set",
+        "goalStatus": { "active": "Active", "pending_review": "Pending review", "archived": "Archived" },
+        "pathTitle": "Growth path",
+        "pathDescription": "Turn occupation gaps into stages, milestones, and actionable tasks.",
+        "milestone": "Stage milestone",
+        "pathStatus": { "completed": "Completed", "current": "Current stage", "upcoming": "Upcoming" },
+        "emptyTitle": "No goal path yet",
+        "emptyDescription": "A student must choose a career goal before the system can generate a gap-based growth path."
+      },
+      "tasks": {
+        "title": "Growth tasks",
+        "description": "Tasks need an ability link, reason, due date, and verifiable completion criteria.",
+        "ability": "Related ability",
+        "dueDate": "Due date",
+        "noDueDate": "Not set",
+        "criteria": "Completion criteria",
+        "assignedBy": "Assigned by",
+        "status": { "todo": "To do", "in_progress": "In progress", "submitted": "Awaiting review", "completed": "Completed", "overdue": "Overdue" },
+        "emptyTitle": "No growth tasks",
+        "emptyDescription": "Create a task above that maps directly to an ability gap."
+      },
+      "guidance": {
+        "title": "Guidance history",
+        "description": "Student-visible guidance and private teacher notes remain separate and keep their history.",
+        "studentVisible": "Visible to student",
+        "privateNote": "Private teacher note",
+        "emptyTitle": "No guidance history",
+        "emptyDescription": "Add the first public guidance item or private teacher note."
+      },
+      "actions": {
+        "guidance": {
+          "trigger": "Add guidance",
+          "title": "Add guidance",
+          "description": "Choose visibility; private teacher notes are never returned to the student.",
+          "visibilityLabel": "Visibility",
+          "studentVisible": "Student-visible guidance",
+          "privateNote": "Private teacher note",
+          "contentLabel": "Guidance",
+          "contentPlaceholder": "Describe the observation, supporting basis, and recommended next action",
+          "submit": "Save guidance"
+        },
+        "task": {
+          "trigger": "Create growth task",
+          "title": "Create growth task",
+          "description": "Turn a specific ability gap into a verifiable action.",
+          "nameLabel": "Task name",
+          "namePlaceholder": "For example: build and deploy a responsive portfolio page",
+          "abilityLabel": "Related ability",
+          "dueDateLabel": "Due date",
+          "reasonLabel": "Reason",
+          "reasonPlaceholder": "Explain the occupation gap or missing evidence this task addresses",
+          "criteriaLabel": "Completion criteria",
+          "criteriaPlaceholder": "Specify the required artifact and how completion will be judged",
+          "submit": "Assign task"
+        },
+        "submitting": "Submitting…",
+        "success": "Saved and student record updated",
+        "error": "Unable to save. Try again later."
+      }
     }
   }
 }

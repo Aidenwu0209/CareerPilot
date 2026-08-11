@@ -40,6 +40,18 @@ import { interviewSessions, interviewRounds, interviewMessages, interviewReports
 import { creditAccounts, creditTransactions } from '@/lib/db/schema-credits';
 import { aiOperations } from '@/lib/db/schema-ai-operations';
 import { legalConsents } from '@/lib/db/schema-audit';
+import {
+  careerProfiles,
+  careerAbilities,
+  careerEvidence,
+  careerGoals,
+  careerTasks,
+  careerProfileSnapshots,
+  careerGuidanceNotes,
+  careerMatches,
+  educationRoleAssignments,
+  occupations,
+} from '@/lib/db/schema-career';
 import { collectUserData, EXPORT_SCHEMA_VERSION } from './user-data-export';
 
 // ── Helpers ──
@@ -175,6 +187,78 @@ async function seedAIOperation(userId: string) {
   });
 }
 
+async function seedCareerData(userId: string, teacherId: string) {
+  await db.insert(careerProfiles).values({
+    id: `${userId}-career-profile`,
+    userId,
+    headline: 'Frontend developer',
+    completeness: 75,
+  });
+  await db.insert(careerAbilities).values({
+    id: `${userId}-career-ability`,
+    userId,
+    code: 'frontend-engineering',
+    name: 'Frontend engineering',
+    dimension: 'professional_skills',
+    score: 78,
+  });
+  await db.insert(careerEvidence).values({
+    id: `${userId}-career-evidence`,
+    userId,
+    abilityCode: 'frontend-engineering',
+    sourceType: 'project',
+    title: 'Portfolio project',
+    status: 'verified',
+    reviewedBy: teacherId,
+    reviewReason: 'Verified against the submitted repository.',
+    reviewedAt: new Date('2026-08-10T10:00:00.000Z'),
+  });
+  await db.insert(careerGoals).values({
+    id: `${userId}-career-goal`,
+    userId,
+    occupationCode: 'OCC-FE',
+    isPrimary: true,
+    confirmedBy: teacherId,
+  });
+  await db.insert(careerTasks).values({
+    id: `${userId}-career-task`,
+    userId,
+    goalId: `${userId}-career-goal`,
+    occupationCode: 'OCC-FE',
+    title: 'Finish portfolio',
+    assignedBy: teacherId,
+  });
+  await db.insert(careerProfileSnapshots).values({
+    id: `${userId}-career-snapshot`,
+    userId,
+    version: 1,
+    abilities: [{ code: 'frontend-engineering', score: 78 }],
+  });
+  await db.insert(careerGuidanceNotes).values([
+    {
+      id: `${userId}-student-guidance`,
+      userId,
+      teacherId,
+      visibility: 'student',
+      content: 'Build one more production-quality project.',
+    },
+    {
+      id: `${userId}-private-guidance`,
+      userId,
+      teacherId,
+      visibility: 'teacher_private',
+      content: 'Private teacher note.',
+    },
+  ]);
+  await db.insert(careerMatches).values({
+    id: `${userId}-career-match`,
+    userId,
+    goalId: `${userId}-career-goal`,
+    occupationCode: 'OCC-FE',
+    score: 72,
+  });
+}
+
 // ── Tests ──
 
 describe('collectUserData', () => {
@@ -210,6 +294,35 @@ describe('collectUserData', () => {
       userId: 'user-a',
       role: 'member',
       status: 'active',
+    });
+    await db.insert(educationRoleAssignments).values([
+      {
+        id: 'education-role-a',
+        organizationId: 'org-1',
+        userId: 'user-a',
+        role: 'student',
+      },
+      {
+        id: 'education-role-b',
+        organizationId: 'org-1',
+        userId: 'user-b',
+        role: 'teacher',
+      },
+    ]);
+
+    await db.insert(occupations).values({
+      code: 'OCC-FE',
+      name: 'Frontend Developer',
+      category: 'Engineering',
+      summary: 'Builds web user interfaces.',
+      description: 'Builds accessible, reliable web applications.',
+      entryLevel: 'Junior',
+    });
+    await seedCareerData('user-a', 'user-b');
+    await db.insert(careerProfiles).values({
+      id: 'user-b-career-profile',
+      userId: 'user-b',
+      headline: 'Teacher-owned profile',
     });
   });
 
@@ -291,6 +404,57 @@ describe('collectUserData', () => {
     expect(mbr.organization!.slug).toBe('test-org');
   });
 
+  it('includes only the user education roles without exposing other users', async () => {
+    const data = await collectUserData('user-a');
+    expect(data.educationRoleAssignments).toHaveLength(1);
+    expect(data.educationRoleAssignments[0]).toMatchObject({
+      id: 'education-role-a',
+      role: 'student',
+      status: 'active',
+      organization: { name: 'Test Org', slug: 'test-org' },
+    });
+    expect(data.educationRoleAssignments[0]).not.toHaveProperty('userId');
+    expect(JSON.stringify(data.educationRoleAssignments)).not.toContain('user-b');
+  });
+
+  it('exports user-owned career data and only student-visible guidance', async () => {
+    const data = await collectUserData('user-a');
+
+    expect(data.careerProfiles).toHaveLength(1);
+    expect(data.careerAbilities).toHaveLength(1);
+    expect(data.careerEvidence).toHaveLength(1);
+    expect(data.careerGoals).toHaveLength(1);
+    expect(data.careerTasks).toHaveLength(1);
+    expect(data.careerProfileSnapshots).toHaveLength(1);
+    expect(data.careerMatches).toHaveLength(1);
+    expect(data.careerGuidanceNotes).toHaveLength(1);
+    expect(data.careerGuidanceNotes[0]).toMatchObject({
+      id: 'user-a-student-guidance',
+      visibility: 'student',
+    });
+    expect(JSON.stringify(data)).not.toContain('user-b-career-profile');
+    expect(JSON.stringify(data.careerGuidanceNotes)).not.toContain('Private teacher note.');
+  });
+
+  it('removes other-user identifiers from portable career records', async () => {
+    const data = await collectUserData('user-a');
+
+    expect(data.careerEvidence[0]).not.toHaveProperty('reviewedBy');
+    expect(data.careerEvidence[0]).toMatchObject({
+      reviewReason: 'Verified against the submitted repository.',
+    });
+    expect(data.careerEvidence[0]).toHaveProperty('reviewedAt');
+    expect(data.careerGoals[0]).not.toHaveProperty('confirmedBy');
+    expect(data.careerTasks[0]).not.toHaveProperty('assignedBy');
+    expect(data.careerGuidanceNotes[0]).not.toHaveProperty('teacherId');
+    expect(JSON.stringify({
+      careerEvidence: data.careerEvidence,
+      careerGoals: data.careerGoals,
+      careerTasks: data.careerTasks,
+      careerGuidanceNotes: data.careerGuidanceNotes,
+    })).not.toContain('user-b');
+  });
+
   it('includes legal consents (AC1)', async () => {
     const data = await collectUserData('user-a');
     expect(data.legalConsents).toHaveLength(1);
@@ -331,6 +495,15 @@ describe('collectUserData', () => {
     expect(data.interviewReports).toEqual([]);
     expect(data.creditTransactions).toEqual([]);
     expect(data.organizationMemberships).toEqual([]);
+    expect(data.educationRoleAssignments).toEqual([]);
+    expect(data.careerProfiles).toEqual([]);
+    expect(data.careerAbilities).toEqual([]);
+    expect(data.careerEvidence).toEqual([]);
+    expect(data.careerGoals).toEqual([]);
+    expect(data.careerTasks).toEqual([]);
+    expect(data.careerProfileSnapshots).toEqual([]);
+    expect(data.careerGuidanceNotes).toEqual([]);
+    expect(data.careerMatches).toEqual([]);
     expect(data.legalConsents).toEqual([]);
     expect(data.aiOperations).toEqual([]);
   });

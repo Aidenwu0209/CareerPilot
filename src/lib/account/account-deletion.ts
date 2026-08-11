@@ -19,7 +19,7 @@
  */
 
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'crypto';
-import { eq, and, isNull, desc, gt } from 'drizzle-orm';
+import { eq, and, or, isNull, desc, gt } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import {
   users,
@@ -27,6 +27,16 @@ import {
   resumes,
   interviewSessions,
   organizationMemberships,
+  careerProfiles,
+  careerAbilities,
+  careerEvidence,
+  careerGoals,
+  careerTasks,
+  careerProfileSnapshots,
+  careerGuidanceNotes,
+  careerMatches,
+  educationRoleAssignments,
+  teacherStudentAssignments,
 } from '@/lib/db/schema';
 import { creditAccounts } from '@/lib/db/schema-credits';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
@@ -192,10 +202,11 @@ export async function initiateAccountDeletion(
  * Steps (in order):
  * 1. Hard-delete resumes (cascades to sections, shares, chat sessions, chat messages, jd_analyses, grammar_checks)
  * 2. Hard-delete interview sessions (cascades to rounds, messages, reports)
- * 3. Hard-delete auth accounts (prevents re-login)
- * 4. Soft-remove organization memberships (frees seats)
- * 5. Freeze personal credit accounts
- * 6. Anonymize user PII and set status to 'deleted'
+ * 3. Hard-delete private career data, guidance, and teacher/student links
+ * 4. Hard-delete auth accounts (prevents re-login)
+ * 5. Soft-remove organization memberships and education roles (frees seats)
+ * 6. Freeze personal credit accounts
+ * 7. Anonymize user PII and set status to 'deleted'
  *
  * Note: audit_events, legal_consents, and credit_transactions are immutable
  * (DB triggers block UPDATE/DELETE). They retain their references to the
@@ -210,10 +221,37 @@ export async function deleteUserData(userId: string): Promise<void> {
   // Step 2: Delete interview sessions (cascade handles rounds, messages, reports)
   await db.delete(interviewSessions).where(eq(interviewSessions.userId, userId));
 
-  // Step 3: Delete auth accounts
+  // Step 3: Delete private career data explicitly. The user row is retained and
+  // anonymized, so its cascade constraints never fire during account deletion.
+  await db.delete(careerMatches).where(eq(careerMatches.userId, userId));
+  await db.delete(careerTasks).where(eq(careerTasks.userId, userId));
+  await db.delete(careerProfileSnapshots).where(eq(careerProfileSnapshots.userId, userId));
+  await db.delete(careerEvidence).where(eq(careerEvidence.userId, userId));
+  await db.delete(careerAbilities).where(eq(careerAbilities.userId, userId));
+  await db.delete(careerGoals).where(eq(careerGoals.userId, userId));
+  await db.delete(careerProfiles).where(eq(careerProfiles.userId, userId));
+
+  // Guidance may belong to the user as a student or have been authored by the
+  // user as a teacher. Both directions contain user-linked private content.
+  await db
+    .delete(careerGuidanceNotes)
+    .where(or(
+      eq(careerGuidanceNotes.userId, userId),
+      eq(careerGuidanceNotes.teacherId, userId),
+    ));
+
+  // Remove both sides of explicit teacher/student access grants.
+  await db
+    .delete(teacherStudentAssignments)
+    .where(or(
+      eq(teacherStudentAssignments.teacherUserId, userId),
+      eq(teacherStudentAssignments.studentUserId, userId),
+    ));
+
+  // Step 4: Delete auth accounts
   await db.delete(authAccounts).where(eq(authAccounts.userId, userId));
 
-  // Step 4: Soft-remove active organization memberships (frees seats)
+  // Step 5: Soft-remove active organization memberships and education roles.
   await db
     .update(organizationMemberships)
     .set({ status: 'removed', updatedAt: now })
@@ -224,7 +262,17 @@ export async function deleteUserData(userId: string): Promise<void> {
       ),
     );
 
-  // Step 5: Freeze personal credit accounts
+  await db
+    .update(educationRoleAssignments)
+    .set({ status: 'removed', updatedAt: now })
+    .where(
+      and(
+        eq(educationRoleAssignments.userId, userId),
+        eq(educationRoleAssignments.status, 'active'),
+      ),
+    );
+
+  // Step 6: Freeze personal credit accounts
   await db
     .update(creditAccounts)
     .set({ status: 'frozen', updatedAt: now })
@@ -235,7 +283,7 @@ export async function deleteUserData(userId: string): Promise<void> {
       ),
     );
 
-  // Step 6: Anonymize user PII and mark as deleted
+  // Step 7: Anonymize user PII and mark as deleted
   await db
     .update(users)
     .set({

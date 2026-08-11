@@ -1,0 +1,85 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('server-only', () => ({}));
+
+vi.mock('@/lib/db', async () => {
+  const Database = (await import('better-sqlite3')).default;
+  const { drizzle } = await import('drizzle-orm/better-sqlite3');
+  const { migrate } = await import('drizzle-orm/better-sqlite3/migrator');
+  const { resolve } = await import('path');
+  const schema = await import('@/lib/db/schema');
+  const sqlite = new Database(':memory:');
+  sqlite.pragma('foreign_keys = ON');
+  const db = drizzle(sqlite, { schema });
+  migrate(db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
+  return { db, dbReady: Promise.resolve() };
+});
+
+import { db } from '@/lib/db';
+import {
+  careerAbilities,
+  careerEvidence,
+  interviewReports,
+  interviewSessions,
+  resumes,
+  resumeSections,
+  users,
+} from '@/lib/db/schema';
+import { syncCareerMaterials } from './materials';
+
+const USER_ID = 'material-user';
+
+beforeEach(async () => {
+  await db.delete(careerEvidence);
+  await db.delete(careerAbilities);
+  await db.delete(interviewReports);
+  await db.delete(interviewSessions);
+  await db.delete(resumeSections);
+  await db.delete(resumes);
+  await db.delete(users);
+  await db.insert(users).values({ id: USER_ID, email: 'material@example.com', authType: 'oauth' });
+});
+
+describe('career material structuring', () => {
+  it('idempotently links resume and interview material while preserving unknown resume scores', async () => {
+    await db.insert(resumes).values({ id: 'resume-material', userId: USER_ID, title: '前端求职简历' });
+    await db.insert(resumeSections).values({
+      id: 'section-projects',
+      resumeId: 'resume-material',
+      type: 'projects',
+      title: '项目经历',
+      content: { items: [{ name: '课程平台', description: '使用 React、TypeScript 和 Playwright 完成开发与自动化测试。' }] },
+    });
+    await db.insert(interviewSessions).values({
+      id: 'interview-material',
+      userId: USER_ID,
+      jobTitle: '前端开发工程师',
+      jobDescription: 'React 前端岗位',
+      selectedInterviewers: [],
+      status: 'completed',
+    });
+    await db.insert(interviewReports).values({
+      id: 'report-material',
+      sessionId: 'interview-material',
+      overallScore: 82,
+      dimensionScores: [],
+      roundEvaluations: [],
+      overallFeedback: '表达清晰，建议继续补充性能优化案例。',
+      improvementPlan: [],
+    });
+
+    const first = await syncCareerMaterials(USER_ID);
+    expect(first.processedSources).toBe(2);
+    expect(first.evidenceCreated).toBeGreaterThanOrEqual(4);
+    expect(first.abilitiesLinked).toBeGreaterThanOrEqual(4);
+
+    const second = await syncCareerMaterials(USER_ID);
+    expect(second.evidenceCreated).toBe(0);
+
+    const evidence = await db.select().from(careerEvidence);
+    expect(evidence.every((item: typeof evidence[number]) => item.status === 'pending')).toBe(true);
+    const abilities = await db.select().from(careerAbilities);
+    expect(abilities.find((item: typeof abilities[number]) => item.code === 'web_frontend')?.score).toBeNull();
+    expect(abilities.find((item: typeof abilities[number]) => item.code === 'interview')?.score).toBe(82);
+  });
+});

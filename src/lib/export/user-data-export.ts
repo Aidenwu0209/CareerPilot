@@ -26,6 +26,15 @@ import {
   grammarChecks,
   organizationMemberships,
   organizations,
+  careerProfiles,
+  careerAbilities,
+  careerEvidence,
+  careerGoals,
+  careerTasks,
+  careerProfileSnapshots,
+  careerGuidanceNotes,
+  careerMatches,
+  educationRoleAssignments,
 } from '@/lib/db/schema';
 import {
   interviewSessions,
@@ -43,11 +52,11 @@ import {
 import {
   legalConsents,
 } from '@/lib/db/schema-audit';
-import { eq, inArray, desc } from 'drizzle-orm';
+import { and, eq, inArray, desc } from 'drizzle-orm';
 
 // ── Types ──
 
-export const EXPORT_SCHEMA_VERSION = 1;
+export const EXPORT_SCHEMA_VERSION = 2;
 
 export interface UserDataExport {
   schemaVersion: number;
@@ -87,6 +96,15 @@ export interface UserDataExport {
   creditAccounts: Array<Record<string, unknown>>;
   creditTransactions: Array<Record<string, unknown>>;
   organizationMemberships: Array<Record<string, unknown>>;
+  educationRoleAssignments: Array<Record<string, unknown>>;
+  careerProfiles: Array<Record<string, unknown>>;
+  careerAbilities: Array<Record<string, unknown>>;
+  careerEvidence: Array<Record<string, unknown>>;
+  careerGoals: Array<Record<string, unknown>>;
+  careerTasks: Array<Record<string, unknown>>;
+  careerProfileSnapshots: Array<Record<string, unknown>>;
+  careerGuidanceNotes: Array<Record<string, unknown>>;
+  careerMatches: Array<Record<string, unknown>>;
   legalConsents: Array<Record<string, unknown>>;
   aiOperations: Array<Record<string, unknown>>;
   errors: string[];
@@ -106,6 +124,20 @@ async function safeCollect<T>(
     errors.push(`collection '${name}' failed: ${msg}`);
     return [];
   }
+}
+
+/**
+ * Remove references to other users before adding a row to a user's portable
+ * export. Review/audit metadata remains useful, but internal actor identifiers
+ * are not part of the student's data and must not cross that privacy boundary.
+ */
+function stripOtherUserReferences(
+  row: unknown,
+  keys: string[],
+): Record<string, unknown> {
+  const sanitized = { ...(row as Record<string, unknown>) };
+  for (const key of keys) delete sanitized[key];
+  return sanitized;
 }
 
 // ── Main export function ──
@@ -270,6 +302,84 @@ export async function collectUserData(userId: string): Promise<UserDataExport> {
     return enriched;
   }, errors);
 
+  // ── Education roles (only this user's role, never classmates/teachers) ──
+  const educationRoleRows = await safeCollect('educationRoleAssignments', async () => {
+    const rows = await db
+      .select()
+      .from(educationRoleAssignments)
+      .where(eq(educationRoleAssignments.userId, userId));
+
+    return await Promise.all(rows.map(async (role: typeof educationRoleAssignments.$inferSelect) => {
+      const orgRows = await db
+        .select()
+        .from(organizations)
+        .where(eq(organizations.id, role.organizationId));
+      const org = orgRows[0];
+      return {
+        id: role.id,
+        organization: org ? { name: org.name, slug: org.slug } : null,
+        role: role.role,
+        status: role.status,
+        createdAt: role.createdAt.toISOString(),
+        updatedAt: role.updatedAt.toISOString(),
+      };
+    }));
+  }, errors);
+
+  // ── Career development data (strictly scoped to this user) ──
+  const careerProfileRows = await safeCollect('careerProfiles', async () => {
+    return await db.select().from(careerProfiles).where(eq(careerProfiles.userId, userId));
+  }, errors);
+
+  const careerAbilityRows = await safeCollect('careerAbilities', async () => {
+    return await db.select().from(careerAbilities).where(eq(careerAbilities.userId, userId));
+  }, errors);
+
+  const careerEvidenceRows = await safeCollect('careerEvidence', async () => {
+    const rows = await db.select().from(careerEvidence).where(eq(careerEvidence.userId, userId));
+    return rows.map((row: typeof careerEvidence.$inferSelect) => (
+      stripOtherUserReferences(row, ['reviewedBy'])
+    ));
+  }, errors);
+
+  const careerGoalRows = await safeCollect('careerGoals', async () => {
+    const rows = await db.select().from(careerGoals).where(eq(careerGoals.userId, userId));
+    return rows.map((row: typeof careerGoals.$inferSelect) => (
+      stripOtherUserReferences(row, ['confirmedBy'])
+    ));
+  }, errors);
+
+  const careerTaskRows = await safeCollect('careerTasks', async () => {
+    const rows = await db.select().from(careerTasks).where(eq(careerTasks.userId, userId));
+    return rows.map((row: typeof careerTasks.$inferSelect) => (
+      stripOtherUserReferences(row, ['assignedBy'])
+    ));
+  }, errors);
+
+  const careerSnapshotRows = await safeCollect('careerProfileSnapshots', async () => {
+    return await db
+      .select()
+      .from(careerProfileSnapshots)
+      .where(eq(careerProfileSnapshots.userId, userId));
+  }, errors);
+
+  const careerGuidanceRows = await safeCollect('careerGuidanceNotes', async () => {
+    const rows = await db
+      .select()
+      .from(careerGuidanceNotes)
+      .where(and(
+        eq(careerGuidanceNotes.userId, userId),
+        eq(careerGuidanceNotes.visibility, 'student'),
+      ));
+    return rows.map((row: typeof careerGuidanceNotes.$inferSelect) => (
+      stripOtherUserReferences(row, ['teacherId'])
+    ));
+  }, errors);
+
+  const careerMatchRows = await safeCollect('careerMatches', async () => {
+    return await db.select().from(careerMatches).where(eq(careerMatches.userId, userId));
+  }, errors);
+
   // ── Legal consents ──
   const consentRows = await safeCollect('legalConsents', async () => {
     return await db.select().from(legalConsents).where(eq(legalConsents.userId, userId));
@@ -303,6 +413,15 @@ export async function collectUserData(userId: string): Promise<UserDataExport> {
     creditTransactions: (creditTransactionRows as Array<typeof creditTransactions.$inferSelect>)
       .map(t => ({ ...t, createdAt: t.createdAt.toISOString() })),
     organizationMemberships: membershipRows as UserDataExport['organizationMemberships'],
+    educationRoleAssignments: educationRoleRows as UserDataExport['educationRoleAssignments'],
+    careerProfiles: careerProfileRows as UserDataExport['careerProfiles'],
+    careerAbilities: careerAbilityRows as UserDataExport['careerAbilities'],
+    careerEvidence: careerEvidenceRows as UserDataExport['careerEvidence'],
+    careerGoals: careerGoalRows as UserDataExport['careerGoals'],
+    careerTasks: careerTaskRows as UserDataExport['careerTasks'],
+    careerProfileSnapshots: careerSnapshotRows as UserDataExport['careerProfileSnapshots'],
+    careerGuidanceNotes: careerGuidanceRows as UserDataExport['careerGuidanceNotes'],
+    careerMatches: careerMatchRows as UserDataExport['careerMatches'],
     legalConsents: (consentRows as Array<typeof legalConsents.$inferSelect>)
       .map(c => ({
         ...c,
