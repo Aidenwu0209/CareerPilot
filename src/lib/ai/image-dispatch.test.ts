@@ -102,4 +102,29 @@ describe('managed image dispatch', () => {
       { prompt: 'x', mimeType: 'image/png', base64Data: 'x' },
     )).rejects.toThrow('UPSTREAM_URL_NOT_ALLOWED');
   });
+
+  it('classifies provider failures without retaining the upstream body', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(
+      JSON.stringify({ error: { message: 'model image-preview not found; key=secret-value' } }),
+      { status: 404 },
+    ));
+    vi.stubGlobal('fetch', fetchMock);
+
+    let caught: unknown;
+    try {
+      await dispatchManagedImageEdit(
+        { ...baseContext, modelIdentifier: 'image-preview' },
+        { prompt: 'x', mimeType: 'image/png', base64Data: 'x' },
+      );
+    } catch (error) {
+      caught = error;
+    }
+
+    expect(caught).toMatchObject({
+      code: 'PROVIDER_MODEL_UNAVAILABLE',
+      clientStatus: 502,
+      retryable: false,
+    });
+    expect(String(caught)).not.toContain('secret-value');
+  });
 });

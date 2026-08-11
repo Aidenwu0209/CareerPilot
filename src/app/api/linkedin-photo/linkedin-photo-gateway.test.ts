@@ -56,7 +56,7 @@ async function seedUser(id: string, email: string) {
 }
 async function seedProviderAndModel() {
   await db.insert(aiProviders).values({ id: 'p1', type: 'google', name: 'Google', status: 'active', encryptedCredentials: '{"v":1,"data":"test"}' });
-  await db.insert(aiModels).values({ id: 'linkedin-photo-default', providerId: 'p1', modelIdentifier: 'gemini-3.1-flash-image-preview', displayName: 'Gemini Flash Image', status: 'active', visibility: 'public', capabilities: ['image_generation'], fixedPrice: 10 });
+  await db.insert(aiModels).values({ id: 'linkedin-photo-default', providerId: 'p1', modelIdentifier: 'gemini-3.1-flash-image', displayName: 'Gemini Flash Image', status: 'active', visibility: 'public', capabilities: ['image_generation'], fixedPrice: 10 });
 }
 
 function setUser(id: string) { ctxState.userId = id; ctxState.role = 'user'; ctxState.status = 'active'; }
@@ -123,6 +123,7 @@ describe('US-049: LinkedIn photo via gateway', () => {
 
     expect(res.status).toBe(200);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(String(fetchSpy.mock.calls[0][0])).toContain('/models/gemini-3.1-flash-image:generateContent');
     const body = await res.json();
     expect(body.image).toBeDefined();
     expect(body.text).toBe('Here is your photo');
@@ -172,16 +173,56 @@ describe('US-049: LinkedIn photo via gateway', () => {
     expect(String(fetchUrl)).not.toContain('sk-forged');
   });
 
-  it('returns error on provider failure with sanitized response', async () => {
+  it('classifies a rejected provider request without leaking raw details', async () => {
     setUser('u1');
-    fetchSpy.mockResolvedValue(new Response('{"error":"bad request"}', { status: 400 }));
+    fetchSpy.mockResolvedValue(new Response('{"error":"bad request secret-value"}', { status: 400 }));
 
     const res = await POST(makeRequest(VALID_BODY));
 
     expect(res.status).toBe(502);
     const body = await res.json();
-    // Response must not contain provider API key or raw error details
+    expect(body.error).toBe('PROVIDER_REQUEST_REJECTED');
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(JSON.stringify(body)).not.toContain('test-api-key');
+    expect(JSON.stringify(body)).not.toContain('secret-value');
+  });
+
+  it.each([
+    {
+      name: 'unavailable model',
+      status: 404,
+      providerBody: '{"error":{"message":"model gemini-missing not found"}}',
+      expectedCode: 'PROVIDER_MODEL_UNAVAILABLE',
+      expectedStatus: 502,
+    },
+    {
+      name: 'rejected credentials',
+      status: 403,
+      providerBody: '{"error":{"message":"API key not valid"}}',
+      expectedCode: 'PROVIDER_CREDENTIALS_REJECTED',
+      expectedStatus: 502,
+    },
+    {
+      name: 'exhausted quota',
+      status: 429,
+      providerBody: '{"error":{"message":"RESOURCE_EXHAUSTED: quota exceeded"}}',
+      expectedCode: 'PROVIDER_QUOTA_EXCEEDED',
+      expectedStatus: 503,
+    },
+  ])('returns a safe error for $name without retrying', async ({
+    status,
+    providerBody,
+    expectedCode,
+    expectedStatus,
+  }) => {
+    setUser('u1');
+    fetchSpy.mockResolvedValue(new Response(providerBody, { status }));
+
+    const res = await POST(makeRequest(VALID_BODY));
+
+    expect(res.status).toBe(expectedStatus);
+    expect(await res.json()).toMatchObject({ error: expectedCode });
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
   it('validates image MIME and size before gateway call', async () => {

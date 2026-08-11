@@ -133,6 +133,11 @@ export default function LinkedInPhotoPage() {
     if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
     if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
     if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('PROVIDER_MODEL_UNAVAILABLE')) return tAi('providerModelUnavailable');
+    if (errorCode.includes('PROVIDER_CREDENTIALS_REJECTED')) return tAi('providerCredentialsRejected');
+    if (errorCode.includes('PROVIDER_QUOTA_EXCEEDED')) return tAi('providerQuotaExceeded');
+    if (errorCode.includes('PROVIDER_REQUEST_REJECTED')) return tAi('providerRequestRejected');
+    if (errorCode.includes('PROVIDER_UPSTREAM_UNAVAILABLE')) return tAi('providerUpstreamUnavailable');
     if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
     return t('errorGenerate');
   }
@@ -300,6 +305,10 @@ export default function LinkedInPhotoPage() {
   const handleGenerate = async () => {
     if (!uploadedImage) {
       toast.error(t('errorNoImage'));
+      return;
+    }
+    if (!selectedModel) {
+      toast.error(tAi('noModelsAvailable'));
       return;
     }
 
@@ -657,7 +666,7 @@ export default function LinkedInPhotoPage() {
           {/* Generate Button */}
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating || !uploadedImage}
+            disabled={isGenerating || !uploadedImage || !selectedModel}
             className="w-full cursor-pointer gap-2 bg-brand py-6 text-base font-medium hover:bg-brand-hover disabled:opacity-50"
           >
             {isGenerating ? (

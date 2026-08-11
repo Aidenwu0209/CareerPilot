@@ -120,7 +120,7 @@ beforeEach(async () => {
   });
   await db.insert(aiModels).values({
     id: 'linkedin-photo-default', providerId: 'p1',
-    modelIdentifier: 'gemini-3.1-flash-image-preview',
+    modelIdentifier: 'gemini-3.1-flash-image',
     displayName: 'Gemini Flash Image', status: 'active', visibility: 'public',
     capabilities: ['image_generation'], fixedPrice: 10,
   });

@@ -1,5 +1,6 @@
 import type { GatewayDispatchContext } from '@/lib/ai/gateway';
 import { SSRF_SAFE_FETCH_OPTIONS, validateUpstreamUrl } from '@/lib/security/ssrf-guard';
+import { managedProviderErrorFromResponse } from '@/lib/ai/provider-errors';
 
 export interface ImageEditInput {
   prompt: string;
@@ -55,7 +56,7 @@ async function dispatchErnie(
     body: form,
     signal: AbortSignal.timeout(55_000),
   });
-  if (!response.ok) throw new Error(`IMAGE_PROVIDER_ERROR_${response.status}`);
+  if (!response.ok) throw await managedProviderErrorFromResponse(response);
   const data = await response.json();
   const first = data?.data?.[0];
   const image = first?.b64_json
@@ -84,7 +85,7 @@ async function deliverResolution(
     body: JSON.stringify({ image: result.image, targetResolution: '4k', outputFormat: 'png' }),
     signal: AbortSignal.timeout(90_000),
   });
-  if (!response.ok) throw new Error(`IMAGE_UPSCALER_ERROR_${response.status}`);
+  if (!response.ok) throw await managedProviderErrorFromResponse(response);
   const data = await response.json();
   const image = data.image ?? data.output?.image ?? data.data?.[0]?.b64_json;
   if (!image) throw new Error('IMAGE_UPSCALER_EMPTY_RESPONSE');
@@ -125,7 +126,7 @@ async function dispatchGoogle(
     }),
     signal: AbortSignal.timeout(55_000),
   });
-  if (!response.ok) throw new Error(`IMAGE_PROVIDER_ERROR_${response.status}`);
+  if (!response.ok) throw await managedProviderErrorFromResponse(response);
 
   const data = await response.json();
   const candidate = data?.candidates?.[0];
@@ -172,7 +173,7 @@ async function dispatchOpenAI(
     }),
     signal: AbortSignal.timeout(55_000),
   });
-  if (!response.ok) throw new Error(`IMAGE_PROVIDER_ERROR_${response.status}`);
+  if (!response.ok) throw await managedProviderErrorFromResponse(response);
 
   const data = await response.json();
   const first = data?.data?.[0];

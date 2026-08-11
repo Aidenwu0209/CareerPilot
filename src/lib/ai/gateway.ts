@@ -23,6 +23,7 @@ import { authorizeAiRequest, type ModelCapability } from '@/lib/ai/ai-authorizat
 import { createHold, settleHold, releaseHold } from '@/lib/ai/credit-hold-service';
 import { checkRateLimit, RATE_LIMIT_POLICIES, rateLimitKey } from '@/lib/rate-limit/rate-limit';
 import type { RequestContext } from '@/lib/auth/context';
+import { isManagedProviderError } from '@/lib/ai/provider-errors';
 
 // ── Types ──
 
@@ -247,7 +248,6 @@ export async function executeAiOperation<T>(
 
   // ── Step 6: Multi-attempt retry loop (US-038) ──
   const maxRetries = params.maxRetries ?? model.maxSteps ?? 3;
-  let lastAttemptId = '';
   let lastError: Error | null = null;
 
   for (let attemptNum = 1; attemptNum <= maxRetries; attemptNum++) {
@@ -327,10 +327,14 @@ export async function executeAiOperation<T>(
         })
         .where(eq(aiProviderAttempts.id, attemptId));
 
-      lastAttemptId = attemptId;
       lastError = err instanceof Error ? err : new Error(String(err));
 
-      // Continue to next retry attempt (if any remain)
+      // Invalid credentials, unavailable models, quota exhaustion, and malformed
+      // requests cannot recover within the same request. Preserve the hold/ledger
+      // cleanup below, but do not multiply a permanent upstream failure.
+      if (isManagedProviderError(lastError) && !lastError.retryable) {
+        break;
+      }
     }
   }
 
@@ -340,6 +344,15 @@ export async function executeAiOperation<T>(
   await db.update(aiOperations)
     .set({ status: 'failed' })
     .where(eq(aiOperations.id, operationId));
+
+  if (isManagedProviderError(lastError)) {
+    return {
+      ok: false,
+      status: lastError.clientStatus,
+      error: lastError.code,
+      message: lastError.message,
+    };
+  }
 
   return {
     ok: false,
