@@ -1,7 +1,9 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { LoginButton } from '@/components/auth/login-button';
+import { EmailOtpLogin } from '@/components/auth/email-otp-login';
 import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
@@ -28,17 +30,41 @@ export default function LoginPage() {
         {t('loginDescription')}
       </p>
 
+      {/* Email OTP login */}
+      <div className="mt-6 w-full">
+        <Suspense fallback={null}>
+          <EmailOtpLogin />
+        </Suspense>
+      </div>
+
       {/* Divider */}
-      <Separator className="my-6" />
+      <div className="my-6 flex w-full items-center gap-3">
+        <Separator className="flex-1" />
+        <span className="text-xs text-zinc-400">{t('or')}</span>
+        <Separator className="flex-1" />
+      </div>
 
-      {/* Login button */}
-      <Suspense fallback={null}>
-        <LoginButton />
-      </Suspense>
+      {/* Google login */}
+      <div className="w-full">
+        <Suspense fallback={null}>
+          <LoginButton />
+        </Suspense>
+      </div>
 
-      {/* Terms */}
+      {/* Terms with clickable links */}
       <p className="mt-6 text-center text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
-        {t('agreeTerms')}
+        {t.rich('agreeTermsLinks', {
+          terms: (chunks) => (
+            <Link href="/terms" className="underline hover:no-underline">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/privacy" className="underline hover:no-underline">
+              {chunks}
+            </Link>
+          ),
+        })}
       </p>
     </div>
   );

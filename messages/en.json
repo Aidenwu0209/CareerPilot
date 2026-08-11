@@ -13,7 +13,9 @@
     "back": "Back",
     "search": "Search",
     "noData": "No data",
-    "rename": "Rename"
+    "rename": "Rename",
+    "moreActions": "More actions",
+    "menu": "Menu"
   },
   "auth": {
     "login": "Log in",
@@ -21,7 +23,27 @@
     "loginWithGoogle": "Sign in with Google",
     "welcomeBack": "Welcome back",
     "loginDescription": "Sign in to manage your resumes",
-    "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy"
+    "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
+    "otp": {
+      "emailLabel": "Email Address",
+      "sendCode": "Send Code",
+      "codeLabel": "Verification Code",
+      "codeSentTo": "Code sent to {email}",
+      "verify": "Verify",
+      "resend": "Resend Code",
+      "resendIn": "Resend available in {seconds}s",
+      "changeEmail": "Change Email",
+      "errors": {
+        "invalidEmail": "Please enter a valid email address",
+        "rateLimited": "Too many requests, please try again later",
+        "invalidCode": "Incorrect verification code",
+        "expired": "Code has expired, please request a new one",
+        "used": "Code has already been used, please request a new one",
+        "serverError": "Service temporarily unavailable, please try again"
+      }
+    },
+    "or": "or",
+    "agreeTermsLinks": "By signing in, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>"
   },
   "dashboard": {
     "nav": "Dashboard",
@@ -131,9 +153,17 @@
       "grammarCheck": "Grammar",
       "share": "Share",
       "import": "Import",
+      "backToDashboard": "Back to dashboard",
+      "more": "More tools",
+      "zoomOut": "Zoom out preview",
+      "zoomIn": "Zoom in preview",
       "previewError": "Preview failed to render — the content may be malformed. Edit it on the left to fix, or undo the recent AI changes."
     },
     "aiPolish": "AI Polish",
+    "showSection": "Show section",
+    "hideSection": "Hide section",
+    "removeSection": "Remove section",
+    "dragSection": "Drag to reorder section",
     "invalidSectionContent": "This section has invalid data. Please use AI to regenerate the content.",
     "sidebar": {
       "sections": "Sections",
@@ -180,6 +210,8 @@
       "endDate": "End Date",
       "current": "Present",
       "description": "Description",
+      "customTitle": "Title",
+      "customDate": "Date",
       "highlights": "Highlights",
       "institution": "Institution",
       "degree": "Degree",
@@ -207,12 +239,22 @@
       "qrUrlInvalid": "Please enter a valid URL",
       "addItem": "Add Item",
       "removeItem": "Remove Item",
+      "uploadAvatar": "Upload avatar",
       "clear": "Clear",
       "dateDisplay": "{month} {year}",
       "months": {
-        "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
-        "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
-        "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+        "10": "Oct",
+        "11": "Nov",
+        "12": "Dec",
+        "01": "Jan",
+        "02": "Feb",
+        "03": "Mar",
+        "04": "Apr",
+        "05": "May",
+        "06": "Jun",
+        "07": "Jul",
+        "08": "Aug",
+        "09": "Sep"
       }
     }
   },
@@ -242,7 +284,29 @@
     "apiKeyMissing": "API Key Not Configured",
     "apiKeyMissingHint": "Please configure your AI API Key in Settings before using AI features.",
     "apiKeyMissingBubble": "API Key not configured. Go to Settings.",
-    "goToSettings": "Go to Settings"
+    "goToSettings": "Go to Settings",
+    "modelPlaceholder": "Select model",
+    "model": "Model",
+    "modelLoadError": "Failed to load models",
+    "noModelsAvailable": "No models available",
+    "tokenPriced": "Token-based",
+    "credits": "credits",
+    "modelUnavailable": "Selected model is no longer available, switched to default",
+    "insufficientCredits": "Insufficient Credits",
+    "insufficientCreditsHint": "You don't have enough credits to complete this action",
+    "rateLimited": "Too Many Requests",
+    "rateLimitedHint": "Please try again later",
+    "modelNotAllowed": "Model Unavailable",
+    "modelNotAllowedHint": "This model is disabled or not authorized, please choose another",
+    "providerModelUnavailable": "The model is unavailable at the provider. Choose another model or contact the administrator.",
+    "providerCredentialsRejected": "The AI provider credentials are invalid. Please contact the administrator.",
+    "providerQuotaExceeded": "The AI provider quota is exhausted. Try again later or contact the administrator.",
+    "providerRequestRejected": "The AI provider rejected this image request. Adjust the image or requirements and retry.",
+    "providerUpstreamUnavailable": "The AI provider is temporarily unavailable. Please try again later.",
+    "accountSuspended": "Account Suspended",
+    "accountSuspendedHint": "Your account has been suspended, please contact support",
+    "networkErrorHint": "Network connection error, please check your connection and retry",
+    "invalidToolCallHint": "The AI model returned an invalid tool call, please retry"
   },
   "pdf": {
     "exporting": "Generating PDF...",
@@ -351,6 +415,7 @@
     "optimize": "Optimize Resume",
     "optimizeCopy": "Copy & Optimize",
     "copyOptimizeError": "Failed to duplicate resume, please try again",
+    "error": "Analysis failed. Please try again.",
     "pasteJd": "Paste a job description to get started",
     "noResults": "No analysis results available",
     "newAnalysis": "New Analysis",
@@ -808,6 +873,7 @@
       "titleLabel": "Interview Title",
       "titlePlaceholder": "e.g., Senior Frontend Engineer Interview",
       "startInterview": "Start Interview",
+      "createFailed": "Failed to create the interview. Please try again.",
       "custom": {
         "title": "Custom Interviewer",
         "name": "Name",
@@ -841,7 +907,12 @@
       "roundComplete": "This round is complete",
       "allComplete": "All interview rounds completed",
       "generateReport": "Generate Report",
-      "generatingReport": "Generating report..."
+      "generatingReport": "Generating report...",
+      "insufficientCredits": "Insufficient credits for this interview message",
+      "rateLimited": "Too many requests, please try again later",
+      "modelNotAllowed": "The selected model is disabled or not available",
+      "accountSuspended": "Account suspended",
+      "chatError": "Failed to send interview message, please retry"
     },
     "report": {
       "title": "Interview Report",
@@ -880,7 +951,12 @@
       "backToLobby": "Back to Lobby",
       "markedForReview": "Marked for Review",
       "usedHint": "Used Hint",
-      "skippedQuestion": "Skipped"
+      "skippedQuestion": "Skipped",
+      "insufficientCredits": "Insufficient credits to generate the report",
+      "rateLimited": "Too many requests, please try again later",
+      "modelNotAllowed": "The selected model is disabled or not available",
+      "accountSuspended": "Account suspended",
+      "reportFailed": "Report generation failed, please try again later"
     },
     "interviewers": {
       "hr": "HR",
@@ -890,6 +966,865 @@
       "project_deep_dive": "Project Deep Dive",
       "leader": "Leader",
       "custom": "Custom"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "version": "Version",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "August 1, 2026",
+      "back": "Back to Home",
+      "sections": {
+        "intro": {
+          "title": "Introduction",
+          "body": "CareerPilot (hereinafter \"we\") respects and protects user privacy. This Privacy Policy explains how we collect, use, store, and protect your personal information. By using this service, you agree to the data practices described in this policy."
+        },
+        "collection": {
+          "title": "Information We Collect",
+          "body": "We collect only the information necessary to provide our services, including:",
+          "items": {
+            "account": "Account information: registration email, display name, and avatar",
+            "resume": "Resume content: resume data you actively create and edit",
+            "usage": "Usage records: AI call logs, credit transactions, and activity logs",
+            "cookies": "Technical information: session cookies and basic browser information"
+          }
+        },
+        "use": {
+          "title": "How We Use Information",
+          "body": "The information we collect is used solely for the following purposes:",
+          "items": {
+            "service": "Providing and maintaining core features such as resume editing, AI optimization, and mock interviews",
+            "ai": "Sending your resume content to platform-managed AI models for processing",
+            "security": "Detecting and preventing fraud, abuse, and unauthorized access",
+            "communication": "Sending you service notifications and important updates"
+          }
+        },
+        "sharing": {
+          "title": "Information Sharing",
+          "body": "We do not sell, rent, or trade your personal information. Information may be shared only when: you give explicit consent; required by law or government authorities; necessary to protect the legitimate rights of the platform and its users. Organization administrators may view aggregated usage data for their organization but cannot access your resume content, interview transcripts, or full prompts."
+        },
+        "retention": {
+          "title": "Data Retention",
+          "body": "Your personal data is retained while your account is active. After account deletion, business data is cascade-deleted according to the data graph; financial and security records required by law are anonymized."
+        },
+        "rights": {
+          "title": "Your Rights",
+          "body": "You have the following rights regarding your personal information:",
+          "items": {
+            "access": "Access: view your personal data and usage details",
+            "export": "Export: download a complete copy of your personal data",
+            "delete": "Delete: close your account and delete associated data",
+            "revoke": "Revoke: withdraw granted organization membership"
+          }
+        },
+        "security": {
+          "title": "Data Security",
+          "body": "We protect your data using encrypted transmission (HTTPS), encrypted storage (key encryption), least-privilege access, and regular audits. AI provider credentials are encrypted with a separate master key; regular APIs and management logs never return plaintext keys."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "body": "If you have any questions about this Privacy Policy, please contact: <email>support@careerpilot.app</email>"
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "version": "Version",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "August 1, 2026",
+      "back": "Back to Home",
+      "sections": {
+        "acceptance": {
+          "title": "Acceptance of Terms",
+          "body": "By using the CareerPilot service, you agree to these Terms of Service. If you do not agree with any terms, please stop using the service."
+        },
+        "accounts": {
+          "title": "Account Registration",
+          "body": "You must register with a valid email address and are responsible for all activities under your account. Registering multiple accounts for abuse is prohibited. The platform reserves the right to suspend accounts that violate these terms."
+        },
+        "credits": {
+          "title": "Credits and Quota",
+          "body": "Individual users receive credits through registration grants or platform adjustments. Organization users use credits allocated to their organization. All AI calls deduct credits according to published platform rules. Credits are non-transferable, non-refundable, and cannot be redeemed for cash unless otherwise specified."
+        },
+        "ai": {
+          "title": "AI-Generated Content",
+          "body": "AI-generated resume content, interview evaluations, and suggestions are for reference only. The platform does not guarantee the accuracy, completeness, or suitability of AI outputs. Users should review all AI-generated content themselves."
+        },
+        "orgUsage": {
+          "title": "Organization Usage",
+          "body": "Organization administrators may manage their organization members and seats, and view aggregated usage data. Administrators cannot access members resume content, interview transcripts, or full prompts. AI consumption by organization members is deducted from the organization quota."
+        },
+        "prohibited": {
+          "title": "Prohibited Conduct",
+          "body": "You must not engage in the following activities:",
+          "items": {
+            "abuse": "Abusing AI interfaces, including automated mass requests, scraping, or exceeding reasonable usage",
+            "reverse": "Reverse engineering, decompiling, or attempting to obtain source code of the platform",
+            "unauthorized": "Accessing other users resumes, interviews, or account data without authorization",
+            "illegal": "Using the service for any illegal or infringing activities"
+          }
+        },
+        "disclaimer": {
+          "title": "Disclaimer",
+          "body": "The service is provided \"as is\" without any express or implied warranties. The platform does not guarantee the availability, reliability, or accuracy of the service."
+        },
+        "liability": {
+          "title": "Limitation of Liability",
+          "body": "To the maximum extent permitted by applicable law, the platform shall not be liable for any indirect, incidental, special, or consequential damages."
+        },
+        "changes": {
+          "title": "Changes to Terms",
+          "body": "The platform reserves the right to modify these terms at any time. Material changes will be communicated through notifications or login prompts. Continued use of the service constitutes acceptance of the modified terms."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "body": "If you have any questions about these Terms of Service, please contact: <email>support@careerpilot.app</email>"
+        }
+      }
+    }
+  },
+  "nav": {
+    "admin": "Admin",
+    "orgAdmin": "Org Admin",
+    "personalCredits": "Personal Credits",
+    "orgCredits": "Organization Credits",
+    "account": "Account"
+  },
+  "credits": {
+    "title": "Credits & Transactions",
+    "description": "View your current billing account balance and transaction history",
+    "accountType": "Account Type",
+    "personalAccount": "Personal Account",
+    "orgAccount": "Organization Account",
+    "personalBadge": "Personal",
+    "orgBadge": "Organization",
+    "availableBalance": "Available Balance",
+    "transactionHistory": "Transaction History",
+    "colTime": "Time",
+    "colType": "Type",
+    "colAmount": "Change",
+    "colBalanceAfter": "Balance After",
+    "colNote": "Note",
+    "empty": "No transactions yet",
+    "loadError": "Failed to load transactions. Please try again.",
+    "retry": "Retry",
+    "prev": "Previous",
+    "next": "Next",
+    "reasons": {
+      "registrationGrant": "Registration Grant",
+      "manualCredit": "Manual Credit",
+      "manualDebit": "Manual Debit",
+      "consumption": "Consumption",
+      "refund": "Refund",
+      "purchaseCredit": "Package top-up",
+      "subscriptionCredit": "Subscription credits",
+      "paymentRefund": "Payment refund",
+      "paymentRefundRollback": "Failed refund rollback",
+      "adjustment": "Adjustment"
+    }
+  },
+  "admin": {
+    "title": "Admin Console",
+    "overview": "Overview",
+    "noPermission": {
+      "title": "Access Denied",
+      "description": "You do not have super admin privileges to access this page."
+    },
+    "sections": {
+      "operations": {
+        "title": "Operations & Alerts",
+        "description": "Monitor AI reliability, credit usage, cost estimates, and audit activity"
+      },
+      "users": {
+        "title": "Users & Credits",
+        "description": "Manage users, freeze accounts, adjust credits"
+      },
+      "aiProviders": {
+        "title": "AI Providers & Models",
+        "description": "Manage providers, credentials, model catalog"
+      },
+      "aiModels": {
+        "title": "Model Catalog",
+        "description": "Configure model capabilities, limits, status, and pricing"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "description": "Create orgs, assign seats and quota"
+      },
+      "creditRules": {
+        "title": "Credit Rules",
+        "description": "Configure registration grants and daily limits"
+      },
+      "billing": {
+        "title": "Billing & Plans",
+        "description": "Manage credit packs, subscriptions, model access, refunds, and reconciliation"
+      }
+    },
+    "operations": {
+      "title": "Operations & Alerts",
+      "description": "A 24-hour reliability view and 30-day usage view for platform operations.",
+      "alerts": "Active alerts",
+      "operations24h": "AI operations · 24h",
+      "successRate24h": "Success rate · 24h",
+      "latency24h": "Average latency · 24h",
+      "credits30d": "Net credits · 30d",
+      "staleHolds": "Expired active holds",
+      "estimatedCost": "Estimated 30-day provider cost: {cost}. Configure AI_COST_PER_CREDIT to calibrate this estimate.",
+      "topModels": "Top models · 30d",
+      "topUsers": "Top users · 30d",
+      "recentAudit": "Recent audit activity",
+      "model": "Model",
+      "user": "User",
+      "calls": "Calls",
+      "failures": "Failures",
+      "time": "Time",
+      "action": "Action",
+      "result": "Result",
+      "summary": "Summary",
+      "empty": "No activity in this period"
+    },
+    "providers": {
+      "title": "Provider Management",
+      "description": "Manage hosted AI providers, encrypted credentials, and connection tests",
+      "refresh": "Refresh",
+      "add": "Add Provider",
+      "empty": "No providers yet. Click \"Add Provider\" to create one.",
+      "loadError": "Failed to load providers",
+      "retry": "Retry",
+      "statusActive": "Active",
+      "statusDisabled": "Disabled",
+      "credential": "Credential",
+      "noCredential": "Not configured",
+      "version": "Version",
+      "lastValidated": "Last Validated",
+      "test": "Test",
+      "edit": "Edit",
+      "rotate": "Rotate",
+      "enable": "Enable",
+      "disable": "Disable",
+      "testSuccess": "Connection test successful",
+      "testFailed": "Connection test failed",
+      "testResultSuccess": "Connected",
+      "testResultFailed": "Failed",
+      "addSuccess": "Provider created",
+      "editSuccess": "Provider updated",
+      "rotateSuccess": "Credential rotated",
+      "toggleFailed": "Failed to toggle status",
+      "enabled": "Provider enabled",
+      "disabled": "Provider disabled",
+      "confirmEnable": "Enable Provider",
+      "confirmDisable": "Disable Provider",
+      "confirmEnableDesc": "Once enabled, models under this provider will become visible and callable by users.",
+      "confirmDisableDesc": "Once disabled, all models under this provider will immediately become invisible and uncallable.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "addTitle": "Add Provider",
+      "addDescription": "Create a new hosted AI provider. Credentials will be encrypted at rest.",
+      "fieldType": "Provider Type",
+      "fieldName": "Name",
+      "fieldBaseUrl": "Base URL",
+      "fieldCredential": "API Credential",
+      "optional": "optional",
+      "credentialHint": "Credentials are encrypted with AES-256-GCM and never returned in plaintext.",
+      "create": "Create",
+      "errNameRequired": "Please enter a provider name",
+      "errAddFailed": "Failed to create provider",
+      "editTitle": "Edit Provider",
+      "editDescription": "Update provider name or base URL.",
+      "save": "Save",
+      "errEditFailed": "Failed to update provider",
+      "rotateTitle": "Rotate Credential",
+      "rotateDescription": "Set a new API credential for provider {name}. The new credential takes effect immediately.",
+      "rotateHint": "Rotation increments the credential version. The old credential is revoked immediately.",
+      "fieldNewKey": "New API Credential",
+      "rotateSubmit": "Rotate",
+      "errKeyRequired": "Please enter the new API credential",
+      "errRotateFailed": "Failed to rotate credential",
+      "errApi": {
+        "TYPE_REQUIRED": "Please select a provider type",
+        "NAME_REQUIRED": "Name is required",
+        "INVALID_NAME": "Invalid name",
+        "UPSTREAM_URL_NOT_ALLOWED": "Base URL domain is not in the approved allowlist",
+        "NEW_KEY_REQUIRED": "New credential is required",
+        "PROVIDER_NOT_FOUND": "Provider not found",
+        "NO_UPDATES": "No fields to update"
+      }
+    },
+    "users": {
+      "title": "Users & Credits",
+      "description": "Search users, view roles and balances, freeze or unfreeze accounts",
+      "refresh": "Refresh",
+      "searchPlaceholder": "Search by name or email…",
+      "search": "Search",
+      "clear": "Clear",
+      "empty": "No users yet",
+      "noResults": "No matching users found",
+      "loadError": "Failed to load users",
+      "retry": "Retry",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "roleAdmin": "Admin",
+      "roleUser": "User",
+      "balance": "Balance",
+      "orgs": "Orgs",
+      "freeze": "Freeze",
+      "unfreeze": "Unfreeze",
+      "cannotFreezeAdmin": "Cannot freeze a super admin",
+      "frozen": "User frozen",
+      "unfrozen": "User unfrozen",
+      "toggleFailed": "Operation failed",
+      "confirmFreeze": "Freeze User",
+      "confirmUnfreeze": "Unfreeze User",
+      "confirmFreezeDesc": "Once frozen, {name} will not be able to call any authenticated API until unfrozen.",
+      "confirmUnfreezeDesc": "Once unfrozen, {name} will regain normal access.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "viewDetails": "Details",
+      "errApi": {
+        "INVALID_ACTION": "Invalid action type",
+        "IDEMPOTENCY_KEY_REQUIRED": "Missing idempotency key",
+        "USER_NOT_FOUND": "User not found",
+        "INVALID_BODY": "Invalid request body",
+        "FORBIDDEN": "You do not have permission to perform this action",
+        "AUTH_REQUIRED": "Authentication required"
+      }
+    },
+    "orgDetail": {
+      "title": "Organization Details",
+      "backToOrgs": "Back to Organizations",
+      "balance": "Balance",
+      "seats": "Seats",
+      "createdAt": "Created",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "addQuota": "Add Quota",
+      "deductQuota": "Deduct Quota",
+      "suspend": "Suspend",
+      "activate": "Activate",
+      "refresh": "Refresh",
+      "loadError": "Failed to load",
+      "retry": "Retry",
+      "empty": "No transactions yet",
+      "adminsTitle": "Organization Admins",
+      "noAdmins": "No admins yet. Assign one by email.",
+      "appoint": "Assign Admin",
+      "revoke": "Revoke",
+      "appointTitle": "Assign Organization Admin",
+      "appointDescription": "Assign a registered user as org admin of \"{name}\"",
+      "fieldEmail": "User Email",
+      "placeholderEmail": "Enter the exact registered email",
+      "confirmAppoint": "Confirm Assign",
+      "appointSuccess": "Appointed {email} as org admin",
+      "appointFailed": "Failed to assign admin",
+      "revokeSuccess": "Revoked org admin from {email}",
+      "revokeFailed": "Failed to revoke admin",
+      "errEmailRequired": "Please enter an email address",
+      "suspendTitle": "Confirm Suspension",
+      "suspendDescription": "Suspending \"{name}\" will reject org-scoped requests from its {count} members. Continue?",
+      "activateTitle": "Confirm Activation",
+      "activateDescription": "Activating \"{name}\" will restore org access for its members.",
+      "confirmSuspend": "Confirm Suspend",
+      "confirmActivate": "Confirm Activate",
+      "suspendSuccess": "Organization suspended",
+      "activateSuccess": "Organization activated",
+      "statusChangeFailed": "Failed to change status",
+      "transactionHistory": "Transaction History",
+      "colTime": "Time",
+      "colType": "Type",
+      "colAmount": "Amount",
+      "colBalanceAfter": "Balance After",
+      "colNote": "Note",
+      "prev": "Previous",
+      "next": "Next",
+      "addTitle": "Add Quota",
+      "deductTitle": "Deduct Quota",
+      "adjustDescription": "Adjusting quota for \"{name}\"",
+      "fieldAmount": "Amount",
+      "fieldNote": "Note (required)",
+      "placeholderAmountAdd": "Enter a positive integer",
+      "placeholderAmountDeduct": "Enter a positive integer",
+      "placeholderNote": "Enter the reason for adjustment",
+      "confirmAdd": "Confirm Add",
+      "confirmDeduct": "Confirm Deduct",
+      "adjustSuccess": "Adjusted ({amount})",
+      "adjustFailed": "Adjustment failed",
+      "errInvalidAmount": "Please enter a non-zero integer",
+      "errNoteRequired": "Please enter a note",
+      "cancel": "Cancel",
+      "reasons": {
+        "registrationGrant": "Registration Grant",
+        "manualCredit": "Manual Credit",
+        "manualDebit": "Manual Debit",
+        "consumption": "Consumption",
+        "refund": "Refund",
+        "purchaseCredit": "Package top-up",
+        "subscriptionCredit": "Subscription credits",
+        "paymentRefund": "Payment refund",
+        "paymentRefundRollback": "Failed refund rollback",
+        "adjustment": "Adjustment"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "Amount must be a non-zero integer",
+        "REASON_REQUIRED": "A note is required",
+        "IDEMPOTENCY_KEY_REQUIRED": "Missing idempotency key",
+        "INSUFFICIENT_CREDITS": "Insufficient quota to deduct",
+        "USER_NOT_FOUND": "User not found",
+        "ALREADY_ADMIN": "User is already an org admin",
+        "NOT_AN_ADMIN": "User is not an org admin of this organization",
+        "INVALID_STATUS": "Invalid status",
+        "INVALID_BODY": "Invalid request body",
+        "FORBIDDEN": "You do not have permission",
+        "AUTH_REQUIRED": "Authentication required"
+      }
+    },
+    "userDetail": {
+      "title": "User Details",
+      "backToUsers": "Back to Users",
+      "balance": "Balance",
+      "createdAt": "Joined",
+      "orgs": "Organizations",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "roleAdmin": "Admin",
+      "roleUser": "User",
+      "addCredits": "Add Credits",
+      "deductCredits": "Deduct Credits",
+      "refresh": "Refresh",
+      "transactionHistory": "Transaction History",
+      "colTime": "Time",
+      "colType": "Type",
+      "colAmount": "Amount",
+      "colBalanceAfter": "Balance After",
+      "colNote": "Note",
+      "empty": "No transactions yet",
+      "loadError": "Failed to load",
+      "retry": "Retry",
+      "prev": "Previous",
+      "next": "Next",
+      "addTitle": "Add Credits",
+      "deductTitle": "Deduct Credits",
+      "adjustDescription": "Adjusting credits for {name}",
+      "fieldAmount": "Amount",
+      "fieldNote": "Note (required)",
+      "placeholderAmountAdd": "Enter a positive integer",
+      "placeholderAmountDeduct": "Enter a positive integer",
+      "placeholderNote": "Enter the reason for adjustment",
+      "confirmAdd": "Confirm Add",
+      "confirmDeduct": "Confirm Deduct",
+      "cancel": "Cancel",
+      "adjustSuccess": "Adjusted ({amount})",
+      "adjustFailed": "Adjustment failed",
+      "errInvalidAmount": "Please enter a non-zero integer",
+      "errNoteRequired": "Please enter a note",
+      "reasons": {
+        "registrationGrant": "Registration Grant",
+        "manualCredit": "Manual Credit",
+        "manualDebit": "Manual Debit",
+        "consumption": "Consumption",
+        "refund": "Refund",
+        "purchaseCredit": "Package top-up",
+        "subscriptionCredit": "Subscription credits",
+        "paymentRefund": "Payment refund",
+        "paymentRefundRollback": "Failed refund rollback",
+        "adjustment": "Adjustment"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "Amount must be a non-zero integer",
+        "REASON_REQUIRED": "Note is required",
+        "IDEMPOTENCY_KEY_REQUIRED": "Missing idempotency key",
+        "INSUFFICIENT_CREDITS": "Insufficient credits, debit would result in negative balance",
+        "USER_NOT_FOUND": "User not found",
+        "INVALID_BODY": "Invalid request body",
+        "FORBIDDEN": "You do not have permission to perform this action",
+        "AUTH_REQUIRED": "Authentication required"
+      }
+    },
+    "creditRules": {
+      "title": "Credit Rules",
+      "description": "Configure registration grants and daily spending limits",
+      "refresh": "Refresh",
+      "save": "Save",
+      "fieldValue": "Value",
+      "ruleRegistrationGrant": "Registration Grant",
+      "ruleRegistrationGrantDesc": "Credits awarded to new users upon first authentication",
+      "ruleDailyLimitPersonal": "Personal Daily Limit",
+      "ruleDailyLimitPersonalDesc": "Maximum daily AI consumption for personal accounts",
+      "ruleDailyLimitOrg": "Organization Daily Limit",
+      "ruleDailyLimitOrgDesc": "Maximum daily AI consumption for organization accounts",
+      "ruleUnknown": "Unknown Rule",
+      "empty": "No rules configured",
+      "loadError": "Failed to load rules",
+      "retry": "Retry",
+      "saveSuccess": "Rule updated",
+      "errInvalidValue": "Please enter a non-negative integer",
+      "errSaveFailed": "Failed to save",
+      "hintFutureOnly": "Rule changes only affect future events and do not retroactively apply to past transactions."
+    },
+    "models": {
+      "title": "Model Catalog Management",
+      "description": "Configure hosted model capabilities, limits, tiers, and pricing rules",
+      "refresh": "Refresh",
+      "add": "Add Model",
+      "empty": "No models yet. Click \"Add Model\" to create one.",
+      "loadError": "Failed to load models",
+      "retry": "Retry",
+      "statusActive": "Active",
+      "statusDisabled": "Disabled",
+      "capText": "Text",
+      "capImage": "Image",
+      "tierFree": "Free",
+      "tierStandard": "Standard",
+      "tierPremium": "Premium",
+      "visibilityPublic": "Public",
+      "visibilityInternal": "Internal",
+      "fieldInputLimit": "Input Limit",
+      "fieldOutputLimit": "Output Limit",
+      "fieldMaxSteps": "Max Steps",
+      "pricingLabel": "Fixed {fixed} / Input {input} / Output {output}",
+      "pricingHint": "Fixed price is per call in credits; token price is per 1K tokens in credits.",
+      "edit": "Edit",
+      "enable": "Enable",
+      "disable": "Disable",
+      "toggleFailed": "Failed to toggle status",
+      "enabled": "Model enabled",
+      "disabled": "Model disabled",
+      "confirmEnable": "Enable Model",
+      "confirmDisable": "Disable Model",
+      "confirmEnableDesc": "Once enabled, this model will become visible and callable by users.",
+      "confirmDisableDesc": "Once disabled, this model will immediately become invisible and uncallable.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "addTitle": "Add Model",
+      "addDescription": "Create a new model configuration under a provider.",
+      "fieldProvider": "Provider",
+      "fieldProviderPlaceholder": "Select a provider",
+      "fieldIdentifier": "Model Identifier",
+      "fieldDisplayName": "Display Name",
+      "fieldCapabilities": "Capabilities",
+      "fieldTier": "Tier",
+      "fieldVisibility": "Visibility",
+      "optional": "optional",
+      "fieldFixedPrice": "Fixed Price",
+      "fieldTokenPriceInput": "Input Token Price",
+      "fieldTokenPriceOutput": "Output Token Price",
+      "create": "Create",
+      "errProviderRequired": "Please select a provider",
+      "errIdentifierRequired": "Please enter a model identifier",
+      "errNameRequired": "Please enter a display name",
+      "errInvalidInputLimit": "Input limit must be a non-negative number",
+      "errInvalidOutputLimit": "Output limit must be a non-negative number",
+      "errInvalidMaxSteps": "Max steps must be a non-negative number",
+      "errInvalidFixedPrice": "Fixed price must be a non-negative number",
+      "errInvalidTokenPriceInput": "Input token price must be a non-negative number",
+      "errInvalidTokenPriceOutput": "Output token price must be a non-negative number",
+      "errAddFailed": "Failed to create model",
+      "editTitle": "Edit Model",
+      "editDescription": "Update configuration for model {name} (provider: {provider}).",
+      "save": "Save",
+      "errEditFailed": "Failed to update model",
+      "addSuccess": "Model created",
+      "editSuccess": "Model updated",
+      "errApi": {
+        "PROVIDER_ID_REQUIRED": "Please select a provider",
+        "MODEL_IDENTIFIER_REQUIRED": "Model identifier is required",
+        "DISPLAY_NAME_REQUIRED": "Display name is required",
+        "PROVIDER_NOT_FOUND": "Provider not found",
+        "MODEL_IDENTIFIER_EXISTS": "This model identifier already exists for this provider",
+        "INVALID_FIXED_PRICE": "Invalid fixed price",
+        "INVALID_TOKEN_PRICE_INPUT": "Invalid input token price",
+        "INVALID_TOKEN_PRICE_OUTPUT": "Invalid output token price",
+        "INVALID_INPUT_TOKEN_LIMIT": "Invalid input token limit",
+        "INVALID_OUTPUT_TOKEN_LIMIT": "Invalid output token limit",
+        "INVALID_MAX_STEPS": "Invalid max steps",
+        "INVALID_STATUS": "Invalid status value",
+        "MODEL_NOT_FOUND": "Model not found",
+        "NO_UPDATES": "No fields to update",
+        "INVALID_BODY": "Invalid request body"
+      }
+    },
+    "orgs": {
+      "title": "Organizations",
+      "description": "Create organizations, view seats, quota, and admins",
+      "refresh": "Refresh",
+      "add": "New Organization",
+      "searchPlaceholder": "Search by name or slug…",
+      "search": "Search",
+      "clear": "Clear",
+      "empty": "No organizations yet. Click \"New Organization\" to create one.",
+      "noResults": "No matching organizations found",
+      "loadError": "Failed to load organizations",
+      "retry": "Retry",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "seats": "Seats",
+      "balance": "Quota",
+      "admins": "Admins",
+      "createTitle": "New Organization",
+      "createDescription": "Create a new organization with slug, seat limit, and initial quota.",
+      "fieldName": "Name",
+      "fieldNamePlaceholder": "e.g., Acme Corporation",
+      "fieldSlug": "Unique Slug",
+      "fieldSlugPlaceholder": "e.g., acme-corp",
+      "fieldSlugHint": "Letters, numbers, and hyphens only. Cannot be changed after creation.",
+      "fieldSeats": "Seat Limit",
+      "fieldQuota": "Initial Quota",
+      "fieldQuotaHint": "One-time credits allocated at creation. Leave empty or 0 for none.",
+      "cancel": "Cancel",
+      "create": "Create",
+      "createSuccess": "Organization created",
+      "createFailed": "Failed to create organization",
+      "errNameRequired": "Please enter an organization name",
+      "errSlugRequired": "Please enter a unique slug",
+      "errSlugFormat": "Slug may only contain letters, numbers, and hyphens",
+      "errSeatLimitInvalid": "Seat limit must be a non-negative integer",
+      "errQuotaInvalid": "Initial quota must be a non-negative integer",
+      "errApi": {
+        "INVALID_NAME": "Invalid name",
+        "INVALID_SLUG": "Invalid slug",
+        "INVALID_SEAT_LIMIT": "Seat limit must be a non-negative integer",
+        "INVALID_INITIAL_QUOTA": "Initial quota must be a non-negative integer",
+        "INVALID_STATUS": "Invalid status",
+        "SLUG_ALREADY_EXISTS": "This slug is already in use",
+        "INVALID_BODY": "Invalid request body",
+        "FORBIDDEN": "You do not have permission to perform this action",
+        "AUTH_REQUIRED": "Authentication required"
+      }
+    }
+  },
+  "orgAdmin": {
+    "title": "Organization Admin",
+    "overview": "Overview",
+    "noPermission": {
+      "title": "Access Denied",
+      "description": "You are not an organization admin and cannot access this page."
+    },
+    "summary": {
+      "orgName": "Organization",
+      "status": "Status",
+      "statusActive": "Active",
+      "statusSuspended": "Suspended",
+      "seats": "Seats",
+      "seatsUsed": "Used",
+      "seatsTotal": "Total",
+      "credits": "Credit Balance",
+      "quotaUsed": "Quota Used",
+      "quotaRemaining": "Quota Remaining"
+    },
+    "sections": {
+      "members": {
+        "title": "Members",
+        "description": "Manage organization members and seats"
+      },
+      "usage": {
+        "title": "Usage",
+        "description": "View organization quota and consumption"
+      },
+      "branding": {
+        "title": "Branding",
+        "description": "Configure your organization name, logo, and product color"
+      }
+    },
+    "branding": {
+      "title": "Organization Branding",
+      "description": "Customize the authenticated product experience for members of your organization.",
+      "productName": "Product name",
+      "tagline": "Tagline",
+      "logoUrl": "Logo URL (HTTPS or local path)",
+      "primaryColor": "Primary color",
+      "loading": "Loading branding…",
+      "save": "Save branding",
+      "saving": "Saving…",
+      "saved": "Branding saved. Refresh to preview it across the product.",
+      "loadError": "Could not load branding settings.",
+      "saveError": "Could not save branding settings. Check the values and try again."
+    },
+    "members": {
+      "title": "Members",
+      "description": "Manage members and seats for {name}",
+      "addMember": "Add Member",
+      "membersTitle": "Member List",
+      "refresh": "Refresh",
+      "seatsFull": "Seat limit reached, cannot add more members",
+      "empty": "No members yet",
+      "loadError": "Failed to load members, please try again",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colRole": "Role",
+      "colJoined": "Joined",
+      "roleAdmin": "Admin",
+      "roleMember": "Member",
+      "remove": "Remove",
+      "fieldEmail": "Email Address",
+      "placeholderEmail": "Enter a registered user's email",
+      "addTitle": "Add Member",
+      "addDescription": "Enter the email of a registered user to add them to {name}",
+      "confirmAdd": "Add",
+      "addSuccess": "Successfully added member {email}",
+      "addFailed": "Failed to add member, please try again",
+      "errEmailRequired": "Please enter an email address",
+      "removeTitle": "Confirm Removal",
+      "removeDescription": "Are you sure you want to remove {name}? They will no longer be able to use organization credits.",
+      "confirmRemove": "Confirm Removal",
+      "removeSuccess": "Removed member {name}",
+      "removeFailed": "Failed to remove member, please try again",
+      "errApi": {
+        "USER_NOT_FOUND": "No registered user found with that email",
+        "ALREADY_MEMBER": "This user is already a member",
+        "SEAT_LIMIT_EXCEEDED": "Organization has reached its seat limit",
+        "BILLING_CONFLICT": "This user already belongs to another organization",
+        "CANNOT_ADD_SUPER_ADMIN": "Super admins cannot be added as organization members",
+        "CANNOT_REMOVE_ADMIN": "Cannot remove organization admins",
+        "ALREADY_REMOVED": "This member has already been removed",
+        "MEMBERSHIP_NOT_FOUND": "Membership not found",
+        "EMAIL_REQUIRED": "An email address is required",
+        "INVALID_BODY": "Invalid request format",
+        "ORG_SUSPENDED": "Organization is suspended",
+        "FORBIDDEN": "You do not have permission to do this",
+        "AUTH_REQUIRED": "Please sign in first"
+      }
+    },
+    "usage": {
+      "title": "Usage Analytics",
+      "description": "View quota consumption and usage details for {name}",
+      "refresh": "Refresh",
+      "loadError": "Failed to load usage data, please try again",
+      "retry": "Retry",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "apply": "Apply",
+      "summary": {
+        "totalConsumed": "Period Consumption",
+        "remaining": "Remaining Quota",
+        "operations": "Operations"
+      },
+      "byMember": {
+        "title": "Member Usage",
+        "colName": "Name",
+        "colOperations": "Operations",
+        "colSucceeded": "Succeeded",
+        "colFailed": "Failed"
+      },
+      "byModel": {
+        "title": "Model Usage",
+        "colModel": "Model",
+        "colAttempts": "Calls",
+        "colSucceeded": "Succeeded",
+        "colFailed": "Failed"
+      },
+      "empty": "No consumption records in the selected time range",
+      "noData": "No data available"
+    }
+  },
+  "account": {
+    "title": "Account",
+    "description": "View your profile, organization memberships, and export your data",
+    "unnamed": "Unnamed User",
+    "role": {
+      "superAdmin": "Super Admin",
+      "user": "User"
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended"
+    },
+    "authType": {
+      "email": "Email Code",
+      "oauth": "OAuth",
+      "fingerprint": "Fingerprint"
+    },
+    "field": {
+      "userId": "User ID",
+      "joined": "Joined"
+    },
+    "orgs": {
+      "title": "Organizations",
+      "roleAdmin": "Admin",
+      "roleMember": "Member",
+      "statusActive": "Active",
+      "statusRemoved": "Removed"
+    },
+    "export": {
+      "title": "Data Export",
+      "description": "Download all personal data stored on the platform, including resumes, chats, interviews, credit transactions, and more.",
+      "download": "Export My Data",
+      "exporting": "Generating export file…",
+      "success": "Export successful, download started",
+      "failed": "Export failed, please try again later"
+    },
+    "delete": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and personal data. This action cannot be undone.",
+      "startButton": "Delete My Account",
+      "dialogTitle": "Confirm Account Deletion",
+      "warningDescription": "You are about to start the deletion process. Please read the impact below carefully. You will need to re-authenticate via email code to proceed.",
+      "dataWillBeDeleted": "Data that will be deleted or revoked",
+      "items": {
+        "resumes": "Resumes and sections ({count})",
+        "interviews": "Mock interview records ({count})",
+        "chats": "AI chat history and sessions",
+        "shares": "Public share links",
+        "auth": "Login credentials (you will not be able to log in again)",
+        "memberships": "Organization memberships ({orgs})"
+      },
+      "retainedNote": "Credit transactions, audit logs, and legal consent records are retained for compliance but anonymized — no personally identifiable information remains.",
+      "noEmailWarning": "Your account has no email address, so re-authentication is not possible. Please contact support.",
+      "continue": "Continue",
+      "cancel": "Cancel",
+      "back": "Back",
+      "otpRequestDescription": "To confirm it's really you, we need to send a one-time code to {email}.",
+      "sendCode": "Send Code",
+      "codeSent": "Code sent. Please check your inbox.",
+      "enterCode": "I received it, enter the code",
+      "otpEnterDescription": "Enter the 6-digit code sent to {email}.",
+      "otpLabel": "Verification Code",
+      "resend": "Resend code",
+      "resendIn": "Resend in {seconds}s",
+      "verifyAndContinue": "Verify and Continue",
+      "finalWarning": "This is the final step. Once confirmed, your account and all data will be permanently deleted and cannot be recovered.",
+      "typeToConfirm": "Type \"{phrase}\" to confirm deletion.",
+      "confirmPhrase": "DELETE MY ACCOUNT",
+      "acknowledgment": "I understand this action is irreversible and all resumes, interviews, chats, and shares will be permanently deleted.",
+      "confirmDelete": "Confirm Deletion",
+      "errors": {
+        "EMAIL_REQUIRED": "Your account has no email address and cannot be deleted here. Please contact support.",
+        "RATE_LIMITED": "Too many requests. Please try again later.",
+        "OTP_SEND_FAILED": "Failed to send verification code. Please try again later.",
+        "INVALID_OTP": "Invalid or expired code. Please try again.",
+        "INVALID_OR_EXPIRED_TOKEN": "Confirmation token is invalid or expired. Please start over.",
+        "USER_NOT_FOUND": "User not found.",
+        "TOKEN_REQUIRED": "Missing confirmation token.",
+        "DELETE_FAILED": "Deletion failed. Please try again or contact support.",
+        "NETWORK_ERROR": "Network error. Please check your connection and retry."
+      }
+    },
+    "legal": {
+      "title": "Legal Documents & Consent",
+      "description": "View current privacy policy and terms of service versions and your consent records.",
+      "currentTitle": "Current Versions",
+      "yourConsent": "Your Consent",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "version": "Version {version}",
+      "effective": "Effective Date",
+      "consentedAt": "Consented At",
+      "consentSource": "Source",
+      "source": {
+        "registration": "Registration",
+        "explicit_reconsent": "Re-consent",
+        "login": "Login"
+      },
+      "notConsented": "Not yet consented",
+      "reconsentTitle": "Re-consent Required",
+      "reconsentDescription": "The privacy policy or terms of service have been updated. You need to consent to the latest versions to continue using the platform.",
+      "reconsentButton": "Consent to Latest Versions",
+      "reconsenting": "Recording consent…",
+      "reconsentSuccess": "Consent records updated",
+      "reconsentFailed": "Action failed, please try again later",
+      "viewDocument": "View Document",
+      "upToDate": "Your consent records are up to date."
     }
   }
 }

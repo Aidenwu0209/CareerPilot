@@ -1,62 +1,62 @@
-import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import { resolveActiveContext } from '@/lib/auth/guards';
+import { getUserIdFromRequest } from '@/lib/auth/helpers';
+import {
+  checkRateLimit,
+  rateLimitedResponse,
+  RATE_LIMIT_POLICIES,
+  rateLimitKey,
+} from '@/lib/rate-limit/rate-limit';
+import { getUserCatalog } from '@/lib/ai/model-catalog';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
-export async function GET(request: NextRequest) {
-  const provider = request.headers.get('x-provider') || 'openai';
-  const apiKey = request.headers.get('x-api-key') || '';
-  const baseURL = request.headers.get('x-base-url') || '';
-
-  if (!apiKey) {
-    return Response.json({ models: [] });
+/**
+ * GET /api/ai/models
+ *
+ * Returns the server-side managed model catalog for the current account.
+ *
+ * AC3: Only returns enabled, public models with capabilities and public pricing.
+ * AC4: Response never includes provider keys or internal service URLs.
+ */
+export async function GET(request: Request) {
+  await warnLegacyByok(request);
+  // Verify authentication and active status before any provider calls
+  const ctx = await resolveActiveContext(getUserIdFromRequest(request));
+  if (ctx === null) {
+    return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  }
+  if (!ctx.ok) {
+    return ctx.response;
   }
 
-  try {
-    let models: { id: string }[] = [];
-
-    switch (provider) {
-      case 'anthropic': {
-        const url = baseURL
-          ? `${baseURL.replace(/\/$/, '')}/v1/models`
-          : 'https://api.anthropic.com/v1/models';
-        const res = await fetch(url, {
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-          },
-        });
-        if (!res.ok) return Response.json({ models: [] });
-        const data = await res.json();
-        models = (data.data ?? []).map((m: { id: string }) => ({ id: m.id }));
-        break;
-      }
-
-      case 'gemini': {
-        const url = baseURL
-          ? `${baseURL.replace(/\/$/, '')}/models?key=${apiKey}`
-          : `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-        const res = await fetch(url);
-        if (!res.ok) return Response.json({ models: [] });
-        const data = await res.json();
-        models = (data.models ?? []).map((m: { name: string }) => ({
-          id: m.name.replace(/^models\//, ''),
-        }));
-        break;
-      }
-
-      default: {
-        // openai
-        const effectiveBaseURL = baseURL || 'https://api.openai.com/v1';
-        const res = await fetch(`${effectiveBaseURL}/models`, {
-          headers: { Authorization: `Bearer ${apiKey}` },
-        });
-        if (!res.ok) return Response.json({ models: [] });
-        const data = await res.json();
-        models = (data.data ?? data).map((m: { id: string }) => ({ id: m.id }));
-        break;
-      }
-    }
-
-    return Response.json({ models });
-  } catch {
-    return Response.json({ models: [] });
+  // Rate limit: per-user, fail-open (read-only catalog lookup)
+  const rlResult = await checkRateLimit(
+    rateLimitKey('ai-models', 'user', ctx.context.actor.userId),
+    RATE_LIMIT_POLICIES.aiModels,
+  );
+  if (!rlResult.allowed) {
+    return rateLimitedResponse(rlResult.retryAfter);
   }
+
+  const models = await getUserCatalog(ctx.context.actor.userId);
+
+  // AC4: Return only safe, public fields — no keys, no internal URLs
+  return NextResponse.json({
+    models: models.map((m) => ({
+      id: m.id,
+      modelIdentifier: m.modelIdentifier,
+      displayName: m.displayName,
+      family: m.family,
+      providerType: m.providerType,
+      capabilities: m.capabilities,
+      tier: m.tier,
+      deliveryResolution: m.deliveryResolution,
+      inputTokenLimit: m.inputTokenLimit,
+      outputTokenLimit: m.outputTokenLimit,
+      maxSteps: m.maxSteps,
+      fixedPrice: m.fixedPrice,
+      tokenPriceInput: m.tokenPriceInput,
+      tokenPriceOutput: m.tokenPriceOutput,
+    })),
+  });
 }

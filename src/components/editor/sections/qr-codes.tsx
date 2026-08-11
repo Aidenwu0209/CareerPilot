@@ -97,6 +97,7 @@ export function QrCodesSection({ section, onUpdate }: Props) {
               const updated = items.filter((_, i) => i !== idx);
               onUpdate({ items: updated });
             }}
+            aria-label={t('removeItem')}
             className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
           >
             <X className="h-3.5 w-3.5" />

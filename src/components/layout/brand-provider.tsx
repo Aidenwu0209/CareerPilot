@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { DEFAULT_BRANDING, type OrganizationBranding } from '@/lib/branding';
 
 export type Brand = 'mint' | 'blue' | 'pink';
 
@@ -32,6 +33,8 @@ function readStoredBrand(): string | null {
 interface BrandContextValue {
   brand: Brand;
   setBrand: (brand: Brand) => void;
+  branding: OrganizationBranding;
+  managedBranding: boolean;
 }
 
 const BrandContext = createContext<BrandContextValue | null>(null);
@@ -47,6 +50,8 @@ function applyBrand(brand: Brand) {
 
 export function BrandProvider({ children }: { children: ReactNode }) {
   const [brand, setBrandState] = useState<Brand>('mint');
+  const [branding, setBranding] = useState<OrganizationBranding>(DEFAULT_BRANDING);
+  const [managedBranding, setManagedBranding] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -60,6 +65,22 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    fetch('/api/branding')
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!active || !data?.branding) return;
+        const next = data.branding as OrganizationBranding;
+        setBranding(next);
+        const managed = Boolean(next.logoUrl || next.primaryColor || next.productName !== DEFAULT_BRANDING.productName || next.tagline);
+        setManagedBranding(managed);
+        applyOrganizationBranding(next);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
   const setBrand = (next: Brand) => {
     setBrandState(next);
     if (typeof window !== 'undefined') {
@@ -68,11 +89,20 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     applyBrand(next);
   };
 
-  return <BrandContext.Provider value={{ brand, setBrand }}>{children}</BrandContext.Provider>;
+  return <BrandContext.Provider value={{ brand, setBrand, branding, managedBranding }}>{children}</BrandContext.Provider>;
 }
 
 export function useBrand() {
   const ctx = useContext(BrandContext);
   if (!ctx) throw new Error('useBrand must be used within BrandProvider');
   return ctx;
+}
+
+function applyOrganizationBranding(branding: OrganizationBranding) {
+  if (typeof document === 'undefined' || !branding.primaryColor) return;
+  const root = document.documentElement;
+  root.style.setProperty('--brand', branding.primaryColor);
+  root.style.setProperty('--brand-hover', `color-mix(in srgb, ${branding.primaryColor} 82%, black)`);
+  root.style.setProperty('--brand-muted', `color-mix(in srgb, ${branding.primaryColor} 12%, white)`);
+  root.style.setProperty('--brand-ring', `color-mix(in srgb, ${branding.primaryColor} 40%, transparent)`);
 }

@@ -8,7 +8,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { id: sessionId } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(sessionId);
   if (!session || session.userId !== user.id) {
@@ -16,6 +16,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }
 
   const { messageId, marked } = await request.json();
+
+  // Verify message belongs to a round in this session
+  if (messageId) {
+    const message = await interviewRepository.findMessageById(messageId);
+    if (!message) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+    const round = await interviewRepository.findRound(message.roundId);
+    if (!round || round.sessionId !== sessionId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+  }
+
   await interviewRepository.updateMessageMetadata(messageId, { marked });
 
   return NextResponse.json({ success: true });

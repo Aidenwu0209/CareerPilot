@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
 import type { ModelMessage } from 'ai';
-import { getModel, extractAIConfig, getJsonProviderOptions, AIConfigError } from '@/lib/ai/provider';
-import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { resolveActiveContext } from '@/lib/auth/guards';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import type { ParsedResume } from '@/lib/ai/parse-schema';
-
-const ACCEPTED_TYPES = [
-  'application/pdf',
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-];
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+import {
+  ALLOWED_UPLOAD_MIME,
+  MAX_FILE_SIZE,
+  MAX_PDF_PAGES,
+  MAX_PROMPT_LENGTH,
+  sanitizedError,
+} from '@/lib/validation/input-limits';
+import { executeAiOperation } from '@/lib/ai/gateway';
+import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const SYSTEM_PROMPT = `You are a resume parser. Extract ALL information from the resume into the EXACT JSON schema below.
 
@@ -31,135 +31,150 @@ RULES:
 - Read ALL pages of the document thoroughly. Information may span multiple pages.`;
 
 export async function POST(request: NextRequest) {
-  try {
-    const fingerprint = getUserIdFromRequest(request);
-    const user = await resolveUser(fingerprint);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  await warnLegacyByok(request);
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
+
+  const formData = await request.formData();
+  const file = formData.get('file') as File | null;
+  const template = (formData.get('template') as string) || 'classic';
+  const language = (formData.get('language') as string) || 'zh';
+  const clientModel = (formData.get('model') as string) || undefined;
+
+  if (!file) {
+    return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+  }
+
+  if (!ALLOWED_UPLOAD_MIME.includes(file.type as typeof ALLOWED_UPLOAD_MIME[number])) {
+    return NextResponse.json(
+      { error: 'Unsupported file type. Accepted: PDF, PNG, JPG, WebP' },
+      { status: 400 }
+    );
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    return NextResponse.json(
+      { error: 'File too large. Maximum size: 10MB' },
+      { status: 400 }
+    );
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  // Build messages based on file type
+  const messages: ModelMessage[] = [];
+  const isPdf = file.type === 'application/pdf';
+
+  if (isPdf) {
+    // Check PDF page count before any rendering
+    const { doc } = await loadMupdfDoc(new Uint8Array(buffer));
+    const pageCount = doc.countPages();
+    if (pageCount > MAX_PDF_PAGES) {
+      return sanitizedError(`PDF has too many pages (${pageCount}, max ${MAX_PDF_PAGES})`);
     }
 
-    const formData = await request.formData();
-    const file = formData.get('file') as File | null;
-    const template = (formData.get('template') as string) || 'classic';
-    const language = (formData.get('language') as string) || 'zh';
+    // Try to extract text from PDF first
+    const pdfText = await extractPdfText(buffer);
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-    }
-
-    if (!ACCEPTED_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Unsupported file type. Accepted: PDF, PNG, JPG, WebP' },
-        { status: 400 }
-      );
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: 'File too large. Maximum size: 10MB' },
-        { status: 400 }
-      );
-    }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
-
-    const aiConfig = extractAIConfig(request);
-    const model = getModel(aiConfig);
-
-    // Build messages based on file type
-    const messages: ModelMessage[] = [];
-    const isPdf = file.type === 'application/pdf';
-
-    if (isPdf) {
-      // Try to extract text from PDF first
-      const pdfText = await extractPdfText(buffer);
-
-      if (pdfText.length > 200) {
-        // Text-based PDF — send extracted text directly (handles multi-page perfectly)
-        console.log('[parse] PDF text extraction: %d chars', pdfText.length);
-        messages.push({
-          role: 'user',
-          content: `Below is the full text extracted from a resume PDF. Extract all resume information using the EXACT JSON schema from the system prompt.\n\n---\n${pdfText}\n---`,
-        });
-      } else {
-        // Scanned/image-based PDF — convert each page to an image
-        console.log('[parse] PDF has little text (%d chars), converting pages to images', pdfText.length);
-        const pageImages = await pdfPagesToImages(buffer);
-        console.log('[parse] Converted %d PDF pages to images', pageImages.length);
-        const contentParts: Array<{ type: 'image'; image: string } | { type: 'text'; text: string }> = [];
-        for (const png of pageImages) {
-          contentParts.push({ type: 'image', image: `data:image/png;base64,${Buffer.from(png).toString('base64')}` });
-        }
-        contentParts.push({ type: 'text', text: 'Extract all resume information from these resume page images. Use the EXACT JSON schema from the system prompt.' });
-        messages.push({ role: 'user', content: contentParts });
+    if (pdfText.length > 200) {
+      // Validate extracted text length
+      if (pdfText.length > MAX_PROMPT_LENGTH * 5) {
+        return sanitizedError(`Extracted text too long (${pdfText.length} chars, max ${MAX_PROMPT_LENGTH * 5})`);
       }
-    } else {
-      // Image file — send as image directly
-      const base64 = buffer.toString('base64');
-      const dataUrl = `data:${file.type};base64,${base64}`;
+      console.log('[parse] PDF text extraction: %d chars', pdfText.length);
       messages.push({
         role: 'user',
-        content: [
-          { type: 'image', image: dataUrl },
-          { type: 'text', text: 'Extract all resume information from this image. Use the EXACT JSON schema from the system prompt.' },
-        ],
+        content: `Below is the full text extracted from a resume PDF. Extract all resume information using the EXACT JSON schema from the system prompt.\n\n---\n${pdfText}\n---`,
       });
+    } else {
+      // Scanned/image-based PDF — convert each page to an image
+      console.log('[parse] PDF has little text (%d chars), converting pages to images', pdfText.length);
+      const pageImages = await pdfPagesToImages(buffer);
+      console.log('[parse] Converted %d PDF pages to images', pageImages.length);
+      const contentParts: Array<{ type: 'image'; image: string } | { type: 'text'; text: string }> = [];
+      for (const png of pageImages) {
+        contentParts.push({ type: 'image', image: `data:image/png;base64,${Buffer.from(png).toString('base64')}` });
+      }
+      contentParts.push({ type: 'text', text: 'Extract all resume information from these resume page images. Use the EXACT JSON schema from the system prompt.' });
+      messages.push({ role: 'user', content: contentParts });
     }
-
-    // Single call — generateText with explicit schema in prompt
-    const result = await generateText({
-      model,
-      maxOutputTokens: 16384,
-      system: SYSTEM_PROMPT,
-      messages,
-      providerOptions: getJsonProviderOptions(aiConfig),
+  } else {
+    // Image file — send as image directly
+    const base64 = buffer.toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
+    messages.push({
+      role: 'user',
+      content: [
+        { type: 'image', image: dataUrl },
+        { type: 'text', text: 'Extract all resume information from this image. Use the EXACT JSON schema from the system prompt.' },
+      ],
     });
-
-    console.log('[parse] finishReason=%s, length=%d', result.finishReason, result.text.length);
-
-    // Parse JSON from response
-    const raw = parseJsonFromText(result.text);
-    if (!raw || typeof raw !== 'object') {
-      console.error('[parse] Failed to parse JSON. Raw text:', result.text.slice(0, 500));
-      return NextResponse.json({ error: 'Failed to extract resume data' }, { status: 500 });
-    }
-
-    // Map to our schema (handles models that return different field names)
-    const resumeData = mapToResumeSchema(raw as Record<string, unknown>);
-
-    // Create resume with parsed data
-    const resume = await resumeRepository.create({
-      userId: user.id,
-      title: resumeData.personalInfo?.fullName || '未命名简历',
-      template,
-      language,
-    });
-
-    if (!resume) {
-      return NextResponse.json({ error: 'Failed to create resume' }, { status: 500 });
-    }
-
-    // Create sections from parsed data
-    const sections = buildSections(resumeData, language);
-    for (let i = 0; i < sections.length; i++) {
-      await resumeRepository.createSection({
-        resumeId: resume.id,
-        type: sections[i].type,
-        title: sections[i].title,
-        sortOrder: i,
-        content: sections[i].content,
-      });
-    }
-
-    const fullResume = await resumeRepository.findById(resume.id);
-    return NextResponse.json(fullResume, { status: 201 });
-  } catch (error) {
-    if (error instanceof AIConfigError) {
-      return NextResponse.json({ error: error.message }, { status: 401 });
-    }
-    console.error('POST /api/resume/parse error:', error);
-    return NextResponse.json({ error: 'Failed to parse resume' }, { status: 500 });
   }
+
+  // Execute through unified gateway
+  const result = await executeAiOperation({
+    context: ctx.context,
+    modelId: clientModel || 'parse-resume-default',
+    capability: 'text',
+    businessCapability: 'resume_parse',
+    idempotencyKey: `parse-resume-${ctx.context.actor.userId}-${Date.now()}`,
+    dispatch: async (gwCtx) => {
+      const model = buildModel(gwCtx);
+      const aiResult = await generateText({
+        model,
+        maxOutputTokens: 16384,
+        system: SYSTEM_PROMPT,
+        messages,
+        providerOptions: getJsonOptions(gwCtx.providerType),
+      });
+      return { text: aiResult.text, usage: aiResult.usage };
+    },
+  });
+
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, message: result.message },
+      { status: result.status }
+    );
+  }
+
+  // Parse JSON from response
+  const raw = parseJsonFromText(result.data.text);
+  if (!raw || typeof raw !== 'object') {
+    console.error('[parse] Failed to parse JSON. Raw text:', result.data.text.slice(0, 500));
+    return NextResponse.json({ error: 'Failed to extract resume data' }, { status: 500 });
+  }
+
+  // Map to our schema (handles models that return different field names)
+  const resumeData = mapToResumeSchema(raw as Record<string, unknown>);
+
+  // Create resume with parsed data
+  const resume = await resumeRepository.create({
+    userId: ctx.context.actor.userId,
+    title: resumeData.personalInfo?.fullName || '未命名简历',
+    template,
+    language,
+  });
+
+  if (!resume) {
+    return NextResponse.json({ error: 'Failed to create resume' }, { status: 500 });
+  }
+
+  // Create sections from parsed data
+  const sections = buildSections(resumeData, language);
+  for (let i = 0; i < sections.length; i++) {
+    await resumeRepository.createSection({
+      resumeId: resume.id,
+      type: sections[i].type,
+      title: sections[i].title,
+      sortOrder: i,
+      content: sections[i].content,
+    });
+  }
+
+  const fullResume = await resumeRepository.findById(resume.id);
+  return NextResponse.json(fullResume, { status: 201 });
 }
 
 // ─── PDF Helpers ─────────────────────────────────────────────────────────────
@@ -187,6 +202,9 @@ function extractPdfText(buffer: Buffer): Promise<string> {
 async function pdfPagesToImages(buffer: Uint8Array): Promise<Uint8Array[]> {
   const { mupdf, doc } = await loadMupdfDoc(buffer);
   const pageCount = doc.countPages();
+  if (pageCount > MAX_PDF_PAGES) {
+    throw new Error(`PDF has ${pageCount} pages (max ${MAX_PDF_PAGES})`);
+  }
   const images: Uint8Array[] = [];
 
   for (let i = 0; i < pageCount; i++) {

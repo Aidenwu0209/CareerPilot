@@ -3,6 +3,7 @@
 import { Plus, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 interface EditableListProps {
   label: string;
@@ -12,6 +13,7 @@ interface EditableListProps {
 }
 
 export function EditableList({ label, items, onChange, placeholder }: EditableListProps) {
+  const t = useTranslations('editor.fields');
   const addItem = () => onChange([...(items || []), '']);
 
   const updateItem = (index: number, value: string) => {
@@ -41,6 +43,7 @@ export function EditableList({ label, items, onChange, placeholder }: EditableLi
               size="sm"
               className="h-8 w-8 shrink-0 cursor-pointer p-0 text-zinc-400 hover:text-red-500"
               onClick={() => removeItem(index)}
+              aria-label={`${t('removeItem')}: ${label} ${index + 1}`}
             >
               <X className="h-3.5 w-3.5" />
             </Button>
@@ -53,7 +56,7 @@ export function EditableList({ label, items, onChange, placeholder }: EditableLi
           className="h-7 cursor-pointer gap-1 text-xs"
         >
           <Plus className="h-3 w-3" />
-          Add
+          {t('addItem')}
         </Button>
       </div>
     </div>

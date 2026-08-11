@@ -25,8 +25,8 @@ export function LandingFooter() {
     {
       titleKey: 'legal.title' as const,
       links: [
-        { key: 'legal.privacy' as const, href: '#' },
-        { key: 'legal.terms' as const, href: '#' },
+        { key: 'legal.privacy' as const, href: '/privacy' },
+        { key: 'legal.terms' as const, href: '/terms' },
       ],
     },
   ];

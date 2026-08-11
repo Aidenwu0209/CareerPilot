@@ -60,6 +60,7 @@ export function WorkExperienceSection({ section, onUpdate }: Props) {
                 size="sm"
                 className="h-7 cursor-pointer p-1 text-zinc-400 hover:text-red-500"
                 onClick={() => removeItem(index)}
+                aria-label={t('removeItem')}
               >
                 <X className="h-3.5 w-3.5" />
               </Button>

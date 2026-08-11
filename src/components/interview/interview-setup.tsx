@@ -8,8 +8,11 @@ import { JDInput } from './jd-input';
 import { ResumeSelector } from './resume-selector';
 import { InterviewerPicker } from './interviewer-picker';
 import { useRouter } from '@/i18n/routing';
-import { getAIHeaders } from '@/stores/settings-store';
-import type { InterviewerConfig } from '@/types/interview';
+import type { InterviewerConfig, InterviewSession } from '@/types/interview';
+import { AlertCircle, Mic } from 'lucide-react';
+import { readJsonResponse } from '@/lib/http/json-client';
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 export function InterviewSetup() {
   const t = useTranslations('interview.setup');
@@ -19,22 +22,19 @@ export function InterviewSetup() {
   const [resumeId, setResumeId] = useState<string | undefined>();
   const [selectedInterviewers, setSelectedInterviewers] = useState<InterviewerConfig[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [createError, setCreateError] = useState(false);
 
   const canStart = jd.trim().length > 0 && selectedInterviewers.length > 0;
 
   const handleStart = async () => {
     if (!canStart) return;
     setIsCreating(true);
+    setCreateError(false);
 
     try {
-      const fp = localStorage.getItem('jade_fingerprint');
       const res = await fetch('/api/interview', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(fp ? { 'x-fingerprint': fp } : {}),
-          ...getAIHeaders(),
-        },
+        headers: JSON_HEADERS,
         body: JSON.stringify({
           jobDescription: jd,
           jobTitle: title.trim() || jd.split('\n')[0].slice(0, 100) || 'Interview',
@@ -43,11 +43,11 @@ export function InterviewSetup() {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to create interview');
-      const { session } = await res.json();
+      const { session } = await readJsonResponse<{ session: InterviewSession }>(res);
       router.push(`/interview/${session.id}`);
     } catch (err) {
       console.error('Failed to create interview:', err);
+      setCreateError(true);
     } finally {
       setIsCreating(false);
     }
@@ -56,7 +56,10 @@ export function InterviewSetup() {
   return (
     <div className="mx-auto max-w-2xl">
       <div className="mb-6 rounded-xl bg-gradient-to-r from-brand-muted to-white px-6 py-5 dark:from-brand-muted/30 dark:to-zinc-900">
-        <h1 className="text-xl font-bold">🎙️ {t('title')}</h1>
+        <h1 className="flex items-center gap-2 text-xl font-bold">
+          <Mic className="h-5 w-5 text-brand" aria-hidden="true" />
+          {t('title')}
+        </h1>
       </div>
       <div className="space-y-6 px-1">
         {/* Title input */}
@@ -77,6 +80,12 @@ export function InterviewSetup() {
         <InterviewerPicker selected={selectedInterviewers} onChange={setSelectedInterviewers} />
       </div>
       <div className="mt-8 px-1">
+        {createError && (
+          <p role="alert" className="mb-3 flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+            <AlertCircle className="h-4 w-4" aria-hidden="true" />
+            {t('createFailed')}
+          </p>
+        )}
         <Button
           onClick={handleStart}
           disabled={!canStart || isCreating}

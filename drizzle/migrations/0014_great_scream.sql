@@ -1,0 +1,1 @@
+ALTER TABLE `organizations` ADD `branding` text DEFAULT '{}' NOT NULL;

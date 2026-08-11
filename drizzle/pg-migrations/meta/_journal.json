@@ -29,6 +29,76 @@
       "when": 1774587349177,
       "tag": "0003_true_kree",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786126890305,
+      "tag": "0004_green_microchip",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786127773591,
+      "tag": "0005_boring_mathemanic",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786128091401,
+      "tag": "0006_crazy_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786128622517,
+      "tag": "0007_skinny_fallen_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1786129371963,
+      "tag": "0008_famous_bullseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1786130025872,
+      "tag": "0009_parched_angel",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1786131694146,
+      "tag": "0010_naive_sasquatch",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1786136463074,
+      "tag": "0011_clean_leader",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1786202679326,
+      "tag": "0012_parched_jean_grey",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1786205996036,
+      "tag": "0013_right_molten_man",
+      "breakpoints": true
     }
   ]
 }

@@ -34,10 +34,7 @@ export function ExportButtons({ report, session }: ExportButtonsProps) {
   const exportPdf = async () => {
     setPdfLoading(true);
     try {
-      const fp = localStorage.getItem('jade_fingerprint');
-      const res = await fetch(`/api/interview/${session.id}/report/export`, {
-        headers: fp ? { 'x-fingerprint': fp } : {},
-      });
+      const res = await fetch(`/api/interview/${session.id}/report/export`);
       if (!res.ok) throw new Error('Failed to export PDF');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);

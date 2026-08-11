@@ -4,7 +4,6 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useInterviewStore } from '@/stores/interview-store';
-import { getAIHeaders } from '@/stores/settings-store';
 import { useLocale } from 'next-intl';
 
 interface UseInterviewChatOptions {
@@ -31,10 +30,6 @@ export function useInterviewChat({ sessionId, roundId, selectedModel }: UseInter
           model: modelRef.current,
           locale,
         }),
-        headers: () => {
-          const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-          return { ...(fp ? { 'x-fingerprint': fp } : {}), ...getAIHeaders() };
-        },
       }),
     [sessionId, locale]
   );

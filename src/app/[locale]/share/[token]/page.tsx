@@ -26,11 +26,11 @@ export default function SharePage({ params }: { params: Promise<{ token: string 
     setPasswordError(false);
 
     try {
-      const url = pwd
-        ? `/api/share/${token}?password=${encodeURIComponent(pwd)}`
-        : `/api/share/${token}`;
-
-      const res = await fetch(url);
+      const res = await fetch(`/api/share/${token}`, pwd ? {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      } : undefined);
 
       if (res.status === 404 || res.status === 403) {
         setNotFound(true);

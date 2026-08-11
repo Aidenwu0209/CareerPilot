@@ -9,7 +9,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { id: sessionId } = await params;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
-  if (!user) return new Response('Unauthorized', { status: 401 });
+  if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
 
   const session = await interviewRepository.findSession(sessionId);
   if (!session || session.userId !== user.id) {
@@ -17,6 +17,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }
 
   const { action, roundId, locale = 'zh' } = await request.json();
+
+  // Verify roundId belongs to the current session
+  if (roundId) {
+    const round = await interviewRepository.findRound(roundId);
+    if (!round || round.sessionId !== sessionId) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    }
+  }
 
   let systemMessage = '';
   switch (action) {

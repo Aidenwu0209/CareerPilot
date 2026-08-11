@@ -8,9 +8,10 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useEditorStore } from '@/stores/editor-store';
-import { useSettingsStore, getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
 import { useAIChat } from '@/hooks/use-ai-chat';
 import { useMessagePagination } from '@/hooks/use-message-pagination';
+import { useCredits } from '@/hooks/use-credits';
 import { AIMessage } from './ai-message';
 import { AIInput } from './ai-input';
 
@@ -25,10 +26,7 @@ interface AIChatContentProps {
   hideTitle?: boolean;
 }
 
-function getHeaders(): Record<string, string> {
-  const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return fp ? { 'x-fingerprint': fp, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
-}
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 function formatTime(date: Date | number | null) {
   if (!date) return '';
@@ -44,7 +42,6 @@ function formatTime(date: Date | number | null) {
 /** Headless chat body — reusable in both side panel and floating bubble */
 export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   const t = useTranslations('ai');
-  const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<string | undefined>(
     () => useSettingsStore.getState().aiModel || undefined
   );
@@ -60,9 +57,6 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   const { historicalMessages, hasMore, isLoadingMore, loadInitial, loadMore, reset: resetPagination } = useMessagePagination();
 
   const settingsModel = useSettingsStore((s) => s.aiModel);
-  const settingsProvider = useSettingsStore((s) => s.aiProvider);
-  const settingsBaseURL = useSettingsStore((s) => s.aiBaseURL);
-  const settingsApiKey = useSettingsStore((s) => s.aiApiKey);
   const hydrated = useSettingsStore((s) => s._hydrated);
 
   // Sync selectedModel when settings hydrate or user changes default model
@@ -72,26 +66,11 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     }
   }, [hydrated, settingsModel]);
 
-  // Fetch models from API — re-fetch when provider/key/baseURL/model changes
-  useEffect(() => {
-    if (!hydrated) return;
-    fetch('/api/ai/models', { headers: getAIHeaders() })
-      .then((res) => res.json())
-      .then((data: { models: { id: string }[] }) => {
-        const ids = data.models.map((m) => m.id);
-        // Ensure user's configured model is always in the list
-        if (settingsModel && !ids.includes(settingsModel)) {
-          ids.unshift(settingsModel);
-        }
-        setModels(ids);
-      })
-      .catch(() => {
-        // Even on error, show user's configured model
-        if (settingsModel) {
-          setModels([settingsModel]);
-        }
-      });
-  }, [hydrated, settingsProvider, settingsBaseURL, settingsApiKey, settingsModel]);
+  // Persist model selection to settings store
+  const handleModelChange = useCallback((modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  }, []);
 
   // Fetch sessions for resumeId; reset state synchronously first so stale
   // sessionsLoaded/activeSessionId can't leak a pendingAiMessage to the wrong resume.
@@ -103,8 +82,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     resetPagination();
 
     let cancelled = false;
-    const headers = getHeaders();
-    fetch(`/api/ai/chat/sessions?resumeId=${resumeId}`, { headers })
+    fetch(`/api/ai/chat/sessions?resumeId=${resumeId}`, { headers: JSON_HEADERS })
       .then((res) => res.json())
       .then(async (data: { sessions: ChatSession[] }) => {
         if (cancelled) return;
@@ -131,11 +109,10 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   }, [resumeId]);
 
   const createNewSession = useCallback(async (isInitial = false) => {
-    const headers = getHeaders();
     try {
       const res = await fetch('/api/ai/chat/sessions', {
         method: 'POST',
-        headers,
+        headers: JSON_HEADERS,
         body: JSON.stringify({ resumeId }),
       });
       const data = await res.json();
@@ -163,9 +140,8 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
   }, [activeSessionId, loadInitial]);
 
   const deleteSession = useCallback(async (sessionId: string) => {
-    const headers = getHeaders();
     try {
-      await fetch(`/api/ai/chat/sessions/${sessionId}`, { method: 'DELETE', headers });
+      await fetch(`/api/ai/chat/sessions/${sessionId}`, { method: 'DELETE', headers: JSON_HEADERS });
     } catch (err) {
       console.error('Failed to delete session:', err);
       return;
@@ -194,17 +170,37 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
     selectedModel,
   });
 
-  // Show toast when AI API call fails
+  const { refresh: refreshBalance } = useCredits();
+
+  // Refresh balance after a successful streaming response completes
+  const prevStatusRef = useRef(status);
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    prevStatusRef.current = status;
+    // When status transitions from streaming/submitted to ready, the AI call succeeded
+    if ((prev === 'streaming' || prev === 'submitted') && status === 'ready') {
+      refreshBalance();
+    }
+  }, [status, refreshBalance]);
+
+  // Show toast when AI API call fails — map known gateway error codes to specific messages
   const lastErrorRef = useRef<Error | null>(null);
   useEffect(() => {
     if (chatError && chatError !== lastErrorRef.current) {
       lastErrorRef.current = chatError;
-      const msg = chatError.message || t('errorMessage');
-      // Show a user-friendly message for common errors
-      if (msg.includes('ETIMEDOUT') || msg.includes('Cannot connect')) {
-        toast.error(t('errorMessage'), { description: 'API 连接超时，请检查网络或 API 配置' });
+      const msg = chatError.message || '';
+      if (msg.includes('INSUFFICIENT_CREDITS')) {
+        toast.error(t('insufficientCredits'), { description: t('insufficientCreditsHint') });
+      } else if (msg.includes('RATE_LIMITED')) {
+        toast.error(t('rateLimited'), { description: t('rateLimitedHint') });
+      } else if (msg.includes('MODEL_NOT_ALLOWED') || msg.includes('MODEL_NOT_FOUND')) {
+        toast.error(t('modelNotAllowed'), { description: t('modelNotAllowedHint') });
+      } else if (msg.includes('ACCOUNT_SUSPENDED')) {
+        toast.error(t('accountSuspended'), { description: t('accountSuspendedHint') });
+      } else if (msg.includes('ETIMEDOUT') || msg.includes('Cannot connect') || msg.includes('Failed to fetch')) {
+        toast.error(t('errorMessage'), { description: t('networkErrorHint') });
       } else if (msg.includes('No tool call found')) {
-        toast.error(t('errorMessage'), { description: 'AI 模型返回了无效的工具调用，请重试' });
+        toast.error(t('errorMessage'), { description: t('invalidToolCallHint') });
       } else {
         toast.error(t('errorMessage'), { description: msg.length > 200 ? msg.slice(0, 200) + '...' : msg });
       }
@@ -383,9 +379,8 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
         onChange={handleInputChange}
         onSubmit={handleSubmit}
         isLoading={isLoading}
-        models={models}
         selectedModel={selectedModel}
-        onModelChange={setSelectedModel}
+        onModelChange={handleModelChange}
       />
     </>
   );

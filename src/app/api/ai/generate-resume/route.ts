@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
-import { getModel, extractAIConfig, getJsonProviderOptions, AIConfigError } from '@/lib/ai/provider';
-import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { resolveActiveContext } from '@/lib/auth/guards';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { generateResumeInputSchema, type GenerateResumeOutput } from '@/lib/ai/generate-resume-schema';
+import { executeAiOperation } from '@/lib/ai/gateway';
+import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const SECTION_TITLES: Record<string, Record<string, string>> = {
   zh: {
@@ -58,39 +60,40 @@ const generateResumeOutputSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  await warnLegacyByok(request);
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
+
+  let body: unknown;
   try {
-    const fingerprint = getUserIdFromRequest(request);
-    const user = await resolveUser(fingerprint);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'INVALID_BODY' }, { status: 400 });
+  }
 
-    const body = await request.json();
-    const parsed = generateResumeInputSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: parsed.error.issues },
-        { status: 400 }
-      );
-    }
+  const parsed = generateResumeInputSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
+  }
 
-    const { jobTitle, yearsOfExperience, skills, industry, experience, template, language } = parsed.data;
-    const lang = language || 'zh';
+  const { jobTitle, yearsOfExperience, skills, industry, experience, template, language, model } = parsed.data;
+  const lang = language || 'zh';
 
-    const aiConfig = extractAIConfig(request);
-    const model = getModel(aiConfig);
+  const skillsContext = skills && skills.length > 0
+    ? `\nKey skills to incorporate: ${skills.join(', ')}`
+    : '';
+  const industryContext = industry
+    ? `\nIndustry: ${industry}`
+    : '';
+  const experienceContext = experience
+    ? `\n\nThe candidate provided the following work experience description. Parse this into structured work_experience items, and use it to inform the summary, skills, and projects sections:\n---\n${experience}\n---`
+    : '';
 
-    const skillsContext = skills && skills.length > 0
-      ? `\nKey skills to incorporate: ${skills.join(', ')}`
-      : '';
-    const industryContext = industry
-      ? `\nIndustry: ${industry}`
-      : '';
-    const experienceContext = experience
-      ? `\n\nThe candidate provided the following work experience description. Parse this into structured work_experience items, and use it to inform the summary, skills, and projects sections:\n---\n${experience}\n---`
-      : '';
-
-    const promptText = `Generate a complete resume for a ${jobTitle} ${yearsOfExperience === 0 ? 'at entry level (fresh graduate / no prior experience)' : `with ${yearsOfExperience} years of experience`}.${skillsContext}${industryContext}${experienceContext}
+  const promptText = `Generate a complete resume for a ${jobTitle} ${yearsOfExperience === 0 ? 'at entry level (fresh graduate / no prior experience)' : `with ${yearsOfExperience} years of experience`}.${skillsContext}${industryContext}${experienceContext}
 
 Return a JSON object with these exact top-level keys: personal_info, summary, work_experience, education, skills, projects.
 
@@ -104,88 +107,90 @@ The structure must be:
 
 Respond with JSON only.`;
 
-    // Higher cap than a single chat turn: a full 6-section resume can exceed 8192
-    // output tokens, which truncates the JSON and makes extractJson fail (issue #87).
-    const generate = (providerOptions: ReturnType<typeof getJsonProviderOptions>) =>
-      generateText({
-        model,
-        maxOutputTokens: 16384,
-        system: getSystemPrompt(lang),
-        prompt: promptText,
-        providerOptions,
-      });
+  // Execute through unified gateway
+  const result = await executeAiOperation({
+    context: ctx.context,
+    modelId: model || 'generate-resume-default',
+    capability: 'text',
+    businessCapability: 'generate_resume',
+    idempotencyKey: `gen-resume-${ctx.context.actor.userId}-${Date.now()}`,
+    dispatch: async (gwCtx) => {
+      const model = buildModel(gwCtx);
+      const jsonOpts = getJsonOptions(gwCtx.providerType);
 
-    let result;
-    try {
-      result = await generate(getJsonProviderOptions(aiConfig));
-    } catch (err) {
-      // Some OpenAI-compatible endpoints reject `response_format: json_object`.
-      // The prompt already demands raw JSON and extractJson repairs the output,
-      // so retry once without the JSON-mode option before giving up.
-      const opts = getJsonProviderOptions(aiConfig);
-      if (Object.keys(opts).length > 0) {
-        result = await generate({} as ReturnType<typeof getJsonProviderOptions>);
-      } else {
+      // Retry without JSON mode if the provider rejects it
+      try {
+        const aiResult = await generateText({
+          model,
+          maxOutputTokens: 16384,
+          system: getSystemPrompt(lang),
+          prompt: promptText,
+          providerOptions: jsonOpts,
+        });
+        return { text: aiResult.text, usage: aiResult.usage };
+      } catch (err) {
+        if (Object.keys(jsonOpts).length > 0) {
+          const aiResult = await generateText({
+            model,
+            maxOutputTokens: 16384,
+            system: getSystemPrompt(lang),
+            prompt: promptText,
+            providerOptions: {},
+          });
+          return { text: aiResult.text, usage: aiResult.usage };
+        }
         throw err;
       }
-    }
+    },
+  });
 
-    const generatedData: GenerateResumeOutput = extractJson(result.text, generateResumeOutputSchema) as GenerateResumeOutput;
-
-    // Create a new resume in the database
-    const resumeTitle = lang === 'zh'
-      ? `${jobTitle} - AI生成简历`
-      : `${jobTitle} - AI Generated Resume`;
-
-    const newResume = await resumeRepository.create({
-      userId: user.id,
-      title: resumeTitle,
-      template: template || 'classic',
-      language: lang,
-    });
-
-    if (!newResume) {
-      return NextResponse.json({ error: 'Failed to create resume' }, { status: 500 });
-    }
-
-    // Create sections in the database
-    const titles = SECTION_TITLES[lang] || SECTION_TITLES.zh;
-    const sectionTypes = ['personal_info', 'summary', 'work_experience', 'education', 'skills', 'projects'] as const;
-
-    for (let i = 0; i < sectionTypes.length; i++) {
-      const type = sectionTypes[i];
-      const content = generatedData[type];
-
-      await resumeRepository.createSection({
-        resumeId: newResume.id,
-        type,
-        title: titles[type],
-        sortOrder: i,
-        // Guard against the model returning list fields as strings (issue #87).
-        content: normalizeSectionContent(type, content),
-      });
-    }
-
-    // Fetch the complete resume with sections
-    const completeResume = await resumeRepository.findById(newResume.id);
-
-    return NextResponse.json({
-      resumeId: newResume.id,
-      title: resumeTitle,
-      sections: completeResume?.sections || [],
-    });
-  } catch (error) {
-    if (error instanceof AIConfigError) {
-      return NextResponse.json({ error: error.message }, { status: 401 });
-    }
-    console.error('POST /api/ai/generate-resume error:', error);
-    // Surface the underlying reason (bad model id, endpoint rejected the request,
-    // JSON parse failure, …) so the user can actually diagnose it instead of a
-    // generic message (issue #87).
-    const detail = error instanceof Error && error.message ? error.message : '';
+  if (!result.ok) {
     return NextResponse.json(
-      { error: detail ? `Failed to generate resume: ${detail}` : 'Failed to generate resume' },
-      { status: 500 }
+      { error: result.error, message: result.message },
+      { status: result.status }
     );
   }
+
+  const generatedData: GenerateResumeOutput = extractJson(result.data.text, generateResumeOutputSchema) as GenerateResumeOutput;
+
+  // Create a new resume in the database
+  const resumeTitle = lang === 'zh'
+    ? `${jobTitle} - AI生成简历`
+    : `${jobTitle} - AI Generated Resume`;
+
+  const newResume = await resumeRepository.create({
+    userId: ctx.context.actor.userId,
+    title: resumeTitle,
+    template: template || 'classic',
+    language: lang,
+  });
+
+  if (!newResume) {
+    return NextResponse.json({ error: 'Failed to create resume' }, { status: 500 });
+  }
+
+  // Create sections
+  const titles = SECTION_TITLES[lang] || SECTION_TITLES.zh;
+  const sectionTypes = ['personal_info', 'summary', 'work_experience', 'education', 'skills', 'projects'] as const;
+
+  for (let i = 0; i < sectionTypes.length; i++) {
+    const type = sectionTypes[i];
+    const content = generatedData[type];
+
+    await resumeRepository.createSection({
+      resumeId: newResume.id,
+      type,
+      title: titles[type],
+      sortOrder: i,
+      content: normalizeSectionContent(type, content),
+    });
+  }
+
+  const completeResume = await resumeRepository.findById(newResume.id);
+
+  return NextResponse.json({
+    resumeId: newResume.id,
+    title: resumeTitle,
+    sections: completeResume?.sections || [],
+  });
 }

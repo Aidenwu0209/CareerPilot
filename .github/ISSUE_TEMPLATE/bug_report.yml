@@ -1,0 +1,87 @@
+name: Bug Report / 缺陷报告
+description: Report a reproducible CareerPilot problem / 报告可复现的问题
+title: "[Bug]: "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请删除或遮盖 API Key、Cookie、个人简历和支付信息。
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已搜索现有 Issues，未发现重复问题。
+          required: true
+        - label: 我已删除日志和截图中的敏感信息。
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本或 Commit
+      description: 分支、发布版本或 git commit SHA。
+      placeholder: develop/careerpilot @ abc1234
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 功能区域
+      options:
+        - 登录与账户
+        - 简历编辑与导出
+        - AI 简历与对话
+        - 模拟面试
+        - 职业照生成
+        - 套餐、点数与支付
+        - 管理后台与监控
+        - 部署与数据库
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 操作系统、浏览器、Node.js、部署方式和数据库类型。
+      placeholder: macOS 15 / Chrome / Node.js 22 / pnpm / SQLite
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 打开……
+        2. 点击……
+        3. 看到……
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 已脱敏日志或截图
+      description: 可粘贴控制台、服务端日志或截图；请勿包含凭证和个人数据。
+      render: shell

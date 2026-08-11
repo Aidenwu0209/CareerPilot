@@ -45,7 +45,7 @@ export function LanguagesSection({ section, onUpdate }: Props) {
                 <div className="flex-1">
                   <EditableText label={t('proficiency')} value={item.proficiency} onChange={(v) => updateItem(index, { proficiency: v })} />
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 w-8 cursor-pointer p-0 text-zinc-400 hover:text-red-500" onClick={() => removeItem(index)}>
+                <Button variant="ghost" size="sm" className="h-8 w-8 cursor-pointer p-0 text-zinc-400 hover:text-red-500" onClick={() => removeItem(index)} aria-label={t('removeItem')}>
                   <X className="h-3.5 w-3.5" />
                 </Button>
               </div>

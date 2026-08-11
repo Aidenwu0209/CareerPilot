@@ -14,8 +14,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { LanguageSelect } from '@/components/ui/language-select';
+import { ModelSelector } from '@/components/ai/model-selector';
 import { cn } from '@/lib/utils';
-import { getAIHeaders } from '@/stores/settings-store';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
 
 interface CoverLetterDialogProps {
   open: boolean;
@@ -32,14 +34,33 @@ type Tone = 'formal' | 'friendly' | 'confident';
 
 export function CoverLetterDialog({ open, onOpenChange, resumeId }: CoverLetterDialogProps) {
   const t = useTranslations('coverLetter');
+  const tAi = useTranslations('ai');
+  const { refresh: refreshCredits } = useCredits();
 
   const [jobDescription, setJobDescription] = useState('');
   const [tone, setTone] = useState<Tone>('formal');
   const [language, setLanguage] = useState('en');
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<CoverLetterResult | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('error');
+  }
 
   const handleGenerate = async () => {
     if (!jobDescription.trim()) return;
@@ -47,15 +68,10 @@ export function CoverLetterDialog({ open, onOpenChange, resumeId }: CoverLetterD
     setError('');
 
     try {
-      const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
       const res = await fetch('/api/ai/cover-letter', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-          ...getAIHeaders(),
-        },
-        body: JSON.stringify({ resumeId, jobDescription, tone, language }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeId, jobDescription, tone, language, model: selectedModel }),
       });
 
       if (!res.ok) {
@@ -65,8 +81,9 @@ export function CoverLetterDialog({ open, onOpenChange, resumeId }: CoverLetterD
 
       const data: CoverLetterResult = await res.json();
       setResult(data);
+      refreshCredits();
     } catch (err: any) {
-      setError(err.message || 'Failed to generate cover letter');
+      setError(mapError(err.message || ''));
     } finally {
       setIsGenerating(false);
     }
@@ -169,6 +186,19 @@ export function CoverLetterDialog({ open, onOpenChange, resumeId }: CoverLetterD
                 {t('language')}
               </label>
               <LanguageSelect value={language} onValueChange={setLanguage} disabled={isGenerating} />
+            </div>
+
+            {/* Model Selector */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                {tAi('model')}
+              </label>
+              <ModelSelector
+                selectedModel={selectedModel}
+                onModelChange={handleModelChange}
+                capability="text"
+                size="default"
+              />
             </div>
 
             {error && (

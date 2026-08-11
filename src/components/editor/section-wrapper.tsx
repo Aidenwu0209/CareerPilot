@@ -81,6 +81,7 @@ export function SectionWrapper({ section, onUpdate, onRemove }: SectionWrapperPr
         <div className="flex items-center gap-2">
           <GripVertical
             className="h-4 w-4 cursor-grab text-zinc-300 active:cursor-grabbing"
+            aria-label={t('dragSection')}
             {...attributes}
             {...listeners}
           />
@@ -112,6 +113,7 @@ export function SectionWrapper({ section, onUpdate, onRemove }: SectionWrapperPr
             size="sm"
             className="h-7 w-7 cursor-pointer p-0 text-brand hover:text-brand"
             title={t('aiPolish')}
+            aria-label={t('aiPolish')}
             onClick={(e) => {
               e.stopPropagation();
               if (!showAiChat) toggleAiChat();
@@ -127,6 +129,7 @@ export function SectionWrapper({ section, onUpdate, onRemove }: SectionWrapperPr
               e.stopPropagation();
               toggleSectionVisibility(section.id);
             }}
+            aria-label={section.visible ? t('hideSection') : t('showSection')}
           >
             {section.visible ? (
               <Eye className="h-3.5 w-3.5 text-zinc-400" />
@@ -142,6 +145,7 @@ export function SectionWrapper({ section, onUpdate, onRemove }: SectionWrapperPr
               e.stopPropagation();
               onRemove();
             }}
+            aria-label={t('removeSection')}
           >
             <X className="h-3.5 w-3.5" />
           </Button>

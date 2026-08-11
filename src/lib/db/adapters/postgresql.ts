@@ -15,8 +15,11 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
   }
 
   async initialize(): Promise<void> {
-    // Auto-run migrations (PG-native migration files)
-    try {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Auto-run migrations (PG-native migration files).
+    // In production, migration failures MUST propagate (fail-closed).
+    if (isProduction) {
       await migrate(this.db, {
         migrationsFolder: resolve(process.cwd(), 'drizzle/pg-migrations'),
       });
@@ -26,7 +29,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
       const check = await this.db.execute(
         sql`SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') AS ok`
       );
-      if (!(check as any)[0]?.ok) {
+      if (!check[0]?.ok) {
         console.warn('[DB] Migration tracking is stale — resetting and re-running');
         await this.db.execute(sql`DROP SCHEMA IF EXISTS drizzle CASCADE`);
         await migrate(this.db, {
@@ -35,14 +38,38 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
       }
 
       console.log('[DB] PostgreSQL migrations applied');
-    } catch (e) {
-      console.error('[DB] PostgreSQL migration failed:', e);
+    } else {
+      try {
+        await migrate(this.db, {
+          migrationsFolder: resolve(process.cwd(), 'drizzle/pg-migrations'),
+        });
+
+        const check = await this.db.execute(
+          sql`SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') AS ok`
+        );
+        if (!check[0]?.ok) {
+          console.warn('[DB] Migration tracking is stale — resetting and re-running');
+          await this.db.execute(sql`DROP SCHEMA IF EXISTS drizzle CASCADE`);
+          await migrate(this.db, {
+            migrationsFolder: resolve(process.cwd(), 'drizzle/pg-migrations'),
+          });
+        }
+
+        console.log('[DB] PostgreSQL migrations applied');
+      } catch (e) {
+        console.error('[DB] PostgreSQL migration failed:', e);
+      }
     }
 
-    // Auto-seed if empty
+    // Skip auto-seeding in production — no demo/fingerprint users or sample resumes.
+    if (isProduction) {
+      return;
+    }
+
+    // Auto-seed if empty (development only)
     try {
       const result = await this.db.execute(sql`SELECT count(*)::int as count FROM users`);
-      const count = Number((result as any)[0]?.count ?? 0);
+      const count = Number(result[0]?.count ?? 0);
       if (count === 0) {
         const { seedDemoUser } = await import('../seed-demo');
         await seedDemoUser(this.db);

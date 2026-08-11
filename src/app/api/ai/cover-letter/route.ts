@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
-import { getModel, extractAIConfig, AIConfigError } from '@/lib/ai/provider';
-import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { resolveActiveContext } from '@/lib/auth/guards';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { coverLetterInputSchema } from '@/lib/ai/cover-letter-schema';
+import { executeAiOperation } from '@/lib/ai/gateway';
+import { validatePromptLength } from '@/lib/validation/input-limits';
+import { buildModel } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 interface CoverLetterOutput {
   title: string;
@@ -64,59 +67,84 @@ function parseCoverLetter(text: string): CoverLetterOutput {
 }
 
 export async function POST(request: NextRequest) {
+  await warnLegacyByok(request);
+  // ── Auth + status guard ──
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
+
+  // ── Parse and validate input ──
+  let body: { resumeId?: string; jobDescription?: string; tone?: string; language?: string };
   try {
-    const fingerprint = getUserIdFromRequest(request);
-    const user = await resolveUser(fingerprint);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'INVALID_BODY' }, { status: 400 });
+  }
 
-    const body = await request.json();
-    const parsed = coverLetterInputSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: parsed.error.issues },
-        { status: 400 }
-      );
-    }
+  const parsed = coverLetterInputSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
+  }
 
-    const { resumeId, jobDescription, tone, language } = parsed.data;
-    const lang = language || 'zh';
+  const { resumeId, jobDescription, tone, language, model } = parsed.data;
+  const lang = language || 'zh';
 
-    // Fetch the resume and verify ownership
-    const resume = await resumeRepository.findById(resumeId);
-    if (!resume) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
-    }
-    if (resume.userId !== user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // ── Validate prompt length ──
+  const promptCheck = validatePromptLength(jobDescription);
+  if (!promptCheck.ok) {
+    return NextResponse.json({ error: promptCheck.error }, { status: 400 });
+  }
 
-    const resumeContext = JSON.stringify(resume.sections);
-    const aiConfig = extractAIConfig(request);
-    const model = getModel(aiConfig);
+  // ── Resume ownership check ──
+  const resume = await resumeRepository.findById(resumeId);
+  if (!resume) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
+  if (resume.userId !== ctx.context.actor.userId) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
 
-    const result = await generateText({
-      model,
-      maxOutputTokens: 4096,
-      system: getSystemPrompt(tone, lang),
-      prompt: `## Resume Data
+  const resumeContext = JSON.stringify(resume.sections);
+
+  // ── Execute through unified gateway ──
+  const result = await executeAiOperation({
+    context: ctx.context,
+    modelId: model || 'cover-letter-default', // Will be resolved by model catalog
+    capability: 'text',
+    businessCapability: 'cover_letter',
+    idempotencyKey: `cover-letter-${ctx.context.actor.userId}-${resumeId}-${Date.now()}`,
+    dispatch: async (gwCtx) => {
+      const model = buildModel(gwCtx);
+      const aiResult = await generateText({
+        model,
+        maxOutputTokens: 4096,
+        system: getSystemPrompt(tone, lang),
+        prompt: `## Resume Data
 ${resumeContext}
 
 ## Job Description
 ${jobDescription}
 
 Based on this resume and job description, write a tailored cover letter. Use the TITLE:/---CONTENT--- format specified in the system prompt.`,
-    });
+      });
 
-    const coverLetterData: CoverLetterOutput = parseCoverLetter(result.text);
+      return {
+        text: aiResult.text,
+        usage: aiResult.usage,
+      };
+    },
+  });
 
-    return NextResponse.json(coverLetterData);
-  } catch (error) {
-    if (error instanceof AIConfigError) {
-      return NextResponse.json({ error: error.message }, { status: 401 });
-    }
-    console.error('POST /api/ai/cover-letter error:', error);
-    return NextResponse.json({ error: 'Failed to generate cover letter' }, { status: 500 });
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, message: result.message },
+      { status: result.status }
+    );
   }
+
+  const coverLetterData: CoverLetterOutput = parseCoverLetter(result.data.text);
+  return NextResponse.json(coverLetterData);
 }

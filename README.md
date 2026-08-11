@@ -2,21 +2,26 @@
 
 # CareerPilot
 
-**AI-Powered Smart Resume Builder**
+**Open-source AI career platform for resumes, interviews, and professional profiles**
 
-Build professional resumes with drag-and-drop editing, real-time AI optimization, 50 templates, and multi-format export.
+Build professional resumes, practice mock interviews, generate professional photos, and operate managed AI services from one bilingual platform.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ed)](#docker-recommended)
+[![Quality Gate](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml/badge.svg?branch=develop%2Fcareerpilot)](https://github.com/Aidenwu0209/careerpilot/actions/workflows/quality.yml)
 
-[中文文档](./README.zh-CN.md)
+[中文文档](./README.zh-CN.md) · [Quick Start](#getting-started) · [Operations Guide](docs/commercial-operations.zh-CN.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
 ---
+
+CareerPilot covers the job-seeking workflow from resume creation and JD matching to mock interviews and professional photo generation. It supports self-hosted development with SQLite, production deployment with PostgreSQL, and an optional commercial layer for managed models, credits, plans, payments, refunds, reconciliation, and operational alerts.
+
+> **Project status:** `main` is the stable branch. `develop/careerpilot` contains the latest development work. External AI, payment, email, storage, and monitoring services require your own credentials and configuration.
 
 ## Screenshots
 
@@ -101,7 +106,9 @@ The following resume sections support Markdown syntax:
 - **Cover Letter Generation** — AI-tailored cover letter based on resume and JD, with tone selection (formal / friendly / confident)
 - **Grammar & Writing Check** — Detect weak verbs, vague descriptions, and grammar issues; returns a quality score
 - **Translation** — Translate resume content across 10 languages while preserving technical terms
-- **Flexible AI Provider** — Supports OpenAI, Anthropic, and custom API endpoints; each user configures their own key in-app
+- **Managed AI Providers** — Super administrators publish approved GPT, Claude, GLM, and DeepSeek models with encrypted credentials
+- **Commercial Credits** — Personal and organization accounts support pre-authorization, per-call/per-token settlement, immutable ledgers, and limits
+- **Multi-provider Image Editing** — Professional photos support approved Gemini, GPT, and ERNIE image models; GPT products can be priced as separate 1K and 4K tiers
 
 ### Mock Interview
 
@@ -145,7 +152,7 @@ The following resume sections support Markdown syntax:
 | State | Zustand |
 | Database | Drizzle ORM (SQLite / PostgreSQL) |
 | Auth | NextAuth.js v5 + FingerprintJS |
-| AI | Vercel AI SDK v6 + OpenAI / Anthropic |
+| AI | Vercel AI SDK v6 + managed GPT / Claude / GLM / DeepSeek / Gemini / ERNIE providers |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | i18n | next-intl |
 | Validation | Zod v4 |
@@ -170,7 +177,7 @@ Open [http://localhost:3000](http://localhost:3000). Database auto-migrates and 
 
 > **`AUTH_SECRET`** is required for session encryption. Generate one with `openssl rand -base64 32`.
 
-> **AI Configuration:** No server-side AI env vars needed. Each user configures their own API Key, Base URL, and Model in **Settings > AI** within the app.
+> **AI Configuration:** Provider credentials are configured by a super administrator and encrypted with `AI_CREDENTIAL_MASTER_KEY`. End users never enter or receive provider keys.
 
 <details>
 <summary>With PostgreSQL</summary>
@@ -206,8 +213,8 @@ docker run -d -p 3000:3000 \
 
 #### Prerequisites
 
-- Node.js 18+
-- pnpm 9+
+- Node.js 22 (recommended; matches CI)
+- pnpm 10.29.2
 
 #### Installation
 
@@ -231,7 +238,7 @@ DB_TYPE=sqlite
 AUTH_ENABLED=false
 ```
 
-> **AI Configuration:** No server-side env vars needed. Each user configures their own API Key, Base URL, and Model in **Settings > AI** within the app.
+> **AI Configuration:** Configure providers and encrypted credentials in **Admin > AI Providers**, then publish approved models through the managed catalog.
 
 See `.env.example` for all available options (Google OAuth, PostgreSQL, etc.).
 
@@ -405,20 +412,16 @@ CareerPilot includes **50 professionally designed resume templates** covering a 
 
 ## Contributing
 
-Contributions are welcome! Here's how to get started:
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, required checks, and pull request guidelines.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Commit your changes: `git commit -m 'feat: add your feature'`
-4. Push to the branch: `git push origin feat/your-feature`
-5. Open a Pull Request
+For help, see [SUPPORT.md](SUPPORT.md). Please report security vulnerabilities privately according to [SECURITY.md](SECURITY.md). All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## FAQ
 
 <details>
 <summary><b>How does AI configuration work?</b></summary>
 
-CareerPilot does not require server-side AI API keys. Each user configures their own AI provider (OpenAI, Anthropic, or custom endpoint), API key, and model in **Settings > AI** within the app. API keys are stored in the browser's local storage and are never sent to the server for storage.
+CareerPilot uses platform-managed AI credentials. A super administrator configures provider credentials in the admin console; they are encrypted at rest and resolved only for bounded server-side requests. End users only see approved models and public credit pricing.
 
 </details>
 
@@ -432,7 +435,7 @@ Yes. Set the `DB_TYPE` environment variable to `sqlite` or `postgresql`. SQLite 
 <details>
 <summary><b>How does authentication work without OAuth?</b></summary>
 
-When `AUTH_ENABLED=false` (default), CareerPilot uses browser fingerprinting via FingerprintJS. A unique fingerprint ID is generated for each browser and used as the user identifier. No login screen is shown — users can start building resumes immediately.
+When `AUTH_ENABLED=false` in local development, CareerPilot can use browser fingerprinting for a zero-config demo. Production startup rejects this mode and requires `AUTH_ENABLED=true` with email/OAuth authentication.
 
 </details>
 

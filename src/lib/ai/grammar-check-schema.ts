@@ -1,9 +1,11 @@
 import { z } from 'zod/v4';
+import { MAX_ARRAY_LENGTH } from '@/lib/validation/input-limits';
 
 // Input schema for grammar-check API
 export const grammarCheckInputSchema = z.object({
   resumeId: z.string().min(1).describe('The ID of the resume to check'),
-  sectionIds: z.array(z.string()).optional().describe('Optional list of specific section IDs to check. If omitted, all sections are checked.'),
+  sectionIds: z.array(z.string()).max(MAX_ARRAY_LENGTH).optional().describe('Optional list of specific section IDs to check. If omitted, all sections are checked.'),
+  model: z.string().optional().describe('The model ID from the authorized model catalog'),
 });
 
 export type GrammarCheckInput = z.infer<typeof grammarCheckInputSchema>;

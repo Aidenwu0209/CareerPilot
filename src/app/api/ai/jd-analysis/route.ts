@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateText } from 'ai';
-import { getModel, extractAIConfig, getJsonProviderOptions, AIConfigError } from '@/lib/ai/provider';
-import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { resolveActiveContext } from '@/lib/auth/guards';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { analysisRepository } from '@/lib/db/repositories/analysis.repository';
 import { jdAnalysisInputSchema, jdAnalysisOutputSchema } from '@/lib/ai/jd-analysis-schema';
 import { extractJson } from '@/lib/ai/extract-json';
+import { executeAiOperation } from '@/lib/ai/gateway';
+import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
+import { warnLegacyByok } from '@/lib/ai/legacy-detect';
 
 const JD_ANALYSIS_PROMPT = `You are an expert resume analyst and career coach. Analyze the match between the provided resume and job description.
 
@@ -22,68 +24,82 @@ Your analysis should be thorough and actionable. You MUST return a JSON object w
 CRITICAL: You are a JSON API. Your entire response must be a single valid JSON object starting with { and ending with }. Do NOT use markdown syntax. Do NOT wrap in code fences. Do NOT add any text before or after the JSON.`;
 
 export async function POST(request: NextRequest) {
+  await warnLegacyByok(request);
+  const ctx = await resolveActiveContext();
+  if (ctx === null) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  if (!ctx.ok) return ctx.response;
+
+  let body: unknown;
   try {
-    const fingerprint = getUserIdFromRequest(request);
-    const user = await resolveUser(fingerprint);
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const parsed = jdAnalysisInputSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: parsed.error.issues },
-        { status: 400 }
-      );
-    }
-
-    const { resumeId, jobDescription } = parsed.data;
-
-    // Fetch the resume and verify ownership
-    const resume = await resumeRepository.findById(resumeId);
-    if (!resume) {
-      return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
-    }
-    if (resume.userId !== user.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const resumeContext = JSON.stringify(resume.sections);
-    const aiConfig = extractAIConfig(request);
-    const model = getModel(aiConfig);
-
-    const result = await generateText({
-      model,
-      maxOutputTokens: 8192,
-      system: JD_ANALYSIS_PROMPT,
-      prompt: `Resume:\n${resumeContext}\n\nJob Description:\n${jobDescription}\n\nRespond with JSON only.`,
-      providerOptions: getJsonProviderOptions(aiConfig),
-    });
-
-    const analysisData = extractJson(result.text, jdAnalysisOutputSchema);
-
-    // Persist to database
-    let historyId: string | undefined;
-    try {
-      const saved = await analysisRepository.createJdAnalysis({
-        resumeId,
-        jobDescription,
-        result: analysisData,
-        overallScore: analysisData.overallScore,
-        atsScore: analysisData.atsScore,
-      });
-      historyId = saved?.id;
-    } catch (e) {
-      console.error('Failed to save JD analysis history:', e);
-    }
-
-    return NextResponse.json({ ...analysisData, historyId });
-  } catch (error) {
-    if (error instanceof AIConfigError) {
-      return NextResponse.json({ error: error.message }, { status: 401 });
-    }
-    console.error('POST /api/ai/jd-analysis error:', error);
-    return NextResponse.json({ error: 'Failed to analyze job description match' }, { status: 500 });
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'INVALID_BODY' }, { status: 400 });
   }
+
+  const parsed = jdAnalysisInputSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid input', details: parsed.error.issues },
+      { status: 400 }
+    );
+  }
+
+  const { resumeId, jobDescription, model } = parsed.data;
+
+  // Fetch the resume and verify ownership
+  const resume = await resumeRepository.findById(resumeId);
+  if (!resume) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
+  if (resume.userId !== ctx.context.actor.userId) {
+    return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
+  }
+
+  const resumeContext = JSON.stringify(resume.sections);
+
+  // Execute through unified gateway
+  const result = await executeAiOperation({
+    context: ctx.context,
+    modelId: model || 'jd-analysis-default',
+    capability: 'text',
+    businessCapability: 'jd_analysis',
+    idempotencyKey: `jd-analysis-${ctx.context.actor.userId}-${resumeId}-${Date.now()}`,
+    dispatch: async (gwCtx) => {
+      const model = buildModel(gwCtx);
+      const aiResult = await generateText({
+        model,
+        maxOutputTokens: 8192,
+        system: JD_ANALYSIS_PROMPT,
+        prompt: `Resume:\n${resumeContext}\n\nJob Description:\n${jobDescription}\n\nRespond with JSON only.`,
+        providerOptions: getJsonOptions(gwCtx.providerType),
+      });
+      return { text: aiResult.text, usage: aiResult.usage };
+    },
+  });
+
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error, message: result.message },
+      { status: result.status }
+    );
+  }
+
+  const analysisData = extractJson(result.data.text, jdAnalysisOutputSchema);
+
+  // Persist to database
+  let historyId: string | undefined;
+  try {
+    const saved = await analysisRepository.createJdAnalysis({
+      resumeId,
+      jobDescription,
+      result: analysisData,
+      overallScore: analysisData.overallScore,
+      atsScore: analysisData.atsScore,
+    });
+    historyId = saved?.id;
+  } catch (e) {
+    console.error('Failed to save JD analysis history:', e);
+  }
+
+  return NextResponse.json({ ...analysisData, historyId });
 }

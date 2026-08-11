@@ -40,6 +40,7 @@ export function EditorPreviewPanel() {
             className="h-7 w-7 cursor-pointer p-0"
             onClick={() => setZoom((z) => Math.max(30, z - 10))}
             disabled={zoom <= 30}
+            aria-label={t('zoomOut')}
           >
             <ZoomOut className="h-3.5 w-3.5" />
           </Button>
@@ -50,6 +51,7 @@ export function EditorPreviewPanel() {
             className="h-7 w-7 cursor-pointer p-0"
             onClick={() => setZoom((z) => Math.min(150, z + 10))}
             disabled={zoom >= 150}
+            aria-label={t('zoomIn')}
           >
             <ZoomIn className="h-3.5 w-3.5" />
           </Button>

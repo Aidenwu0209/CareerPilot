@@ -51,6 +51,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
           size="icon"
           onClick={() => router.push('/dashboard')}
           className="h-8 w-8 shrink-0 cursor-pointer text-zinc-600"
+          aria-label={t('backToDashboard')}
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
@@ -83,6 +84,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
           disabled={undoStack.length === 0}
           className="h-8 w-8 cursor-pointer"
           title={t('undo')}
+          aria-label={t('undo')}
         >
           <Undo2 className="h-4 w-4" />
         </Button>
@@ -93,6 +95,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
           disabled={redoStack.length === 0}
           className="h-8 w-8 cursor-pointer"
           title={t('redo')}
+          aria-label={t('redo')}
         >
           <Redo2 className="h-4 w-4" />
         </Button>
@@ -179,6 +182,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
             onClick={() => openModal('settings')}
             className="cursor-pointer"
             title={t('settings')}
+            aria-label={t('settings')}
           >
             <Settings className="h-4 w-4" />
           </Button>
@@ -188,7 +192,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
         <div className="md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={t('more')}>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -238,6 +242,7 @@ export function EditorToolbar({ resumeId }: EditorToolbarProps) {
           onClick={toggleThemeEditor}
           className="h-8 w-8 cursor-pointer sm:w-auto sm:px-3"
           title={t('theme')}
+          aria-label={t('theme')}
         >
           <Palette className="h-4 w-4" />
           <span className="ml-1 hidden text-xs sm:inline">{t('theme')}</span>

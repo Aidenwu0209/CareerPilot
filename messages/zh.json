@@ -13,7 +13,9 @@
     "back": "返回",
     "search": "搜索",
     "noData": "暂无数据",
-    "rename": "重命名"
+    "rename": "重命名",
+    "moreActions": "更多操作",
+    "menu": "菜单"
   },
   "auth": {
     "login": "登录",
@@ -21,7 +23,27 @@
     "loginWithGoogle": "使用 Google 登录",
     "welcomeBack": "欢迎回来",
     "loginDescription": "登录以管理你的简历",
-    "agreeTerms": "登录即表示你同意我们的服务条款和隐私政策"
+    "agreeTerms": "登录即表示你同意我们的服务条款和隐私政策",
+    "otp": {
+      "emailLabel": "邮箱地址",
+      "sendCode": "获取验证码",
+      "codeLabel": "验证码",
+      "codeSentTo": "验证码已发送至 {email}",
+      "verify": "验证",
+      "resend": "重新发送",
+      "resendIn": "{seconds}秒后可重新发送",
+      "changeEmail": "更换邮箱",
+      "errors": {
+        "invalidEmail": "请输入有效的邮箱地址",
+        "rateLimited": "请求过于频繁，请稍后再试",
+        "invalidCode": "验证码错误",
+        "expired": "验证码已过期，请重新获取",
+        "used": "验证码已使用，请重新获取",
+        "serverError": "服务暂时不可用，请稍后重试"
+      }
+    },
+    "or": "或",
+    "agreeTermsLinks": "登录即表示你同意我们的<terms>服务条款</terms>和<privacy>隐私政策</privacy>"
   },
   "dashboard": {
     "nav": "工作台",
@@ -131,9 +153,17 @@
       "grammarCheck": "语法检查",
       "share": "分享",
       "import": "导入",
+      "backToDashboard": "返回工作台",
+      "more": "更多功能",
+      "zoomOut": "缩小预览",
+      "zoomIn": "放大预览",
       "previewError": "预览渲染失败，可能是内容格式有误。请在左侧编辑修复，或撤销最近的 AI 修改。"
     },
     "aiPolish": "AI 润色",
+    "showSection": "显示模块",
+    "hideSection": "隐藏模块",
+    "removeSection": "删除模块",
+    "dragSection": "拖动模块排序",
     "invalidSectionContent": "该模块数据异常，请使用 AI 重新生成内容",
     "sidebar": {
       "sections": "简历模块",
@@ -180,6 +210,8 @@
       "endDate": "结束时间",
       "current": "至今",
       "description": "描述",
+      "customTitle": "标题",
+      "customDate": "日期",
       "highlights": "亮点",
       "institution": "学校",
       "degree": "学位",
@@ -207,12 +239,22 @@
       "qrUrlInvalid": "请输入有效的链接地址",
       "addItem": "添加条目",
       "removeItem": "删除条目",
+      "uploadAvatar": "上传头像",
       "clear": "清除",
       "dateDisplay": "{year}年{month}",
       "months": {
-        "01": "1月", "02": "2月", "03": "3月", "04": "4月",
-        "05": "5月", "06": "6月", "07": "7月", "08": "8月",
-        "09": "9月", "10": "10月", "11": "11月", "12": "12月"
+        "10": "10月",
+        "11": "11月",
+        "12": "12月",
+        "01": "1月",
+        "02": "2月",
+        "03": "3月",
+        "04": "4月",
+        "05": "5月",
+        "06": "6月",
+        "07": "7月",
+        "08": "8月",
+        "09": "9月"
       }
     }
   },
@@ -242,7 +284,29 @@
     "apiKeyMissing": "API Key 未配置",
     "apiKeyMissingHint": "请先在设置中配置 AI 服务的 API Key，才能使用 AI 功能。",
     "apiKeyMissingBubble": "API Key 未配置，请前往设置配置",
-    "goToSettings": "前往设置"
+    "goToSettings": "前往设置",
+    "modelPlaceholder": "选择模型",
+    "model": "模型",
+    "modelLoadError": "模型加载失败",
+    "noModelsAvailable": "暂无可用模型",
+    "tokenPriced": "按量计费",
+    "credits": "点",
+    "modelUnavailable": "所选模型已不可用，已切换到默认模型",
+    "insufficientCredits": "点数不足",
+    "insufficientCreditsHint": "你的点数余额不足，无法完成此操作",
+    "rateLimited": "请求过于频繁",
+    "rateLimitedHint": "请稍后再试",
+    "modelNotAllowed": "模型不可用",
+    "modelNotAllowedHint": "当前模型已停用或无权使用，请选择其他模型",
+    "providerModelUnavailable": "供应商端的模型不可用，请选择其他模型或联系管理员",
+    "providerCredentialsRejected": "AI 供应商凭证配置无效，请联系管理员",
+    "providerQuotaExceeded": "AI 供应商额度已用尽，请稍后重试或联系管理员",
+    "providerRequestRejected": "AI 供应商拒绝了本次图片请求，请调整图片或要求后重试",
+    "providerUpstreamUnavailable": "AI 供应商暂时不可用，请稍后重试",
+    "accountSuspended": "账号已冻结",
+    "accountSuspendedHint": "你的账号已被冻结，请联系管理员",
+    "networkErrorHint": "网络连接异常，请检查网络后重试",
+    "invalidToolCallHint": "AI 模型返回了无效的工具调用，请重试"
   },
   "pdf": {
     "exporting": "正在生成 PDF...",
@@ -351,6 +415,7 @@
     "optimize": "一键优化",
     "optimizeCopy": "复制优化",
     "copyOptimizeError": "复制简历失败，请重试",
+    "error": "分析失败，请重试",
     "pasteJd": "粘贴职位描述以开始分析",
     "noResults": "暂无分析结果",
     "newAnalysis": "新分析",
@@ -808,6 +873,7 @@
       "titleLabel": "面试标题",
       "titlePlaceholder": "如：高级前端工程师面试",
       "startInterview": "开始面试",
+      "createFailed": "面试创建失败，请稍后重试",
       "custom": {
         "title": "自定义面试官",
         "name": "面试官名称",
@@ -841,7 +907,12 @@
       "roundComplete": "本轮面试结束",
       "allComplete": "所有面试轮次已完成",
       "generateReport": "生成面试报告",
-      "generatingReport": "正在生成报告..."
+      "generatingReport": "正在生成报告...",
+      "insufficientCredits": "点数不足，无法完成面试消息",
+      "rateLimited": "请求过于频繁，请稍后再试",
+      "modelNotAllowed": "当前模型已停用或无权使用",
+      "accountSuspended": "账号已被冻结",
+      "chatError": "面试消息发送失败，请重试"
     },
     "report": {
       "title": "面试报告",
@@ -880,7 +951,12 @@
       "backToLobby": "返回面试大厅",
       "markedForReview": "标记复习",
       "usedHint": "使用了提示",
-      "skippedQuestion": "已跳过"
+      "skippedQuestion": "已跳过",
+      "insufficientCredits": "点数不足，无法生成面试报告",
+      "rateLimited": "请求过于频繁，请稍后再试",
+      "modelNotAllowed": "当前模型已停用或无权使用",
+      "accountSuspended": "账号已被冻结",
+      "reportFailed": "报告生成失败，请稍后重试"
     },
     "interviewers": {
       "hr": "HR面",
@@ -890,6 +966,865 @@
       "project_deep_dive": "项目深挖",
       "leader": "Leader面",
       "custom": "自定义"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "隐私政策",
+      "version": "版本",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "2026年8月1日",
+      "back": "返回首页",
+      "sections": {
+        "intro": {
+          "title": "引言",
+          "body": "CareerPilot（以下简称「我们」）尊重并保护用户的隐私。本隐私政策说明我们如何收集、使用、存储和保护您的个人信息。使用本服务即表示您同意本政策所述的信息处理方式。"
+        },
+        "collection": {
+          "title": "我们收集的信息",
+          "body": "我们仅收集为提供服务所必需的信息，包括：",
+          "items": {
+            "account": "账户信息：注册邮箱、昵称和头像",
+            "resume": "简历内容：您主动创建和编辑的简历数据",
+            "usage": "使用记录：AI 调用记录、点数流水和操作日志",
+            "cookies": "技术信息：会话 Cookie 和基本浏览器信息"
+          }
+        },
+        "use": {
+          "title": "信息的使用",
+          "body": "我们收集的信息仅用于以下目的：",
+          "items": {
+            "service": "提供和维护简历编辑、AI 优化和模拟面试等核心功能",
+            "ai": "将您的简历内容发送给平台托管的 AI 模型进行处理",
+            "security": "检测和防止欺诈、滥用和未授权访问",
+            "communication": "向您发送服务通知和重要更新"
+          }
+        },
+        "sharing": {
+          "title": "信息共享",
+          "body": "我们不会出售、出租或交易您的个人信息。仅在以下情况下可能共享：经您明确同意；为遵守法律法规或政府机关的要求；为保护平台和用户的合法权益。机构管理员可以查看您所属机构的聚合用量数据，但不能查看您的简历正文、面试内容或完整提示词。"
+        },
+        "retention": {
+          "title": "数据保留",
+          "body": "您的个人数据在账户存续期间予以保留。账户注销后，业务数据将按数据图级联删除；法律法规要求保留的账务和安全记录将匿名化处理。"
+        },
+        "rights": {
+          "title": "您的权利",
+          "body": "您对自己的个人信息享有以下权利：",
+          "items": {
+            "access": "访问：查看您的个人数据和用量明细",
+            "export": "导出：下载完整的个人数据副本",
+            "delete": "删除：注销账户并删除相关数据",
+            "revoke": "撤回：撤销已授予的机构成员身份"
+          }
+        },
+        "security": {
+          "title": "数据安全",
+          "body": "我们采用加密传输（HTTPS）、加密存储（密钥加密）、最小权限访问和定期审计等措施保护您的数据。AI 供应商凭据使用独立主密钥加密，普通接口和管理日志不返回明文密钥。"
+        },
+        "contact": {
+          "title": "联系我们",
+          "body": "如果您对本隐私政策有任何疑问，请联系：<email>support@careerpilot.app</email>"
+        }
+      }
+    },
+    "terms": {
+      "title": "服务条款",
+      "version": "版本",
+      "versionNumber": "2026-08-01-v1",
+      "effectiveDate": "2026年8月1日",
+      "back": "返回首页",
+      "sections": {
+        "acceptance": {
+          "title": "条款接受",
+          "body": "使用 CareerPilot 服务即表示您同意本服务条款。如果您不同意任何条款，请停止使用本服务。"
+        },
+        "accounts": {
+          "title": "账户注册",
+          "body": "您必须使用真实有效的邮箱注册账户，并对账户内的所有活动负责。禁止注册多个账户进行滥用。平台有权冻结违规账户。"
+        },
+        "credits": {
+          "title": "点数与额度",
+          "body": "个人用户通过注册赠点或平台调账获得点数。机构用户使用机构分配的额度。所有 AI 调用按平台公布的规则扣减点数。余额不可转让、退款或兑现（另有规定除外）。"
+        },
+        "ai": {
+          "title": "AI 生成内容",
+          "body": "AI 生成的简历内容、面试评价和建议仅供参考。平台不对 AI 输出的准确性、完整性和适用性做出保证。用户应自行审核所有 AI 生成的内容。"
+        },
+        "orgUsage": {
+          "title": "机构使用",
+          "body": "机构管理员可管理本机构成员和席位，查看聚合用量数据。机构管理员无权查看成员的简历正文、面试内容或完整提示词。机构成员的 AI 消费从机构额度中扣减。"
+        },
+        "prohibited": {
+          "title": "禁止行为",
+          "body": "您不得进行以下行为：",
+          "items": {
+            "abuse": "滥用 AI 接口，包括自动刷量、爬取或超出合理使用范围",
+            "reverse": "对平台进行逆向工程、反编译或尝试获取源代码",
+            "unauthorized": "未经授权访问他人的简历、面试或账户数据",
+            "illegal": "利用本服务从事任何违法或侵权活动"
+          }
+        },
+        "disclaimer": {
+          "title": "免责声明",
+          "body": "本服务按「现状」提供，不附带任何明示或暗示的保证。平台不对服务的可用性、可靠性或准确性做出承诺。"
+        },
+        "liability": {
+          "title": "责任限制",
+          "body": "在适用法律允许的最大范围内，平台不对任何间接、附带、特殊或后果性损害承担责任。"
+        },
+        "changes": {
+          "title": "条款变更",
+          "body": "平台保留随时修改本条款的权利。重大变更将通过通知或登录提示告知用户。继续使用服务即表示接受修改后的条款。"
+        },
+        "contact": {
+          "title": "联系我们",
+          "body": "如果您对本服务条款有任何疑问，请联系：<email>support@careerpilot.app</email>"
+        }
+      }
+    }
+  },
+  "nav": {
+    "admin": "管理后台",
+    "orgAdmin": "机构管理",
+    "personalCredits": "个人点数",
+    "orgCredits": "机构额度",
+    "account": "账号"
+  },
+  "credits": {
+    "title": "点数与流水",
+    "description": "查看当前计费账户余额和历史流水记录",
+    "accountType": "账户类型",
+    "personalAccount": "个人账户",
+    "orgAccount": "机构账户",
+    "personalBadge": "个人",
+    "orgBadge": "机构",
+    "availableBalance": "可用余额",
+    "transactionHistory": "流水记录",
+    "colTime": "时间",
+    "colType": "类型",
+    "colAmount": "变动",
+    "colBalanceAfter": "变动后余额",
+    "colNote": "备注",
+    "empty": "暂无流水记录",
+    "loadError": "加载流水失败，请稍后重试",
+    "retry": "重试",
+    "prev": "上一页",
+    "next": "下一页",
+    "reasons": {
+      "registrationGrant": "注册赠点",
+      "manualCredit": "人工充值",
+      "manualDebit": "人工扣减",
+      "consumption": "消费",
+      "refund": "退款",
+      "purchaseCredit": "套餐充值",
+      "subscriptionCredit": "订阅赠点",
+      "paymentRefund": "支付退款",
+      "paymentRefundRollback": "退款失败回滚",
+      "adjustment": "调整"
+    }
+  },
+  "admin": {
+    "title": "管理后台",
+    "overview": "概览",
+    "noPermission": {
+      "title": "无权限访问",
+      "description": "您没有超级管理员权限，无法访问此页面。"
+    },
+    "sections": {
+      "operations": {
+        "title": "运营监控与告警",
+        "description": "监控 AI 稳定性、点数消耗、成本估算和审计活动"
+      },
+      "users": {
+        "title": "用户与点数",
+        "description": "管理用户、冻结账户、调整点数"
+      },
+      "aiProviders": {
+        "title": "AI 供应商与模型",
+        "description": "管理供应商、凭证、模型目录"
+      },
+      "aiModels": {
+        "title": "模型目录",
+        "description": "配置模型能力、限制、启用状态和扣点规则"
+      },
+      "organizations": {
+        "title": "机构",
+        "description": "创建机构、分配席位与配额"
+      },
+      "creditRules": {
+        "title": "点数规则",
+        "description": "配置注册赠点和个人每日上限"
+      },
+      "billing": {
+        "title": "支付与套餐",
+        "description": "管理充值包、订阅等级、模型权限、退款和对账"
+      }
+    },
+    "operations": {
+      "title": "运营监控与告警",
+      "description": "汇总平台近 24 小时可靠性与近 30 天用量，辅助日常运营决策。",
+      "alerts": "当前告警",
+      "operations24h": "AI 调用 · 24 小时",
+      "successRate24h": "成功率 · 24 小时",
+      "latency24h": "平均延迟 · 24 小时",
+      "credits30d": "净消耗点数 · 30 天",
+      "staleHolds": "已过期未结算预占",
+      "estimatedCost": "近 30 天供应商成本估算：{cost}。可通过 AI_COST_PER_CREDIT 校准估算系数。",
+      "topModels": "模型调用排行 · 30 天",
+      "topUsers": "用户调用排行 · 30 天",
+      "recentAudit": "最近审计活动",
+      "model": "模型",
+      "user": "用户",
+      "calls": "调用次数",
+      "failures": "失败次数",
+      "time": "时间",
+      "action": "操作",
+      "result": "结果",
+      "summary": "摘要",
+      "empty": "当前时段暂无数据"
+    },
+    "providers": {
+      "title": "供应商管理",
+      "description": "管理托管 AI 供应商、加密凭证和连接测试",
+      "refresh": "刷新",
+      "add": "新增供应商",
+      "empty": "暂无供应商，点击「新增供应商」添加",
+      "loadError": "加载供应商列表失败",
+      "retry": "重试",
+      "statusActive": "已启用",
+      "statusDisabled": "已停用",
+      "credential": "凭证",
+      "noCredential": "未配置",
+      "version": "版本",
+      "lastValidated": "最后验证",
+      "test": "测试连接",
+      "edit": "编辑",
+      "rotate": "轮换",
+      "enable": "启用",
+      "disable": "停用",
+      "testSuccess": "连接测试成功",
+      "testFailed": "连接测试失败",
+      "testResultSuccess": "连接成功",
+      "testResultFailed": "连接失败",
+      "addSuccess": "供应商已创建",
+      "editSuccess": "供应商已更新",
+      "rotateSuccess": "凭证已轮换",
+      "toggleFailed": "状态变更失败",
+      "enabled": "供应商已启用",
+      "disabled": "供应商已停用",
+      "confirmEnable": "确认启用供应商",
+      "confirmDisable": "确认停用供应商",
+      "confirmEnableDesc": "启用后，该供应商下的模型将恢复对用户的可见性和调用。",
+      "confirmDisableDesc": "停用后，该供应商下的所有模型将立即对用户不可见，且无法调用。",
+      "cancel": "取消",
+      "confirm": "确认",
+      "addTitle": "新增供应商",
+      "addDescription": "创建一个新的托管 AI 供应商。凭证将加密存储。",
+      "fieldType": "供应商类型",
+      "fieldName": "名称",
+      "fieldBaseUrl": "服务地址",
+      "fieldCredential": "API 凭证",
+      "optional": "可选",
+      "credentialHint": "凭证将使用 AES-256-GCM 加密存储，不会以明文形式返回。",
+      "create": "创建",
+      "errNameRequired": "请输入供应商名称",
+      "errAddFailed": "创建供应商失败",
+      "editTitle": "编辑供应商",
+      "editDescription": "更新供应商名称或服务地址。",
+      "save": "保存",
+      "errEditFailed": "更新供应商失败",
+      "rotateTitle": "轮换凭证",
+      "rotateDescription": "为供应商 {name} 设置新的 API 凭证。新凭证将立即生效，旧凭证将被替换。",
+      "rotateHint": "轮换后凭证版本递增，旧凭证立即失效。",
+      "fieldNewKey": "新 API 凭证",
+      "rotateSubmit": "轮换凭证",
+      "errKeyRequired": "请输入新的 API 凭证",
+      "errRotateFailed": "凭证轮换失败",
+      "errApi": {
+        "TYPE_REQUIRED": "请选择供应商类型",
+        "NAME_REQUIRED": "请输入名称",
+        "INVALID_NAME": "名称无效",
+        "UPSTREAM_URL_NOT_ALLOWED": "服务地址不在允许的域名列表中",
+        "NEW_KEY_REQUIRED": "请输入新凭证",
+        "PROVIDER_NOT_FOUND": "供应商不存在",
+        "NO_UPDATES": "没有需要更新的字段"
+      }
+    },
+    "users": {
+      "title": "用户与点数",
+      "description": "搜索用户、查看角色与余额、冻结或解冻账户",
+      "refresh": "刷新",
+      "searchPlaceholder": "按姓名或邮箱搜索…",
+      "search": "搜索",
+      "clear": "清除",
+      "empty": "暂无用户",
+      "noResults": "未找到匹配的用户",
+      "loadError": "加载用户列表失败",
+      "retry": "重试",
+      "statusActive": "正常",
+      "statusSuspended": "已冻结",
+      "roleAdmin": "超管",
+      "roleUser": "用户",
+      "balance": "余额",
+      "orgs": "机构",
+      "freeze": "冻结",
+      "unfreeze": "解冻",
+      "cannotFreezeAdmin": "不可冻结超级管理员",
+      "frozen": "用户已冻结",
+      "unfrozen": "用户已解冻",
+      "toggleFailed": "操作失败",
+      "confirmFreeze": "确认冻结用户",
+      "confirmUnfreeze": "确认解冻用户",
+      "confirmFreezeDesc": "冻结后，{name} 将无法调用任何需要认证的接口，直到解冻。",
+      "confirmUnfreezeDesc": "解冻后，{name} 将恢复正常的访问权限。",
+      "cancel": "取消",
+      "confirm": "确认",
+      "viewDetails": "详情",
+      "errApi": {
+        "INVALID_ACTION": "操作类型无效",
+        "IDEMPOTENCY_KEY_REQUIRED": "缺少幂等键",
+        "USER_NOT_FOUND": "用户不存在",
+        "INVALID_BODY": "请求格式无效",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "需要登录"
+      }
+    },
+    "orgDetail": {
+      "title": "机构详情",
+      "backToOrgs": "返回机构列表",
+      "balance": "额度",
+      "seats": "席位",
+      "createdAt": "创建时间",
+      "statusActive": "正常",
+      "statusSuspended": "已停用",
+      "addQuota": "追加额度",
+      "deductQuota": "扣减额度",
+      "suspend": "停用机构",
+      "activate": "启用机构",
+      "refresh": "刷新",
+      "loadError": "加载失败",
+      "retry": "重试",
+      "empty": "暂无流水记录",
+      "adminsTitle": "机构管理员",
+      "noAdmins": "暂无管理员，通过邮箱任命一位",
+      "appoint": "任命管理员",
+      "revoke": "撤销",
+      "appointTitle": "任命机构管理员",
+      "appointDescription": "为「{name}」任命一位已注册用户为机构管理员",
+      "fieldEmail": "用户邮箱",
+      "placeholderEmail": "输入已注册用户的精确邮箱",
+      "confirmAppoint": "确认任命",
+      "appointSuccess": "已将 {email} 任命为机构管理员",
+      "appointFailed": "任命失败",
+      "revokeSuccess": "已撤销 {email} 的机构管理员权限",
+      "revokeFailed": "撤销失败",
+      "errEmailRequired": "请输入邮箱地址",
+      "suspendTitle": "确认停用机构",
+      "suspendDescription": "停用「{name}」后，其 {count} 名成员的机构请求将被拒绝。确认操作？",
+      "activateTitle": "确认启用机构",
+      "activateDescription": "启用「{name}」后，其成员将恢复机构访问权限。",
+      "confirmSuspend": "确认停用",
+      "confirmActivate": "确认启用",
+      "suspendSuccess": "机构已停用",
+      "activateSuccess": "机构已启用",
+      "statusChangeFailed": "状态变更失败",
+      "transactionHistory": "额度流水",
+      "colTime": "时间",
+      "colType": "类型",
+      "colAmount": "变动",
+      "colBalanceAfter": "变动后余额",
+      "colNote": "备注",
+      "prev": "上一页",
+      "next": "下一页",
+      "addTitle": "追加额度",
+      "deductTitle": "扣减额度",
+      "adjustDescription": "调整「{name}」的机构额度",
+      "fieldAmount": "数量",
+      "fieldNote": "备注（必填）",
+      "placeholderAmountAdd": "输入正整数",
+      "placeholderAmountDeduct": "输入正整数",
+      "placeholderNote": "输入调整原因",
+      "confirmAdd": "确认追加",
+      "confirmDeduct": "确认扣减",
+      "adjustSuccess": "已调整 ({amount})",
+      "adjustFailed": "调整失败",
+      "errInvalidAmount": "请输入非零整数",
+      "errNoteRequired": "请输入备注",
+      "cancel": "取消",
+      "reasons": {
+        "registrationGrant": "注册赠送",
+        "manualCredit": "手动充值",
+        "manualDebit": "手动扣减",
+        "consumption": "消费",
+        "refund": "退款",
+        "purchaseCredit": "套餐充值",
+        "subscriptionCredit": "订阅赠点",
+        "paymentRefund": "支付退款",
+        "paymentRefundRollback": "退款失败回滚",
+        "adjustment": "调整"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "数量必须是非零整数",
+        "REASON_REQUIRED": "请输入备注",
+        "IDEMPOTENCY_KEY_REQUIRED": "缺少幂等键",
+        "INSUFFICIENT_CREDITS": "额度不足，无法扣减",
+        "USER_NOT_FOUND": "用户不存在",
+        "ALREADY_ADMIN": "该用户已是机构管理员",
+        "NOT_AN_ADMIN": "该用户不是本机构的管理员",
+        "INVALID_STATUS": "状态值无效",
+        "INVALID_BODY": "请求格式无效",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "需要登录"
+      }
+    },
+    "userDetail": {
+      "title": "用户详情",
+      "backToUsers": "返回用户列表",
+      "balance": "余额",
+      "createdAt": "注册时间",
+      "orgs": "机构",
+      "statusActive": "正常",
+      "statusSuspended": "已冻结",
+      "roleAdmin": "超管",
+      "roleUser": "用户",
+      "addCredits": "充值",
+      "deductCredits": "扣减",
+      "refresh": "刷新",
+      "transactionHistory": "流水记录",
+      "colTime": "时间",
+      "colType": "类型",
+      "colAmount": "变动",
+      "colBalanceAfter": "变动后余额",
+      "colNote": "备注",
+      "empty": "暂无流水记录",
+      "loadError": "加载失败，请稍后重试",
+      "retry": "重试",
+      "prev": "上一页",
+      "next": "下一页",
+      "addTitle": "充值点数",
+      "deductTitle": "扣减点数",
+      "adjustDescription": "正在为 {name} 调整点数",
+      "fieldAmount": "数量",
+      "fieldNote": "备注（必填）",
+      "placeholderAmountAdd": "输入正整数",
+      "placeholderAmountDeduct": "输入正整数",
+      "placeholderNote": "请输入调整原因，例如：补偿测试消费",
+      "confirmAdd": "确认充值",
+      "confirmDeduct": "确认扣减",
+      "cancel": "取消",
+      "adjustSuccess": "调账成功（{amount}）",
+      "adjustFailed": "调账失败",
+      "errInvalidAmount": "请输入非零整数",
+      "errNoteRequired": "请填写备注",
+      "reasons": {
+        "registrationGrant": "注册赠点",
+        "manualCredit": "人工充值",
+        "manualDebit": "人工扣减",
+        "consumption": "消费",
+        "refund": "退款",
+        "purchaseCredit": "套餐充值",
+        "subscriptionCredit": "订阅赠点",
+        "paymentRefund": "支付退款",
+        "paymentRefundRollback": "退款失败回滚",
+        "adjustment": "调整"
+      },
+      "errApi": {
+        "INVALID_AMOUNT": "金额必须是非零整数",
+        "REASON_REQUIRED": "请填写备注",
+        "IDEMPOTENCY_KEY_REQUIRED": "缺少幂等键",
+        "INSUFFICIENT_CREDITS": "余额不足，扣减会导致负余额",
+        "USER_NOT_FOUND": "用户不存在",
+        "INVALID_BODY": "请求格式无效",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "需要登录"
+      }
+    },
+    "creditRules": {
+      "title": "点数规则",
+      "description": "配置注册赠点和每日消费上限",
+      "refresh": "刷新",
+      "save": "保存",
+      "fieldValue": "值",
+      "ruleRegistrationGrant": "注册赠点",
+      "ruleRegistrationGrantDesc": "新用户首次完成注册认证时获得的点数",
+      "ruleDailyLimitPersonal": "个人每日上限",
+      "ruleDailyLimitPersonalDesc": "个人账户每日 AI 消费点数上限",
+      "ruleDailyLimitOrg": "机构每日上限",
+      "ruleDailyLimitOrgDesc": "机构账户每日 AI 消费点数上限",
+      "ruleUnknown": "未知规则",
+      "empty": "暂无规则",
+      "loadError": "加载规则失败",
+      "retry": "重试",
+      "saveSuccess": "规则已更新",
+      "errInvalidValue": "请输入非负整数",
+      "errSaveFailed": "保存失败",
+      "hintFutureOnly": "规则变更仅影响后续事件，不会追溯已发生的业务。"
+    },
+    "models": {
+      "title": "模型目录管理",
+      "description": "配置托管模型的能力、限制、档位和扣点规则",
+      "refresh": "刷新",
+      "add": "新增模型",
+      "empty": "暂无模型，点击「新增模型」添加",
+      "loadError": "加载模型列表失败",
+      "retry": "重试",
+      "statusActive": "已启用",
+      "statusDisabled": "已停用",
+      "capText": "文本",
+      "capImage": "生图",
+      "tierFree": "免费",
+      "tierStandard": "标准",
+      "tierPremium": "高级",
+      "visibilityPublic": "公开",
+      "visibilityInternal": "内部",
+      "fieldInputLimit": "输入上限",
+      "fieldOutputLimit": "输出上限",
+      "fieldMaxSteps": "最大步数",
+      "pricingLabel": "固定 {fixed} / 输入 {input} / 输出 {output}",
+      "pricingHint": "固定价格为每次调用点数；Token 价格为每 1K Token 点数。",
+      "edit": "编辑",
+      "enable": "启用",
+      "disable": "停用",
+      "toggleFailed": "状态变更失败",
+      "enabled": "模型已启用",
+      "disabled": "模型已停用",
+      "confirmEnable": "确认启用模型",
+      "confirmDisable": "确认停用模型",
+      "confirmEnableDesc": "启用后，该模型将恢复对用户的可见性和调用。",
+      "confirmDisableDesc": "停用后，该模型将立即对用户不可见，且无法调用。",
+      "cancel": "取消",
+      "confirm": "确认",
+      "addTitle": "新增模型",
+      "addDescription": "在供应商下创建新的模型配置。",
+      "fieldProvider": "供应商",
+      "fieldProviderPlaceholder": "选择供应商",
+      "fieldIdentifier": "模型标识",
+      "fieldDisplayName": "显示名称",
+      "fieldCapabilities": "能力",
+      "fieldTier": "档位",
+      "fieldVisibility": "可见范围",
+      "optional": "可选",
+      "fieldFixedPrice": "固定价格",
+      "fieldTokenPriceInput": "输入 Token 价格",
+      "fieldTokenPriceOutput": "输出 Token 价格",
+      "create": "创建",
+      "errProviderRequired": "请选择供应商",
+      "errIdentifierRequired": "请输入模型标识",
+      "errNameRequired": "请输入显示名称",
+      "errInvalidInputLimit": "输入上限必须是非负数字",
+      "errInvalidOutputLimit": "输出上限必须是非负数字",
+      "errInvalidMaxSteps": "最大步数必须是非负数字",
+      "errInvalidFixedPrice": "固定价格必须是非负数字",
+      "errInvalidTokenPriceInput": "输入 Token 价格必须是非负数字",
+      "errInvalidTokenPriceOutput": "输出 Token 价格必须是非负数字",
+      "errAddFailed": "创建模型失败",
+      "editTitle": "编辑模型",
+      "editDescription": "更新模型 {name}（供应商：{provider}）的配置。",
+      "save": "保存",
+      "errEditFailed": "更新模型失败",
+      "addSuccess": "模型已创建",
+      "editSuccess": "模型已更新",
+      "errApi": {
+        "PROVIDER_ID_REQUIRED": "请选择供应商",
+        "MODEL_IDENTIFIER_REQUIRED": "请输入模型标识",
+        "DISPLAY_NAME_REQUIRED": "请输入显示名称",
+        "PROVIDER_NOT_FOUND": "供应商不存在",
+        "MODEL_IDENTIFIER_EXISTS": "该供应商下已存在相同模型标识",
+        "INVALID_FIXED_PRICE": "固定价格无效",
+        "INVALID_TOKEN_PRICE_INPUT": "输入 Token 价格无效",
+        "INVALID_TOKEN_PRICE_OUTPUT": "输出 Token 价格无效",
+        "INVALID_INPUT_TOKEN_LIMIT": "输入 Token 上限无效",
+        "INVALID_OUTPUT_TOKEN_LIMIT": "输出 Token 上限无效",
+        "INVALID_MAX_STEPS": "最大步数无效",
+        "INVALID_STATUS": "状态值无效",
+        "MODEL_NOT_FOUND": "模型不存在",
+        "NO_UPDATES": "没有需要更新的字段",
+        "INVALID_BODY": "请求格式无效"
+      }
+    },
+    "orgs": {
+      "title": "机构管理",
+      "description": "创建机构、查看席位、额度和管理员",
+      "refresh": "刷新",
+      "add": "新增机构",
+      "searchPlaceholder": "按名称或标识搜索…",
+      "search": "搜索",
+      "clear": "清除",
+      "empty": "暂无机构，点击「新增机构」创建",
+      "noResults": "未找到匹配的机构",
+      "loadError": "加载机构列表失败",
+      "retry": "重试",
+      "statusActive": "正常",
+      "statusSuspended": "已停用",
+      "seats": "席位",
+      "balance": "额度",
+      "admins": "管理员",
+      "createTitle": "新增机构",
+      "createDescription": "创建一个新的机构，设置标识、席位上限和初始额度。",
+      "fieldName": "名称",
+      "fieldNamePlaceholder": "如：杭州科技有限公司",
+      "fieldSlug": "唯一标识",
+      "fieldSlugPlaceholder": "如：hangzhou-tech",
+      "fieldSlugHint": "仅限字母、数字和连字符，创建后不可更改",
+      "fieldSeats": "席位上限",
+      "fieldQuota": "初始额度",
+      "fieldQuotaHint": "创建时一次性分配的点数，留空或 0 表示不分配",
+      "cancel": "取消",
+      "create": "创建",
+      "createSuccess": "机构已创建",
+      "createFailed": "创建机构失败",
+      "errNameRequired": "请输入机构名称",
+      "errSlugRequired": "请输入唯一标识",
+      "errSlugFormat": "标识仅允许字母、数字和连字符",
+      "errSeatLimitInvalid": "席位上限必须是非负整数",
+      "errQuotaInvalid": "初始额度必须是非负整数",
+      "errApi": {
+        "INVALID_NAME": "名称无效",
+        "INVALID_SLUG": "标识无效",
+        "INVALID_SEAT_LIMIT": "席位上限必须是非负整数",
+        "INVALID_INITIAL_QUOTA": "初始额度必须是非负整数",
+        "INVALID_STATUS": "状态值无效",
+        "SLUG_ALREADY_EXISTS": "该标识已被使用",
+        "INVALID_BODY": "请求格式无效",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "需要登录"
+      }
+    }
+  },
+  "orgAdmin": {
+    "title": "机构管理",
+    "overview": "概览",
+    "noPermission": {
+      "title": "无权限访问",
+      "description": "您不是机构管理员，无法访问此页面。"
+    },
+    "summary": {
+      "orgName": "机构名称",
+      "status": "状态",
+      "statusActive": "正常",
+      "statusSuspended": "已暂停",
+      "seats": "席位",
+      "seatsUsed": "已用",
+      "seatsTotal": "总数",
+      "credits": "额度余额",
+      "quotaUsed": "已用额度",
+      "quotaRemaining": "剩余额度"
+    },
+    "sections": {
+      "members": {
+        "title": "成员管理",
+        "description": "管理机构成员和席位"
+      },
+      "usage": {
+        "title": "用量",
+        "description": "查看机构配额和消耗"
+      },
+      "branding": {
+        "title": "机构品牌",
+        "description": "配置机构名称、Logo 与产品主色"
+      }
+    },
+    "branding": {
+      "title": "机构品牌配置",
+      "description": "为机构成员定制登录后的产品名称、Logo 和主色。",
+      "productName": "产品名称",
+      "tagline": "品牌标语",
+      "logoUrl": "Logo 地址（HTTPS 或站内路径）",
+      "primaryColor": "品牌主色",
+      "loading": "正在加载品牌配置…",
+      "save": "保存品牌配置",
+      "saving": "正在保存…",
+      "saved": "品牌配置已保存，刷新页面后可查看全局效果。",
+      "loadError": "品牌配置加载失败。",
+      "saveError": "保存失败，请检查输入后重试。"
+    },
+    "members": {
+      "title": "成员管理",
+      "description": "管理机构「{name}」的成员和席位",
+      "addMember": "添加成员",
+      "membersTitle": "成员列表",
+      "refresh": "刷新",
+      "seatsFull": "席位已满，无法添加新成员",
+      "empty": "暂无成员",
+      "loadError": "加载成员列表失败，请重试",
+      "retry": "重试",
+      "cancel": "取消",
+      "colName": "姓名",
+      "colEmail": "邮箱",
+      "colRole": "角色",
+      "colJoined": "加入时间",
+      "roleAdmin": "管理员",
+      "roleMember": "成员",
+      "remove": "移除",
+      "fieldEmail": "邮箱地址",
+      "placeholderEmail": "输入已注册用户的邮箱",
+      "addTitle": "添加成员",
+      "addDescription": "输入已注册用户的邮箱，将其添加到机构「{name}」",
+      "confirmAdd": "添加",
+      "addSuccess": "已成功添加成员 {email}",
+      "addFailed": "添加成员失败，请重试",
+      "errEmailRequired": "请输入邮箱地址",
+      "removeTitle": "确认移除成员",
+      "removeDescription": "确定要移除 {name} 吗？移除后该成员将无法继续使用机构额度。",
+      "confirmRemove": "确认移除",
+      "removeSuccess": "已移除成员 {name}",
+      "removeFailed": "移除成员失败，请重试",
+      "errApi": {
+        "USER_NOT_FOUND": "未找到该邮箱对应的注册用户",
+        "ALREADY_MEMBER": "该用户已是机构成员",
+        "SEAT_LIMIT_EXCEEDED": "机构席位已满，无法添加更多成员",
+        "BILLING_CONFLICT": "该用户已属于其他机构",
+        "CANNOT_ADD_SUPER_ADMIN": "超级管理员不能被添加为机构成员",
+        "CANNOT_REMOVE_ADMIN": "无法移除机构管理员",
+        "ALREADY_REMOVED": "该成员已被移除",
+        "MEMBERSHIP_NOT_FOUND": "未找到该成员关系",
+        "EMAIL_REQUIRED": "请提供邮箱地址",
+        "INVALID_BODY": "请求格式无效",
+        "ORG_SUSPENDED": "机构已停用",
+        "FORBIDDEN": "无权限执行此操作",
+        "AUTH_REQUIRED": "请先登录"
+      }
+    },
+    "usage": {
+      "title": "用量分析",
+      "description": "查看机构「{name}」的额度消费和用量明细",
+      "refresh": "刷新",
+      "loadError": "加载用量数据失败，请重试",
+      "retry": "重试",
+      "dateFrom": "开始日期",
+      "dateTo": "结束日期",
+      "apply": "应用",
+      "summary": {
+        "totalConsumed": "本期消费",
+        "remaining": "剩余额度",
+        "operations": "消费次数"
+      },
+      "byMember": {
+        "title": "成员消费",
+        "colName": "姓名",
+        "colOperations": "操作数",
+        "colSucceeded": "成功",
+        "colFailed": "失败"
+      },
+      "byModel": {
+        "title": "模型用量",
+        "colModel": "模型",
+        "colAttempts": "调用数",
+        "colSucceeded": "成功",
+        "colFailed": "失败"
+      },
+      "empty": "所选时间范围内暂无消费记录",
+      "noData": "暂无数据"
+    }
+  },
+  "account": {
+    "title": "账号信息",
+    "description": "查看你的账号资料、机构归属和导出个人数据",
+    "unnamed": "未命名用户",
+    "role": {
+      "superAdmin": "超级管理员",
+      "user": "普通用户"
+    },
+    "status": {
+      "active": "正常",
+      "suspended": "已冻结"
+    },
+    "authType": {
+      "email": "邮箱验证码",
+      "oauth": "第三方登录",
+      "fingerprint": "指纹"
+    },
+    "field": {
+      "userId": "用户 ID",
+      "joined": "注册时间"
+    },
+    "orgs": {
+      "title": "所属机构",
+      "roleAdmin": "管理员",
+      "roleMember": "成员",
+      "statusActive": "活跃",
+      "statusRemoved": "已移除"
+    },
+    "export": {
+      "title": "数据导出",
+      "description": "下载平台保存的全部个人数据，包括简历、聊天、面试记录、点数流水等。",
+      "download": "导出我的数据",
+      "exporting": "正在生成导出文件…",
+      "success": "导出成功，文件已开始下载",
+      "failed": "导出失败，请稍后重试"
+    },
+    "delete": {
+      "title": "注销账号",
+      "description": "永久删除你的账号和个人数据。此操作不可撤销。",
+      "startButton": "注销我的账号",
+      "dialogTitle": "确认注销账号",
+      "warningDescription": "你即将开始注销流程。请仔细阅读以下影响，确认后需要通过邮箱验证码重新认证。",
+      "dataWillBeDeleted": "将被删除或撤销的数据",
+      "items": {
+        "resumes": "简历及章节（{count} 份）",
+        "interviews": "模拟面试记录（{count} 份）",
+        "chats": "AI 聊天记录与会话",
+        "shares": "公开分享链接",
+        "auth": "登录凭据（注销后无法再登录）",
+        "memberships": "机构成员资格（{orgs}）"
+      },
+      "retainedNote": "点数流水、审计记录和法律同意记录因合规要求保留，但会匿名化处理，不再包含可识别信息。",
+      "noEmailWarning": "你的账号没有绑定邮箱，无法通过验证码重新认证。请联系客服处理。",
+      "continue": "继续",
+      "cancel": "取消",
+      "back": "返回",
+      "otpRequestDescription": "为了确认是你本人操作，我们需要向 {email} 发送一个一次性验证码。",
+      "sendCode": "发送验证码",
+      "codeSent": "验证码已发送，请查收邮箱。",
+      "enterCode": "我已收到，去输入验证码",
+      "otpEnterDescription": "请输入发送到 {email} 的 6 位验证码。",
+      "otpLabel": "验证码",
+      "resend": "重新发送",
+      "resendIn": "{seconds}秒后可重发",
+      "verifyAndContinue": "验证并继续",
+      "finalWarning": "这是最后一步。确认后你的账号和所有数据将被立即删除，无法恢复。",
+      "typeToConfirm": "请输入 \"{phrase}\" 以确认注销。",
+      "confirmPhrase": "删除我的账号",
+      "acknowledgment": "我理解此操作不可撤销，所有简历、面试、聊天和分享数据将被永久删除。",
+      "confirmDelete": "确认注销",
+      "errors": {
+        "EMAIL_REQUIRED": "你的账号没有绑定邮箱，无法完成注销。请联系客服。",
+        "RATE_LIMITED": "请求过于频繁，请稍后再试。",
+        "OTP_SEND_FAILED": "验证码发送失败，请稍后重试。",
+        "INVALID_OTP": "验证码无效或已过期，请重新输入。",
+        "INVALID_OR_EXPIRED_TOKEN": "确认令牌无效或已过期，请重新开始。",
+        "USER_NOT_FOUND": "用户不存在。",
+        "TOKEN_REQUIRED": "缺少确认令牌。",
+        "DELETE_FAILED": "注销失败，请稍后重试或联系客服。",
+        "NETWORK_ERROR": "网络错误，请检查连接后重试。"
+      }
+    },
+    "legal": {
+      "title": "法律文档与同意",
+      "description": "查看当前隐私政策和服务条款版本，以及你的同意记录。",
+      "currentTitle": "当前有效版本",
+      "yourConsent": "你的同意记录",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "version": "版本 {version}",
+      "effective": "生效日期",
+      "consentedAt": "同意时间",
+      "consentSource": "来源",
+      "source": {
+        "registration": "注册",
+        "explicit_reconsent": "重新同意",
+        "login": "登录"
+      },
+      "notConsented": "尚未同意",
+      "reconsentTitle": "需要重新同意",
+      "reconsentDescription": "隐私政策或服务条款已更新，你需要同意最新版本才能继续使用。",
+      "reconsentButton": "同意最新版本",
+      "reconsenting": "正在记录同意…",
+      "reconsentSuccess": "同意记录已更新",
+      "reconsentFailed": "操作失败，请稍后重试",
+      "viewDocument": "查看文档",
+      "upToDate": "你的同意记录为最新版本。"
     }
   }
 }

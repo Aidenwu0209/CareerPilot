@@ -1,30 +1,31 @@
 'use client';
 
 import { use, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { InterviewReportView } from '@/components/interview/interview-report';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useSettingsStore, getAIHeaders } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewReport, InterviewSession } from '@/types/interview';
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 export default function ReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const t = useTranslations('interview.report');
   const [report, setReport] = useState<InterviewReport | null>(null);
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [loading, setLoading] = useState(true);
-  const hydrated = useSettingsStore((s) => s._hydrated);
+
+  const { refresh: refreshBalance } = useCredits();
 
   useEffect(() => {
-    if (!hydrated) return;
-
-    const fp = localStorage.getItem('jade_fingerprint');
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...(fp ? { 'x-fingerprint': fp } : {}),
-      ...getAIHeaders(),
-    };
-
-    fetch(`/api/interview/${id}`, { headers })
-      .then((r) => r.json())
+    fetch(`/api/interview/${id}`, { headers: JSON_HEADERS })
+      .then((response) => readJsonResponse<{
+        session: InterviewSession;
+        report: InterviewReport | null;
+      }>(response))
       .then(({ session: s, report: r }) => {
         setSession(s);
         if (r) {
@@ -33,12 +34,29 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
         } else {
           fetch(`/api/interview/${id}/report`, {
             method: 'POST',
-            headers,
+            headers: JSON_HEADERS,
             body: JSON.stringify({ locale: document.documentElement.lang || 'zh' }),
           })
-            .then((res) => res.json())
-            .then((data) => setReport(data))
-            .catch(console.error)
+            .then((response) => readJsonResponse<InterviewReport>(response))
+            .then((data) => {
+              setReport(data);
+              refreshBalance();
+            })
+            .catch((err) => {
+              console.error(err);
+              const msg = err.message || '';
+              if (msg.includes('INSUFFICIENT_CREDITS')) {
+                toast.error(t('insufficientCredits'));
+              } else if (msg.includes('RATE_LIMITED')) {
+                toast.error(t('rateLimited'));
+              } else if (msg.includes('MODEL_NOT_ALLOWED')) {
+                toast.error(t('modelNotAllowed'));
+              } else if (msg.includes('ACCOUNT_SUSPENDED')) {
+                toast.error(t('accountSuspended'));
+              } else {
+                toast.error(t('reportFailed'));
+              }
+            })
             .finally(() => setLoading(false));
         }
       })
@@ -46,7 +64,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
         console.error(err);
         setLoading(false);
       });
-  }, [id, hydrated]);
+  }, [id, t, refreshBalance]);
 
   if (loading) {
     return (

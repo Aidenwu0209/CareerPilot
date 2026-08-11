@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { RuntimeConfigProvider } from '@/components/providers/runtime-config-provider';
 import { BrandProvider } from '@/components/layout/brand-provider';
+import { SettingsHydrator } from '@/components/providers/settings-hydrator';
 
 export default async function LocaleLayout({
   children,
@@ -36,6 +37,7 @@ export default async function LocaleLayout({
         >
           <BrandProvider>
             <TooltipProvider>
+              <SettingsHydrator />
               {children}
               <Toaster />
             </TooltipProvider>

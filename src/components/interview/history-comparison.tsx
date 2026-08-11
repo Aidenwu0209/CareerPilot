@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { RadarChart } from './radar-chart';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { HistoryStats, DimensionScore, InterviewReport } from '@/types/interview';
 
 interface HistoryComparisonProps {
@@ -23,11 +24,8 @@ export function HistoryComparison({ currentReport }: HistoryComparisonProps) {
   const [stats, setStats] = useState<HistoryStats | null>(null);
 
   useEffect(() => {
-    const fp = localStorage.getItem('jade_fingerprint');
-    fetch('/api/interview/history/stats', {
-      headers: fp ? { 'x-fingerprint': fp } : {},
-    })
-      .then((r) => r.json())
+    fetch('/api/interview/history/stats')
+      .then((response) => readJsonResponse<HistoryStats>(response))
       .then(setStats)
       .catch(console.error);
   }, []);

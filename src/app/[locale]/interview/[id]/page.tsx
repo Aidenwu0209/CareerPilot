@@ -4,7 +4,9 @@ import { use, useEffect, useState } from 'react';
 import { InterviewRoom } from '@/components/interview/interview-room';
 import { useInterviewStore } from '@/stores/interview-store';
 import { Skeleton } from '@/components/ui/skeleton';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { UIMessage } from 'ai';
+import type { InterviewRound, InterviewSession } from '@/types/interview';
 
 /** Convert DB interview messages to UIMessage format for useChat */
 function dbMessagesToUIMessages(dbMessages: any[]): UIMessage[] {
@@ -24,11 +26,11 @@ export default function InterviewRoomPage({ params }: { params: Promise<{ id: st
   const { setSession, setStatus } = useInterviewStore();
 
   useEffect(() => {
-    const fp = localStorage.getItem('jade_fingerprint');
-    fetch(`/api/interview/${id}`, {
-      headers: fp ? { 'x-fingerprint': fp } : {},
-    })
-      .then((r) => r.json())
+    fetch(`/api/interview/${id}`)
+      .then((response) => readJsonResponse<{
+        session: InterviewSession;
+        rounds: InterviewRound[];
+      }>(response))
       .then(({ session, rounds }) => {
         setSession(session, rounds);
         if (session.status === 'paused') {
@@ -37,8 +39,9 @@ export default function InterviewRoomPage({ params }: { params: Promise<{ id: st
 
         // Load messages for the current round
         const currentRound = rounds[session.currentRound];
-        if (currentRound?.messages?.length > 0) {
-          setInitialMessages(dbMessagesToUIMessages(currentRound.messages));
+        const currentMessages = currentRound?.messages ?? [];
+        if (currentMessages.length > 0) {
+          setInitialMessages(dbMessagesToUIMessages(currentMessages));
         }
       })
       .catch(console.error)

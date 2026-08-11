@@ -17,17 +17,28 @@ export class SQLiteAdapter implements DatabaseAdapter {
     this.sqlite.pragma('foreign_keys = ON');
     this.db = drizzle(this.sqlite, { schema });
 
-    // Auto-run migrations (synchronous for SQLite)
-    try {
+    // Auto-run migrations (synchronous for SQLite).
+    // In production, migration failures must propagate (fail-closed).
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
       migrate(this.db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
-    } catch (e) {
-      console.error('[DB] SQLite migration failed:', e);
+    } else {
+      try {
+        migrate(this.db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
+      } catch (e) {
+        console.error('[DB] SQLite migration failed:', e);
+      }
     }
   }
 
   async initialize(): Promise<void> {
+    // Skip auto-seeding in production — no demo/fingerprint users or sample resumes.
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+
     try {
-      const row = this.sqlite.prepare('SELECT count(*) as count FROM users').get() as any;
+      const row = this.sqlite.prepare('SELECT count(*) as count FROM users').get() as { count: number } | undefined;
       if (row?.count === 0) {
         const { seedDemoUser } = await import('../seed-demo');
         await seedDemoUser(this.db);

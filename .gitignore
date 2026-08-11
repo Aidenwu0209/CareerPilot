@@ -7,6 +7,12 @@
 
 # testing
 /coverage
+/.playwright-cli/
+/.worktrees/
+
+# python caches
+__pycache__/
+*.py[cod]
 
 # next.js
 /.next/
@@ -44,4 +50,4 @@ careerpilot-data/*
 
 .superpowers
 
-test
+/test

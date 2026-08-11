@@ -7,8 +7,6 @@ import {
   Download,
   RefreshCw,
   UserCircle,
-  Eye,
-  EyeOff,
   ChevronDown,
   ChevronUp,
   Upload,
@@ -21,7 +19,6 @@ import {
   Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
@@ -35,9 +32,14 @@ import { Link } from '@/i18n/routing';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { Resume } from '@/types/resume';
+import { ModelSelector } from '@/components/ai/model-selector';
+import { useSettingsStore } from '@/stores/settings-store';
+import { useCredits } from '@/hooks/use-credits';
+import { ApiResponseError, readJsonResponse } from '@/lib/http/json-client';
 
-const API_KEY_STORAGE_KEY = 'jade_nanobanana_api_key';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
 const ASPECT_RATIOS = [
   { label: '1:1', value: '1:1', desc: 'LinkedIn / WeChat' },
@@ -45,17 +47,6 @@ const ASPECT_RATIOS = [
   { label: '2:3', value: '2:3', desc: 'Portrait' },
   { label: '4:3', value: '4:3', desc: 'Landscape' },
 ];
-
-function getHeaders() {
-  const fingerprint =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('jade_fingerprint')
-      : null;
-  return {
-    'Content-Type': 'application/json',
-    ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-  };
-}
 
 function resizeImage(file: File, maxSize: number): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -124,10 +115,32 @@ function resizeDataUrl(
 
 export default function LinkedInPhotoPage() {
   const t = useTranslations('linkedinPhoto');
+  const tAi = useTranslations('ai');
+  const { refresh: refreshCredits } = useCredits();
 
-  // API Key
-  const [apiKey, setApiKey] = useState('');
-  const [showKey, setShowKey] = useState(false);
+  // Model selection
+  const [selectedModel, setSelectedModel] = useState<string | undefined>(
+    () => useSettingsStore.getState().aiModel || undefined
+  );
+
+  const handleModelChange = (modelId: string) => {
+    setSelectedModel(modelId);
+    useSettingsStore.getState().setAIModel(modelId);
+  };
+
+  /** Map server error codes to localized user-facing messages. */
+  function mapError(errorCode: string): string {
+    if (errorCode.includes('INSUFFICIENT_CREDITS')) return tAi('insufficientCredits');
+    if (errorCode.includes('RATE_LIMITED')) return tAi('rateLimited');
+    if (errorCode.includes('MODEL_NOT_ALLOWED') || errorCode.includes('MODEL_NOT_FOUND')) return tAi('modelNotAllowed');
+    if (errorCode.includes('PROVIDER_MODEL_UNAVAILABLE')) return tAi('providerModelUnavailable');
+    if (errorCode.includes('PROVIDER_CREDENTIALS_REJECTED')) return tAi('providerCredentialsRejected');
+    if (errorCode.includes('PROVIDER_QUOTA_EXCEEDED')) return tAi('providerQuotaExceeded');
+    if (errorCode.includes('PROVIDER_REQUEST_REJECTED')) return tAi('providerRequestRejected');
+    if (errorCode.includes('PROVIDER_UPSTREAM_UNAVAILABLE')) return tAi('providerUpstreamUnavailable');
+    if (errorCode.includes('ACCOUNT_SUSPENDED')) return tAi('accountSuspended');
+    return t('errorGenerate');
+  }
 
   // Upload
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -157,15 +170,13 @@ export default function LinkedInPhotoPage() {
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [selectedResumeId, setSelectedResumeId] = useState<string>('');
 
-  // Load API key, default prompt, and resume list on mount
+  // Load default prompt and resume list on mount
   useEffect(() => {
-    const stored = localStorage.getItem(API_KEY_STORAGE_KEY);
-    if (stored) setApiKey(stored);
     setPrompt(t('promptDefault'));
 
     // Fetch resume list
-    fetch('/api/resume', { headers: getHeaders() })
-      .then((res) => (res.ok ? res.json() : []))
+    fetch('/api/resume')
+      .then((response) => readJsonResponse<Resume[]>(response))
       .then((data: Resume[]) => {
         setResumes(data);
         if (data.length > 0) setSelectedResumeId(data[0].id);
@@ -181,12 +192,6 @@ export default function LinkedInPhotoPage() {
       }
     };
   }, []);
-
-  // Persist API key
-  const handleApiKeyChange = (value: string) => {
-    setApiKey(value);
-    localStorage.setItem(API_KEY_STORAGE_KEY, value);
-  };
 
   // File handling
   const handleFile = useCallback(
@@ -298,12 +303,12 @@ export default function LinkedInPhotoPage() {
 
   // Generate
   const handleGenerate = async () => {
-    if (!apiKey.trim()) {
-      toast.error(t('errorNoApiKey'));
-      return;
-    }
     if (!uploadedImage) {
       toast.error(t('errorNoImage'));
+      return;
+    }
+    if (!selectedModel) {
+      toast.error(tAi('noModelsAvailable'));
       return;
     }
 
@@ -313,32 +318,27 @@ export default function LinkedInPhotoPage() {
     try {
       const res = await fetch('/api/linkedin-photo', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: JSON_HEADERS,
         body: JSON.stringify({
           image: uploadedImage,
           prompt,
           requirements: requirements.trim(),
           aspectRatio,
-          apiKey: apiKey.trim(),
+          model: selectedModel,
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.error === 'invalid_key') {
-          toast.error(t('errorInvalidKey'));
-        } else if (data.error === 'safety_filtered') {
-          toast.error(t('errorSafety'));
-        } else {
-          toast.error(t('errorGenerate'));
-        }
-        return;
-      }
+      const data = await readJsonResponse<{ image: string }>(res);
 
       setResultImage(data.image);
-    } catch {
-      toast.error(t('errorGenerate'));
+      refreshCredits();
+    } catch (error) {
+      const errorCode = error instanceof ApiResponseError ? error.code : '';
+      if (errorCode === 'safety_filtered') {
+        toast.error(t('errorSafety'));
+      } else {
+        toast.error(mapError(errorCode));
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -363,14 +363,12 @@ export default function LinkedInPhotoPage() {
 
     try {
       // 1. Fetch the target resume to find personalInfo section
-      const resumeRes = await fetch(`/api/resume/${selectedResumeId}`, {
-        headers: getHeaders(),
-      });
+      const resumeRes = await fetch(`/api/resume/${selectedResumeId}`);
       if (!resumeRes.ok) {
         toast.error(t('setAsAvatarNoResume'));
         return;
       }
-      const resume: Resume = await resumeRes.json();
+      const resume = await readJsonResponse<Resume>(resumeRes);
       const personalInfo = resume.sections.find(
         (s) => s.type === 'personal_info'
       );
@@ -391,7 +389,7 @@ export default function LinkedInPhotoPage() {
 
       const putRes = await fetch(`/api/resume/${selectedResumeId}`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: JSON_HEADERS,
         body: JSON.stringify({ sections: updatedSections }),
       });
 
@@ -431,36 +429,6 @@ export default function LinkedInPhotoPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {/* Left Column — Settings & Upload */}
         <div className="space-y-6">
-          {/* API Key */}
-          <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <Label className="mb-2 block text-sm font-medium">
-              {t('apiKey')}
-            </Label>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Input
-                  type={showKey ? 'text' : 'password'}
-                  value={apiKey}
-                  onChange={(e) => handleApiKeyChange(e.target.value)}
-                  placeholder={t('apiKeyPlaceholder')}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-                >
-                  {showKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-            <p className="mt-1.5 text-xs text-zinc-400">{t('apiKeyHint')}</p>
-          </div>
-
           {/* Image Upload / Camera */}
           <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
             <Label className="mb-3 block text-sm font-medium">
@@ -682,10 +650,23 @@ export default function LinkedInPhotoPage() {
             />
           </div>
 
+          {/* Model selector */}
+          <div className="flex items-center gap-3">
+            <Label className="text-sm font-medium text-zinc-500">
+              {tAi('model')}
+            </Label>
+            <ModelSelector
+              selectedModel={selectedModel}
+              onModelChange={handleModelChange}
+              capability="image_generation"
+              size="default"
+            />
+          </div>
+
           {/* Generate Button */}
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating || !apiKey.trim() || !uploadedImage}
+            disabled={isGenerating || !uploadedImage || !selectedModel}
             className="w-full cursor-pointer gap-2 bg-brand py-6 text-base font-medium hover:bg-brand-hover disabled:opacity-50"
           >
             {isGenerating ? (

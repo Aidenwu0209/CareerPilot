@@ -20,7 +20,7 @@ export const useUIStore = create<UIStore>((set) => ({
   sidebarOpen: true,
   activeModal: null,
   theme: 'light',
-  settingsTab: 'ai',
+  settingsTab: 'appearance',
 
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
