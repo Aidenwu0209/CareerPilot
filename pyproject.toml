@@ -1,0 +1,19 @@
+[project]
+name = "careerpilot-career-catalog"
+version = "0.1.0"
+requires-python = ">=3.9"
+description = "Auditable Guangzhou College of Commerce career catalog pipeline"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pyright]
+pythonVersion = "3.9"
+include = ["scripts/career_catalog"]
+
+[tool.coverage.run]
+source = ["scripts/career_catalog"]

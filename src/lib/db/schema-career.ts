@@ -62,15 +62,138 @@ export const occupations = sqliteTable('occupations', {
   code: text('code').primaryKey(),
   name: text('name').notNull(),
   category: text('category').notNull(),
+  canonicalType: text('canonical_type', { enum: ['national_occupation', 'market_alias', 'unresolved_placeholder'] }).notNull().default('national_occupation'),
+  jobFamily: text('job_family').notNull().default(''),
+  industry: text('industry').notNull().default(''),
+  cities: text('cities', { mode: 'json' }).notNull().default('[]'),
+  educationLevels: text('education_levels', { mode: 'json' }).notNull().default('[]'),
   summary: text('summary').notNull(),
   description: text('description').notNull(),
   entryLevel: text('entry_level').notNull(),
+  catalogVersion: text('catalog_version'),
+  reviewStatus: text('review_status').notNull().default('reviewed'),
+  scoringEligible: integer('scoring_eligible', { mode: 'boolean' }).notNull().default(true),
   active: integer('active', { mode: 'boolean' }).notNull().default(true),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
 }, (table) => ({
   categoryIdx: index('occupations_category_idx').on(table.category),
   activeIdx: index('occupations_active_idx').on(table.active),
+  catalogIdx: index('occupations_catalog_version_idx').on(table.catalogVersion),
+  familyIdx: index('occupations_job_family_idx').on(table.jobFamily),
+  industryIdx: index('occupations_industry_idx').on(table.industry),
+}));
+
+export const careerCatalogVersions = sqliteTable('career_catalog_versions', {
+  id: text('id').primaryKey(),
+  version: text('version').notNull().unique(),
+  schemaVersion: text('schema_version').notNull(),
+  status: text('status', { enum: ['staged', 'active', 'archived', 'failed'] }).notNull().default('staged'),
+  manifestHash: text('manifest_hash').notNull(),
+  sourceDirectory: text('source_directory').notNull().default(''),
+  metadata: text('metadata', { mode: 'json' }).notNull().default('{}'),
+  activatedAt: integer('activated_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  statusIdx: index('career_catalog_versions_status_idx').on(table.status),
+  createdIdx: index('career_catalog_versions_created_at_idx').on(table.createdAt),
+}));
+
+export const careerCatalogEntries = sqliteTable('career_catalog_entries', {
+  id: text('id').primaryKey(),
+  catalogVersionId: text('catalog_version_id').notNull().references(() => careerCatalogVersions.id, { onDelete: 'cascade' }),
+  entityType: text('entity_type').notNull(),
+  externalId: text('external_id').notNull(),
+  payload: text('payload', { mode: 'json' }).notNull(),
+  contentHash: text('content_hash').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  versionEntityUnique: unique('career_catalog_entries_version_entity_external_unique').on(table.catalogVersionId, table.entityType, table.externalId),
+  versionTypeIdx: index('career_catalog_entries_version_type_idx').on(table.catalogVersionId, table.entityType),
+}));
+
+export const careerColleges = sqliteTable('career_colleges', {
+  id: text('id').primaryKey(),
+  catalogVersion: text('catalog_version').notNull(),
+  code: text('code').notNull(),
+  name: text('name').notNull(),
+  sourceIds: text('source_ids', { mode: 'json' }).notNull().default('[]'),
+  reviewStatus: text('review_status').notNull().default('pending'),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+}, (table) => ({
+  versionCodeUnique: unique('career_colleges_catalog_version_code_unique').on(table.catalogVersion, table.code),
+  codeIdx: index('career_colleges_code_idx').on(table.code),
+}));
+
+export const careerMajors = sqliteTable('career_majors', {
+  id: text('id').primaryKey(),
+  catalogVersion: text('catalog_version').notNull(),
+  code: text('code').notNull(),
+  collegeCode: text('college_code').notNull(),
+  name: text('name').notNull(),
+  degreeLevel: text('degree_level').notNull().default(''),
+  currentlyRecruiting: integer('currently_recruiting', { mode: 'boolean' }).notNull().default(true),
+  admissionYear: integer('admission_year'),
+  sourceIds: text('source_ids', { mode: 'json' }).notNull().default('[]'),
+  sourceExcerpt: text('source_excerpt').notNull().default(''),
+  employmentText: text('employment_text').notNull().default(''),
+  reviewStatus: text('review_status').notNull().default('pending'),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+}, (table) => ({
+  versionCodeUnique: unique('career_majors_catalog_version_code_unique').on(table.catalogVersion, table.code),
+  collegeIdx: index('career_majors_college_code_idx').on(table.collegeCode),
+  nameIdx: index('career_majors_name_idx').on(table.name),
+}));
+
+export const occupationAliases = sqliteTable('occupation_aliases', {
+  id: text('id').primaryKey(),
+  catalogVersion: text('catalog_version').notNull(),
+  occupationCode: text('occupation_code').notNull().references(() => occupations.code),
+  alias: text('alias').notNull(),
+  sourceIds: text('source_ids', { mode: 'json' }).notNull().default('[]'),
+  reviewStatus: text('review_status').notNull().default('pending'),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+}, (table) => ({
+  versionOccupationAliasUnique: unique('occupation_aliases_version_occupation_alias_unique').on(table.catalogVersion, table.occupationCode, table.alias),
+  aliasIdx: index('occupation_aliases_alias_idx').on(table.alias),
+  occupationIdx: index('occupation_aliases_occupation_code_idx').on(table.occupationCode),
+}));
+
+export const majorOccupationEdges = sqliteTable('major_occupation_edges', {
+  id: text('id').primaryKey(),
+  catalogVersion: text('catalog_version').notNull(),
+  majorCode: text('major_code').notNull(),
+  occupationCode: text('occupation_code').references(() => occupations.code),
+  proposedTitle: text('proposed_title'),
+  relationType: text('relation_type', { enum: ['primary', 'adjacent', 'cross_major', 'stretch'] }).notNull(),
+  sourceIds: text('source_ids', { mode: 'json' }).notNull().default('[]'),
+  evidenceExcerpt: text('evidence_excerpt').notNull().default(''),
+  reviewRequired: integer('review_required', { mode: 'boolean' }).notNull().default(false),
+  reviewReason: text('review_reason').notNull().default(''),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+}, (table) => ({
+  versionMajorOccupationUnique: unique('major_occupation_edges_version_major_occupation_relation_unique').on(table.catalogVersion, table.majorCode, table.occupationCode, table.relationType),
+  majorIdx: index('major_occupation_edges_major_code_idx').on(table.majorCode),
+  occupationIdx: index('major_occupation_edges_occupation_code_idx').on(table.occupationCode),
+}));
+
+export const careerSourceSnapshots = sqliteTable('career_source_snapshots', {
+  id: text('id').primaryKey(),
+  catalogVersion: text('catalog_version').notNull(),
+  sourceId: text('source_id').notNull(),
+  url: text('url').notNull(),
+  title: text('title').notNull(),
+  publisher: text('publisher').notNull().default(''),
+  sourceType: text('source_type').notNull().default(''),
+  publishedAt: integer('published_at', { mode: 'timestamp' }),
+  fetchedAt: integer('fetched_at', { mode: 'timestamp' }),
+  contentHash: text('content_hash').notNull(),
+  httpStatus: integer('http_status'),
+  robotsStatus: text('robots_status').notNull().default('unknown'),
+  licenseNotes: text('license_notes').notNull().default(''),
+}, (table) => ({
+  versionSourceUnique: unique('career_source_snapshots_version_source_unique').on(table.catalogVersion, table.sourceId),
+  hashIdx: index('career_source_snapshots_content_hash_idx').on(table.contentHash),
 }));
 
 export const occupationRequirements = sqliteTable('occupation_requirements', {
@@ -83,6 +206,12 @@ export const occupationRequirements = sqliteTable('occupation_requirements', {
   weight: integer('weight').notNull().default(1),
   required: integer('required', { mode: 'boolean' }).notNull().default(true),
   description: text('description').notNull().default(''),
+  educationLevel: text('education_level').notNull().default(''),
+  experienceLevel: text('experience_level').notNull().default(''),
+  region: text('region').notNull().default(''),
+  sourceIds: text('source_ids', { mode: 'json' }).notNull().default('[]'),
+  reviewStatus: text('review_status').notNull().default('reviewed'),
+  catalogVersion: text('catalog_version'),
 }, (table) => ({
   occupationAbilityUnique: unique('occupation_requirements_occupation_code_ability_code_unique').on(table.occupationCode, table.abilityCode),
   occupationIdx: index('occupation_requirements_occupation_code_idx').on(table.occupationCode),
@@ -111,6 +240,8 @@ export const careerKnowledgeDocuments = sqliteTable('career_knowledge_documents'
   publishedAt: integer('published_at', { mode: 'timestamp' }),
   verifiedAt: integer('verified_at', { mode: 'timestamp' }).notNull().default(now),
   metadata: text('metadata', { mode: 'json' }).notNull().default('{}'),
+  catalogVersion: text('catalog_version'),
+  contentHash: text('content_hash').notNull().default(''),
 }, (table) => ({
   occupationIdx: index('career_knowledge_documents_occupation_code_idx').on(table.occupationCode),
   sourceIdx: index('career_knowledge_documents_source_label_idx').on(table.sourceLabel),
@@ -195,6 +326,9 @@ export const careerMatches = sqliteTable('career_matches', {
   breakdown: text('breakdown', { mode: 'json' }).notNull().default('[]'),
   citations: text('citations', { mode: 'json' }).notNull().default('[]'),
   algorithmVersion: text('algorithm_version').notNull().default('career-match-v1'),
+  catalogVersion: text('catalog_version'),
+  confidence: integer('confidence'),
+  knownCoverage: integer('known_coverage').notNull().default(0),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
 }, (table) => ({
   userOccupationIdx: index('career_matches_user_id_occupation_code_idx').on(table.userId, table.occupationCode),

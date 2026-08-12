@@ -1,0 +1,2503 @@
+{
+  "catalog_version": "gcc-2026-20260812-p2-84190f91",
+  "generated_at": "2026-08-12T13:37:00Z",
+  "items": [
+    {
+      "evidence_excerpt": "学生毕业后能在企事业单位及政府部门，胜任会计核算、税务申报、审计及财务管理等相关岗位工作。",
+      "id": "major-occupation-edge-37112f467619",
+      "major_id": "major-5161a41b9a13",
+      "occupation_code": "GCC-CAND-C4CF2BF41D12",
+      "proposed_title": "会计核算",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在企事业单位及政府部门，胜任会计核算、税务申报、审计及财务管理等相关岗位工作。",
+      "id": "major-occupation-edge-58471aa48bd3",
+      "major_id": "major-5161a41b9a13",
+      "occupation_code": "GCC-CAND-E73D84773A07",
+      "proposed_title": "审计",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在企事业单位及政府部门，胜任会计核算、税务申报、审计及财务管理等相关岗位工作。",
+      "id": "major-occupation-edge-b382f241dab9",
+      "major_id": "major-5161a41b9a13",
+      "occupation_code": "GCC-CAND-6E1F412867EF",
+      "proposed_title": "财务管理",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在工商、企事业单位及政府部门等从事财务管理与分析、会计及金融管理与咨询服务等工作。",
+      "id": "major-occupation-edge-9b192e990958",
+      "major_id": "major-89abf0e082cb",
+      "occupation_code": "GCC-CAND-6E1F412867EF",
+      "proposed_title": "财务管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在工商、企事业单位及政府部门等从事财务管理与分析、会计及金融管理与咨询服务等工作。",
+      "id": "major-occupation-edge-b1ac5f0e9dc4",
+      "major_id": "major-89abf0e082cb",
+      "occupation_code": "GCC-CAND-D649E95568CA",
+      "proposed_title": "会计",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在工商、企事业单位及政府部门等从事财务管理与分析、会计及金融管理与咨询服务等工作。",
+      "id": "major-occupation-edge-93d7586ea5a1",
+      "major_id": "major-89abf0e082cb",
+      "occupation_code": "GCC-CAND-1452B1567B57",
+      "proposed_title": "金融管理",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可从事会计及内部审计工作，可在政府审计机关和司法机关从事审计检查与鉴定工作，也可在会计师事务所、律师事务所、资产评估公司等中介机构从事审计服务与咨询等工作。",
+      "id": "major-occupation-edge-bd78a80bbaae",
+      "major_id": "major-1feb8f993d52",
+      "occupation_code": "GCC-CAND-D649E95568CA",
+      "proposed_title": "会计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可从事会计及内部审计工作，可在政府审计机关和司法机关从事审计检查与鉴定工作，也可在会计师事务所、律师事务所、资产评估公司等中介机构从事审计服务与咨询等工作。",
+      "id": "major-occupation-edge-91abd07977f9",
+      "major_id": "major-1feb8f993d52",
+      "occupation_code": null,
+      "proposed_title": "审计学相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可从事会计及内部审计工作，可在政府审计机关和司法机关从事审计检查与鉴定工作，也可在会计师事务所、律师事务所、资产评估公司等中介机构从事审计服务与咨询等工作。",
+      "id": "major-occupation-edge-6819585d53b5",
+      "major_id": "major-1feb8f993d52",
+      "occupation_code": null,
+      "proposed_title": "审计学相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在税务机关、财税咨询机构、会计师事务所等从事税收政策分析、税务筹划、纳税申报等工作；也可在各类企事业单位财务部门、金融机构及政府部门等从事税务管理、税收风险控制、国际税收协调及财税咨询服务等工作。随着税收政策不断优化和数字化转型，税务信息化、大数据税收分析等领域人才需求持续增长，就业前景广阔，职业发展空间大。",
+      "id": "major-occupation-edge-8947d2caa0c5",
+      "major_id": "major-f207ee0a1bf2",
+      "occupation_code": "GCC-CAND-94540AB0E79B",
+      "proposed_title": "税收政策分析",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在税务机关、财税咨询机构、会计师事务所等从事税收政策分析、税务筹划、纳税申报等工作；也可在各类企事业单位财务部门、金融机构及政府部门等从事税务管理、税收风险控制、国际税收协调及财税咨询服务等工作。随着税收政策不断优化和数字化转型，税务信息化、大数据税收分析等领域人才需求持续增长，就业前景广阔，职业发展空间大。",
+      "id": "major-occupation-edge-04a91270e1d9",
+      "major_id": "major-f207ee0a1bf2",
+      "occupation_code": "GCC-CAND-082737E041F0",
+      "proposed_title": "税务管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在税务机关、财税咨询机构、会计师事务所等从事税收政策分析、税务筹划、纳税申报等工作；也可在各类企事业单位财务部门、金融机构及政府部门等从事税务管理、税收风险控制、国际税收协调及财税咨询服务等工作。随着税收政策不断优化和数字化转型，税务信息化、大数据税收分析等领域人才需求持续增长，就业前景广阔，职业发展空间大。",
+      "id": "major-occupation-edge-edecb634f636",
+      "major_id": "major-f207ee0a1bf2",
+      "occupation_code": "GCC-CAND-E77A9C44C703",
+      "proposed_title": "大数据税收分析",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业可创业或在广告及设计公司、展览、媒体单位、时尚品牌设计机构、企事业单位从事平面设计、交互设计、虚拟设计、策划等视觉传达设计工作。",
+      "id": "major-occupation-edge-5ed9c9731226",
+      "major_id": "major-4f2111e269e5",
+      "occupation_code": "GCC-CAND-36F6BFB177E5",
+      "proposed_title": "平面设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业可创业或在广告及设计公司、展览、媒体单位、时尚品牌设计机构、企事业单位从事平面设计、交互设计、虚拟设计、策划等视觉传达设计工作。",
+      "id": "major-occupation-edge-d1fd3eb880f9",
+      "major_id": "major-4f2111e269e5",
+      "occupation_code": "GCC-CAND-1175EC132520",
+      "proposed_title": "交互设计",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业可创业或在广告及设计公司、展览、媒体单位、时尚品牌设计机构、企事业单位从事平面设计、交互设计、虚拟设计、策划等视觉传达设计工作。",
+      "id": "major-occupation-edge-9446c8561403",
+      "major_id": "major-4f2111e269e5",
+      "occupation_code": "GCC-CAND-1EC47E1A0949",
+      "proposed_title": "虚拟设计",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业不仅能够在传统建筑设计院、室内设计公司、景观规划机构及政府相关部门从事项目设计与管理运营工作，也可在互联网、文化创意公司、游戏与影视行业中从事虚拟世界场景构建、数字孪生开发或AR/VR交互体验设计等工作，或自主创业，成立融合科技与设计的创新工作室。",
+      "id": "major-occupation-edge-9a543d17ba5d",
+      "major_id": "major-54ee8b2b6063",
+      "occupation_code": "GCC-CAND-B7A306731BA8",
+      "proposed_title": "项目设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业不仅能够在传统建筑设计院、室内设计公司、景观规划机构及政府相关部门从事项目设计与管理运营工作，也可在互联网、文化创意公司、游戏与影视行业中从事虚拟世界场景构建、数字孪生开发或AR/VR交互体验设计等工作，或自主创业，成立融合科技与设计的创新工作室。",
+      "id": "major-occupation-edge-5d06aadf804f",
+      "major_id": "major-54ee8b2b6063",
+      "occupation_code": "GCC-CAND-42C3CF8B4A9E",
+      "proposed_title": "数字孪生开发",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业不仅能够在传统建筑设计院、室内设计公司、景观规划机构及政府相关部门从事项目设计与管理运营工作，也可在互联网、文化创意公司、游戏与影视行业中从事虚拟世界场景构建、数字孪生开发或AR/VR交互体验设计等工作，或自主创业，成立融合科技与设计的创新工作室。",
+      "id": "major-occupation-edge-51b87d6909ad",
+      "major_id": "major-54ee8b2b6063",
+      "occupation_code": "GCC-CAND-957E1B3E29F1",
+      "proposed_title": "VR交互体验设计",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业后能够到企业、设计公司、培训机构等相关行业从事产品设计、产品开发、设计管理、培训等工作，或者自主创业。",
+      "id": "major-occupation-edge-ac6f17527628",
+      "major_id": "major-35a89aaed949",
+      "occupation_code": "GCC-CAND-16EC441BC706",
+      "proposed_title": "产品设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业后能够到企业、设计公司、培训机构等相关行业从事产品设计、产品开发、设计管理、培训等工作，或者自主创业。",
+      "id": "major-occupation-edge-61d3b8d12888",
+      "major_id": "major-35a89aaed949",
+      "occupation_code": "GCC-CAND-7590CB054CA3",
+      "proposed_title": "产品开发",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生毕业后能够到企业、设计公司、培训机构等相关行业从事产品设计、产品开发、设计管理、培训等工作，或者自主创业。",
+      "id": "major-occupation-edge-30dc306b6412",
+      "major_id": "major-35a89aaed949",
+      "occupation_code": "GCC-CAND-114003C0E8E9",
+      "proposed_title": "设计管理",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可以到影视创意公司、网络游戏公司、动画设计公司等相关部门工作，或者自主创业。",
+      "id": "major-occupation-edge-d991931c8933",
+      "major_id": "major-0dfe8f7c338f",
+      "occupation_code": null,
+      "proposed_title": "数字媒体艺术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可以到影视创意公司、网络游戏公司、动画设计公司等相关部门工作，或者自主创业。",
+      "id": "major-occupation-edge-e5697b480486",
+      "major_id": "major-0dfe8f7c338f",
+      "occupation_code": null,
+      "proposed_title": "数字媒体艺术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可以到影视创意公司、网络游戏公司、动画设计公司等相关部门工作，或者自主创业。",
+      "id": "major-occupation-edge-8a38dab47cca",
+      "major_id": "major-0dfe8f7c338f",
+      "occupation_code": null,
+      "proposed_title": "数字媒体艺术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生可以在多个领域找到就业机会，如：城市规划设计院、市政规划局、艺术教育机构、文化创意产业、自主创业等。 师资队伍 学院现有教职工212名，专任教师190名。师资队伍结构合理，层次高，有教授、副教授，海归博士和国内博士，广东省教学名师和南粤优秀教师等。设有教授学科带头人，专业负责人5名，教师当中拥有高级职称47名，博士学位48名，硕士及以上教师占教师人数的97%，双师双能型教师52名。 教学设施 学院有良好的教学环境和教学设施，建有视觉传达设计工作室、101环境设计工作室、数动方舟（数字媒体）工作室、融媒体创新影像工作室、交互设计工作室、VR实训实验室、陶艺工作坊、首饰工作坊、雕塑工作坊等工作室、实验实训室50多间，电脑、摄影摄像等教学设备总数达500余套，能满足AI数字设计及专业实践教学的需求。同时学院通过不断加强产学研合作，与78家行业协会、企业签订校企合作协议，建立起学院与企业协同育人机制，为学生的社会实践提供必要的保障。 成果与荣誉 近年来，我院注重“学—研—商”特色教学，大力发展“工作室+”模式，取得优秀的成绩，如广东岭南美术出版社在我院成立校内实习基地，共同编写开发“",
+      "id": "major-occupation-edge-32f962587572",
+      "major_id": "major-c531b996463d",
+      "occupation_code": null,
+      "proposed_title": "公共艺术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生可以在多个领域找到就业机会，如：城市规划设计院、市政规划局、艺术教育机构、文化创意产业、自主创业等。 师资队伍 学院现有教职工212名，专任教师190名。师资队伍结构合理，层次高，有教授、副教授，海归博士和国内博士，广东省教学名师和南粤优秀教师等。设有教授学科带头人，专业负责人5名，教师当中拥有高级职称47名，博士学位48名，硕士及以上教师占教师人数的97%，双师双能型教师52名。 教学设施 学院有良好的教学环境和教学设施，建有视觉传达设计工作室、101环境设计工作室、数动方舟（数字媒体）工作室、融媒体创新影像工作室、交互设计工作室、VR实训实验室、陶艺工作坊、首饰工作坊、雕塑工作坊等工作室、实验实训室50多间，电脑、摄影摄像等教学设备总数达500余套，能满足AI数字设计及专业实践教学的需求。同时学院通过不断加强产学研合作，与78家行业协会、企业签订校企合作协议，建立起学院与企业协同育人机制，为学生的社会实践提供必要的保障。 成果与荣誉 近年来，我院注重“学—研—商”特色教学，大力发展“工作室+”模式，取得优秀的成绩，如广东岭南美术出版社在我院成立校内实习基地，共同编写开发“",
+      "id": "major-occupation-edge-909fb48affd0",
+      "major_id": "major-c531b996463d",
+      "occupation_code": null,
+      "proposed_title": "公共艺术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业学生可以在多个领域找到就业机会，如：城市规划设计院、市政规划局、艺术教育机构、文化创意产业、自主创业等。 师资队伍 学院现有教职工212名，专任教师190名。师资队伍结构合理，层次高，有教授、副教授，海归博士和国内博士，广东省教学名师和南粤优秀教师等。设有教授学科带头人，专业负责人5名，教师当中拥有高级职称47名，博士学位48名，硕士及以上教师占教师人数的97%，双师双能型教师52名。 教学设施 学院有良好的教学环境和教学设施，建有视觉传达设计工作室、101环境设计工作室、数动方舟（数字媒体）工作室、融媒体创新影像工作室、交互设计工作室、VR实训实验室、陶艺工作坊、首饰工作坊、雕塑工作坊等工作室、实验实训室50多间，电脑、摄影摄像等教学设备总数达500余套，能满足AI数字设计及专业实践教学的需求。同时学院通过不断加强产学研合作，与78家行业协会、企业签订校企合作协议，建立起学院与企业协同育人机制，为学生的社会实践提供必要的保障。 成果与荣誉 近年来，我院注重“学—研—商”特色教学，大力发展“工作室+”模式，取得优秀的成绩，如广东岭南美术出版社在我院成立校内实习基地，共同编写开发“",
+      "id": "major-occupation-edge-91a2f944e59a",
+      "major_id": "major-c531b996463d",
+      "occupation_code": null,
+      "proposed_title": "公共艺术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-c73c560bb414",
+      "major_id": "major-67d0b6d04256",
+      "occupation_code": null,
+      "proposed_title": "互联网金融相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1ac13b822a7c",
+      "major_id": "major-67d0b6d04256",
+      "occupation_code": null,
+      "proposed_title": "互联网金融相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-ce2ba5933261",
+      "major_id": "major-67d0b6d04256",
+      "occupation_code": null,
+      "proposed_title": "互联网金融相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-7d3214ff15ba",
+      "major_id": "major-d5ae026c114f",
+      "occupation_code": null,
+      "proposed_title": "物流管理相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-5f68d0dc4ad5",
+      "major_id": "major-d5ae026c114f",
+      "occupation_code": null,
+      "proposed_title": "物流管理相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-22992a13b8c9",
+      "major_id": "major-d5ae026c114f",
+      "occupation_code": null,
+      "proposed_title": "物流管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-3498e4de46f2",
+      "major_id": "major-9c8feb01d621",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-36a2a3ce2672",
+      "major_id": "major-9c8feb01d621",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-04221bff08ea",
+      "major_id": "major-9c8feb01d621",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-f78e2e8c6f49",
+      "major_id": "major-0397181e92e0",
+      "occupation_code": null,
+      "proposed_title": "财务管理相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2a62687239ab",
+      "major_id": "major-0397181e92e0",
+      "occupation_code": null,
+      "proposed_title": "财务管理相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-d15d768ac2a9",
+      "major_id": "major-0397181e92e0",
+      "occupation_code": null,
+      "proposed_title": "财务管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8b65ce722e0d",
+      "major_id": "major-a82baa4056ec",
+      "occupation_code": null,
+      "proposed_title": "金融学相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8936555e563b",
+      "major_id": "major-a82baa4056ec",
+      "occupation_code": null,
+      "proposed_title": "金融学相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-d7f4698abbdb",
+      "major_id": "major-a82baa4056ec",
+      "occupation_code": null,
+      "proposed_title": "金融学相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-034a4eae8a24",
+      "major_id": "major-72ea8080dfc8",
+      "occupation_code": null,
+      "proposed_title": "市场营销相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2a3b3868d1ac",
+      "major_id": "major-72ea8080dfc8",
+      "occupation_code": null,
+      "proposed_title": "市场营销相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-f804895339e2",
+      "major_id": "major-72ea8080dfc8",
+      "occupation_code": null,
+      "proposed_title": "市场营销相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-820dceed8c61",
+      "major_id": "major-41be67722c33",
+      "occupation_code": null,
+      "proposed_title": "会计学相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-cdc8fa9279d1",
+      "major_id": "major-41be67722c33",
+      "occupation_code": null,
+      "proposed_title": "会计学相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2a5a56351d05",
+      "major_id": "major-41be67722c33",
+      "occupation_code": null,
+      "proposed_title": "会计学相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-dd29447f1cd5",
+      "major_id": "major-c4d68bd815af",
+      "occupation_code": null,
+      "proposed_title": "电子商务相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-c8fc0d78ecdb",
+      "major_id": "major-c4d68bd815af",
+      "occupation_code": null,
+      "proposed_title": "电子商务相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-967f462bebcc",
+      "major_id": "major-c4d68bd815af",
+      "occupation_code": null,
+      "proposed_title": "电子商务相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-0f395845a52a",
+      "major_id": "major-d7ae0f2c5b36",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1217cf104687",
+      "major_id": "major-d7ae0f2c5b36",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-69dbf91c840d",
+      "major_id": "major-d7ae0f2c5b36",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1243e536a00c",
+      "major_id": "major-9e93f3c685bb",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-d53a03e592b5",
+      "major_id": "major-9e93f3c685bb",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8b286cb0140c",
+      "major_id": "major-9e93f3c685bb",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-bda7a61741b5",
+      "major_id": "major-2eda6b9d0e86",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-581fa2b14541",
+      "major_id": "major-2eda6b9d0e86",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-ad7ebbd6bdd9",
+      "major_id": "major-2eda6b9d0e86",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-f5a199325e0d",
+      "major_id": "major-78c8050fa3f3",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-3f5acf74df14",
+      "major_id": "major-78c8050fa3f3",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-9a05499795c2",
+      "major_id": "major-78c8050fa3f3",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1b7e255fdeda",
+      "major_id": "major-3c5a36036119",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-f92ad8d36a71",
+      "major_id": "major-3c5a36036119",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-5e9fd611ef7a",
+      "major_id": "major-3c5a36036119",
+      "occupation_code": null,
+      "proposed_title": "国际商务相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-6665d9f09050",
+      "major_id": "major-b583a37a6cce",
+      "occupation_code": null,
+      "proposed_title": "大数据与会计相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-ebed3128367e",
+      "major_id": "major-b583a37a6cce",
+      "occupation_code": null,
+      "proposed_title": "大数据与会计相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-47f547f291cf",
+      "major_id": "major-b583a37a6cce",
+      "occupation_code": null,
+      "proposed_title": "大数据与会计相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-9a4597cc7080",
+      "major_id": "major-c2939865b0c0",
+      "occupation_code": null,
+      "proposed_title": "国际金融相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-0962ff2a84ae",
+      "major_id": "major-c2939865b0c0",
+      "occupation_code": null,
+      "proposed_title": "国际金融相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-267fbac0bff9",
+      "major_id": "major-c2939865b0c0",
+      "occupation_code": null,
+      "proposed_title": "国际金融相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-32fc7b404697",
+      "major_id": "major-7123d4335abf",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-3851c087a0d6",
+      "major_id": "major-7123d4335abf",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-34583ebce180",
+      "major_id": "major-7123d4335abf",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-4b9b4af67c48",
+      "major_id": "major-5dee7aa019e2",
+      "occupation_code": null,
+      "proposed_title": "视觉传达相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-19921ee512e5",
+      "major_id": "major-5dee7aa019e2",
+      "occupation_code": null,
+      "proposed_title": "视觉传达相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2f3854608560",
+      "major_id": "major-5dee7aa019e2",
+      "occupation_code": null,
+      "proposed_title": "视觉传达相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事数智物流与供应链管理、物流系统规划设计、仓储管理、运输管理、供应链金融产品开发、供应链金融管理等工作。",
+      "id": "major-occupation-edge-0e5246fe607c",
+      "major_id": "major-e43f25e27073",
+      "occupation_code": "GCC-CAND-061684D3E4D5",
+      "proposed_title": "供应链管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事数智物流与供应链管理、物流系统规划设计、仓储管理、运输管理、供应链金融产品开发、供应链金融管理等工作。",
+      "id": "major-occupation-edge-27667e83b035",
+      "major_id": "major-e43f25e27073",
+      "occupation_code": "GCC-CAND-0F1802714BDC",
+      "proposed_title": "物流系统规划设计",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事数智物流与供应链管理、物流系统规划设计、仓储管理、运输管理、供应链金融产品开发、供应链金融管理等工作。",
+      "id": "major-occupation-edge-67104bcb28c8",
+      "major_id": "major-e43f25e27073",
+      "occupation_code": "GCC-CAND-6665364E8BB4",
+      "proposed_title": "仓储管理",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在交通/运输/物流/供应链等物流行业、制造业和信息技术业、互联网/电子商务行业、贸易/批发/零售行业、建筑业等行业以及相关企事业单位从事供应链规划设计、供应链协同运营、供应链数字信息技术服务等工作。",
+      "id": "major-occupation-edge-21b435f071d3",
+      "major_id": "major-d5b88415ab15",
+      "occupation_code": "GCC-CAND-BC48ABDF447E",
+      "proposed_title": "供应链规划设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在交通/运输/物流/供应链等物流行业、制造业和信息技术业、互联网/电子商务行业、贸易/批发/零售行业、建筑业等行业以及相关企事业单位从事供应链规划设计、供应链协同运营、供应链数字信息技术服务等工作。",
+      "id": "major-occupation-edge-384b31cec4ff",
+      "major_id": "major-d5b88415ab15",
+      "occupation_code": "GCC-CAND-910E986C4066",
+      "proposed_title": "供应链协同运营",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在交通/运输/物流/供应链等物流行业、制造业和信息技术业、互联网/电子商务行业、贸易/批发/零售行业、建筑业等行业以及相关企事业单位从事供应链规划设计、供应链协同运营、供应链数字信息技术服务等工作。",
+      "id": "major-occupation-edge-8ed1e4b46c79",
+      "major_id": "major-d5b88415ab15",
+      "occupation_code": null,
+      "proposed_title": "供应链管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事新产品市场开拓、客户开发与管理、产品品牌营销策划和推广、渠道整合布局铺陈、网络市场研究、公共关系管理、市场调查等相关工作。",
+      "id": "major-occupation-edge-b5af44a6fd0f",
+      "major_id": "major-21e51675187c",
+      "occupation_code": "GCC-CAND-1308100A610B",
+      "proposed_title": "客户开发",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事新产品市场开拓、客户开发与管理、产品品牌营销策划和推广、渠道整合布局铺陈、网络市场研究、公共关系管理、市场调查等相关工作。",
+      "id": "major-occupation-edge-233ee832bf5d",
+      "major_id": "major-21e51675187c",
+      "occupation_code": "GCC-CAND-3F2BCEACCB17",
+      "proposed_title": "产品品牌营销策划",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事新产品市场开拓、客户开发与管理、产品品牌营销策划和推广、渠道整合布局铺陈、网络市场研究、公共关系管理、市场调查等相关工作。",
+      "id": "major-occupation-edge-5e1b5d08b980",
+      "major_id": "major-21e51675187c",
+      "occupation_code": "GCC-CAND-8390E143054E",
+      "proposed_title": "公共关系管理",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在各级旅游行政管理部门、国内外旅行社、旅游电子商务公司、旅游景区等旅游企业从事经营管理工作。",
+      "id": "major-occupation-edge-ab28fbc569af",
+      "major_id": "major-dcef7a00d447",
+      "occupation_code": "GCC-CAND-F8D680791FCE",
+      "proposed_title": "经营管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在各级旅游行政管理部门、国内外旅行社、旅游电子商务公司、旅游景区等旅游企业从事经营管理工作。",
+      "id": "major-occupation-edge-7ab9d38cba41",
+      "major_id": "major-dcef7a00d447",
+      "occupation_code": null,
+      "proposed_title": "旅游管理相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能在各级旅游行政管理部门、国内外旅行社、旅游电子商务公司、旅游景区等旅游企业从事经营管理工作。",
+      "id": "major-occupation-edge-aae54da8c033",
+      "major_id": "major-dcef7a00d447",
+      "occupation_code": null,
+      "proposed_title": "旅游管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在医院、医疗机构、健康管理公司、老龄化服务机构、社区公共卫生部门以及政府相关管理机构等多个领域担任管理、咨询、评估与指导工作。 师资队伍 学院拥有一支勤奋、务实、开拓、创新的高素质应用型师资队伍。现有教职工共160人，其中教授6人，副教授35人，博士63人，双师双能型教师39人。 教学设施 学院现有14间实验实训室，建有菜鸟校园驿站、咖啡吧等多个协同育人平台，同时在校外建30多个实践教学基地，校内外实验实训基地能满足实践教学需要。学生专业赛事获奖多，毕业生广受欢迎。 成果与荣誉 近三年来，教师教学科研成果丰硕，教师在核心刊物发表论文24篇，承担市厅级以上科研项目49项，编写教材3本，编写专著5本，科研应用性成果8项。创新创业立项55个，其中国家级4个，省级22个。在学科能力竞赛中获奖193项，其中，国家级一等奖9项、二等奖36项、三等奖28项；省部级一等奖42项、二等奖60项、三等奖18项。 办学特色 1.实施“产-学-研-教”协同育人举措，培养基础扎实、知识前沿、应用明确的专业管理人才。立足粤港澳大湾区，通过特色课程将“基于“互联网+金融+物流”要素禀赋的物流教学改革研究",
+      "id": "major-occupation-edge-f4f0e615e4fe",
+      "major_id": "major-64033e9600a1",
+      "occupation_code": null,
+      "proposed_title": "健康服务与管理相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在医院、医疗机构、健康管理公司、老龄化服务机构、社区公共卫生部门以及政府相关管理机构等多个领域担任管理、咨询、评估与指导工作。 师资队伍 学院拥有一支勤奋、务实、开拓、创新的高素质应用型师资队伍。现有教职工共160人，其中教授6人，副教授35人，博士63人，双师双能型教师39人。 教学设施 学院现有14间实验实训室，建有菜鸟校园驿站、咖啡吧等多个协同育人平台，同时在校外建30多个实践教学基地，校内外实验实训基地能满足实践教学需要。学生专业赛事获奖多，毕业生广受欢迎。 成果与荣誉 近三年来，教师教学科研成果丰硕，教师在核心刊物发表论文24篇，承担市厅级以上科研项目49项，编写教材3本，编写专著5本，科研应用性成果8项。创新创业立项55个，其中国家级4个，省级22个。在学科能力竞赛中获奖193项，其中，国家级一等奖9项、二等奖36项、三等奖28项；省部级一等奖42项、二等奖60项、三等奖18项。 办学特色 1.实施“产-学-研-教”协同育人举措，培养基础扎实、知识前沿、应用明确的专业管理人才。立足粤港澳大湾区，通过特色课程将“基于“互联网+金融+物流”要素禀赋的物流教学改革研究",
+      "id": "major-occupation-edge-79c90ecb380b",
+      "major_id": "major-64033e9600a1",
+      "occupation_code": null,
+      "proposed_title": "健康服务与管理相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在医院、医疗机构、健康管理公司、老龄化服务机构、社区公共卫生部门以及政府相关管理机构等多个领域担任管理、咨询、评估与指导工作。 师资队伍 学院拥有一支勤奋、务实、开拓、创新的高素质应用型师资队伍。现有教职工共160人，其中教授6人，副教授35人，博士63人，双师双能型教师39人。 教学设施 学院现有14间实验实训室，建有菜鸟校园驿站、咖啡吧等多个协同育人平台，同时在校外建30多个实践教学基地，校内外实验实训基地能满足实践教学需要。学生专业赛事获奖多，毕业生广受欢迎。 成果与荣誉 近三年来，教师教学科研成果丰硕，教师在核心刊物发表论文24篇，承担市厅级以上科研项目49项，编写教材3本，编写专著5本，科研应用性成果8项。创新创业立项55个，其中国家级4个，省级22个。在学科能力竞赛中获奖193项，其中，国家级一等奖9项、二等奖36项、三等奖28项；省部级一等奖42项、二等奖60项、三等奖18项。 办学特色 1.实施“产-学-研-教”协同育人举措，培养基础扎实、知识前沿、应用明确的专业管理人才。立足粤港澳大湾区，通过特色课程将“基于“互联网+金融+物流”要素禀赋的物流教学改革研究",
+      "id": "major-occupation-edge-9c0e27b7762c",
+      "major_id": "major-64033e9600a1",
+      "occupation_code": null,
+      "proposed_title": "健康服务与管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-5746a7de6383",
+      "major_id": "major-99ad48fd9530",
+      "occupation_code": null,
+      "proposed_title": "酒店管理相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-e3767e0f85df",
+      "major_id": "major-99ad48fd9530",
+      "occupation_code": null,
+      "proposed_title": "酒店管理相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2683e44f458f",
+      "major_id": "major-99ad48fd9530",
+      "occupation_code": null,
+      "proposed_title": "酒店管理相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "evidence_excerpt": "地方银行前台业务员、客户经理、证券公司证券代表、保险公司金融营销员等工作。",
+      "id": "major-occupation-edge-fe085c86134a",
+      "major_id": "major-c37c7b919163",
+      "occupation_code": "GCC-CAND-11C106E4A1FE",
+      "proposed_title": "地方银行前台业务员",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "地方银行前台业务员、客户经理、证券公司证券代表、保险公司金融营销员等工作。",
+      "id": "major-occupation-edge-56af7070814f",
+      "major_id": "major-c37c7b919163",
+      "occupation_code": "GCC-CAND-C1C4D7FDFE08",
+      "proposed_title": "客户经理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "地方银行前台业务员、客户经理、证券公司证券代表、保险公司金融营销员等工作。",
+      "id": "major-occupation-edge-ad5a177c9ead",
+      "major_id": "major-c37c7b919163",
+      "occupation_code": "GCC-CAND-DB8C35DC4111",
+      "proposed_title": "保险公司金融营销员",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事对外贸易业务、外贸经营管理、外贸跟单、报关报检、国际营销等工作。",
+      "id": "major-occupation-edge-545eceac6eb1",
+      "major_id": "major-84665a8e90aa",
+      "occupation_code": "GCC-CAND-C0858C4006CB",
+      "proposed_title": "外贸经营管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事对外贸易业务、外贸经营管理、外贸跟单、报关报检、国际营销等工作。",
+      "id": "major-occupation-edge-0ae644742fb8",
+      "major_id": "major-84665a8e90aa",
+      "occupation_code": null,
+      "proposed_title": "国际经济与贸易相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后能够从事对外贸易业务、外贸经营管理、外贸跟单、报关报检、国际营销等工作。",
+      "id": "major-occupation-edge-eec20c004ac8",
+      "major_id": "major-84665a8e90aa",
+      "occupation_code": null,
+      "proposed_title": "国际经济与贸易相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要从事投资咨询公司或私募、公募基金公司证券代表、理财咨询助理、投资者关系管理助理等工作。",
+      "id": "major-occupation-edge-c44cc6eadab9",
+      "major_id": "major-154ae046dfb8",
+      "occupation_code": "GCC-CAND-E1BECE134CB7",
+      "proposed_title": "理财咨询助理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要从事投资咨询公司或私募、公募基金公司证券代表、理财咨询助理、投资者关系管理助理等工作。",
+      "id": "major-occupation-edge-1fcbd4ca6657",
+      "major_id": "major-154ae046dfb8",
+      "occupation_code": "GCC-CAND-80FF607F7608",
+      "proposed_title": "投资者关系管理助理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要从事投资咨询公司或私募、公募基金公司证券代表、理财咨询助理、投资者关系管理助理等工作。",
+      "id": "major-occupation-edge-264317ffff42",
+      "major_id": "major-154ae046dfb8",
+      "occupation_code": null,
+      "proposed_title": "投资学相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在银行和互联网金融机构从事网贷管理、众筹管理、金融数据分析、网络金融系统风险管控、金融业务推广等工作。",
+      "id": "major-occupation-edge-e172af542588",
+      "major_id": "major-7d4b0638b10f",
+      "occupation_code": "GCC-CAND-10BAF9A5B913",
+      "proposed_title": "网贷管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在银行和互联网金融机构从事网贷管理、众筹管理、金融数据分析、网络金融系统风险管控、金融业务推广等工作。",
+      "id": "major-occupation-edge-50217de67e47",
+      "major_id": "major-7d4b0638b10f",
+      "occupation_code": "GCC-CAND-CE93A31FBB91",
+      "proposed_title": "众筹管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在银行和互联网金融机构从事网贷管理、众筹管理、金融数据分析、网络金融系统风险管控、金融业务推广等工作。",
+      "id": "major-occupation-edge-907b31263c27",
+      "major_id": "major-7d4b0638b10f",
+      "occupation_code": "GCC-CAND-F8C01CA95244",
+      "proposed_title": "金融数据分析",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在金融机构、金融科技企业、第三方金融服务机构、金融监管部门及相关企事业单位从事金融科技产品开发设计、业务运营、数据分析及平台管理等岗位，也可从事投资顾问、财富管理顾问等岗位。 师资队伍 经济学院现有在校生3100人。现有专任教师185名，由博士、海归硕士和有实践经验的“双师双能型”教师等多层次人才组成，专任教师中具有高级职称教师47名，博士87名，具有专业相关行业背景教师79名，硕士以上学历教师占比99%，学院已建成一支师德高尚、结构合理、业务精湛、充满活力的教师队伍。 教学设施 学院着力为区域经济发展服务，培养竞争力强的高素质应用型人才。与互联网金融协会等建立了长期稳定的合作关系；与中国建设银行支行合作，在校内建立了校园E银行和新金融智慧银行；建有合富金融、广发证券等40家实习基地；拥有“大数据与量化金融研究中心”等10个科研平台；建有设备先进的金融综合、量化投资等实验、实训室9间；开设了金融CFA(Chartered Financial Analyst特许金融分析师)精英班、金融学辅修学位班。 成果与荣誉 近3年来，经济学院不断加大对专业建设、学科建设等方面的建设力度，重点围绕",
+      "id": "major-occupation-edge-33dfd7b25ba9",
+      "major_id": "major-f4a1bc2bb03a",
+      "occupation_code": "GCC-CAND-34C2FF415C3B",
+      "proposed_title": "金融科技产品开发设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在金融机构、金融科技企业、第三方金融服务机构、金融监管部门及相关企事业单位从事金融科技产品开发设计、业务运营、数据分析及平台管理等岗位，也可从事投资顾问、财富管理顾问等岗位。 师资队伍 经济学院现有在校生3100人。现有专任教师185名，由博士、海归硕士和有实践经验的“双师双能型”教师等多层次人才组成，专任教师中具有高级职称教师47名，博士87名，具有专业相关行业背景教师79名，硕士以上学历教师占比99%，学院已建成一支师德高尚、结构合理、业务精湛、充满活力的教师队伍。 教学设施 学院着力为区域经济发展服务，培养竞争力强的高素质应用型人才。与互联网金融协会等建立了长期稳定的合作关系；与中国建设银行支行合作，在校内建立了校园E银行和新金融智慧银行；建有合富金融、广发证券等40家实习基地；拥有“大数据与量化金融研究中心”等10个科研平台；建有设备先进的金融综合、量化投资等实验、实训室9间；开设了金融CFA(Chartered Financial Analyst特许金融分析师)精英班、金融学辅修学位班。 成果与荣誉 近3年来，经济学院不断加大对专业建设、学科建设等方面的建设力度，重点围绕",
+      "id": "major-occupation-edge-752df5028da3",
+      "major_id": "major-f4a1bc2bb03a",
+      "occupation_code": "GCC-CAND-CE7DEDA7820E",
+      "proposed_title": "业务运营",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "主要在金融机构、金融科技企业、第三方金融服务机构、金融监管部门及相关企事业单位从事金融科技产品开发设计、业务运营、数据分析及平台管理等岗位，也可从事投资顾问、财富管理顾问等岗位。 师资队伍 经济学院现有在校生3100人。现有专任教师185名，由博士、海归硕士和有实践经验的“双师双能型”教师等多层次人才组成，专任教师中具有高级职称教师47名，博士87名，具有专业相关行业背景教师79名，硕士以上学历教师占比99%，学院已建成一支师德高尚、结构合理、业务精湛、充满活力的教师队伍。 教学设施 学院着力为区域经济发展服务，培养竞争力强的高素质应用型人才。与互联网金融协会等建立了长期稳定的合作关系；与中国建设银行支行合作，在校内建立了校园E银行和新金融智慧银行；建有合富金融、广发证券等40家实习基地；拥有“大数据与量化金融研究中心”等10个科研平台；建有设备先进的金融综合、量化投资等实验、实训室9间；开设了金融CFA(Chartered Financial Analyst特许金融分析师)精英班、金融学辅修学位班。 成果与荣誉 近3年来，经济学院不断加大对专业建设、学科建设等方面的建设力度，重点围绕",
+      "id": "major-occupation-edge-0784f3dceba7",
+      "major_id": "major-f4a1bc2bb03a",
+      "occupation_code": "GCC-CAND-5D8EC6F62009",
+      "proposed_title": "数据分析",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职政府机关、外贸企业、跨境电商行业、中小学以及各类英语培训机构，从事国际贸易、涉外口笔译以及英语教学等方面工作。",
+      "id": "major-occupation-edge-c6af0474829a",
+      "major_id": "major-e966c68fb6bc",
+      "occupation_code": null,
+      "proposed_title": "英语相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职政府机关、外贸企业、跨境电商行业、中小学以及各类英语培训机构，从事国际贸易、涉外口笔译以及英语教学等方面工作。",
+      "id": "major-occupation-edge-04a7bbabea82",
+      "major_id": "major-e966c68fb6bc",
+      "occupation_code": null,
+      "proposed_title": "英语相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职政府机关、外贸企业、跨境电商行业、中小学以及各类英语培训机构，从事国际贸易、涉外口笔译以及英语教学等方面工作。",
+      "id": "major-occupation-edge-7fd1bac5e45e",
+      "major_id": "major-e966c68fb6bc",
+      "occupation_code": null,
+      "proposed_title": "英语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职各类外资企业、政府机关、外事单位、外经贸部门，从事国际商务、外贸翻译、数字营销、跨境电商、文秘等工作。",
+      "id": "major-occupation-edge-76a1e903f16b",
+      "major_id": "major-b59a683114d5",
+      "occupation_code": "GCC-CAND-210253A055DB",
+      "proposed_title": "外贸翻译",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职各类外资企业、政府机关、外事单位、外经贸部门，从事国际商务、外贸翻译、数字营销、跨境电商、文秘等工作。",
+      "id": "major-occupation-edge-5f6cebe6e3a9",
+      "major_id": "major-b59a683114d5",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职各类外资企业、政府机关、外事单位、外经贸部门，从事国际商务、外贸翻译、数字营销、跨境电商、文秘等工作。",
+      "id": "major-occupation-edge-e318437e5511",
+      "major_id": "major-b59a683114d5",
+      "occupation_code": null,
+      "proposed_title": "商务英语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职日资企业、政府机关以及外经贸单位，从事国际经济贸易管理工作或翻译工作。学院与日本城西国际大学、立命馆大学等签订“2+2”“3+1”等学分互认项目，通过考试者可到日本城西国际大学留学，符合毕业条件的学生可同时获得双方高校学士学位，可申请在该校继续攻读硕士研究生。",
+      "id": "major-occupation-edge-d00a25a99357",
+      "major_id": "major-ac59a8a0634d",
+      "occupation_code": "GCC-CAND-24BABE472479",
+      "proposed_title": "国际经济贸易管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职日资企业、政府机关以及外经贸单位，从事国际经济贸易管理工作或翻译工作。学院与日本城西国际大学、立命馆大学等签订“2+2”“3+1”等学分互认项目，通过考试者可到日本城西国际大学留学，符合毕业条件的学生可同时获得双方高校学士学位，可申请在该校继续攻读硕士研究生。",
+      "id": "major-occupation-edge-e34449fc01c2",
+      "major_id": "major-ac59a8a0634d",
+      "occupation_code": "GCC-CAND-A52A08335185",
+      "proposed_title": "翻译",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职日资企业、政府机关以及外经贸单位，从事国际经济贸易管理工作或翻译工作。学院与日本城西国际大学、立命馆大学等签订“2+2”“3+1”等学分互认项目，通过考试者可到日本城西国际大学留学，符合毕业条件的学生可同时获得双方高校学士学位，可申请在该校继续攻读硕士研究生。",
+      "id": "major-occupation-edge-8f4aaf33b89a",
+      "major_id": "major-ac59a8a0634d",
+      "occupation_code": null,
+      "proposed_title": "日语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类德资企业以及外向型中资企业，从事商务翻译、行政管理、外经贸工作。学院与德国慕尼黑应用语言大学、奥斯纳布吕克大学、欧福大学等签订“2+2.5”“3+1”等学分互认项目，通过考试者可录取到慕尼黑应用语言大学留学，符合毕业条件的学生可同时获得双方高校学士学位，也可申请留在德国工作或申请攻读德国高校硕士研究生。",
+      "id": "major-occupation-edge-d4df4bcd06cd",
+      "major_id": "major-515742e97bcc",
+      "occupation_code": "GCC-CAND-CAF6DB894BCC",
+      "proposed_title": "商务翻译",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类德资企业以及外向型中资企业，从事商务翻译、行政管理、外经贸工作。学院与德国慕尼黑应用语言大学、奥斯纳布吕克大学、欧福大学等签订“2+2.5”“3+1”等学分互认项目，通过考试者可录取到慕尼黑应用语言大学留学，符合毕业条件的学生可同时获得双方高校学士学位，也可申请留在德国工作或申请攻读德国高校硕士研究生。",
+      "id": "major-occupation-edge-41f128c8d45a",
+      "major_id": "major-515742e97bcc",
+      "occupation_code": "GCC-CAND-CE1B3E716676",
+      "proposed_title": "行政管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类德资企业以及外向型中资企业，从事商务翻译、行政管理、外经贸工作。学院与德国慕尼黑应用语言大学、奥斯纳布吕克大学、欧福大学等签订“2+2.5”“3+1”等学分互认项目，通过考试者可录取到慕尼黑应用语言大学留学，符合毕业条件的学生可同时获得双方高校学士学位，也可申请留在德国工作或申请攻读德国高校硕士研究生。",
+      "id": "major-occupation-edge-a26b68c8e806",
+      "major_id": "major-515742e97bcc",
+      "occupation_code": null,
+      "proposed_title": "德语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类中西资企业、政府机关及教育单位，从事商务翻译、行政管理、教育及外经贸工作。学院与西班牙康普顿斯大学签订“3+1”“3.5+0.5”等学分互认项目，通过考核者可录取到西班牙康普顿斯大学留学，毕业后也可申请攻读西班牙高校硕士研究生。 师资队伍 外国语学院教师团队业务精湛、充满活力。有高级职称40人、博士（含在读博士）33人、广东省高等学校教学名师1人、广东省优秀教师4名、双师双能型教师30人。 教学设施 外国语学院有多媒体教室48间、语音实验室6间、口笔译实训室1间、商务外语沟通情景室1间、日语文化体验室1间、德语文化情景室1间、西班牙语语文化情景室1间、微格教学实训室1间、多功能录播室1间，翻译实训室1间，外语综合技能实训室1间，还与其他学院共享跨境电商实训室、智慧教室等。为保证学生能进行在线外语练习，外国语学院购买了“YiCAT翻译管理平台”“YiCorpus语料库管理平台”“传神翻译实训系统”“科大讯飞Fif口语训练系统”“国际贸易单一窗口实训平台”，同时使用“外研社U校园”“外教社WElearn随行课堂”“MyET日语课程”“Speexx德语训练平台”等多个线上外语资源和",
+      "id": "major-occupation-edge-39d34c9ae23f",
+      "major_id": "major-1c3541aa6817",
+      "occupation_code": "GCC-CAND-CAF6DB894BCC",
+      "proposed_title": "商务翻译",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类中西资企业、政府机关及教育单位，从事商务翻译、行政管理、教育及外经贸工作。学院与西班牙康普顿斯大学签订“3+1”“3.5+0.5”等学分互认项目，通过考核者可录取到西班牙康普顿斯大学留学，毕业后也可申请攻读西班牙高校硕士研究生。 师资队伍 外国语学院教师团队业务精湛、充满活力。有高级职称40人、博士（含在读博士）33人、广东省高等学校教学名师1人、广东省优秀教师4名、双师双能型教师30人。 教学设施 外国语学院有多媒体教室48间、语音实验室6间、口笔译实训室1间、商务外语沟通情景室1间、日语文化体验室1间、德语文化情景室1间、西班牙语语文化情景室1间、微格教学实训室1间、多功能录播室1间，翻译实训室1间，外语综合技能实训室1间，还与其他学院共享跨境电商实训室、智慧教室等。为保证学生能进行在线外语练习，外国语学院购买了“YiCAT翻译管理平台”“YiCorpus语料库管理平台”“传神翻译实训系统”“科大讯飞Fif口语训练系统”“国际贸易单一窗口实训平台”，同时使用“外研社U校园”“外教社WElearn随行课堂”“MyET日语课程”“Speexx德语训练平台”等多个线上外语资源和",
+      "id": "major-occupation-edge-a8f3c224668c",
+      "major_id": "major-1c3541aa6817",
+      "occupation_code": "GCC-CAND-CE1B3E716676",
+      "proposed_title": "行政管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "就职于各类中西资企业、政府机关及教育单位，从事商务翻译、行政管理、教育及外经贸工作。学院与西班牙康普顿斯大学签订“3+1”“3.5+0.5”等学分互认项目，通过考核者可录取到西班牙康普顿斯大学留学，毕业后也可申请攻读西班牙高校硕士研究生。 师资队伍 外国语学院教师团队业务精湛、充满活力。有高级职称40人、博士（含在读博士）33人、广东省高等学校教学名师1人、广东省优秀教师4名、双师双能型教师30人。 教学设施 外国语学院有多媒体教室48间、语音实验室6间、口笔译实训室1间、商务外语沟通情景室1间、日语文化体验室1间、德语文化情景室1间、西班牙语语文化情景室1间、微格教学实训室1间、多功能录播室1间，翻译实训室1间，外语综合技能实训室1间，还与其他学院共享跨境电商实训室、智慧教室等。为保证学生能进行在线外语练习，外国语学院购买了“YiCAT翻译管理平台”“YiCorpus语料库管理平台”“传神翻译实训系统”“科大讯飞Fif口语训练系统”“国际贸易单一窗口实训平台”，同时使用“外研社U校园”“外教社WElearn随行课堂”“MyET日语课程”“Speexx德语训练平台”等多个线上外语资源和",
+      "id": "major-occupation-edge-f17c6e140e8f",
+      "major_id": "major-1c3541aa6817",
+      "occupation_code": null,
+      "proposed_title": "西班牙语相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生主要去向主要为两大类：一类为法律服务岗位：包括律师助理、公证员助理、公司企业法务专员；另一类为司法、行政执法岗位：包括法官助理、检察官助理或法院书记员，或行政执法机关的公务员。",
+      "id": "major-occupation-edge-ea60d93d3473",
+      "major_id": "major-7284c4a38cc7",
+      "occupation_code": "GCC-CAND-14EE0688C3E2",
+      "proposed_title": "律师助理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生主要去向主要为两大类：一类为法律服务岗位：包括律师助理、公证员助理、公司企业法务专员；另一类为司法、行政执法岗位：包括法官助理、检察官助理或法院书记员，或行政执法机关的公务员。",
+      "id": "major-occupation-edge-85ea444909f2",
+      "major_id": "major-7284c4a38cc7",
+      "occupation_code": "GCC-CAND-93CDE9070DB6",
+      "proposed_title": "公证员助理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生主要去向主要为两大类：一类为法律服务岗位：包括律师助理、公证员助理、公司企业法务专员；另一类为司法、行政执法岗位：包括法官助理、检察官助理或法院书记员，或行政执法机关的公务员。",
+      "id": "major-occupation-edge-d0ab1fe3fa36",
+      "major_id": "major-7284c4a38cc7",
+      "occupation_code": "GCC-CAND-D01B311B5274",
+      "proposed_title": "公司企业法务专员",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "风控专业是一个应用性很强的复合型专业，既要有坚实的法律基础知识、技能，又要具备一定的经济、管理等知识和技能。要求学生毕业后运用法律制度、规则服务于银行、保险、证券等金融机构以及其他公司、企业的合规经营与风险控制。毕业生就业主要面向银行和非银行金融机构的法务、风控、合规、信用管理等岗位，同样也可从事非金融行业、法律服务行业、政府及事业单位的相关法务专员岗位。该专业毕业生同样也可以参加全国法律职业资格考试，到司法机关、行政执法机关及法律服务机构工作。",
+      "id": "major-occupation-edge-6be49b9281f9",
+      "major_id": "major-1c60924b4131",
+      "occupation_code": "GCC-CAND-1CB90B6ED074",
+      "proposed_title": "信用管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "风控专业是一个应用性很强的复合型专业，既要有坚实的法律基础知识、技能，又要具备一定的经济、管理等知识和技能。要求学生毕业后运用法律制度、规则服务于银行、保险、证券等金融机构以及其他公司、企业的合规经营与风险控制。毕业生就业主要面向银行和非银行金融机构的法务、风控、合规、信用管理等岗位，同样也可从事非金融行业、法律服务行业、政府及事业单位的相关法务专员岗位。该专业毕业生同样也可以参加全国法律职业资格考试，到司法机关、行政执法机关及法律服务机构工作。",
+      "id": "major-occupation-edge-06f30d906c0c",
+      "major_id": "major-1c60924b4131",
+      "occupation_code": "GCC-CAND-84F1616A6308",
+      "proposed_title": "法务专员",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "风控专业是一个应用性很强的复合型专业，既要有坚实的法律基础知识、技能，又要具备一定的经济、管理等知识和技能。要求学生毕业后运用法律制度、规则服务于银行、保险、证券等金融机构以及其他公司、企业的合规经营与风险控制。毕业生就业主要面向银行和非银行金融机构的法务、风控、合规、信用管理等岗位，同样也可从事非金融行业、法律服务行业、政府及事业单位的相关法务专员岗位。该专业毕业生同样也可以参加全国法律职业资格考试，到司法机关、行政执法机关及法律服务机构工作。",
+      "id": "major-occupation-edge-658bb212292b",
+      "major_id": "major-1c60924b4131",
+      "occupation_code": null,
+      "proposed_title": "信用风险管理与法律防控相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "国际经贸规则专业融合法学和国际经济贸易两专业的骨干课程，在从事贸易方面的法律事务上有优势。毕业生主要面向国内外与国际经贸法律有关的政府机构、非政府组织、国际仲裁机构、涉外律师事务所、跨国公司、外贸公司企业等单位，也可选择考取国内高等院校的国际经济法方向、涉外律师方向的研究生，对推荐毕业生去外国或境外大学读研也有较大的优势。 上一篇：【2025年专业介绍】数字经济产业学院 下一篇：没有了 友情链接 阳光高考 广东省教育厅 广东省教育考试院 中国高等教育学生信息网 咨询热线：020-82872773 82874639 图文传真：020-82872773 电子邮箱：gzcczsb@163.com 学校地址：广东省广州市黄埔区知识大道300号 邮政编码：511363 Copyright©2019 广州商学院 All Rights Reserved 粤公网安备 44011602000060号 粤ICP备15103669号 //百度统计代码 var _hmt = _hmt || []; (function() { var hm = document.createElement(\"script\");",
+      "id": "major-occupation-edge-289b8828d34d",
+      "major_id": "major-5602511fb14f",
+      "occupation_code": null,
+      "proposed_title": "国际经贸规则相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "国际经贸规则专业融合法学和国际经济贸易两专业的骨干课程，在从事贸易方面的法律事务上有优势。毕业生主要面向国内外与国际经贸法律有关的政府机构、非政府组织、国际仲裁机构、涉外律师事务所、跨国公司、外贸公司企业等单位，也可选择考取国内高等院校的国际经济法方向、涉外律师方向的研究生，对推荐毕业生去外国或境外大学读研也有较大的优势。 上一篇：【2025年专业介绍】数字经济产业学院 下一篇：没有了 友情链接 阳光高考 广东省教育厅 广东省教育考试院 中国高等教育学生信息网 咨询热线：020-82872773 82874639 图文传真：020-82872773 电子邮箱：gzcczsb@163.com 学校地址：广东省广州市黄埔区知识大道300号 邮政编码：511363 Copyright©2019 广州商学院 All Rights Reserved 粤公网安备 44011602000060号 粤ICP备15103669号 //百度统计代码 var _hmt = _hmt || []; (function() { var hm = document.createElement(\"script\");",
+      "id": "major-occupation-edge-47af0068f03c",
+      "major_id": "major-5602511fb14f",
+      "occupation_code": null,
+      "proposed_title": "国际经贸规则相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "国际经贸规则专业融合法学和国际经济贸易两专业的骨干课程，在从事贸易方面的法律事务上有优势。毕业生主要面向国内外与国际经贸法律有关的政府机构、非政府组织、国际仲裁机构、涉外律师事务所、跨国公司、外贸公司企业等单位，也可选择考取国内高等院校的国际经济法方向、涉外律师方向的研究生，对推荐毕业生去外国或境外大学读研也有较大的优势。 上一篇：【2025年专业介绍】数字经济产业学院 下一篇：没有了 友情链接 阳光高考 广东省教育厅 广东省教育考试院 中国高等教育学生信息网 咨询热线：020-82872773 82874639 图文传真：020-82872773 电子邮箱：gzcczsb@163.com 学校地址：广东省广州市黄埔区知识大道300号 邮政编码：511363 Copyright©2019 广州商学院 All Rights Reserved 粤公网安备 44011602000060号 粤ICP备15103669号 //百度统计代码 var _hmt = _hmt || []; (function() { var hm = document.createElement(\"script\");",
+      "id": "major-occupation-edge-b4c8c5ba9700",
+      "major_id": "major-5602511fb14f",
+      "occupation_code": null,
+      "proposed_title": "国际经贸规则相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在电子商务企业、跨境贸易公司、数字营销机构、政府机关等单位从事数字营销、跨境与直播运营、商务数据分析、智能商业策划及电商行业管理等工作。",
+      "id": "major-occupation-edge-f31f774883ca",
+      "major_id": "major-26b91cb34b37",
+      "occupation_code": "GCC-CAND-96705952F9DC",
+      "proposed_title": "直播运营",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在电子商务企业、跨境贸易公司、数字营销机构、政府机关等单位从事数字营销、跨境与直播运营、商务数据分析、智能商业策划及电商行业管理等工作。",
+      "id": "major-occupation-edge-28300d438e86",
+      "major_id": "major-26b91cb34b37",
+      "occupation_code": "GCC-CAND-E846F6DBF1A7",
+      "proposed_title": "商务数据分析",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在电子商务企业、跨境贸易公司、数字营销机构、政府机关等单位从事数字营销、跨境与直播运营、商务数据分析、智能商业策划及电商行业管理等工作。",
+      "id": "major-occupation-edge-40a110dd0aa4",
+      "major_id": "major-26b91cb34b37",
+      "occupation_code": "GCC-CAND-8C95F9D8DB0E",
+      "proposed_title": "智能商业策划",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-f3e267b5a847",
+      "major_id": "major-7b38068aa8ce",
+      "occupation_code": null,
+      "proposed_title": "大数据管理与应用相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2424429ef633",
+      "major_id": "major-7b38068aa8ce",
+      "occupation_code": null,
+      "proposed_title": "大数据管理与应用相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1d290da8e19d",
+      "major_id": "major-7b38068aa8ce",
+      "occupation_code": null,
+      "proposed_title": "大数据管理与应用相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在科研部门、教育部门、事业和行政管理部门从事数字贸易、经济管理和政策咨询，可在企业领域从事跨境电商运营、跨境直播、数字营销与市场分析、供应链与智能物流等岗位工作，也可从事传统国际贸易经营与管理等工作。",
+      "id": "major-occupation-edge-32f9180454af",
+      "major_id": "major-d609c030b632",
+      "occupation_code": "GCC-CAND-509B5586B87F",
+      "proposed_title": "经济管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在科研部门、教育部门、事业和行政管理部门从事数字贸易、经济管理和政策咨询，可在企业领域从事跨境电商运营、跨境直播、数字营销与市场分析、供应链与智能物流等岗位工作，也可从事传统国际贸易经营与管理等工作。",
+      "id": "major-occupation-edge-c25c9d82242e",
+      "major_id": "major-d609c030b632",
+      "occupation_code": "GCC-CAND-A435DFBAA2F5",
+      "proposed_title": "跨境电商运营",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在科研部门、教育部门、事业和行政管理部门从事数字贸易、经济管理和政策咨询，可在企业领域从事跨境电商运营、跨境直播、数字营销与市场分析、供应链与智能物流等岗位工作，也可从事传统国际贸易经营与管理等工作。",
+      "id": "major-occupation-edge-e9d2734e5375",
+      "major_id": "major-d609c030b632",
+      "occupation_code": "GCC-CAND-E2DDE8E4C13F",
+      "proposed_title": "市场分析",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在政府数字经济管理部门、互联网科技企业、金融机构、实体企业数字化部门等单位从事数据分析、数字金融、数字化转型、数字化战略规划、数字营销、数字商务、数据挖掘与可视化等相关工作，也可在数字经济相关研究机构从事学术研究工作。",
+      "id": "major-occupation-edge-e24af6f12fb2",
+      "major_id": "major-4d726bdff471",
+      "occupation_code": "GCC-CAND-5D8EC6F62009",
+      "proposed_title": "数据分析",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在政府数字经济管理部门、互联网科技企业、金融机构、实体企业数字化部门等单位从事数据分析、数字金融、数字化转型、数字化战略规划、数字营销、数字商务、数据挖掘与可视化等相关工作，也可在数字经济相关研究机构从事学术研究工作。",
+      "id": "major-occupation-edge-3552bdee49a5",
+      "major_id": "major-4d726bdff471",
+      "occupation_code": null,
+      "proposed_title": "数字经济相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "本专业毕业生可在政府数字经济管理部门、互联网科技企业、金融机构、实体企业数字化部门等单位从事数据分析、数字金融、数字化转型、数字化战略规划、数字营销、数字商务、数据挖掘与可视化等相关工作，也可在数字经济相关研究机构从事学术研究工作。",
+      "id": "major-occupation-edge-05dced36f3f0",
+      "major_id": "major-4d726bdff471",
+      "occupation_code": null,
+      "proposed_title": "数字经济相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-85c94babf68f",
+      "major_id": "major-c87465df3f29",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-ec14bc98b699",
+      "major_id": "major-c87465df3f29",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-6f8df4a4f3e8",
+      "major_id": "major-c87465df3f29",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-46e4225d9c95",
+      "major_id": "major-ae1da1d76f6f",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-6c275a4585e6",
+      "major_id": "major-ae1da1d76f6f",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8f2d4d50347a",
+      "major_id": "major-ae1da1d76f6f",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-0db297e711bb",
+      "major_id": "major-3fe37274f17b",
+      "occupation_code": null,
+      "proposed_title": "物联网工程相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2d0dee784d28",
+      "major_id": "major-3fe37274f17b",
+      "occupation_code": null,
+      "proposed_title": "物联网工程相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-b79bb3866846",
+      "major_id": "major-3fe37274f17b",
+      "occupation_code": null,
+      "proposed_title": "物联网工程相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-c850e6db568c",
+      "major_id": "major-17b50731a99b",
+      "occupation_code": null,
+      "proposed_title": "人工智能相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-53f6982dc4b5",
+      "major_id": "major-17b50731a99b",
+      "occupation_code": null,
+      "proposed_title": "人工智能相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8d7cdad5d785",
+      "major_id": "major-17b50731a99b",
+      "occupation_code": null,
+      "proposed_title": "人工智能相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-5932e4d2af92",
+      "major_id": "major-a701b501f929",
+      "occupation_code": null,
+      "proposed_title": "数据科学与大数据技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-ceb110b50ad6",
+      "major_id": "major-a701b501f929",
+      "occupation_code": null,
+      "proposed_title": "数据科学与大数据技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-942b8fb1e3f3",
+      "major_id": "major-a701b501f929",
+      "occupation_code": null,
+      "proposed_title": "数据科学与大数据技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-a83dee0ec150",
+      "major_id": "major-9ec918d33cfa",
+      "occupation_code": null,
+      "proposed_title": "计算机应用技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-1c4a619dad1d",
+      "major_id": "major-9ec918d33cfa",
+      "occupation_code": null,
+      "proposed_title": "计算机应用技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-2dc12d42d1bf",
+      "major_id": "major-9ec918d33cfa",
+      "occupation_code": null,
+      "proposed_title": "计算机应用技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-85919f74fe87",
+      "major_id": "major-f5fa8295aa2f",
+      "occupation_code": null,
+      "proposed_title": "软件技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-b737d0ff4ec2",
+      "major_id": "major-f5fa8295aa2f",
+      "occupation_code": null,
+      "proposed_title": "软件技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-8101d5f468f6",
+      "major_id": "major-f5fa8295aa2f",
+      "occupation_code": null,
+      "proposed_title": "软件技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术类行业，从事计算机应用、网络规划设计及运维管理等工作；可在各类的科研院所、政府管理部门、企事业单位的信息技术部门工作。",
+      "id": "major-occupation-edge-c48797772a21",
+      "major_id": "major-81c051b2f072",
+      "occupation_code": "GCC-CAND-C3D39FF5D88E",
+      "proposed_title": "网络规划设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术类行业，从事计算机应用、网络规划设计及运维管理等工作；可在各类的科研院所、政府管理部门、企事业单位的信息技术部门工作。",
+      "id": "major-occupation-edge-e340f58d19a2",
+      "major_id": "major-81c051b2f072",
+      "occupation_code": "GCC-CAND-BC4ED0E95E37",
+      "proposed_title": "运维管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术类行业，从事计算机应用、网络规划设计及运维管理等工作；可在各类的科研院所、政府管理部门、企事业单位的信息技术部门工作。",
+      "id": "major-occupation-edge-4980b9d87be9",
+      "major_id": "major-81c051b2f072",
+      "occupation_code": null,
+      "proposed_title": "计算机科学与技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术行业从事信息化应用系统和智能应用系统的设计、开发、测试、运维管理和技术服务等工作；可在各类政府管理部门、企事业单位的信息技术、数据技术等相关管理部门工作。",
+      "id": "major-occupation-edge-3db341b69bdb",
+      "major_id": "major-051f23f781f5",
+      "occupation_code": "GCC-CAND-BCD275F79693",
+      "proposed_title": "智能应用系统的设计",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术行业从事信息化应用系统和智能应用系统的设计、开发、测试、运维管理和技术服务等工作；可在各类政府管理部门、企事业单位的信息技术、数据技术等相关管理部门工作。",
+      "id": "major-occupation-edge-ef6c8420e4e0",
+      "major_id": "major-051f23f781f5",
+      "occupation_code": "GCC-CAND-BC4ED0E95E37",
+      "proposed_title": "运维管理",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在信息技术行业从事信息化应用系统和智能应用系统的设计、开发、测试、运维管理和技术服务等工作；可在各类政府管理部门、企事业单位的信息技术、数据技术等相关管理部门工作。",
+      "id": "major-occupation-edge-ae4936971bce",
+      "major_id": "major-051f23f781f5",
+      "occupation_code": null,
+      "proposed_title": "软件工程相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在物联网工程相关行业从事物联网工程相关产品规划、设计开发、集成和管理等方面的应用工作；也可在各类科研机构、设计院、咨询公司、政府管理部门从事物联网工程相关领域的应用、研发和管理工作。",
+      "id": "major-occupation-edge-e93848c8ee4f",
+      "major_id": "major-f64ebf174852",
+      "occupation_code": "GCC-CAND-7EF9D30C5E13",
+      "proposed_title": "设计开发",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在物联网工程相关行业从事物联网工程相关产品规划、设计开发、集成和管理等方面的应用工作；也可在各类科研机构、设计院、咨询公司、政府管理部门从事物联网工程相关领域的应用、研发和管理工作。",
+      "id": "major-occupation-edge-e35e3c289962",
+      "major_id": "major-f64ebf174852",
+      "occupation_code": null,
+      "proposed_title": "物联网工程相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "学生毕业后可在物联网工程相关行业从事物联网工程相关产品规划、设计开发、集成和管理等方面的应用工作；也可在各类科研机构、设计院、咨询公司、政府管理部门从事物联网工程相关领域的应用、研发和管理工作。",
+      "id": "major-occupation-edge-69a101460dea",
+      "major_id": "major-f64ebf174852",
+      "occupation_code": null,
+      "proposed_title": "物联网工程相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "大数据技术人才应用前景广阔，需求旺盛。毕业生可在政府、企事业单位、社会组织等从事数据采集、存储与管理、数据分析与挖掘、数据安全与治理，大数据系统开发、集成、管理和运维等工作。",
+      "id": "major-occupation-edge-de305052d379",
+      "major_id": "major-9eca050e4129",
+      "occupation_code": "GCC-CAND-5D8EC6F62009",
+      "proposed_title": "数据分析",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "大数据技术人才应用前景广阔，需求旺盛。毕业生可在政府、企事业单位、社会组织等从事数据采集、存储与管理、数据分析与挖掘、数据安全与治理，大数据系统开发、集成、管理和运维等工作。",
+      "id": "major-occupation-edge-c3c0f8b38f66",
+      "major_id": "major-9eca050e4129",
+      "occupation_code": "GCC-CAND-435207CA7E1B",
+      "proposed_title": "大数据系统开发",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "大数据技术人才应用前景广阔，需求旺盛。毕业生可在政府、企事业单位、社会组织等从事数据采集、存储与管理、数据分析与挖掘、数据安全与治理，大数据系统开发、集成、管理和运维等工作。",
+      "id": "major-occupation-edge-2307317ab091",
+      "major_id": "major-9eca050e4129",
+      "occupation_code": null,
+      "proposed_title": "数据科学与大数据技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在政府、企事业单位、金融机构及互联网公司等从事信息管理、数据分析、ERP实施顾问、系统开发与运维、IT咨询等工作；也可在信息技术类行业，从事信息系统设计开发，运维和管理等相关工作。",
+      "id": "major-occupation-edge-b22bbe81c07f",
+      "major_id": "major-ace4e394b530",
+      "occupation_code": "GCC-CAND-72771E1E362F",
+      "proposed_title": "信息管理",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在政府、企事业单位、金融机构及互联网公司等从事信息管理、数据分析、ERP实施顾问、系统开发与运维、IT咨询等工作；也可在信息技术类行业，从事信息系统设计开发，运维和管理等相关工作。",
+      "id": "major-occupation-edge-57acfcc8acbf",
+      "major_id": "major-ace4e394b530",
+      "occupation_code": "GCC-CAND-5D8EC6F62009",
+      "proposed_title": "数据分析",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在政府、企事业单位、金融机构及互联网公司等从事信息管理、数据分析、ERP实施顾问、系统开发与运维、IT咨询等工作；也可在信息技术类行业，从事信息系统设计开发，运维和管理等相关工作。",
+      "id": "major-occupation-edge-10e027a45dc7",
+      "major_id": "major-ace4e394b530",
+      "occupation_code": "GCC-CAND-DF9CC7D701D5",
+      "proposed_title": "ERP实施顾问",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生就业前景广阔，主要面向企事业单位、互联网、智能制造、金融科技、教育等行业，从事智能系统开发、智能信息处理、机器人工程师、算法工程师等岗位工作。",
+      "id": "major-occupation-edge-e670ac84b00a",
+      "major_id": "major-a8bd6e0f9569",
+      "occupation_code": "GCC-CAND-6A886E745425",
+      "proposed_title": "智能系统开发",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生就业前景广阔，主要面向企事业单位、互联网、智能制造、金融科技、教育等行业，从事智能系统开发、智能信息处理、机器人工程师、算法工程师等岗位工作。",
+      "id": "major-occupation-edge-07bd7ed7af8d",
+      "major_id": "major-a8bd6e0f9569",
+      "occupation_code": "GCC-CAND-B442CE20C9E2",
+      "proposed_title": "机器人工程师",
+      "relation_type": "adjacent",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生就业前景广阔，主要面向企事业单位、互联网、智能制造、金融科技、教育等行业，从事智能系统开发、智能信息处理、机器人工程师、算法工程师等岗位工作。",
+      "id": "major-occupation-edge-378d081d669d",
+      "major_id": "major-a8bd6e0f9569",
+      "occupation_code": "GCC-CAND-23453144F0F0",
+      "proposed_title": "算法工程师",
+      "relation_type": "stretch",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在信息技术类企业，从事安全产品研发、安全分析与设计、安全技术咨询等工作；也可在政府部门和商业企业的网络安全部门，负责网络安全规划、部署实施、运维和管理等工作。 师资队伍 学院现有教职工202人；专任教师由博士、高级职称、海归硕士和具有丰富企业经验的“双师双能型”教师等174名多层次人才组成，其中高级职称81名，博士51名。专任教师队伍总体上结构合理、教学水平高，实践教学能力强。 教学设施 学院教研仪器设备总值2,160余万元，建有人工智能、大数据应用、图像处理与机器视觉、网络工程、软件工程、智能控制、嵌入式、物联网、网络信息安全和ERP等30个实验室，为科研协同创新培养建立了教授工作室和，为学生科技创新活动与企业共建了多个校企创新实践基地。 成果与荣誉 近年来，教师潜心教学和科研，成果丰硕，承担省級以上科研项目70余项，其中国家自然科学基金1项，省自然科学基金项目3项，省哲学社会科学规划4项，省教育科学规划高等教育专项17项，广东省教育厅科研项目25项。2024年，数据科学与大数据技术专业建成省级特色专业；2021年，计算机科学与技术教学团队立项省级课程思政示范团队建设项目；2",
+      "id": "major-occupation-edge-637fc867ece3",
+      "major_id": "major-7047af4703d9",
+      "occupation_code": "GCC-CAND-6317F508CB18",
+      "proposed_title": "安全分析",
+      "relation_type": "primary",
+      "review_reason": "University employment text yielded a candidate title, but no authoritative national occupation mapping has been reviewed.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在信息技术类企业，从事安全产品研发、安全分析与设计、安全技术咨询等工作；也可在政府部门和商业企业的网络安全部门，负责网络安全规划、部署实施、运维和管理等工作。 师资队伍 学院现有教职工202人；专任教师由博士、高级职称、海归硕士和具有丰富企业经验的“双师双能型”教师等174名多层次人才组成，其中高级职称81名，博士51名。专任教师队伍总体上结构合理、教学水平高，实践教学能力强。 教学设施 学院教研仪器设备总值2,160余万元，建有人工智能、大数据应用、图像处理与机器视觉、网络工程、软件工程、智能控制、嵌入式、物联网、网络信息安全和ERP等30个实验室，为科研协同创新培养建立了教授工作室和，为学生科技创新活动与企业共建了多个校企创新实践基地。 成果与荣誉 近年来，教师潜心教学和科研，成果丰硕，承担省級以上科研项目70余项，其中国家自然科学基金1项，省自然科学基金项目3项，省哲学社会科学规划4项，省教育科学规划高等教育专项17项，广东省教育厅科研项目25项。2024年，数据科学与大数据技术专业建成省级特色专业；2021年，计算机科学与技术教学团队立项省级课程思政示范团队建设项目；2",
+      "id": "major-occupation-edge-452b4169ab15",
+      "major_id": "major-7047af4703d9",
+      "occupation_code": null,
+      "proposed_title": "网络空间安全相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "毕业生可在信息技术类企业，从事安全产品研发、安全分析与设计、安全技术咨询等工作；也可在政府部门和商业企业的网络安全部门，负责网络安全规划、部署实施、运维和管理等工作。 师资队伍 学院现有教职工202人；专任教师由博士、高级职称、海归硕士和具有丰富企业经验的“双师双能型”教师等174名多层次人才组成，其中高级职称81名，博士51名。专任教师队伍总体上结构合理、教学水平高，实践教学能力强。 教学设施 学院教研仪器设备总值2,160余万元，建有人工智能、大数据应用、图像处理与机器视觉、网络工程、软件工程、智能控制、嵌入式、物联网、网络信息安全和ERP等30个实验室，为科研协同创新培养建立了教授工作室和，为学生科技创新活动与企业共建了多个校企创新实践基地。 成果与荣誉 近年来，教师潜心教学和科研，成果丰硕，承担省級以上科研项目70余项，其中国家自然科学基金1项，省自然科学基金项目3项，省哲学社会科学规划4项，省教育科学规划高等教育专项17项，广东省教育厅科研项目25项。2024年，数据科学与大数据技术专业建成省级特色专业；2021年，计算机科学与技术教学团队立项省级课程思政示范团队建设项目；2",
+      "id": "major-occupation-edge-50c76014cd4e",
+      "major_id": "major-7047af4703d9",
+      "occupation_code": null,
+      "proposed_title": "网络空间安全相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-e398bd9204e3",
+      "major_id": "major-c5444d389da6",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关primary职业（待审核）",
+      "relation_type": "primary",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-b8b29e31a77f",
+      "major_id": "major-c5444d389da6",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关adjacent职业（待审核）",
+      "relation_type": "adjacent",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    },
+    {
+      "evidence_excerpt": "",
+      "id": "major-occupation-edge-6899ba82a823",
+      "major_id": "major-c5444d389da6",
+      "occupation_code": null,
+      "proposed_title": "智能科学与技术相关stretch职业（待审核）",
+      "relation_type": "stretch",
+      "review_reason": "The official major page did not provide enough distinct occupation evidence; this unresolved placeholder is not publishable or scoreable.",
+      "review_required": true,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    }
+  ],
+  "schema_version": "1.0.0"
+}

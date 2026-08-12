@@ -32,7 +32,7 @@ export function GoalForm({
   const t = useTranslations('career');
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
-  const [occupationCode, setOccupationCode] = useState(currentGoal?.occupationCode ?? occupations[0]?.code ?? '');
+  const [occupationCode, setOccupationCode] = useState(currentGoal?.occupationCode ?? '');
   const [targetDate, setTargetDate] = useState(currentGoal?.targetDate?.slice(0, 10) ?? '');
   const [rationale, setRationale] = useState(currentGoal?.rationale ?? '');
   const [industries, setIndustries] = useState(asCommaList(currentGoal?.preferences.industries));
@@ -87,6 +87,7 @@ export function GoalForm({
           onChange={(event) => setOccupationCode(event.target.value)}
           className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
         >
+          <option value="">{t('goals.form.occupationPlaceholder')}</option>
           {occupations.map((occupation) => (
             <option key={occupation.code} value={occupation.code}>
               {occupation.name} · {occupation.category}

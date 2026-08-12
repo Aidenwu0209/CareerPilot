@@ -7,6 +7,7 @@ import {
   careerEvidence,
   careerGoals,
   careerGuidanceNotes,
+  careerMatches,
   careerProfiles,
   careerProfileSnapshots,
   careerTasks,
@@ -29,10 +30,12 @@ import type {
   CareerTaskStatus,
   GuidanceNote,
   OccupationDetail,
+  OccupationListFilters,
+  OccupationPage,
   OccupationSummary,
 } from '@/types/career';
 import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
-import { careerKnowledgeProvider, ensureCareerCatalog } from './knowledge-provider';
+import { careerKnowledgeProvider } from './knowledge-provider';
 import { clampScore, parseJson, toIso, toNullableIso } from './serialization';
 
 export class CareerNotFoundError extends Error {
@@ -46,6 +49,13 @@ export class CareerValidationError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'CareerValidationError';
+  }
+}
+
+export class CareerGoalRequiredError extends Error {
+  constructor() {
+    super('A primary career goal or explicit occupationCode is required.');
+    this.name = 'CareerGoalRequiredError';
   }
 }
 
@@ -201,7 +211,11 @@ export async function getCareerProfile(userId: string): Promise<CareerProfile> {
 }
 
 export async function listOccupations(query?: string): Promise<OccupationSummary[]> {
-  return careerKnowledgeProvider.listOccupations(query);
+  return (await careerKnowledgeProvider.listOccupations({ query, limit: 100, offset: 0 })).items;
+}
+
+export async function listOccupationPage(filters: OccupationListFilters = {}): Promise<OccupationPage> {
+  return careerKnowledgeProvider.listOccupations(filters);
 }
 
 export async function getOccupationByCode(code: string): Promise<OccupationDetail | null> {
@@ -232,9 +246,8 @@ function taskAction(abilityName: string, state: 'met' | 'gap' | 'unknown', gap: 
 
 export async function getCareerMatch(userId: string, occupationCode?: string): Promise<CareerMatchResult> {
   const goals = occupationCode ? [] : await listCareerGoals(userId);
-  const fallbackOccupation = (await listOccupations())[0];
-  const code = occupationCode ?? goals.find((goal) => goal.isPrimary)?.occupationCode ?? fallbackOccupation?.code;
-  if (!code) throw new CareerNotFoundError('No occupation is available for matching.');
+  const code = occupationCode ?? goals.find((goal) => goal.isPrimary)?.occupationCode;
+  if (!code) throw new CareerGoalRequiredError();
 
   const [occupation, profile] = await Promise.all([
     getOccupationByCode(code),
@@ -282,24 +295,92 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     };
   });
 
+  const rawScore = knownWeight ? clampScore((weightedAchievement / knownWeight) * 100) : null;
+  const knownCoverage = totalWeight ? clampScore((knownWeight / totalWeight) * 100) : 0;
+  const evidenceCoverage = totalWeight ? clampScore((evidencedWeight / totalWeight) * 100) : 0;
+  const scoringStatus = occupation.scoringEligible === false || occupation.requirements.length === 0
+    ? 'not_eligible' as const
+    : knownCoverage >= 50 && evidenceCoverage >= 40
+      ? 'ready' as const
+      : 'insufficient_evidence' as const;
+  const score = scoringStatus === 'ready' ? rawScore : null;
+  const confidence = scoringStatus === 'ready'
+    ? clampScore((knownCoverage * 0.4) + (evidenceCoverage * 0.6))
+    : null;
+  const strengths = dimensionBreakdown
+    .filter((item) => item.state === 'met' && item.studentEvidence.some((evidence) => evidence.status === 'verified'))
+    .sort((a, b) => b.requirement.weight - a.requirement.weight)
+    .slice(0, 3);
+  const priorityGaps = dimensionBreakdown
+    .filter((item) => item.state !== 'met')
+    .sort((a, b) => Number(b.requirement.required) - Number(a.requirement.required)
+      || b.requirement.weight - a.requirement.weight
+      || (b.gap ?? -1) - (a.gap ?? -1))
+    .slice(0, 3);
+  const previousRows = await db.select({ score: careerMatches.score })
+    .from(careerMatches)
+    .where(and(eq(careerMatches.userId, userId), eq(careerMatches.occupationCode, code)))
+    .orderBy(desc(careerMatches.createdAt))
+    .limit(1);
+  const previousScore = previousRows[0]?.score ?? null;
+  const changeSummary = previousRows[0]
+    ? {
+        previousScore,
+        currentScore: score,
+        delta: previousScore == null || score == null ? null : score - previousScore,
+        reason: '根据当前已确认能力证据重新计算。',
+      }
+    : null;
+  const catalogVersion = occupation.catalogVersion ?? await careerKnowledgeProvider.getActiveCatalogVersion();
+
   return {
     occupation: {
       code: occupation.code,
       name: occupation.name,
       category: occupation.category,
       summary: occupation.summary,
-      matchScore: knownWeight ? clampScore((weightedAchievement / knownWeight) * 100) : null,
-      evidenceCoverage: totalWeight ? clampScore((evidencedWeight / totalWeight) * 100) : 0,
+      matchScore: score,
+      evidenceCoverage,
     },
-    score: knownWeight ? clampScore((weightedAchievement / knownWeight) * 100) : null,
-    evidenceCoverage: totalWeight ? clampScore((evidencedWeight / totalWeight) * 100) : 0,
+    score,
+    evidenceCoverage,
     knownWeight,
     totalWeight,
     dimensionBreakdown,
     citations: occupation.citations,
     algorithmVersion: 'career-match-v1',
+    catalogVersion,
+    scoringStatus,
+    confidence,
+    knownCoverage,
+    strengths,
+    priorityGaps,
+    changeSummary,
     generatedAt: new Date().toISOString(),
   };
+}
+
+/** Persist a match snapshot only for an explicit recalculation action. */
+export async function calculateAndPersistCareerMatch(userId: string, occupationCode?: string): Promise<CareerMatchResult> {
+  const result = await getCareerMatch(userId, occupationCode);
+  const goals = await listCareerGoals(userId);
+  const goalId = goals.find((goal) => goal.occupationCode === result.occupation.code)?.id ?? null;
+  await db.insert(careerMatches).values({
+    userId,
+    goalId,
+    occupationCode: result.occupation.code,
+    score: result.score,
+    evidenceCoverage: result.evidenceCoverage,
+    knownWeight: result.knownWeight,
+    totalWeight: result.totalWeight,
+    breakdown: result.dimensionBreakdown,
+    citations: result.citations,
+    algorithmVersion: result.algorithmVersion,
+    catalogVersion: result.catalogVersion,
+    confidence: result.confidence,
+    knownCoverage: result.knownCoverage,
+  } as never);
+  return result;
 }
 
 async function getLatestAbilityChanges(userId: string): Promise<AbilityChange[]> {
@@ -465,7 +546,6 @@ async function createDefaultGoalTasks(userId: string, goal: CareerGoal): Promise
 }
 
 export async function upsertCareerGoal(userId: string, input: CareerGoalInput): Promise<CareerGoal> {
-  await ensureCareerCatalog();
   await ensureProfileRow(userId);
   const occupation = await getOccupationByCode(input.occupationCode);
   if (!occupation) throw new CareerValidationError('Unknown occupation code.');
@@ -514,7 +594,7 @@ export async function upsertCareerGoal(userId: string, input: CareerGoalInput): 
 }
 
 export async function createCareerTask(userId: string, input: CareerTaskInput): Promise<CareerTask> {
-  await ensureCareerCatalog();
+  await dbReady;
   await ensureProfileRow(userId);
   const title = input.title.trim();
   if (!title) throw new CareerValidationError('Task title is required.');

@@ -15,6 +15,7 @@ export type CareerGoalStatus = 'draft' | 'active' | 'achieved' | 'archived';
 export type CareerTaskStatus = 'todo' | 'in_progress' | 'completed' | 'cancelled';
 export type CareerTaskCategory = 'explore' | 'learn' | 'practice' | 'portfolio' | 'application';
 export type OccupationRelationType = 'progresses_to' | 'transfers_to' | 'related_to';
+export type MajorOccupationRelationType = 'primary' | 'adjacent' | 'cross_major' | 'stretch';
 
 export interface CareerEvidence {
   id: string;
@@ -107,6 +108,22 @@ export interface OccupationSummary {
   summary: string;
   matchScore: number | null;
   evidenceCoverage?: number;
+  jobFamily?: string;
+  industry?: string;
+  cities?: string[];
+  educationLevels?: string[];
+  catalogVersion?: string | null;
+  aliases?: string[];
+  majorMappings?: Array<{
+    majorCode: string;
+    majorName: string;
+    collegeCode: string;
+    collegeName: string;
+    relevanceType: MajorOccupationRelationType;
+  }>;
+  canonicalType?: 'national_occupation' | 'market_alias' | 'unresolved_placeholder';
+  reviewStatus?: string;
+  scoringEligible?: boolean;
 }
 
 export interface OccupationDetail extends OccupationSummary {
@@ -115,6 +132,45 @@ export interface OccupationDetail extends OccupationSummary {
   requirements: OccupationRequirement[];
   relatedOccupations: RelatedOccupation[];
   citations: KnowledgeCitation[];
+}
+
+export interface OccupationListFilters {
+  query?: string;
+  collegeCode?: string;
+  majorCode?: string;
+  jobFamily?: string;
+  industry?: string;
+  city?: string;
+  educationLevel?: string;
+  relevanceType?: MajorOccupationRelationType;
+  relationType?: OccupationRelationType;
+  limit?: number;
+  offset?: number;
+}
+
+export interface OccupationFilterOption {
+  value: string;
+  label: string;
+}
+
+export interface OccupationFilterFacets {
+  colleges: OccupationFilterOption[];
+  majors: OccupationFilterOption[];
+  jobFamilies: string[];
+  industries: string[];
+  cities: string[];
+  educationLevels: string[];
+}
+
+export interface OccupationPage {
+  items: OccupationSummary[];
+  pageInfo: {
+    limit: number;
+    offset: number;
+    total: number;
+    hasMore: boolean;
+  };
+  filters: OccupationListFilters & OccupationFilterFacets;
 }
 
 export interface CareerGoal {
@@ -216,7 +272,7 @@ export interface OccupationMatch {
   totalWeight: number;
   breakdown: AbilityMatchBreakdown[];
   citations: KnowledgeCitation[];
-  algorithmVersion: 'career-match-v1';
+  algorithmVersion: string;
   generatedAt: string;
 }
 
@@ -245,7 +301,19 @@ export interface CareerMatchResult {
   totalWeight: number;
   dimensionBreakdown: CareerMatchBreakdownItem[];
   citations: KnowledgeCitation[];
-  algorithmVersion: 'career-match-v1';
+  algorithmVersion: string;
+  catalogVersion: string | null;
+  scoringStatus: 'ready' | 'insufficient_evidence' | 'not_eligible';
+  confidence: number | null;
+  knownCoverage: number;
+  strengths: CareerMatchBreakdownItem[];
+  priorityGaps: CareerMatchBreakdownItem[];
+  changeSummary: {
+    previousScore: number | null;
+    currentScore: number | null;
+    delta: number | null;
+    reason: string;
+  } | null;
   generatedAt: string;
 }
 

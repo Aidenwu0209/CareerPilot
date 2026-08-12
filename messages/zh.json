@@ -1861,7 +1861,7 @@
     "nav": "职业发展",
     "subnav": {
       "label": "职业发展中心导航",
-      "overview": "驾驶舱",
+      "overview": "职业总览",
       "profile": "职业画像",
       "goals": "职业目标",
       "jobs": "岗位知识",
@@ -1871,6 +1871,8 @@
     "common": {
       "notSet": "未设置",
       "insufficientEvidence": "证据不足",
+      "notScored": "暂不评分",
+      "knowledgePendingReview": "岗位知识待审核",
       "goalRequired": "请先设置目标",
       "unknown": "未知",
       "pendingReview": "待确认",
@@ -1933,6 +1935,16 @@
       "transfers_to": "转岗方向",
       "related_to": "相关岗位"
     },
+    "relevanceType": {
+      "primary": "核心岗位",
+      "adjacent": "相邻岗位",
+      "cross_major": "跨专业岗位",
+      "stretch": "进阶岗位"
+    },
+    "reviewStatus": {
+      "reviewed": "已审核",
+      "review_required": "待审核"
+    },
     "pathStageStatus": {
       "locked": "尚未开始",
       "current": "当前阶段",
@@ -1954,7 +1966,7 @@
       "evidenceCoverageDescription": "有可追溯材料支撑的能力要求比例"
     },
     "overview": {
-      "eyebrow": "学生职业驾驶舱",
+      "eyebrow": "学生职业总览",
       "title": "看清目标、差距与下一步",
       "description": "把简历、项目、面试和教师指导汇入同一份职业发展档案，持续记录真实成长。",
       "viewMatch": "查看人岗匹配",
@@ -2051,7 +2063,8 @@
         "editTitle": "调整主目标",
         "description": "目标改变会影响后续匹配和成长任务，请根据真实意向填写。",
         "occupation": "目标岗位",
-        "occupationHelp": "第一版岗位均来自人工审核的演示知识目录。",
+        "occupationPlaceholder": "请选择一个真实目标岗位",
+        "occupationHelp": "岗位来自版本化知识目录；没有明确目标时，系统不会自动选择或评分。",
         "targetDate": "期望达成日期",
         "rationale": "选择理由",
         "rationalePlaceholder": "例如：我喜欢用技术解决真实问题，并希望从前端开发开始积累产品实践……",
@@ -2085,6 +2098,25 @@
       "listLabel": "岗位知识列表",
       "matchScore": "匹配 {score}%",
       "viewOccupation": "查看岗位详情",
+      "separator": "、",
+      "relatedMajors": "相关专业：{majors}",
+      "loadFailed": "岗位目录暂时无法加载，已保留当前页面内容。",
+      "filters": {
+        "title": "筛选岗位", "all": "全部", "collegeCode": "学院", "majorCode": "专业",
+        "jobFamily": "岗位族", "industry": "行业", "city": "城市", "educationLevel": "学历",
+        "relevanceType": "专业关联", "relationType": "职业关系", "reset": "重置筛选"
+      },
+      "pagination": {
+        "label": "岗位目录分页", "previous": "上一页", "next": "下一页",
+        "status": "第 {start}–{end} 项，共 {total} 项"
+      },
+      "compare": {
+        "title": "岗位对比", "description": "比较 2–3 个岗位的方向与证据，不用单一分数替你做决定。",
+        "help": "已选择 {count}/3 个岗位；至少选择 2 个开始对比", "select": "加入对比", "pendingReview": "待审核，暂不可对比",
+        "action": "比较匹配证据", "tableCaption": "已选岗位摘要对比", "dimension": "对比维度",
+        "jobFamily": "岗位族", "industry": "行业", "city": "城市", "educationLevel": "学历要求",
+        "matchScore": "岗位匹配度"
+      },
       "empty": {
         "title": "没有找到相关岗位",
         "description": "尝试使用更短的岗位名称或类别关键词。"
@@ -2093,15 +2125,34 @@
     "jobDetail": {
       "back": "返回岗位知识",
       "matchAction": "评估我的匹配度",
+      "matchUnavailable": "待审核，暂不可匹配",
       "code": "岗位代码：{code}",
       "entryLevel": "入门层级：{level}",
+      "jobFamily": "岗位族：{value}",
+      "industry": "行业：{value}",
+      "catalogVersion": "目录版本：{value}",
+      "metadataLabel": "岗位基础信息",
+      "cities": "常见城市",
+      "educationLevels": "学历要求",
+      "aliases": "市场常用名称",
+      "reviewRequired": {
+        "title": "候选岗位知识待审核",
+        "description": "该岗位的能力要求尚未完成审核，当前仅供浏览，暂不支持人岗匹配或评分。"
+      },
       "requirements": {
         "title": "岗位能力要求",
         "description": "权重和目标分用于确定性匹配，缺少学生证据时不会按零分处理。",
         "required": "必要能力",
         "preferred": "加分能力",
         "target": "{name}目标要求",
-        "weight": "匹配权重 {weight}"
+        "weight": "匹配权重 {weight}",
+        "emptyTitle": "岗位能力要求待补充审核",
+        "emptyDescription": "当前没有可用于匹配的已审核要求，因此不会生成岗位匹配分。"
+      },
+      "majors": {
+        "title": "专业与岗位关系",
+        "description": "区分核心、相邻、跨专业与进阶方向，关系均来自目录映射。",
+        "empty": "当前暂无已核验的专业映射。"
       },
       "graph": {
         "title": "职业关系",
@@ -2112,6 +2163,8 @@
         "title": "知识来源",
         "description": "岗位解释来自可追溯资料，不由模型凭空生成。",
         "verified": "核验于 {date}",
+        "sourceVersion": "来源版本：{version}",
+        "reviewStatus": "审核状态：{status}",
         "empty": "当前岗位资料不足，暂不提供无来源结论。"
       }
     },
@@ -2121,16 +2174,59 @@
       "description": "结构化规则负责评分，证据决定可信度；RAG 仅用于检索、解释和引用。",
       "viewOccupation": "查看岗位知识",
       "selectLabel": "选择要评估的岗位",
+      "selectPlaceholder": "请选择岗位",
       "recalculate": "查看匹配",
       "primaryGoal": "当前主目标",
       "comparison": "岗位对比",
       "metricsLabel": "匹配结果指标",
       "confidence": "结果置信度",
-      "confidenceDescription": "已知要求权重占全部要求权重的比例",
+      "confidenceDescription": "已知要求和已核验证据共同决定可信程度",
+      "catalogVersion": "岗位目录 {version}",
+      "compareForm": {
+        "legend": "选择匹配与对比岗位", "help": "主岗位必选，可再选择 1–2 个岗位。重复岗位会自动去重。",
+        "primary": "主对比岗位", "comparison": "对比岗位 {number}", "none": "不添加"
+      },
+      "noGoal": {
+        "title": "先确定目标，再开始人岗匹配",
+        "description": "系统不会替你默认选择第一个岗位。请设置主目标，或在上方明确选择本次要了解的岗位。",
+        "action": "设置职业目标"
+      },
+      "insufficient": {
+        "title": "证据覆盖不足，暂不显示匹配分",
+        "description": "先同步简历、项目、模拟面试、课程或证书材料。达到最低覆盖要求后，系统才会给出可解释的匹配结果。",
+        "coverage": "已知要求覆盖 {known}%，已核验证据覆盖 {evidence}%", "viewProfile": "查看职业画像"
+      },
+      "notEligible": {
+        "title": "候选岗位知识待审核，暂不支持评分",
+        "description": "该岗位的结构化能力要求尚未完成审核。这不是你的材料不足；岗位知识审核通过前，系统不会计算匹配度。"
+      },
+      "comparisonTable": {
+        "title": "多岗位证据对比", "description": "并排查看匹配、证据与关键差距，不按最高分自动推荐岗位。",
+        "caption": "2到3个岗位的匹配结果对比", "dimension": "对比维度", "score": "岗位匹配度",
+        "evidenceCoverage": "证据覆盖率", "confidence": "结果置信度", "strength": "首要优势", "gap": "首要差距"
+      },
+      "summary": {
+        "label": "匹配解释摘要", "strengths": "前三项优势", "strengthsDescription": "仅展示有材料支持且达到要求的能力",
+        "gaps": "优先差距", "gapsDescription": "必要能力和较大差距优先", "actions": "下一步行动",
+        "actionsDescription": "每项行动对应一条真实差距", "verifiedEvidence": "已有核验证据支持",
+        "noStrengths": "现有证据还不足以确认优势。", "noGaps": "当前没有已确认的优先差距。",
+        "noActions": "补充材料后生成针对性行动。"
+      },
+      "change": { "title": "本次匹配变化说明" },
+      "review": {
+        "action": "映射不准确？申请复核", "title": "申请人工复核", "description": "反馈岗位要求、能力映射或证据归因问题。",
+        "scope": "请在邮件中说明哪项要求或证据不准确，并提供可核验的补充材料。",
+        "notice": "当前版本通过支持邮箱接收复核申请，不会自动改写评分或岗位知识。",
+        "cancel": "取消", "contact": "联系支持", "emailSubject": "申请复核：{occupation}",
+        "emailBody": "岗位：{occupation}\n岗位代码：{code}\n\n需要复核的问题：\n补充证据或来源："
+      },
       "breakdown": {
         "title": "要求—证据—差距—行动",
         "description": "展开每项要求，查看学生材料和下一步建议。",
         "required": "必要要求",
+        "requiredTitle": "必要能力",
+        "preferredTitle": "加分能力",
+        "count": "{count} 项",
         "studentScore": "当前：{score}",
         "targetScore": "目标：{score}",
         "requirementLabel": "岗位要求",
@@ -2146,6 +2242,11 @@
         "description": "引用只解释结果，不参与或修改结构化分数。"
       },
       "generatedAt": "结果生成于 {date}"
+    },
+    "materials": {
+      "action": "同步职业材料", "syncing": "正在同步…",
+      "success": "已处理 {sources} 份材料，新增 {evidence} 条能力证据",
+      "warning": "部分材料未能结构化，请检查材料内容后重试", "error": "材料同步失败，请稍后重试"
     },
     "path": {
       "eyebrow": "成长路径",

@@ -1,0 +1,87 @@
+{
+  "catalog_version": "gcc-2026-20260812-p2-84190f91",
+  "generated_at": "2026-08-12T13:37:00Z",
+  "items": [
+    {
+      "id": "college-f81509193ed1",
+      "name": "会计学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ]
+    },
+    {
+      "id": "college-40d0f38d3655",
+      "name": "艺术设计学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ]
+    },
+    {
+      "id": "college-42827a4d7811",
+      "name": "国际学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-44da4b2ff406"
+      ]
+    },
+    {
+      "id": "college-f88c0bbc7e8a",
+      "name": "管理学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ]
+    },
+    {
+      "id": "college-f162d01a29c7",
+      "name": "经济学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ]
+    },
+    {
+      "id": "college-2ebbd732ac33",
+      "name": "外国语学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ]
+    },
+    {
+      "id": "college-6983c96d384e",
+      "name": "法学院（知识产权学院）",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ]
+    },
+    {
+      "id": "college-590386159888",
+      "name": "数字经济产业学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ]
+    },
+    {
+      "id": "college-83c3e535cd47",
+      "name": "现代信息产业学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-d3b13ec733d9"
+      ]
+    },
+    {
+      "id": "college-a9933ba09fb4",
+      "name": "信息技术与工程学院",
+      "review_status": "reviewed",
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ]
+    }
+  ],
+  "schema_version": "1.0.0"
+}
