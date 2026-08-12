@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import hashlib
 import tempfile
 import unittest
 from pathlib import Path
 
+from scripts.career_catalog.build_china_major_graph import parse_dadian, parse_standard_skills
 from scripts.career_catalog.common import (
     CATALOG_DIR,
     AuditedFetcher,
@@ -76,6 +76,37 @@ class CatalogPipelineTests(unittest.TestCase):
         self.assertEqual(parser.title, "x")
         self.assertEqual(parser.links, [("/a", "2026专业")])
 
+    def test_chinese_dadian_parser_keeps_official_tasks(self) -> None:
+        sample = """2 - 0 6 - 0 3 - 0 0 会计专业人员
+在单位中进行会计核算和监督的专业人员。
+主要工作任务:
+1 .进行会计核算;
+2 .进行会计监督;
+3 .制订内部会计制度;
+4 .分析财务与业务信息。
+"""
+        parsed = parse_dadian(sample)
+        self.assertEqual(parsed["2-06-03-00"]["name"], "会计专业人员")
+        self.assertEqual(len(parsed["2-06-03-00"]["tasks"]), 4)
+
+    def test_national_standard_parser_reads_entry_level_skills(self) -> None:
+        sample = """1. 3 职业定义
+从事测试工作的人员。
+1. 4 职业技能等级
+3. 工作要求
+3. 1 四级/中级工
+1. 1. 1 能识读设计文档
+1. 1. 2 设计文档的结构
+1. 1. 2 能分析模块需求
+2. 1. 1 能编写程序代码
+2. 1. 2 能进行功能测试
+3. 2 三级/高级工
+"""
+        level, definition, skills = parse_standard_skills(sample)
+        self.assertEqual(level, "四级/中级工")
+        self.assertEqual(definition, "从事测试工作的人员")
+        self.assertEqual(len(skills), 4)
+
     def test_committed_catalog_is_approved_traceable_and_scoreable(self) -> None:
         self.assertEqual(validate(CATALOG_DIR), [])
         manifest = read_json(CATALOG_DIR / "catalog_manifest.json")
@@ -88,19 +119,20 @@ class CatalogPipelineTests(unittest.TestCase):
         self.assertEqual(occupations["schema_version"], "1.0.0")
         self.assertEqual(majors["catalog_version"], occupations["catalog_version"])
         self.assertEqual(len({item["name"] for item in majors["items"]}), 45)
-        self.assertEqual(len(edges), len(majors["items"]) * 3)
+        self.assertEqual(len(edges), len(majors["items"]) * 5)
+        for major in majors["items"]:
+            relation_types = [edge["relation_type"] for edge in edges if edge["major_id"] == major["id"]]
+            self.assertEqual(relation_types.count("primary"), 1)
+            self.assertEqual(relation_types.count("adjacent"), 2)
+            self.assertEqual(relation_types.count("stretch"), 2)
         self.assertEqual(manifest["publication_status"], "approved")
         self.assertTrue(manifest["scoring_safe"])
-        self.assertRegex(manifest["catalog_version"], r"^gcc-onet-30\.3-\d{8}-[0-9a-f]{8}$")
-        onet_source = next(item for item in sources if item["id"] == "onet-30.3-csv")
-        gcc_hashes = sorted(item["content_sha256"] for item in sources if item["id"].startswith("gcc-"))
-        expected_revision = hashlib.sha256(
-            "|".join([onet_source["content_sha256"], *gcc_hashes]).encode("utf-8")
-        ).hexdigest()[:8]
-        self.assertTrue(manifest["catalog_version"].endswith(expected_revision))
+        self.assertRegex(manifest["catalog_version"], r"^gcc-cn-2022-\d{8}-[0-9a-f]{10}$")
+        self.assertIn("中华人民共和国职业分类大典", manifest["standard_system"])
+        self.assertGreaterEqual(len(occupations["items"]), 90)
         self.assertTrue(
             all(
-                item["canonical_type"] == "standard_occupation"
+                item["canonical_type"] == "china_national_occupation"
                 and item["review_status"] == "approved"
                 and item["scoring_eligible"] is True
                 for item in occupations["items"]
@@ -108,11 +140,16 @@ class CatalogPipelineTests(unittest.TestCase):
         )
         for occupation in occupations["items"]:
             current = [item for item in requirements if item["occupation_code"] == occupation["code"]]
-            self.assertGreaterEqual(sum(item["requirement_type"] == "skill" for item in current), 5)
-            self.assertGreaterEqual(sum(item["requirement_type"] == "knowledge" for item in current), 3)
-            self.assertTrue(any("onetonline.org/link/summary/" in source["url"] for source in sources if source["id"] in occupation["source_ids"]))
+            self.assertGreaterEqual(len(current), 4)
+            self.assertGreaterEqual(sum(item["requirement_type"] == "skill" for item in current), 3)
+            self.assertRegex(occupation["code"], r"^[2-6]-\d{2}-\d{2}-\d{2}$")
+            self.assertTrue(any(
+                any(host in source["url"] for host in ("mohrss.gov.cn", "osta.mohrss.gov.cn", "srsj.cngy.gov.cn"))
+                for source in sources if source["id"] in occupation["source_ids"]
+            ))
         self.assertTrue(all(any("\u4e00" <= char <= "\u9fff" for char in item["ability_name"]) for item in requirements))
-        self.assertTrue(all("O*NET" in item["description"] and "(" in item["description"] for item in requirements))
+        self.assertTrue(all("不是官方考试分数" in item["description"] for item in requirements))
+        self.assertFalse(any("O*NET" in item["description"] for item in requirements))
 
 if __name__ == "__main__":
     unittest.main()

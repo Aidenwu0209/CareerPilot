@@ -2129,8 +2129,8 @@
       "back": "返回岗位知识",
       "matchAction": "评估我的匹配度",
       "matchUnavailable": "待审核，暂不可匹配",
-      "code": "O*NET-SOC 标准代码：{code}",
-      "standardOccupation": "标准岗位，可参与匹配",
+      "code": "中国职业分类代码：{code}",
+      "standardOccupation": "中国标准岗位，可参与匹配",
       "entryLevel": "入门层级：{level}",
       "jobFamily": "岗位族：{value}",
       "industry": "行业：{value}",
@@ -2145,7 +2145,7 @@
       },
       "requirements": {
         "title": "岗位能力要求",
-        "description": "权重和目标分用于确定性匹配，缺少学生证据时不会按零分处理。",
+        "description": "能力要求来自中国官方职业资料；CareerPilot 采用统一证据量表做确定性匹配，缺少证据不按零分处理。",
         "required": "必要能力",
         "preferred": "加分能力",
         "target": "{name}目标要求",
@@ -2167,8 +2167,8 @@
         "title": "知识来源",
         "description": "岗位解释来自可追溯资料，不由模型凭空生成。",
         "verified": "核验于 {date}",
-        "onetTitle": "直接来源：美国劳工部 O*NET 30.3",
-        "onetDescription": "岗位名称、任务、技能与知识要求来自 O*NET 30.3 结构化职业数据；页面引用可直接打开核验。",
+        "standardTitle": "中国标准来源：职业分类大典与现行国家职业标准",
+        "standardDescription": "岗位代码与工作任务依据《中华人民共和国职业分类大典（2022年版）》；有现行国家职业标准的岗位优先采用其初始等级技能要求，其余岗位使用大典主要工作任务做简易判定。",
         "sourceVersion": "来源版本：{version}",
         "reviewStatus": "审核状态：{status}",
         "empty": "当前岗位资料不足，暂不提供无来源结论。"
@@ -2177,7 +2177,11 @@
     "matching": {
       "eyebrow": "可解释人岗匹配",
       "title": "知道差多少，也知道为什么",
-      "description": "结构化规则负责评分，证据决定可信度；RAG 仅用于检索、解释和引用。",
+      "description": "中国官方职业要求负责定义岗位，结构化规则负责匹配，证据决定可信度；RAG 仅用于检索、解释和引用。",
+      "disclaimer": {
+        "title": "匹配分不是职业资格或技能等级认定",
+        "description": "系统用 0–100 的统一证据量表比较学生材料与岗位要求，60 分只是产品内满足阈值，不等同于国家职业资格考试、职业技能等级评价或录用结论。"
+      },
       "viewOccupation": "查看岗位知识",
       "selectLabel": "选择要评估的岗位",
       "selectPlaceholder": "请选择岗位",

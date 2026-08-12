@@ -134,7 +134,7 @@ export interface OccupationSummary {
     collegeName: string;
     relevanceType: MajorOccupationRelationType;
   }>;
-  canonicalType?: 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
+  canonicalType?: 'china_national_occupation' | 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
   reviewStatus?: string;
   scoringEligible?: boolean;
 }

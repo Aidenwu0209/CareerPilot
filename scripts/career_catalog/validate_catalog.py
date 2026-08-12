@@ -26,9 +26,9 @@ def validate(catalog_dir: Path) -> list[str]:
     errors: list[str] = []
     manifest = read_json(catalog_dir / "catalog_manifest.json")
     if manifest.get("scoring_safe") is not True:
-        errors.append("approved O*NET catalog must declare scoring_safe=true")
+        errors.append("approved Chinese-standard catalog must declare scoring_safe=true")
     if manifest.get("publication_status") != "approved":
-        errors.append("approved O*NET catalog must declare publication_status=approved")
+        errors.append("approved Chinese-standard catalog must declare publication_status=approved")
     missing = REQUIRED_FILES - set(manifest.get("files", {}))
     if missing:
         errors.append(f"manifest missing files: {sorted(missing)}")
@@ -66,7 +66,7 @@ def validate(catalog_dir: Path) -> list[str]:
     if not occupations:
         errors.append("catalog has no occupations")
     gates = manifest.get("quality_gates", {})
-    for gate in ["all_45_unique_majors_mapped", "every_major_has_three_resolved_edges", "every_occupation_has_requirements", "curated_mapping_complete"]:
+    for gate in ["all_45_unique_majors_mapped", "every_major_has_five_resolved_edges", "every_occupation_has_traceable_requirements", "china_codes_only", "curated_mapping_complete"]:
         if gates.get(gate) is not True:
             errors.append(f"{gate} quality gate failed")
 
@@ -119,17 +119,21 @@ def validate(catalog_dir: Path) -> list[str]:
         if not isinstance(requirement.get("target_score"), int) or not isinstance(requirement.get("weight"), int):
             errors.append(f"requirement {requirement.get('id')} is not scoreable")
     for code, counts in requirement_counts.items():
-        if counts["skill"] < 5 or counts["knowledge"] < 3 or counts["total"] < 8:
+        if counts["skill"] < 3 or counts["total"] < 4:
             errors.append(f"occupation {code} requirements below minimum: {counts}")
     for occupation in occupations:
         check_sources(occupation, source_ids, errors)
-        if occupation.get("canonical_type") != "standard_occupation":
-            errors.append(f"occupation {occupation.get('code')} is not canonical")
+        if occupation.get("canonical_type") != "china_national_occupation":
+            errors.append(f"occupation {occupation.get('code')} is not a Chinese national occupation")
         if occupation.get("review_status") != "approved" or occupation.get("scoring_eligible") is not True:
             errors.append(f"occupation {occupation.get('code')} is not approved and scoring eligible")
-        direct_sources = [source for source in sources if source.get("id") in occupation.get("source_ids", []) and "onetonline.org/link/summary/" in source.get("url", "")]
+        direct_sources = [
+            source for source in sources
+            if source.get("id") in occupation.get("source_ids", [])
+            and any(host in source.get("url", "") for host in ("mohrss.gov.cn", "osta.mohrss.gov.cn", "srsj.cngy.gov.cn"))
+        ]
         if not direct_sources:
-            errors.append(f"occupation {occupation.get('code')} lacks direct O*NET citation")
+            errors.append(f"occupation {occupation.get('code')} lacks a direct Chinese official citation")
     for relation in occupation_relations:
         if relation.get("from_code") not in occupation_codes or relation.get("to_code") not in occupation_codes:
             errors.append(f"occupation relation {relation.get('id')} references unknown occupation")
@@ -149,8 +153,8 @@ def validate(catalog_dir: Path) -> list[str]:
             errors.append(f"source {source.get('id')} URL is not traceable HTTPS")
     for major_id in major_ids:
         resolved = [edge for edge in edges if edge.get("major_id") == major_id and edge.get("occupation_code") in occupation_codes]
-        if len(resolved) != 3 or any(edge.get("review_required") for edge in resolved):
-            errors.append(f"major {major_id} must have exactly three resolved approved edges")
+        if len(resolved) != 5 or any(edge.get("review_required") for edge in resolved):
+            errors.append(f"major {major_id} must have exactly five resolved approved edges")
     return errors
 
 

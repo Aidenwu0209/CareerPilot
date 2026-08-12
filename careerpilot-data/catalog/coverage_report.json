@@ -1,17 +1,17 @@
 {
-  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
-  "generated_at": "2026-08-12T14:40:20Z",
+  "catalog_version": "gcc-cn-2022-20260812-a47edb7d63",
+  "generated_at": "2026-08-12T17:14:03Z",
   "items": [
     {
       "major_id": "major-5161a41b9a13",
       "major_name": "会计学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -19,11 +19,11 @@
       "major_name": "财务管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -31,11 +31,11 @@
       "major_name": "审计学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -43,11 +43,11 @@
       "major_name": "税收学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -55,11 +55,11 @@
       "major_name": "视觉传达设计",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -67,11 +67,11 @@
       "major_name": "环境设计",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -79,11 +79,11 @@
       "major_name": "产品设计",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -91,11 +91,11 @@
       "major_name": "数字媒体艺术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -103,11 +103,11 @@
       "major_name": "公共艺术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -115,11 +115,11 @@
       "major_name": "互联网金融",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -127,11 +127,11 @@
       "major_name": "物流管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -139,11 +139,11 @@
       "major_name": "国际商务",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -151,11 +151,11 @@
       "major_name": "财务管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -163,11 +163,11 @@
       "major_name": "金融学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -175,11 +175,11 @@
       "major_name": "市场营销",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -187,11 +187,11 @@
       "major_name": "会计学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -199,11 +199,11 @@
       "major_name": "电子商务",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -211,11 +211,11 @@
       "major_name": "智能科学与技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -223,11 +223,11 @@
       "major_name": "计算机科学与技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -235,11 +235,11 @@
       "major_name": "软件工程",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -247,11 +247,11 @@
       "major_name": "商务英语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -259,11 +259,11 @@
       "major_name": "国际商务",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -271,11 +271,11 @@
       "major_name": "大数据与会计",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -283,11 +283,11 @@
       "major_name": "国际金融",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -295,11 +295,11 @@
       "major_name": "商务英语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -307,11 +307,11 @@
       "major_name": "视觉传达",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -319,11 +319,11 @@
       "major_name": "物流管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -331,11 +331,11 @@
       "major_name": "供应链管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -343,11 +343,11 @@
       "major_name": "市场营销",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -355,11 +355,11 @@
       "major_name": "旅游管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -367,11 +367,11 @@
       "major_name": "健康服务与管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -379,11 +379,11 @@
       "major_name": "酒店管理",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -391,11 +391,11 @@
       "major_name": "金融学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -403,11 +403,11 @@
       "major_name": "国际经济与贸易",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -415,11 +415,11 @@
       "major_name": "投资学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -427,11 +427,11 @@
       "major_name": "互联网金融",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -439,11 +439,11 @@
       "major_name": "金融科技",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -451,11 +451,11 @@
       "major_name": "英语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -463,11 +463,11 @@
       "major_name": "商务英语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -475,11 +475,11 @@
       "major_name": "日语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -487,11 +487,11 @@
       "major_name": "德语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -499,11 +499,11 @@
       "major_name": "西班牙语",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -511,11 +511,11 @@
       "major_name": "法学",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -523,11 +523,11 @@
       "major_name": "信用风险管理与法律防控",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -535,11 +535,11 @@
       "major_name": "国际经贸规则",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -547,11 +547,11 @@
       "major_name": "电子商务",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -559,11 +559,11 @@
       "major_name": "大数据管理与应用",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -571,11 +571,11 @@
       "major_name": "国际经济与贸易",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -583,11 +583,11 @@
       "major_name": "数字经济",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -595,11 +595,11 @@
       "major_name": "软件工程",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -607,11 +607,11 @@
       "major_name": "计算机科学与技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -619,11 +619,11 @@
       "major_name": "物联网工程",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -631,11 +631,11 @@
       "major_name": "人工智能",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -643,11 +643,11 @@
       "major_name": "数据科学与大数据技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -655,11 +655,11 @@
       "major_name": "计算机应用技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -667,11 +667,11 @@
       "major_name": "软件技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -679,11 +679,11 @@
       "major_name": "计算机科学与技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -691,11 +691,11 @@
       "major_name": "软件工程",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -703,11 +703,11 @@
       "major_name": "物联网工程",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -715,11 +715,11 @@
       "major_name": "数据科学与大数据技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -727,11 +727,11 @@
       "major_name": "信息管理与信息系统",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -739,11 +739,11 @@
       "major_name": "人工智能",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -751,11 +751,11 @@
       "major_name": "网络空间安全",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     },
     {
@@ -763,23 +763,25 @@
       "major_name": "智能科学与技术",
       "orphan": false,
       "relations": {
-        "adjacent": 1,
+        "adjacent": 2,
         "primary": 1,
-        "stretch": 1
+        "stretch": 2
       },
-      "resolved_occupation_edges": 3,
+      "resolved_occupation_edges": 5,
       "review_required_edges": 0
     }
   ],
   "schema_version": "1.0.0",
   "summary": {
     "colleges": 10,
-    "edges": 192,
+    "dadian_task_model": 60,
+    "edges": 320,
     "major_records": 64,
-    "occupation_relations": 301,
-    "occupations": 54,
+    "national_standard": 32,
+    "occupation_relations": 206,
+    "occupations": 92,
     "orphan_majors": 0,
-    "requirements": 702,
+    "requirements": 765,
     "unique_majors": 45
   }
 }

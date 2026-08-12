@@ -64,7 +64,7 @@ export const occupations = sqliteTable('occupations', {
   code: text('code').primaryKey(),
   name: text('name').notNull(),
   category: text('category').notNull(),
-  canonicalType: text('canonical_type', { enum: ['national_occupation', 'standard_occupation', 'market_alias', 'unresolved_placeholder'] }).notNull().default('national_occupation'),
+  canonicalType: text('canonical_type', { enum: ['china_national_occupation', 'national_occupation', 'standard_occupation', 'market_alias', 'unresolved_placeholder'] }).notNull().default('national_occupation'),
   jobFamily: text('job_family').notNull().default(''),
   industry: text('industry').notNull().default(''),
   cities: text('cities', { mode: 'json' }).notNull().default('[]'),

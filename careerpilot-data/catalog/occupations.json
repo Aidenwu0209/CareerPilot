@@ -1,1161 +1,1906 @@
 {
-  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
-  "generated_at": "2026-08-12T14:40:20Z",
+  "catalog_version": "gcc-cn-2022-20260812-a47edb7d63",
+  "generated_at": "2026-08-12T17:14:03Z",
   "items": [
     {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-2021.00",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate marketing policies and programs, such as determining the demand for products and services offered by a firm and its competitors, and identify potential customers. Develop pricing strategies with the goal of maximizing the firm's profits or share of the market while ensuring the firm's customers are satisfied. Oversee product development or monitor trends that indicate the need for new products and services.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "市场营销经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-2021.00"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-3031.00",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate accounting, investing, banking, insurance, securities, and other financial activities of a branch, office, or department of an establishment.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "财务经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-3031.00"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-3031.03",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate investment strategy or operations for a large pool of liquid assets supplied by institutional investors or individual investors.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "投资基金经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-3031.03"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-3071.04",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Direct or coordinate production, purchasing, warehousing, distribution, or financial forecasting services or activities to limit costs and improve accuracy, customer service, or safety. Examine existing procedures or opportunities for streamlining activities to meet product distribution needs. Direct the movement, storage, or processing of inventory.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "供应链经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-3071.04"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-9081.00",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate activities of an organization or department that provides lodging and other accommodations.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "住宿业经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-9081.00"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-9111.00",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate medical and health services in hospitals, clinics, managed care organizations, public health agencies, or similar organizations.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "医疗与健康服务经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-9111.00"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "管理岗位",
-      "cities": [],
-      "code": "11-9199.02",
-      "description": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。\nO*NET original: Plan, direct, or coordinate activities of an organization to ensure compliance with ethical or regulatory standards.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "组织管理与运营",
-      "job_family": "管理岗位",
-      "name": "合规经理",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-11-9199.02"
-      ],
-      "summary": "规划、指导并协调组织或业务单元的专业活动，承担目标制定、资源配置、过程管理与结果改进。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1041.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Examine, evaluate, and investigate eligibility for or conformity with laws and regulations governing contract compliance of licenses and permits, and perform other compliance and enforcement inspection and analysis activities not classified elsewhere.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "合规专员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1041.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1081.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Analyze and coordinate the ongoing logistical functions of a firm or organization. Responsible for the entire life cycle of a product, including acquisition, distribution, internal allocation, delivery, and final disposal of resources.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "物流师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1081.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1081.01",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Design or analyze operational solutions for projects such as transportation optimization, network modeling, process and methods analysis, cost containment, capacity enhancement, routing and shipment optimization, or information management.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "物流工程师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1081.01"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1081.02",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Analyze product delivery or supply chain processes to identify or recommend changes. May manage route activity including invoicing, electronic bills, and shipment tracing.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "物流分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1081.02"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1111.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Conduct organizational studies and evaluations, design systems and procedures, conduct work simplification and measurement studies, and prepare operations and procedures manuals to assist management in operating more efficiently and effectively. Includes program analysts and management consultants.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "管理分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1111.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1161.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Research conditions in local, regional, national, or online markets. Gather information to determine potential sales of a product or service, or plan a marketing or advertising campaign. May gather information on competitors, prices, sales, and methods of marketing and distribution. May employ search marketing tactics, analyze web metrics, and develop recommendations to increase search engine ranking and visibility to target markets.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "市场研究分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1161.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-1161.01",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Employ search marketing tactics to increase visibility and engagement with content, products, or services in Internet-enabled devices or interfaces. Examine search query behaviors on general or specialty search engines or other Internet-based content. Analyze research, data, or technology to understand user intent and measure outcomes for ongoing optimization.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "搜索营销策略师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-1161.01"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2011.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Examine, analyze, and interpret accounting records to prepare financial statements, give advice, or audit and evaluate statements prepared by others. Install or advise on systems of recording costs or other financial and budgetary data.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "会计师与审计师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2011.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2052.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Advise clients on financial plans using knowledge of tax and investment strategies, securities, insurance, pension plans, and real estate. Duties include assessing clients' assets, liabilities, cash flow, insurance coverage, tax status, and financial objectives. May also buy and sell financial assets for clients.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "个人理财顾问",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2052.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2061.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Enforce or ensure compliance with laws and regulations governing financial and securities institutions and financial and real estate transactions. May examine, verify, or authenticate records.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "金融审查专员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2061.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2081.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Determine tax liability or collect taxes from individuals or business firms according to prescribed laws and regulations.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "税务审查与征收专员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2081.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2082.00",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Prepare tax returns for individuals or small businesses.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "税务申报专员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2082.00"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "商业与金融岗位",
-      "cities": [],
-      "code": "13-2099.01",
-      "description": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。\nO*NET original: Develop quantitative techniques to inform securities investing, equities investing, pricing, or valuation of financial instruments. Develop mathematical or statistical models for risk management, asset optimization, pricing, or relative value analysis.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "商业、金融与专业服务",
-      "job_family": "商业与金融岗位",
-      "name": "金融量化分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-13-2099.01"
-      ],
-      "summary": "运用商业、金融、合规或运营分析方法收集信息、评估问题并形成可执行的专业建议。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1211.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Analyze science, engineering, business, and other data processing problems to develop and implement solutions to complex applications problems, system administration issues, or network concerns. Perform systems management and integration functions, improve existing computer systems, and review computer system capabilities, workflow, and schedule limitations. May analyze or recommend commercially available software.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "计算机系统分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1211.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1211.01",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Apply knowledge of nursing and informatics to assist in the design, development, and ongoing modification of computerized health care systems. May educate staff and assist in problem solving to promote the implementation of the health care system.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "健康信息学专家",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1211.01"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1212.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Plan, implement, upgrade, or monitor security measures for the protection of computer networks and information. Assess system vulnerabilities for security risks and propose and implement risk mitigation strategies. May ensure appropriate security controls are in place that will safeguard digital files and vital electronic infrastructure. May respond to computer security breaches and viruses.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "信息安全分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1212.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1221.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Conduct research into fundamental computer and information science as theorists, designers, or inventors. Develop solutions to problems in the field of computer hardware and software.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "计算机与信息研究科学家",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1221.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1232.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Provide technical assistance to computer users. Answer questions or resolve computer problems for clients in person, via telephone, or electronically. May provide assistance concerning the use of computer hardware and software, including printing, installation, word processing, electronic mail, and operating systems.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "计算机用户支持专家",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1232.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1241.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Design and implement computer and information networks, such as local area networks (LAN), wide area networks (WAN), intranets, extranets, and other data communications networks. Perform network modeling, analysis, and planning, including analysis of capacity needs for network infrastructures. May also design network and computer security measures. May research and recommend network and data communications hardware and software.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "计算机网络架构师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1241.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1243.01",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Design, model, or implement corporate data warehousing activities. Program and configure warehouses of database information and provide support to warehouse users.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "数据仓库专家",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1243.01"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1244.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Install, configure, and maintain an organization's local area network (LAN), wide area network (WAN), data communications network, operating systems, and physical and virtual servers. Perform system monitoring and verify the integrity and availability of hardware, network, and server resources and systems. Review system and application logs and verify completion of scheduled jobs, including system backups. Analyze network and server resource consumption and control user access. Install and upgrade software and maintain software licenses. May assist in network modeling, analysis, planning, and coordination between network and data communications hardware and software.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "网络与计算机系统管理员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1244.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1252.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Research, design, and develop computer and network software or specialized utility programs. Analyze user needs and develop software solutions, applying principles and techniques of computer science, engineering, and mathematical analysis. Update software or enhance existing software capabilities. May work with computer hardware engineers to integrate hardware and software systems, and develop specifications and performance requirements. May maintain databases within an application area, working individually or coordinating database development as part of a team.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "软件开发工程师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1252.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1253.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Develop and execute software tests to identify software problems and their causes. Test system modifications to prepare for implementation. Document software and application defects using a bug tracking system and report defects to software or web developers. Create and maintain databases of known defects. May participate in software design reviews to provide input on functional requirements, operational characteristics, product designs, and schedules.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "软件质量保证分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1253.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1254.00",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Develop and implement websites, web applications, application databases, and interactive web interfaces. Evaluate code to ensure that it is properly structured, meets industry standards, and is compatible with browsers and devices. Optimize website performance, scalability, and server-side code and processes. May develop website infrastructure and integrate websites with other computer applications.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "Web开发工程师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1254.00"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1299.05",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Develop and oversee the implementation of information security procedures and policies. Build, maintain and upgrade security technology, such as firewalls, for the safe use of computer networks and the transmission and retrieval of information. Design and implement appropriate security controls to identify vulnerabilities and protect digital files and electronic infrastructures. Monitor and respond to computer security breaches, viruses, and intrusions, and perform forensic investigation. May oversee the assessment of information security systems.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "信息安全工程师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1299.05"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-1299.08",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Design and develop solutions to complex applications problems, system administration issues, or network concerns. Perform systems management and integration functions.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "计算机系统工程师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-1299.08"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "计算机与数学岗位",
-      "cities": [],
-      "code": "15-2051.01",
-      "description": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。\nO*NET original: Produce financial and market intelligence by querying data repositories and generating periodic reports. Devise methods for identifying data patterns and trends in available information sources.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "数字技术与信息服务",
-      "job_family": "计算机与数学岗位",
-      "name": "商业智能分析师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-15-2051.01"
-      ],
-      "summary": "分析、设计、开发、测试或维护计算机系统、数据产品和数字化服务，并保障其可靠运行。"
-    },
-    {
-      "canonical_type": "standard_occupation",
+      "canonical_type": "china_national_occupation",
       "category": "工程技术岗位",
       "cities": [],
-      "code": "17-2061.00",
-      "description": "运用工程原理完成技术方案设计、验证、实施与改进，解决产品或系统中的实际问题。\nO*NET original: Research, design, develop, or test computer or computer-related equipment for commercial, industrial, military, or scientific use. May supervise the manufacturing and installation of computer or computer-related equipment and components.",
+      "code": "2-02-10-02",
+      "description": "从事计算机整机、主板、外设等硬件技术研究、设计、调试、集成、维护和管理的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
+        "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "工程与制造技术",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
       "job_family": "工程技术岗位",
-      "name": "计算机硬件工程师",
+      "name": "计算机硬件工程技术人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-17-2061.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用工程原理完成技术方案设计、验证、实施与改进，解决产品或系统中的实际问题。"
+      "summary": "从事计算机整机、主板、外设等硬件技术研究、设计、调试、集成、维护和管理的工程技术人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "社会与健康服务岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
       "cities": [],
-      "code": "21-1091.00",
-      "description": "面向个人与社区提供健康促进、教育或支持服务，评估需求并协调专业资源。\nO*NET original: Provide and manage health education programs that help individuals, families, and their communities maximize and maintain healthy lifestyles. Use data to identify community needs prior to planning, implementing, monitoring, and evaluating programs designed to encourage healthy lifestyles, policies, and environments. May link health systems, health providers, insurers, and patients to address individual and population health needs. May serve as resource to assist individuals, other health professionals, or the community, and may administer fiscal resources for health education programs.",
+      "code": "2-02-10-03",
+      "description": "从事计算机软件研究、需求分析、设计、测试、维护和管理的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
+        "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "公共服务与健康促进",
-      "job_family": "社会与健康服务岗位",
-      "name": "健康教育专家",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "计算机软件工程技术人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-21-1091.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "面向个人与社区提供健康促进、教育或支持服务，评估需求并协调专业资源。"
+      "summary": "从事计算机软件研究、需求分析、设计、测试、维护和管理的工程技术人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "法律岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
       "cities": [],
-      "code": "23-1011.00",
-      "description": "研究和运用法律规则，为组织或个人提供法律分析、文件处理、合规与争议解决支持。\nO*NET original: Represent clients in criminal and civil litigation and other legal proceedings, draw up legal documents, or manage or advise clients on legal transactions. May specialize in a single area or may practice broadly in many areas of law.",
+      "code": "2-02-10-04",
+      "description": "从事互联网等计算机网络研究、设计、安装、集成、调试、维护、管理和服务的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "计算机网络工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事互联网等计算机网络研究、设计、安装、集成、调试、维护、管理和服务的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-10-05",
+      "description": "从事信息系统分析、设计、咨询的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "信息系统分析工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事信息系统分析、设计、咨询的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-10-06",
+      "description": "从事嵌入式应用系统和自动化控制系统的分析、编程、设计、集成、维护、评价、改进的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 5",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "嵌入式系统设计工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事嵌入式应用系统和自动化控制系统的分析、编程、设计、集成、维护、评价、改进的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-10-07",
+      "description": "从事信息系统安全研究、规划、设计、实施、评估的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "信息安全工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事信息系统安全研究、规划、设计、实施、评估的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-18-01",
+      "description": "从事建筑物、构筑物和市政工程设计,工程项目管理、咨询及技术服务的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "建筑和市政设计工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事建筑物、构筑物和市政工程设计,工程项目管理、咨询及技术服务的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-30-02",
+      "description": "从事物流系统、项目、装备与技术研发、设计、应用、集成并组织实施的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "物流工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事物流系统、项目、装备与技术研发、设计、应用、集成并组织实施的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-30-04",
+      "description": "从事项目策划、选择、目标制订、组织、执行、控制、验收和收尾过程的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "项目管理工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事项目策划、选择、目标制订、组织、执行、控制、验收和收尾过程的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-30-08",
+      "description": "从事单位信息化建设,信息技术和资源开发、应用,信息系统运作、管理的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "信息管理工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事单位信息化建设,信息技术和资源开发、应用,信息系统运作、管理的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-30-09",
+      "description": "从事信息系统数据规划、采集、管理、分析及数据库设计与优化、数据资源整合、数据挖掘、数据分析等工作的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "数据分析处理工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事信息系统数据规划、采集、管理、分析及数据库设计与优化、数据资源整合、数据挖掘、数据分析等工作的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-30-11",
+      "description": "从事供应链系统、平台研究与构建及其风险防控,设计、开发供应链相关模型、技术、工具与方法的工程技术人员\n判定依据：国家职业标准初始等级（初级）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "初级",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "供应链工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-2-02-30-11"
+      ],
+      "summary": "从事供应链系统、平台研究与构建及其风险防控,设计、开发供应链相关模型、技术、工具与方法的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-34-01",
+      "description": "在制造业、旅游业、服务业、文化产业等领域,从事产品创意设计、造型艺术设计、服务设计及咨询服务的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "产品设计工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在制造业、旅游业、服务业、文化产业等领域,从事产品创意设计、造型艺术设计、服务设计及咨询服务的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-38-01",
+      "description": "从事人工智能相关算法、深度学习技术的分析、研究、开发,设计、优化、运维、管理和应用人工智能系统的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "人工智能工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事人工智能相关算法、深度学习技术的分析、研究、开发,设计、优化、运维、管理和应用人工智能系统的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-38-02",
+      "description": "从事物联网架构、平台、芯片、传感器、智能标签等技术的研究和开发,以及物联网工程的设计、测试、维护、管理和服务的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "物联网工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事物联网架构、平台、芯片、传感器、智能标签等技术的研究和开发,以及物联网工程的设计、测试、维护、管理和服务的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "工程技术岗位",
+      "cities": [],
+      "code": "2-02-38-03",
+      "description": "从事大数据采集、清洗、分析、治理、挖掘等技术研究,并加以利用、管理、维护和服务的工程技术人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "工程技术与数字产业",
+      "job_family": "工程技术岗位",
+      "name": "大数据工程技术人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事大数据采集、清洗、分析、治理、挖掘等技术研究,并加以利用、管理、维护和服务的工程技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-03-00",
+      "description": "在国家机关、社会团体、企业、事业单位和其他组织中进行会计核算、实行会计监督的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "会计专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在国家机关、社会团体、企业、事业单位和其他组织中进行会计核算、实行会计监督的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-04-00",
+      "description": "从事对被审计单位财政、财务收支、内部控制及其他经济活动的真实性、合法性、效益性进行监督、鉴证、评价等工作的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "审计专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事对被审计单位财政、财务收支、内部控制及其他经济活动的真实性、合法性、效益性进行监督、鉴证、评价等工作的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-05-00",
+      "description": "在税务师事务所等涉税专业服务机构中,从事税务代理、税务鉴证、税务审核、税务咨询等服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "税务专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在税务师事务所等涉税专业服务机构中,从事税务代理、税务鉴证、税务审核、税务咨询等服务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-01",
+      "description": "从事国际间商品、技术贸易等商务活动的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "国际商务专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事国际间商品、技术贸易等商务活动的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-02",
+      "description": "从事市场分析、产品宣传促销、生产经营决策咨询服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "市场营销专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事市场分析、产品宣传促销、生产经营决策咨询服务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-03",
+      "description": "从事社会经济组织商务活动调查、分析、设计的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "商务策划专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事社会经济组织商务活动调查、分析、设计的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-08",
+      "description": "从事企事业单位发展战略和经营管理调研、诊断、分析并提供解决方案的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "管理咨询专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事企事业单位发展战略和经营管理调研、诊断、分析并提供解决方案的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-13",
+      "description": "使用数字化智能移动办公平台,进行企业及组织经营在线化、数字化管理的工作人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "数字化管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "使用数字化智能移动办公平台,进行企业及组织经营在线化、数字化管理的工作人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-14",
+      "description": "从事企业及企业内部成员行为符合法律法规、监管要求、行业规定和道德规范等合规管理和监督的工作人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "企业合规师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事企业及企业内部成员行为符合法律法规、监管要求、行业规定和道德规范等合规管理和监督的工作人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-07-15",
+      "description": "从事招标采购业务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "招标采购专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事招标采购业务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-09-02",
+      "description": "从事外汇市场、货币市场、债券市场、衍生品市场金融交易等业务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "银行金融市场业务专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事外汇市场、货币市场、债券市场、衍生品市场金融交易等业务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-09-06",
+      "description": "在银行及相关金融服务机构中,为企业等实体经济机构客户提供金融规划、投融资筹划、资本结构管理、金融风险防控和金融信息咨询等综合性咨询服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "公司金融顾问",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在银行及相关金融服务机构中,为企业等实体经济机构客户提供金融规划、投融资筹划、资本结构管理、金融风险防控和金融信息咨询等综合性咨询服务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-10-03",
+      "description": "从事理赔查勘定损、核损核赔、调查取证等保险索赔业务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "保险理赔专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事理赔查勘定损、核损核赔、调查取证等保险索赔业务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-11-03",
+      "description": "从事证券市场调查分析、资本运营设计和投资咨询服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "证券投资专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事证券市场调查分析、资本运营设计和投资咨询服务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-12-01",
+      "description": "在专利代理机构中,从事专利申请、无效、转让、诉讼和咨询服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "专利代理专业人员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在专利代理机构中,从事专利申请、无效、转让、诉讼和咨询服务的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "经济与金融专业岗位",
+      "cities": [],
+      "code": "2-06-14-00",
+      "description": "从事金融科技、数字金融领域应用技术研究、产品设计、服务运营、跟踪评价的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商业、金融与专业服务",
+      "job_family": "经济与金融专业岗位",
+      "name": "金融科技师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事金融科技、数字金融领域应用技术研究、产品设计、服务运营、跟踪评价的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "法律专业岗位",
+      "cities": [],
+      "code": "2-07-04-00",
+      "description": "接受委托或者指定,依法为当事人提供法律服务的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
       "industry": "法律与合规服务",
-      "job_family": "法律岗位",
+      "job_family": "法律专业岗位",
       "name": "律师",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-23-1011.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "研究和运用法律规则，为组织或个人提供法律分析、文件处理、合规与争议解决支持。"
+      "summary": "接受委托或者指定,依法为当事人提供法律服务的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "法律岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "法律专业岗位",
       "cities": [],
-      "code": "23-2011.00",
-      "description": "研究和运用法律规则，为组织或个人提供法律分析、文件处理、合规与争议解决支持。\nO*NET original: Assist lawyers by investigating facts, preparing legal documents, or researching legal precedent. Conduct research to support a legal proceeding, to formulate a defense, or to initiate legal action.",
+      "code": "2-07-08-00",
+      "description": "在党政机关、企事业单位及其他社会组织中从事决策合法性审查,合同、协议、规章制度及规范性文件法律审核,办理诉讼和非诉讼法律事务,以及从事合规管理、风险管理、法治宣传和法律咨询等事务的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 3",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
       "industry": "法律与合规服务",
-      "job_family": "法律岗位",
-      "name": "法律助理",
+      "job_family": "法律专业岗位",
+      "name": "法律顾问",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-23-2011.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "研究和运用法律规则，为组织或个人提供法律分析、文件处理、合规与争议解决支持。"
+      "summary": "在党政机关、企事业单位及其他社会组织中从事决策合法性审查,合同、协议、规章制度及规范性文件法律审核,办理诉讼和非诉讼法律事务,以及从事合规管理、风险管理、法治宣传和法律咨询等事务的人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "教育岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "25-1123.00",
-      "description": "设计并实施教育教学活动，评估学习效果，持续改进课程与学习支持。\nO*NET original: Teach courses in English language and literature, including linguistics and comparative literature. Includes both teachers primarily engaged in teaching and those who do a combination of teaching and research.",
+      "code": "2-09-06-01",
+      "description": "在书籍、印刷、形象识别、环境视觉等领域运用可视艺术形式,从事设计的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "教育与培训",
-      "job_family": "教育岗位",
-      "name": "高校英语教师",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "视觉传达设计人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-25-1123.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "设计并实施教育教学活动，评估学习效果，持续改进课程与学习支持。"
+      "summary": "在书籍、印刷、形象识别、环境视觉等领域运用可视艺术形式,从事设计的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "教育岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "25-1124.00",
-      "description": "设计并实施教育教学活动，评估学习效果，持续改进课程与学习支持。\nO*NET original: Teach languages and literature courses in languages other than English. Includes teachers of American Sign Language (ASL). Includes both teachers primarily engaged in teaching and those who do a combination of teaching and research.",
+      "code": "2-09-06-03",
+      "description": "从事动画、漫画、游戏项目创意、设计、开发制作的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "教育与培训",
-      "job_family": "教育岗位",
-      "name": "高校外语教师",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "动画设计人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-25-1124.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "设计并实施教育教学活动，评估学习效果，持续改进课程与学习支持。"
+      "summary": "从事动画、漫画、游戏项目创意、设计、开发制作的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "27-1011.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Formulate design concepts and presentation approaches for visual productions and media, such as print, broadcasting, video, and film. Direct workers engaged in artwork or layout design.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "艺术总监",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1011.00"
-      ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
-      "cities": [],
-      "code": "27-1013.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Create original artwork using any of a wide variety of media and techniques.",
+      "code": "2-09-06-04",
+      "description": "在建筑、景观等相关领域,从事公共建筑室内外、居住空间、城市与社区景观等设计的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "纯艺术创作者",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "环境设计人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1013.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "在建筑、景观等相关领域,从事公共建筑室内外、居住空间、城市与社区景观等设计的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "27-1014.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Create special effects or animations using film, video, computers, or other electronic tools and media for use in products, such as computer games, movies, music videos, and commercials.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "特效与动画设计师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1014.00"
-      ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
-      "cities": [],
-      "code": "27-1021.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Design and develop manufactured products, such as cars, home appliances, and children's toys. Combine artistic talent with research on product use, marketing, and materials to create the most functional and appealing product design.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "商业与工业设计师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1021.00"
-      ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
-      "cities": [],
-      "code": "27-1024.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Design or create graphics to meet specific commercial or promotional needs, such as packaging, displays, or logos. May use a variety of mediums to achieve artistic or decorative effects.",
+      "code": "2-09-06-07",
+      "description": "在广播、电视、网络、电影、会展、娱乐等领域,从事数字艺术、媒体、游戏、动画、图形与图像、界面、交互设计的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "平面设计师",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "数字媒体艺术专业人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1024.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "在广播、电视、网络、电影、会展、娱乐等领域,从事数字艺术、媒体、游戏、动画、图形与图像、界面、交互设计的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "27-1025.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Plan, design, and furnish the internal space of rooms or buildings. Design interior environments or create physical layouts that are practical, aesthetic, and conducive to the intended purposes. May specialize in a particular field, style, or phase of interior design.",
+      "code": "2-09-06-08",
+      "description": "从事室内外公共空间艺术景观、设施、装置设计的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "室内设计师",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "公共艺术专业人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1025.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "从事室内外公共空间艺术景观、设施、装置设计的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "文学艺术专业岗位",
       "cities": [],
-      "code": "27-1027.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Design special exhibits and sets for film, video, television, and theater productions. May study scripts, confer with directors, and conduct research to determine appropriate architectural styles.",
-      "education_levels": [
-        "专科",
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 5",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "场景与展览设计师",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-1027.00"
-      ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
-      "cities": [],
-      "code": "27-2012.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Produce or direct stage, television, radio, video, or film productions for entertainment, information, or instruction. Responsible for creative decisions, such as interpretation of script, choice of actors or guests, set design, sound, special effects, and choreography.",
+      "code": "2-09-06-09",
+      "description": "从事陈列展览研究与策划、设计工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "制片人与导演",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "文学艺术专业岗位",
+      "name": "陈列展览设计人员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-2012.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "从事陈列展览研究与策划、设计工作的人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "新闻出版与文化岗位",
       "cities": [],
-      "code": "27-3031.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Promote or create an intended public image for individuals, groups, or organizations. May write or select material for release to various communications media. May specialize in using social media.",
+      "code": "2-10-02-05",
+      "description": "从事互联网等网络媒体内容策划、稿件组织、加工管理的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "语言、传媒与内容服务",
+      "job_family": "新闻出版与文化岗位",
+      "name": "网络编辑",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事互联网等网络媒体内容策划、稿件组织、加工管理的专业人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "新闻出版与文化岗位",
+      "cities": [],
+      "code": "2-10-05-01",
+      "description": "以口头或书面形式,从事两种及以上语言文字间信息转换的专业人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "公共关系专员",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "语言、传媒与内容服务",
+      "job_family": "新闻出版与文化岗位",
+      "name": "翻译",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-3031.00"
+        "china-occupation-classification-2022"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "以口头或书面形式,从事两种及以上语言文字间信息转换的专业人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "艺术、设计与传媒岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "办事与公共服务岗位",
       "cities": [],
-      "code": "27-3091.00",
-      "description": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。\nO*NET original: Interpret oral or sign language, or translate written text from one language into another.",
+      "code": "3-01-04-05",
+      "description": "经司法行政机关核准取得基层法律服务工作者执业证,在基层法律服务所执业,为社会提供法律服务的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "法律与公共服务",
+      "job_family": "办事与公共服务岗位",
+      "name": "基层法律服务工作者",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "经司法行政机关核准取得基层法律服务工作者执业证,在基层法律服务所执业,为社会提供法律服务的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "批发零售服务岗位",
+      "cities": [],
+      "code": "4-01-01-00",
+      "description": "从事市场供求信息调查、商品采购工作的人员\n判定依据：国家职业标准初始等级（三级/高级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "三级/高级工",
+      "industry": "商贸与电子商务",
+      "job_family": "批发零售服务岗位",
+      "name": "采购员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-01-01-00"
+      ],
+      "summary": "从事市场供求信息调查、商品采购工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "批发零售服务岗位",
+      "cities": [],
+      "code": "4-01-02-01",
+      "description": "从事市场调查、市场分析、营销策划、商品与服务推广等工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 4",
-      "industry": "文化创意、设计与传媒",
-      "job_family": "艺术、设计与传媒岗位",
-      "name": "口译与笔译人员",
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商贸与电子商务",
+      "job_family": "批发零售服务岗位",
+      "name": "营销员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-27-3091.00"
+        "china-occupation-classification-2022",
+        "china-national-standard-4-01-02-01"
       ],
-      "summary": "运用艺术、设计或传媒方法完成创意策划、视觉表达、内容制作与传播协作。"
+      "summary": "从事市场调查、市场分析、营销策划、商品与服务推广等工作的人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "个人服务岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "批发零售服务岗位",
       "cities": [],
-      "code": "39-7011.00",
-      "description": "面向旅游或个人服务场景提供讲解、协调与现场支持，保障服务体验和流程顺畅。\nO*NET original: Escort individuals or groups on sightseeing tours or through places of interest, such as industrial establishments, public buildings, and art galleries.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "旅游与个人服务",
-      "job_family": "个人服务岗位",
-      "name": "导游与陪同人员",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-39-7011.00"
-      ],
-      "summary": "面向旅游或个人服务场景提供讲解、协调与现场支持，保障服务体验和流程顺畅。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "销售岗位",
-      "cities": [],
-      "code": "41-3041.00",
-      "description": "分析客户需求，介绍并销售产品或服务，维护客户关系并支持交易完成。\nO*NET original: Plan and sell transportation and accommodations for customers. Determine destination, modes of transportation, travel dates, costs, and accommodations required. May also describe, plan, and arrange itineraries and sell tour packages. May assist in resolving clients' travel problems.",
-      "education_levels": [
-        "本科"
-      ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "市场销售与客户服务",
-      "job_family": "销售岗位",
-      "name": "旅行顾问",
-      "review_status": "approved",
-      "scoring_eligible": true,
-      "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-41-3041.00"
-      ],
-      "summary": "分析客户需求，介绍并销售产品或服务，维护客户关系并支持交易完成。"
-    },
-    {
-      "canonical_type": "standard_occupation",
-      "category": "行政支持岗位",
-      "cities": [],
-      "code": "43-3031.00",
-      "description": "执行行政、记录、客户接待或业务流程支持工作，确保信息准确和服务及时。\nO*NET original: Compute, classify, and record numerical data to keep financial records complete. Perform any combination of routine calculating, posting, and verifying duties to obtain primary financial data for use in maintaining accounting records. May also check the accuracy of figures, calculations, and postings pertaining to business transactions recorded by other workers.",
+      "code": "4-01-06-01",
+      "description": "在互联网及现代信息技术平台上,从事商务活动的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "专科",
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 3",
-      "industry": "行政与业务支持",
-      "job_family": "行政支持岗位",
-      "name": "会计与审计事务员",
+      "entry_level": "五级/初级工",
+      "industry": "商贸与电子商务",
+      "job_family": "批发零售服务岗位",
+      "name": "电子商务师",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-43-3031.00"
+        "china-occupation-classification-2022",
+        "china-national-standard-4-01-06-01"
       ],
-      "summary": "执行行政、记录、客户接待或业务流程支持工作，确保信息准确和服务及时。"
+      "summary": "在互联网及现代信息技术平台上,从事商务活动的人员"
     },
     {
-      "canonical_type": "standard_occupation",
-      "category": "行政支持岗位",
+      "canonical_type": "china_national_occupation",
+      "category": "批发零售服务岗位",
       "cities": [],
-      "code": "43-4081.00",
-      "description": "执行行政、记录、客户接待或业务流程支持工作，确保信息准确和服务及时。\nO*NET original: Accommodate hotel, motel, and resort patrons by registering and assigning rooms to guests, issuing room keys or cards, transmitting and receiving messages, keeping records of occupied rooms and guests' accounts, making and confirming reservations, and presenting statements to and collecting payments from departing guests.",
+      "code": "4-01-06-02",
+      "description": "在数字化信息平台上,运用网络的交互性与传播公信力,对企业产品进行营销推广的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商贸与电子商务",
+      "job_family": "批发零售服务岗位",
+      "name": "互联网营销师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在数字化信息平台上,运用网络的交互性与传播公信力,对企业产品进行营销推广的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "交通物流服务岗位",
+      "cities": [],
+      "code": "4-02-06-01",
+      "description": "从事仓储物品出入库、储存、账务等管理工作的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
       "education_levels": [
         "本科"
       ],
-      "entry_level": "O*NET Job Zone 2",
-      "industry": "行政与业务支持",
-      "job_family": "行政支持岗位",
-      "name": "酒店前台服务员",
+      "entry_level": "五级/初级工",
+      "industry": "物流与供应链",
+      "job_family": "交通物流服务岗位",
+      "name": "仓储管理员",
       "review_status": "approved",
       "scoring_eligible": true,
       "source_ids": [
-        "onet-30.3-csv",
-        "onet-online-43-4081.00"
+        "china-occupation-classification-2022",
+        "china-national-standard-4-02-06-01"
       ],
-      "summary": "执行行政、记录、客户接待或业务流程支持工作，确保信息准确和服务及时。"
+      "summary": "从事仓储物品出入库、储存、账务等管理工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "交通物流服务岗位",
+      "cities": [],
+      "code": "4-02-06-03",
+      "description": "从事物品采购、仓储运输、货品分拣、配送包装、装卸搬运、流通加工、信息服务等物流作业的组织、计划、实施、控制与协调工作的人员\n判定依据：国家职业标准初始等级（三级/高级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "三级/高级工",
+      "industry": "物流与供应链",
+      "job_family": "交通物流服务岗位",
+      "name": "物流服务师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-02-06-03"
+      ],
+      "summary": "从事物品采购、仓储运输、货品分拣、配送包装、装卸搬运、流通加工、信息服务等物流作业的组织、计划、实施、控制与协调工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "交通物流服务岗位",
+      "cities": [],
+      "code": "4-02-06-05",
+      "description": "运用供应链技术、管理方法和工具,从事产品设计、采购、生产、销售、服务等全过程协同,控制供应链系统成本的人员\n判定依据：国家职业标准初始等级（三级/高级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "三级/高级工",
+      "industry": "物流与供应链",
+      "job_family": "交通物流服务岗位",
+      "name": "供应链管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-02-06-05"
+      ],
+      "summary": "运用供应链技术、管理方法和工具,从事产品设计、采购、生产、销售、服务等全过程协同,控制供应链系统成本的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "住宿餐饮服务岗位",
+      "cities": [],
+      "code": "4-03-01-01",
+      "description": "为宾客提供咨询、迎送、入住登记、结账等前厅服务的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "旅游与酒店服务",
+      "job_family": "住宿餐饮服务岗位",
+      "name": "前厅服务员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "为宾客提供咨询、迎送、入住登记、结账等前厅服务的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "住宿餐饮服务岗位",
+      "cities": [],
+      "code": "4-03-01-02",
+      "description": "在饭店、宾馆、旅游客船等住宿场所,清洁和整理客房,并提供宾客迎送、住宿等服务的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "旅游与酒店服务",
+      "job_family": "住宿餐饮服务岗位",
+      "name": "客房服务员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在饭店、宾馆、旅游客船等住宿场所,清洁和整理客房,并提供宾客迎送、住宿等服务的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "住宿餐饮服务岗位",
+      "cities": [],
+      "code": "4-03-02-05",
+      "description": "在餐饮场所中,安排顾客座位,点配菜点,进行餐厅装饰、布置等就餐服务的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "旅游与酒店服务",
+      "job_family": "住宿餐饮服务岗位",
+      "name": "餐厅服务员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-03-02-05"
+      ],
+      "summary": "在餐饮场所中,安排顾客座位,点配菜点,进行餐厅装饰、布置等就餐服务的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "住宿餐饮服务岗位",
+      "cities": [],
+      "code": "4-03-02-11",
+      "description": "在食品生产、餐饮服务、食品销售等单位生产经营活动中,从事原料、食品及相关产品、人员等食品安全控制的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "旅游与酒店服务",
+      "job_family": "住宿餐饮服务岗位",
+      "name": "食品安全管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-03-02-11"
+      ],
+      "summary": "在食品生产、餐饮服务、食品销售等单位生产经营活动中,从事原料、食品及相关产品、人员等食品安全控制的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-01",
+      "description": "从事信息通信网络运行配置管理、性能管理、优化管理和故障排除等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "信息通信网络运行管理员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-04-01"
+      ],
+      "summary": "从事信息通信网络运行配置管理、性能管理、优化管理和故障排除等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-02",
+      "description": "从事网络及信息安全管理、防护、监控工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "网络与信息安全管理员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-04-02"
+      ],
+      "summary": "从事网络及信息安全管理、防护、监控工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-03",
+      "description": "从事信息通信信息化系统和通信业务支撑系统使用、维护和管理等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "信息通信信息化系统管理员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-04-03"
+      ],
+      "summary": "从事信息通信信息化系统和通信业务支撑系统使用、维护和管理等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-04",
+      "description": "从事个人信息保护合规检测，对个人信息收集、存储、使用、加工、传输、提供、公开、删除等环节中实施安全保护以及合规管理工作的技术人员\n判定依据：国家职业标准初始等级（三级/高级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "三级/高级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "信息安全测试员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-04-04"
+      ],
+      "summary": "从事个人信息保护合规检测，对个人信息收集、存储、使用、加工、传输、提供、公开、删除等环节中实施安全保护以及合规管理工作的技术人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-05",
+      "description": "从事产业数字化需求分析与挖掘、数字化解决方案制订、项目实施与运营技术支撑等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "数字化解决方案设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-04-05"
+      ],
+      "summary": "从事产业数字化需求分析与挖掘、数字化解决方案制订、项目实施与运营技术支撑等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-04-06",
+      "description": "从事网络、信息系统、数据等安全保护状况检测和评估工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "网络安全等级保护测评师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事网络、信息系统、数据等安全保护状况检测和评估工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-01",
+      "description": "从事计算机和移动终端应用程序设计、编制工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "计算机程序设计员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-01"
+      ],
+      "summary": "从事计算机和移动终端应用程序设计、编制工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-02",
+      "description": "使用计算机及附属设备、测试工具、测试用例,验证计算机软件产品功能、性能及参数的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "计算机软件测试员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-02"
+      ],
+      "summary": "使用计算机及附属设备、测试工具、测试用例,验证计算机软件产品功能、性能及参数的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-04",
+      "description": "对系统所使用的数据库进行维护及管理等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "数据库运行管理员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-04"
+      ],
+      "summary": "对系统所使用的数据库进行维护及管理等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-05",
+      "description": "使用智能训练软件,在人工智能产品实际使用过程中进行数据库管理、算法参数设置、人机交互设计、性能测试跟踪及其他辅助作业的人员。本职业包含数据标注员、人工智能算法测试员两个工种\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "人工智能训练师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-05"
+      ],
+      "summary": "使用智能训练软件,在人工智能产品实际使用过程中进行数据库管理、算法参数设置、人机交互设计、性能测试跟踪及其他辅助作业的人员。本职业包含数据标注员、人工智能算法测试员两个工种"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-08",
+      "description": "从事电子数据提取、固定、恢复、分析等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "电子数据取证分析师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-08"
+      ],
+      "summary": "从事电子数据提取、固定、恢复、分析等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-09",
+      "description": "从事信息系统基础环境、终端、安全体系、业务系统的适配、测试、调优、数据迁移、维护等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "信息系统适配验证师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-09"
+      ],
+      "summary": "从事信息系统基础环境、终端、安全体系、业务系统的适配、测试、调优、数据迁移、维护等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-10",
+      "description": "使用仿真技术工具和数字孪生平台,构建、运行维护数字孪生体,监控、预测并优化实体系统运行状态的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "数字孪生应用技术员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-04-05-10"
+      ],
+      "summary": "使用仿真技术工具和数字孪生平台,构建、运行维护数字孪生体,监控、预测并优化实体系统运行状态的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "信息技术服务岗位",
+      "cities": [],
+      "code": "4-04-05-11",
+      "description": "使用虚拟现实编辑工具,从事虚拟现实产品内容设计、编制工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "数字技术与信息服务",
+      "job_family": "信息技术服务岗位",
+      "name": "虚拟现实产品设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "使用虚拟现实编辑工具,从事虚拟现实产品内容设计、编制工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "金融服务岗位",
+      "cities": [],
+      "code": "4-05-02-00",
+      "description": "从事证券、期货投资咨询、财务顾问、法律服务、资信评级、资产评估、证券业务审计等工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "金融服务",
+      "job_family": "金融服务岗位",
+      "name": "证券期货服务师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事证券、期货投资咨询、财务顾问、法律服务、资信评级、资产评估、证券业务审计等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "金融服务岗位",
+      "cities": [],
+      "code": "4-05-05-02",
+      "description": "从事资产的产权、运营、投资、价值、评价、数字化及风险等管理工作的服务人员\n判定依据：国家职业标准初始等级（资产管理师）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "资产管理师",
+      "industry": "金融服务",
+      "job_family": "金融服务岗位",
+      "name": "资产管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-05-05-02"
+      ],
+      "summary": "从事资产的产权、运营、投资、价值、评价、数字化及风险等管理工作的服务人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-02-01",
+      "description": "从事整体风险评估、监测、预警,进行风险管理活动督导、协调、控制并提供咨询服务工作的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "风险管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-07-02-01"
+      ],
+      "summary": "从事整体风险评估、监测、预警,进行风险管理活动督导、协调、控制并提供咨询服务工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-02-04",
+      "description": "在企业中,从事信用交易、信用风险控制和征信、信用评价等技术工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "信用管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在企业中,从事信用交易、信用风险控制和征信、信用评价等技术工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-02-05",
+      "description": "从事商务行为相关数据采集、清洗、挖掘、分析,发现问题、研判规律,形成数据分析报告并指导他人应用的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "商务数据分析师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-07-02-05"
+      ],
+      "summary": "从事商务行为相关数据采集、清洗、挖掘、分析,发现问题、研判规律,形成数据分析报告并指导他人应用的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-04-01",
+      "description": "从事旅游向导、讲解及旅途服务工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "导游",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事旅游向导、讲解及旅途服务工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-04-02",
+      "description": "从事出境旅游团队全程陪同服务,并协调督促境外接待社履行旅游行程计划等工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "旅游团队领队",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事出境旅游团队全程陪同服务,并协调督促境外接待社履行旅游行程计划等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-04-04",
+      "description": "在旅游咨询服务场所,提供公益性旅游信息服务工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "旅游咨询员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-07-04-04"
+      ],
+      "summary": "在旅游咨询服务场所,提供公益性旅游信息服务工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "商务与技术服务岗位",
+      "cities": [],
+      "code": "4-07-04-07",
+      "description": "从事景区安全管理、营销推广、数字化管理、生态环境保护等的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "商务咨询与旅游服务",
+      "job_family": "商务与技术服务岗位",
+      "name": "景区运营管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-07-04-07"
+      ],
+      "summary": "从事景区安全管理、营销推广、数字化管理、生态环境保护等的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-05",
+      "description": "从事玉雕、牙雕、景泰蓝、漆器等传统工艺品设计,或以玻璃、纤维、金属、漆木等为材料设计现代实用工艺美术品的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "工艺美术品设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-08-08-05"
+      ],
+      "summary": "从事玉雕、牙雕、景泰蓝、漆器等传统工艺品设计,或以玻璃、纤维、金属、漆木等为材料设计现代实用工艺美术品的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-06",
+      "description": "从事商品标志、装潢、广告等视觉传达设计的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "装潢美术设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事商品标志、装潢、广告等视觉传达设计的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-07",
+      "description": "从事建筑物和飞机、车、船等内部空间环境设计,装饰装修污染预评估控制,监控施工过程的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "室内装饰设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-08-08-07"
+      ],
+      "summary": "从事建筑物和飞机、车、船等内部空间环境设计,装饰装修污染预评估控制,监控施工过程的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-08",
+      "description": "从事广告创意、宣传、形象设计的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "广告设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-08-08-08"
+      ],
+      "summary": "从事广告创意、宣传、形象设计的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-09",
+      "description": "从事商品生产和流通领域储运包装、防护包装、销售包装和包装工艺设计的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "包装设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-08-08-09"
+      ],
+      "summary": "从事商品生产和流通领域储运包装、防护包装、销售包装和包装工艺设计的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-10",
+      "description": "从事玩具和玩具类儿童用品设计的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "玩具设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事玩具和玩具类儿童用品设计的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-21",
+      "description": "在会议、展览及节事活动中,从事空间环境视觉化表现设计工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "会展设计师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "在会议、展览及节事活动中,从事空间环境视觉化表现设计工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "技术辅助与设计岗位",
+      "cities": [],
+      "code": "4-08-08-26",
+      "description": "运用工业设计技术,从事产品、系统、服务等方面设计的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "文化创意与设计",
+      "job_family": "技术辅助与设计岗位",
+      "name": "工业设计工艺师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "运用工业设计技术,从事产品、系统、服务等方面设计的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "文化传媒服务岗位",
+      "cities": [],
+      "code": "4-13-01-05",
+      "description": "综合利用各种媒介技术和渠道,采用数据分析、创意策划等方式,从事对信息进行加工、匹配、分发、传播、反馈等工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "专科",
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "文化传媒与数字内容",
+      "job_family": "文化传媒服务岗位",
+      "name": "全媒体运营师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-13-01-05"
+      ],
+      "summary": "综合利用各种媒介技术和渠道,采用数据分析、创意策划等方式,从事对信息进行加工、匹配、分发、传播、反馈等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "文化传媒服务岗位",
+      "cities": [],
+      "code": "4-13-02-02",
+      "description": "从事影视动画中间画绘制、描线上色、音乐音效、数字特效、后期合成、影像编辑等制作工作的人员\n判定依据：国家职业标准初始等级（四级/中级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "四级/中级工",
+      "industry": "文化传媒与数字内容",
+      "job_family": "文化传媒服务岗位",
+      "name": "动画制作员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-13-02-02"
+      ],
+      "summary": "从事影视动画中间画绘制、描线上色、音乐音效、数字特效、后期合成、影像编辑等制作工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "健康服务岗位",
+      "cities": [],
+      "code": "4-14-01-03",
+      "description": "运用基本医学护理知识与技能,从事家庭、医院、社区及长期护理服务机构等场所照护对象的健康照护及生活照料服务的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "健康服务",
+      "job_family": "健康服务岗位",
+      "name": "健康照护师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-4-14-01-03"
+      ],
+      "summary": "运用基本医学护理知识与技能,从事家庭、医院、社区及长期护理服务机构等场所照护对象的健康照护及生活照料服务的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "健康服务岗位",
+      "cities": [],
+      "code": "4-14-02-02",
+      "description": "从事个体或群体健康状况监测、分析、评估,以及健康咨询指导和健康危险因素干预等工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "健康服务",
+      "job_family": "健康服务岗位",
+      "name": "健康管理师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事个体或群体健康状况监测、分析、评估,以及健康咨询指导和健康危险因素干预等工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "健康服务岗位",
+      "cities": [],
+      "code": "4-14-02-03",
+      "description": "从事计划生育、优生优育等生殖健康教育、咨询、服务工作的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "健康服务",
+      "job_family": "健康服务岗位",
+      "name": "生殖健康咨询师",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事计划生育、优生优育等生殖健康教育、咨询、服务工作的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "健康服务岗位",
+      "cities": [],
+      "code": "4-14-04-04",
+      "description": "从事社群健康档案管理、宣教培训,就诊和保健咨询、代理、陪护及公共卫生事件事务处理的人员\n判定依据：《中华人民共和国职业分类大典（2022年版）》主要工作任务的 CareerPilot 简易判定模型。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "职业探索简易判定（非职业资格等级）",
+      "industry": "健康服务",
+      "job_family": "健康服务岗位",
+      "name": "社群健康助理员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "summary": "从事社群健康档案管理、宣教培训,就诊和保健咨询、代理、陪护及公共卫生事件事务处理的人员"
+    },
+    {
+      "canonical_type": "china_national_occupation",
+      "category": "电子设备制造岗位",
+      "cities": [],
+      "code": "6-25-04-09",
+      "description": "使用检测仪器和专用工具,安装、配置、调试物联网产品与设备的人员\n判定依据：国家职业标准初始等级（五级/初级工）技能要求。匹配分仅表示学生证据与岗位要求的覆盖情况，不代表国家职业资格或技能等级认定。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "五级/初级工",
+      "industry": "智能制造与物联网",
+      "job_family": "电子设备制造岗位",
+      "name": "物联网安装调试员",
+      "review_status": "approved",
+      "scoring_eligible": true,
+      "source_ids": [
+        "china-occupation-classification-2022",
+        "china-national-standard-6-25-04-09"
+      ],
+      "summary": "使用检测仪器和专用工具,安装、配置、调试物联网产品与设备的人员"
     }
   ],
   "schema_version": "1.0.0"
