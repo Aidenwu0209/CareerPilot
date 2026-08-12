@@ -1871,6 +1871,8 @@
     "common": {
       "notSet": "Not set",
       "insufficientEvidence": "Insufficient evidence",
+      "notScored": "Not scored yet",
+      "knowledgePendingReview": "Occupation knowledge pending review",
       "goalRequired": "Choose a goal first",
       "unknown": "Unknown",
       "pendingReview": "Pending review",
@@ -1932,6 +1934,16 @@
       "progresses_to": "Progression",
       "transfers_to": "Transition",
       "related_to": "Related occupation"
+    },
+    "relevanceType": {
+      "primary": "Core occupation",
+      "adjacent": "Adjacent occupation",
+      "cross_major": "Cross-major occupation",
+      "stretch": "Stretch occupation"
+    },
+    "reviewStatus": {
+      "reviewed": "Reviewed",
+      "review_required": "Review required"
     },
     "pathStageStatus": {
       "locked": "Not started",
@@ -2051,7 +2063,8 @@
         "editTitle": "Adjust primary goal",
         "description": "Changing the goal affects matching and growth tasks, so use your real intentions.",
         "occupation": "Target occupation",
-        "occupationHelp": "The first release uses a manually reviewed demonstration catalog.",
+        "occupationPlaceholder": "Choose a real target occupation",
+        "occupationHelp": "Occupations come from a versioned catalog. The system never selects or scores one without an explicit goal.",
         "targetDate": "Desired target date",
         "rationale": "Reason for choosing it",
         "rationalePlaceholder": "For example: I enjoy solving real problems with technology and want to build product experience through frontend development…",
@@ -2085,6 +2098,25 @@
       "listLabel": "Occupation knowledge list",
       "matchScore": "{score}% match",
       "viewOccupation": "View occupation",
+      "separator": ", ",
+      "relatedMajors": "Related majors: {majors}",
+      "loadFailed": "The occupation catalog could not be refreshed. Current content has been preserved.",
+      "filters": {
+        "title": "Filter occupations", "all": "All", "collegeCode": "College", "majorCode": "Major",
+        "jobFamily": "Job family", "industry": "Industry", "city": "City", "educationLevel": "Education",
+        "relevanceType": "Major relationship", "relationType": "Career relationship", "reset": "Reset filters"
+      },
+      "pagination": {
+        "label": "Occupation catalog pagination", "previous": "Previous", "next": "Next",
+        "status": "Items {start}–{end} of {total}"
+      },
+      "compare": {
+        "title": "Occupation comparison", "description": "Compare 2–3 directions and their evidence without letting one score decide for you.",
+        "help": "{count}/3 occupations selected; choose at least 2 to compare", "select": "Add to comparison", "pendingReview": "Pending review; comparison unavailable",
+        "action": "Compare matching evidence", "tableCaption": "Selected occupation summary comparison", "dimension": "Dimension",
+        "jobFamily": "Job family", "industry": "Industry", "city": "City", "educationLevel": "Education",
+        "matchScore": "Occupation match"
+      },
       "empty": {
         "title": "No occupations found",
         "description": "Try a shorter occupation name or category keyword."
@@ -2093,15 +2125,34 @@
     "jobDetail": {
       "back": "Back to occupation knowledge",
       "matchAction": "Evaluate my match",
+      "matchUnavailable": "Pending review; matching unavailable",
       "code": "Occupation code: {code}",
       "entryLevel": "Entry level: {level}",
+      "jobFamily": "Job family: {value}",
+      "industry": "Industry: {value}",
+      "catalogVersion": "Catalog version: {value}",
+      "metadataLabel": "Occupation metadata",
+      "cities": "Common cities",
+      "educationLevels": "Education requirements",
+      "aliases": "Market aliases",
+      "reviewRequired": {
+        "title": "Candidate occupation knowledge pending review",
+        "description": "This occupation's ability requirements have not completed review. You may browse it, but matching and scoring are unavailable."
+      },
       "requirements": {
         "title": "Ability requirements",
         "description": "Weights and target scores drive deterministic matching. Missing student evidence is never treated as zero.",
         "required": "Required",
         "preferred": "Preferred",
         "target": "Target for {name}",
-        "weight": "Match weight {weight}"
+        "weight": "Match weight {weight}",
+        "emptyTitle": "Ability requirements pending review",
+        "emptyDescription": "There are no reviewed requirements available for matching, so the system will not generate an occupation match score."
+      },
+      "majors": {
+        "title": "Major–occupation relationships",
+        "description": "Core, adjacent, cross-major, and stretch paths come from reviewed catalog mappings.",
+        "empty": "No reviewed major mapping is available yet."
       },
       "graph": {
         "title": "Career relationships",
@@ -2112,6 +2163,8 @@
         "title": "Knowledge sources",
         "description": "Occupation explanations come from traceable sources, not model invention.",
         "verified": "Verified {date}",
+        "sourceVersion": "Source version: {version}",
+        "reviewStatus": "Review status: {status}",
         "empty": "Source material is insufficient, so no unsupported conclusion is provided."
       }
     },
@@ -2121,16 +2174,60 @@
       "description": "Structured rules determine scores and evidence determines confidence. RAG is used only for retrieval, explanation, and citations.",
       "viewOccupation": "View occupation knowledge",
       "selectLabel": "Choose an occupation to evaluate",
+      "selectPlaceholder": "Choose an occupation",
       "recalculate": "View match",
       "primaryGoal": "Current primary goal",
       "comparison": "Occupation comparison",
       "metricsLabel": "Match result indicators",
       "confidence": "Result confidence",
-      "confidenceDescription": "Known requirement weight as a share of total requirement weight",
+      "confidenceDescription": "Known requirements and verified evidence jointly determine confidence",
+      "catalogVersion": "Occupation catalog {version}",
+      "compareForm": {
+        "legend": "Choose occupations to match and compare", "help": "The primary occupation is required. Add one or two more; duplicates are removed.",
+        "primary": "Primary comparison occupation", "comparison": "Comparison occupation {number}", "none": "Do not add"
+      },
+      "noGoal": {
+        "title": "Choose a goal before matching",
+        "description": "The system will not default to the first occupation. Set a primary goal or explicitly choose what to explore above.",
+        "action": "Set a career goal"
+      },
+      "insufficient": {
+        "title": "Evidence coverage is too low to show a match score",
+        "description": "Sync resumes, projects, mock interviews, courses, or certificates. A score appears only after minimum thresholds are met.",
+        "coverage": "Known requirements {known}%; verified evidence {evidence}%", "viewProfile": "View career profile"
+      },
+      "notEligible": {
+        "title": "Candidate occupation knowledge pending review; scoring unavailable",
+        "description": "The structured requirements for this occupation have not completed review. This is not a problem with your materials; no match score will be calculated until the occupation knowledge is approved."
+      },
+      "comparisonTable": {
+        "title": "Multi-occupation evidence comparison", "description": "Compare match, evidence, and key gaps without recommending the highest score.",
+        "caption": "Match comparison for two or three occupations", "dimension": "Dimension", "score": "Occupation match",
+        "evidenceCoverage": "Evidence coverage", "confidence": "Result confidence", "strength": "Top strength", "gap": "Top gap"
+      },
+      "summary": {
+        "label": "Match explanation summary", "strengths": "Top three strengths", "strengthsDescription": "Only evidence-backed abilities meeting requirements are shown",
+        "gaps": "Priority gaps", "gapsDescription": "Required abilities and larger gaps come first", "actions": "Next actions",
+        "actionsDescription": "Each action maps to a real gap", "verifiedEvidence": "Supported by verified evidence",
+        "noStrengths": "Current evidence is not enough to confirm a strength.", "noGaps": "No priority gap has been confirmed.",
+        "noActions": "Add materials to generate targeted actions."
+      },
+      "change": { "title": "Why this match changed" },
+      "review": {
+        "action": "Incorrect mapping? Request review", "title": "Request human review",
+        "description": "Report an issue with requirements, ability mapping, or evidence attribution.",
+        "scope": "Explain which requirement or evidence is inaccurate and include verifiable supporting material.",
+        "notice": "This version sends review requests to support. It never changes scores or occupation knowledge automatically.",
+        "cancel": "Cancel", "contact": "Contact support", "emailSubject": "Review request: {occupation}",
+        "emailBody": "Occupation: {occupation}\nOccupation code: {code}\n\nIssue to review:\nSupporting evidence or source:"
+      },
       "breakdown": {
         "title": "Requirement → evidence → gap → action",
         "description": "Expand each requirement to review student evidence and next-step advice.",
         "required": "Required",
+        "requiredTitle": "Required abilities",
+        "preferredTitle": "Preferred abilities",
+        "count": "{count} items",
         "studentScore": "Current: {score}",
         "targetScore": "Target: {score}",
         "requirementLabel": "Occupation requirement",
@@ -2146,6 +2243,12 @@
         "description": "Citations explain the result but never change the structured score."
       },
       "generatedAt": "Generated {date}"
+    },
+    "materials": {
+      "action": "Sync career materials", "syncing": "Syncing…",
+      "success": "Processed {sources} materials and added {evidence} evidence items",
+      "warning": "Some materials could not be structured. Review them and try again.",
+      "error": "Unable to sync materials. Try again later."
     },
     "path": {
       "eyebrow": "Growth path",

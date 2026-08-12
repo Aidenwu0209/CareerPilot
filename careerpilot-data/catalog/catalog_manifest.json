@@ -1,0 +1,60 @@
+{
+  "catalog_version": "gcc-2026-20260812-p2-84190f91",
+  "files": {
+    "colleges.json": {
+      "count": 10,
+      "sha256": "6c2fa1db605035328811bafd196924be44e440a82baa7c72b9e3a96e27709773"
+    },
+    "coverage_report.json": {
+      "count": 64,
+      "sha256": "64cb47e069dc1e8861c70261f52d6c5a47b64952d5127fbd3059d09d0ea95ec6"
+    },
+    "legacy_occupation_map.json": {
+      "count": 12,
+      "sha256": "261a8f98869ae5d570f8c52e3192d0bde584421d9ab3d256cffde6e77c73c825"
+    },
+    "major_occupation_edges.json": {
+      "count": 192,
+      "sha256": "d159fc9a719327efcab3d3d906b330a0110ea2b103b2bac2c758bc3987877771"
+    },
+    "majors.json": {
+      "count": 64,
+      "sha256": "f5c032e9c0001e7c7627b7737d1184a0b58a2fe653b9a1976fe6ac7a04f07a42"
+    },
+    "occupation_aliases.json": {
+      "count": 0,
+      "sha256": "59a9aaa5d019b88fcfe594e3c777f63e081bf826612be3067341e5c6832ec15d"
+    },
+    "occupation_requirements.json": {
+      "count": 0,
+      "sha256": "59a9aaa5d019b88fcfe594e3c777f63e081bf826612be3067341e5c6832ec15d"
+    },
+    "occupations.json": {
+      "count": 81,
+      "sha256": "fef3cbcc720fb0fb8e27634165330c3d989b7fb9113627b93e2af34b1e0f13b3"
+    },
+    "sources.json": {
+      "count": 13,
+      "sha256": "cdb70f8e86a32bcf261c9742a2f42fff39c356433449c4ec11a4279325b3c33c"
+    }
+  },
+  "generated_at": "2026-08-12T13:37:00Z",
+  "notes": "No candidate title is promoted to a canonical occupation until an evidence-backed human review maps it to an authoritative occupation code.",
+  "publication_status": "candidate",
+  "quality_gates": {
+    "all_published_occupations_have_sources": true,
+    "every_major_has_primary_adjacent_stretch_records": true,
+    "human_review_complete": false,
+    "no_orphan_majors": true,
+    "non_empty_major_catalog": true
+  },
+  "schema_version": "1.0.0",
+  "scoring_safe": false,
+  "source_failures": [
+    {
+      "error": "robots.txt could not be checked: https://chinajob.mohrss.gov.cn/robots.txt: <urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] sslv3 alert handshake failure (_ssl.c:1129)>",
+      "source_id": "mohrss-occupation-catalog-2022",
+      "url": "https://chinajob.mohrss.gov.cn/h5/c/2022-10-08/361551.shtml"
+    }
+  ]
+}

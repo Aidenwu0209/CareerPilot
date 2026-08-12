@@ -1,0 +1,1791 @@
+{
+  "catalog_version": "gcc-2026-20260812-p2-84190f91",
+  "generated_at": "2026-08-12T13:37:00Z",
+  "items": [
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-C4CF2BF41D12",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "会计核算",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E73D84773A07",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "审计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-6E1F412867EF",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "财务管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-D649E95568CA",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "会计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1452B1567B57",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "金融管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-94540AB0E79B",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "税收政策分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-082737E041F0",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "税务管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E77A9C44C703",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "大数据税收分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-46fd514e9067"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-36F6BFB177E5",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "平面设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1175EC132520",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "交互设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1EC47E1A0949",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "虚拟设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-57E7E067B575",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "视觉传达设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-B7A306731BA8",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "项目设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-42C3CF8B4A9E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "数字孪生开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-957E1B3E29F1",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "VR交互体验设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-16EC441BC706",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "产品设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-7590CB054CA3",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "产品开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-114003C0E8E9",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "设计管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-20c6f987d14f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-061684D3E4D5",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "供应链管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-0F1802714BDC",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "物流系统规划设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-6665364E8BB4",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "仓储管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-290F594865D2",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "运输管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-AA909A643910",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "供应链金融产品开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-DACAF8102ABB",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "供应链金融管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-BC48ABDF447E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "供应链规划设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-910E986C4066",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "供应链协同运营",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1308100A610B",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "客户开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-3F2BCEACCB17",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "产品品牌营销策划",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-8390E143054E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "公共关系管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-F8D680791FCE",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "经营管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-6471ba873f5a"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-11C106E4A1FE",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "地方银行前台业务员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-C1C4D7FDFE08",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "客户经理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-DB8C35DC4111",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "保险公司金融营销员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-C0858C4006CB",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "外贸经营管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E1BECE134CB7",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "理财咨询助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-80FF607F7608",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "投资者关系管理助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-10BAF9A5B913",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "网贷管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-CE93A31FBB91",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "众筹管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-F8C01CA95244",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "金融数据分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-34C2FF415C3B",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "金融科技产品开发设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-CE7DEDA7820E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "业务运营",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-5D8EC6F62009",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "数据分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa",
+        "gcc-major-page-c1e2ae287c8b",
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1FFEA8D7039E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "平台管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E5D307346FFE",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "投资顾问",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-7C55F9FDB6A9",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "财富管理顾问",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-A6654120CBEC",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "教师",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-0fe723329dfa"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-210253A055DB",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "外贸翻译",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-24BABE472479",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "国际经济贸易管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-A52A08335185",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "翻译",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-CAF6DB894BCC",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "商务翻译",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-CE1B3E716676",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "行政管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-8262a8bce84f"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-14EE0688C3E2",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "律师助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-93CDE9070DB6",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "公证员助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-D01B311B5274",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "公司企业法务专员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-0632DC706448",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "法官助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-6552BAC307CA",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "检察官助理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-74E975F775A0",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "法院书记员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E9EBD7D68DA9",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "公务员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-1CB90B6ED074",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "信用管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-84F1616A6308",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "法务专员",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-2b6a158f2039"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-96705952F9DC",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "直播运营",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E846F6DBF1A7",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "商务数据分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-8C95F9D8DB0E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "智能商业策划",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-3DC1A6E53813",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "电商行业管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-509B5586B87F",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "经济管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-A435DFBAA2F5",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "跨境电商运营",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-E2DDE8E4C13F",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "市场分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-7B1E186BD080",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "传统国际贸易经营与管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-c1e2ae287c8b"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-C3D39FF5D88E",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "网络规划设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-BC4ED0E95E37",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "运维管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-BCD275F79693",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "智能应用系统的设计",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-7EF9D30C5E13",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "设计开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-435207CA7E1B",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "大数据系统开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-72771E1E362F",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "信息管理",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-DF9CC7D701D5",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "ERP实施顾问",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-756C3418CA7C",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "系统开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-BC4DB76A4516",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "信息系统设计开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-6A886E745425",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "智能系统开发",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-B442CE20C9E2",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "机器人工程师",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-23453144F0F0",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "算法工程师",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    },
+    {
+      "canonical_type": "unresolved_placeholder",
+      "category": "广州商学院官网就业方向候选",
+      "cities": [
+        "广州",
+        "粤港澳大湾区"
+      ],
+      "code": "GCC-CAND-6317F508CB18",
+      "description": "该记录仅用于展示官网就业方向候选；必须经人工审核和权威职业代码映射后才能发布为正式岗位知识。",
+      "education_levels": [
+        "本科"
+      ],
+      "entry_level": "待审核",
+      "industry": "",
+      "name": "安全分析",
+      "review_status": "review_required",
+      "scoring_eligible": false,
+      "source_ids": [
+        "gcc-major-page-d7f5de8dd4c7"
+      ],
+      "summary": "由广州商学院官方专业页就业文字确定性提取，尚未映射到人社部规范职业代码。"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

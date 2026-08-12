@@ -11,6 +11,7 @@ import {
   StatusPill,
 } from '@/components/career/career-shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MaterialSyncButton } from '@/components/career/material-sync-button';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -47,6 +48,7 @@ export default async function CareerProfilePage({
         eyebrow={t('profile.eyebrow')}
         title={t('profile.title')}
         description={t('profile.description')}
+        action={<MaterialSyncButton />}
       />
 
       <Card className="gap-5 overflow-hidden border-brand/20 bg-gradient-to-br from-brand/10 via-white to-white py-6 shadow-none dark:via-zinc-950 dark:to-zinc-950">

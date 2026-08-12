@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { eq } from 'drizzle-orm';
 
 vi.mock('server-only', () => ({}));
 
@@ -25,9 +26,15 @@ import {
   careerProfiles,
   careerProfileSnapshots,
   careerTasks,
+  careerKnowledgeDocuments,
+  occupationRelations,
+  occupationRequirements,
+  occupations,
   users,
 } from '@/lib/db/schema';
 import {
+  calculateAndPersistCareerMatch,
+  CareerGoalRequiredError,
   getCareerMatch,
   getCareerPath,
   getCareerProfile,
@@ -50,25 +57,55 @@ beforeEach(async () => {
   await db.delete(careerGoals);
   await db.delete(careerAbilities);
   await db.delete(careerProfiles);
+  await db.delete(careerKnowledgeDocuments);
+  await db.delete(occupationRelations);
+  await db.delete(occupationRequirements);
+  await db.delete(occupations);
   await db.delete(users);
   await db.insert(users).values([
     { id: ALICE_ID, email: 'career-alice@example.com', name: 'Alice', authType: 'oauth' },
     { id: BOB_ID, email: 'career-bob@example.com', name: 'Bob', authType: 'oauth' },
   ]);
+  await db.insert(occupations).values([
+    {
+      code: 'J-FE-001', name: '前端开发工程师', category: '软件与互联网',
+      summary: '前端岗位', description: '构建可访问的Web应用', entryLevel: '初级',
+      catalogVersion: 'test-catalog-v1', active: true, scoringEligible: true,
+    },
+    {
+      code: 'J-FS-001', name: '全栈开发工程师', category: '软件与互联网',
+      summary: '全栈岗位', description: '交付端到端应用', entryLevel: '初级',
+      catalogVersion: 'test-catalog-v1', active: true, scoringEligible: true,
+    },
+  ]);
+  await db.insert(occupationRequirements).values([
+    { id: 'req-web', occupationCode: 'J-FE-001', abilityCode: 'web_frontend', abilityName: 'Web 前端基础', dimension: 'professional_skills', targetScore: 72, weight: 5, required: true, description: '前端基础' },
+    { id: 'req-test', occupationCode: 'J-FE-001', abilityCode: 'testing', abilityName: '软件测试与质量', dimension: 'professional_skills', targetScore: 55, weight: 2, required: true, description: '测试基础' },
+    { id: 'req-project', occupationCode: 'J-FE-001', abilityCode: 'project_delivery', abilityName: '项目交付', dimension: 'project_practice', targetScore: 65, weight: 3, required: true, description: '项目经验' },
+  ]);
+  await db.insert(occupationRelations).values({ id: 'rel-fe-fs', fromCode: 'J-FE-001', toCode: 'J-FS-001', relationType: 'progresses_to', description: '全栈发展' });
+  await db.insert(careerKnowledgeDocuments).values({ id: 'doc-fe', occupationCode: 'J-FE-001', title: '前端职业标准', content: '前端职业标准说明', sourceLabel: '测试权威来源', sourceUrl: 'https://example.com/frontend' });
 });
 
 describe('career knowledge catalog', () => {
-  it('provides 12 reviewed occupations with relationships and citations', async () => {
+  it('reads the explicitly published SQL catalog with relationships and citations', async () => {
     const occupations = await listOccupations();
-    expect(occupations).toHaveLength(12);
+    expect(occupations).toHaveLength(2);
+    expect(occupations.find((item) => item.code === 'J-FE-001')?.scoringEligible).toBe(true);
+    expect(occupations.find((item) => item.code === 'J-FS-001')?.scoringEligible).toBe(false);
     const frontend = await getOccupationByCode('J-FE-001');
-    expect(frontend?.requirements.length).toBeGreaterThanOrEqual(5);
+    expect(frontend?.requirements.length).toBe(3);
     expect(frontend?.relatedOccupations.length).toBeGreaterThan(0);
     expect(frontend?.citations[0].sourceUrl).toMatch(/^https:\/\//);
+    expect((await getOccupationByCode('J-FS-001'))?.scoringEligible).toBe(false);
   });
 });
 
 describe('deterministic occupation matching', () => {
+  it('requires an explicit occupation or primary goal instead of selecting the first catalog item', async () => {
+    await expect(getCareerMatch(ALICE_ID)).rejects.toBeInstanceOf(CareerGoalRequiredError);
+  });
+
   it('keeps unknown abilities null and excludes them from the score denominator', async () => {
     const emptyMatch = await getCareerMatch(ALICE_ID, 'J-FE-001');
     expect(emptyMatch.score).toBeNull();
@@ -85,8 +122,34 @@ describe('deterministic occupation matching', () => {
     });
     const partialMatch = await getCareerMatch(ALICE_ID, 'J-FE-001');
     expect(partialMatch.knownWeight).toBe(5);
-    expect(partialMatch.score).toBe(50);
+    expect(partialMatch.score).toBeNull();
+    expect(partialMatch.scoringStatus).toBe('insufficient_evidence');
+    expect(partialMatch.knownCoverage).toBe(50);
     expect(partialMatch.dimensionBreakdown.find((item) => item.abilityCode === 'testing')?.studentScore).toBeNull();
+  });
+
+  it('shows a score only after both known and verified-evidence thresholds pass, then persists an explicit snapshot', async () => {
+    await db.insert(careerAbilities).values([
+      { userId: ALICE_ID, code: 'web_frontend', name: 'Web 前端基础', dimension: 'professional_skills', score: 72, confidence: 90 },
+      { userId: ALICE_ID, code: 'testing', name: '软件测试与质量', dimension: 'professional_skills', score: 55, confidence: 90 },
+      { userId: ALICE_ID, code: 'project_delivery', name: '项目交付', dimension: 'project_practice', score: 65, confidence: 90 },
+    ]);
+    await db.insert(careerEvidence).values([
+      { userId: ALICE_ID, abilityCode: 'web_frontend', sourceType: 'project', sourceId: 'verified-web', title: '前端项目', status: 'verified' },
+      { userId: ALICE_ID, abilityCode: 'project_delivery', sourceType: 'project', sourceId: 'verified-project', title: '交付项目', status: 'verified' },
+    ]);
+
+    const match = await calculateAndPersistCareerMatch(ALICE_ID, 'J-FE-001');
+    expect(match).toMatchObject({ scoringStatus: 'ready', score: 100, knownCoverage: 100, evidenceCoverage: 80 });
+    expect(match.confidence).toBe(88);
+    expect((await db.select().from(careerMatches))).toHaveLength(1);
+  });
+
+  it('marks candidate catalog occupations as not eligible instead of asking for more evidence', async () => {
+    await db.update(occupations).set({ scoringEligible: false, canonicalType: 'unresolved_placeholder' })
+      .where(eq(occupations.code, 'J-FE-001'));
+    const match = await getCareerMatch(ALICE_ID, 'J-FE-001');
+    expect(match).toMatchObject({ scoringStatus: 'not_eligible', score: null, confidence: null });
   });
 });
 

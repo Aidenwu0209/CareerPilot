@@ -1,4 +1,15 @@
-import { ArrowLeft, ArrowRight, BookOpen, ExternalLink, Network, ShieldCheck } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Building2,
+  ExternalLink,
+  GraduationCap,
+  MapPin,
+  Network,
+  ShieldCheck,
+  Tags,
+} from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
@@ -29,6 +40,11 @@ export default async function OccupationDetailPage({
 
   const occupation = await getOccupationByCode(code);
   if (!occupation) notFound();
+  const sourceVersion = (occupation as typeof occupation & { sourceVersion?: string | null }).sourceVersion;
+  const isMatchEligible = occupation.scoringEligible !== false && occupation.requirements.length > 0;
+  const effectiveReviewStatus = isMatchEligible && occupation.reviewStatus === 'reviewed'
+    ? 'reviewed'
+    : 'review_required';
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -44,29 +60,68 @@ export default async function OccupationDetailPage({
         title={occupation.name}
         description={occupation.description}
         action={
-          <Button asChild className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
-            <Link href={`/career/matching?occupationCode=${encodeURIComponent(occupation.code)}`}>
-              {t('jobDetail.matchAction')}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
+          isMatchEligible ? (
+            <Button asChild className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
+              <Link href={`/career/matching?occupationCode=${encodeURIComponent(occupation.code)}`}>
+                {t('jobDetail.matchAction')}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          ) : (
+            <Button type="button" disabled className="w-full sm:w-auto">{t('jobDetail.matchUnavailable')}</Button>
+          )
         }
       />
 
       <div className="flex flex-wrap gap-2">
         <StatusPill>{t('jobDetail.code', { code: occupation.code })}</StatusPill>
         <StatusPill tone="positive">{t('jobDetail.entryLevel', { level: occupation.entryLevel })}</StatusPill>
-        {occupation.matchScore === null ? (
-          <StatusPill tone="warning">{t('common.insufficientEvidence')}</StatusPill>
+        {occupation.jobFamily ? <StatusPill>{t('jobDetail.jobFamily', { value: occupation.jobFamily })}</StatusPill> : null}
+        {occupation.industry ? <StatusPill>{t('jobDetail.industry', { value: occupation.industry })}</StatusPill> : null}
+        {occupation.catalogVersion ? <StatusPill>{t('jobDetail.catalogVersion', { value: occupation.catalogVersion })}</StatusPill> : null}
+        {!isMatchEligible ? (
+          <StatusPill tone="warning">{t('common.knowledgePendingReview')}</StatusPill>
+        ) : occupation.matchScore === null ? (
+          <StatusPill tone="warning">{t('common.notScored')}</StatusPill>
         ) : (
           <StatusPill tone="positive">{t('jobs.matchScore', { score: occupation.matchScore })}</StatusPill>
         )}
       </div>
 
+      {!isMatchEligible ? (
+        <div role="note" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+          <p className="font-semibold">{t('jobDetail.reviewRequired.title')}</p>
+          <p className="mt-1">{t('jobDetail.reviewRequired.description')}</p>
+        </div>
+      ) : null}
+
+      {(occupation.cities?.length || occupation.educationLevels?.length || occupation.aliases?.length) ? (
+        <section aria-label={t('jobDetail.metadataLabel')} className="grid gap-3 sm:grid-cols-3">
+          {occupation.cities?.length ? (
+            <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+              <p className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400"><MapPin className="h-4 w-4" aria-hidden="true" />{t('jobDetail.cities')}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-800 dark:text-zinc-200">{occupation.cities.join(t('jobs.separator'))}</p>
+            </div>
+          ) : null}
+          {occupation.educationLevels?.length ? (
+            <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+              <p className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400"><GraduationCap className="h-4 w-4" aria-hidden="true" />{t('jobDetail.educationLevels')}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-800 dark:text-zinc-200">{occupation.educationLevels.join(t('jobs.separator'))}</p>
+            </div>
+          ) : null}
+          {occupation.aliases?.length ? (
+            <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
+              <p className="flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400"><Tags className="h-4 w-4" aria-hidden="true" />{t('jobDetail.aliases')}</p>
+              <p className="mt-2 text-sm leading-6 text-zinc-800 dark:text-zinc-200">{occupation.aliases.join(t('jobs.separator'))}</p>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]">
         <CareerSection title={t('jobDetail.requirements.title')} description={t('jobDetail.requirements.description')}>
           <div className="space-y-5">
-            {occupation.requirements.map((requirement) => (
+            {occupation.requirements.length > 0 ? occupation.requirements.map((requirement) => (
               <div key={requirement.abilityCode} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
                 <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
                   <div>
@@ -88,11 +143,37 @@ export default async function OccupationDetailPage({
                   detail={t('jobDetail.requirements.weight', { weight: requirement.weight })}
                 />
               </div>
-            ))}
+            )) : (
+              <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center dark:border-zinc-700 dark:bg-zinc-900">
+                <p className="font-medium text-zinc-800 dark:text-zinc-200">{t('jobDetail.requirements.emptyTitle')}</p>
+                <p className="mt-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">{t('jobDetail.requirements.emptyDescription')}</p>
+              </div>
+            )}
           </div>
         </CareerSection>
 
         <div className="space-y-6">
+          <CareerSection title={t('jobDetail.majors.title')} description={t('jobDetail.majors.description')}>
+            {occupation.majorMappings?.length ? (
+              <ul className="space-y-3">
+                {occupation.majorMappings.map((mapping) => (
+                  <li key={`${mapping.majorCode}-${mapping.relevanceType}`} className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
+                    <div className="flex items-start gap-3">
+                      <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium text-zinc-800 dark:text-zinc-200">{mapping.majorName}</p>
+                          <StatusPill>{t(`relevanceType.${mapping.relevanceType}`)}</StatusPill>
+                        </div>
+                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{mapping.collegeName} · {mapping.majorCode}</p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : <p className="text-sm leading-6 text-zinc-500 dark:text-zinc-400">{t('jobDetail.majors.empty')}</p>}
+          </CareerSection>
+
           <CareerSection title={t('jobDetail.graph.title')} description={t('jobDetail.graph.description')}>
             {occupation.relatedOccupations.length > 0 ? (
               <ul className="space-y-3">
@@ -122,6 +203,16 @@ export default async function OccupationDetailPage({
           </CareerSection>
 
           <CareerSection title={t('jobDetail.sources.title')} description={t('jobDetail.sources.description')}>
+            {(sourceVersion || occupation.reviewStatus || !isMatchEligible) ? (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {sourceVersion ? <StatusPill>{t('jobDetail.sources.sourceVersion', { version: sourceVersion })}</StatusPill> : null}
+                {(occupation.reviewStatus || !isMatchEligible) ? (
+                  <StatusPill tone={effectiveReviewStatus === 'reviewed' ? 'positive' : 'warning'}>
+                    {t(`reviewStatus.${effectiveReviewStatus}`)}
+                  </StatusPill>
+                ) : null}
+              </div>
+            ) : null}
             {occupation.citations.length > 0 ? (
               <ol className="space-y-3">
                 {occupation.citations.map((citation) => (

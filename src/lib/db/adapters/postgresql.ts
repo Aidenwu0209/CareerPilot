@@ -62,7 +62,7 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
     }
 
     // Skip auto-seeding in production — no demo/fingerprint users or sample resumes.
-    if (isProduction || process.env.DEMO_MODE !== 'true') {
+    if (isProduction || process.env.DEMO_MODE !== 'true' || process.env.CAREERPILOT_SKIP_DEMO_SEED === '1') {
       return;
     }
 

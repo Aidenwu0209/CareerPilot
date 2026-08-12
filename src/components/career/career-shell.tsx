@@ -169,12 +169,14 @@ export function EmptyCareerState({
   description,
   href,
   actionLabel,
+  onAction,
 }: {
   icon: LucideIcon;
   title: string;
   description: string;
   href?: string;
   actionLabel?: string;
+  onAction?: () => void;
 }) {
   return (
     <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-950">
@@ -186,6 +188,10 @@ export function EmptyCareerState({
       {href && actionLabel ? (
         <Button asChild className="mt-5 bg-brand hover:bg-brand-hover">
           <Link href={href}>{actionLabel}</Link>
+        </Button>
+      ) : onAction && actionLabel ? (
+        <Button type="button" onClick={onAction} className="mt-5 bg-brand hover:bg-brand-hover">
+          {actionLabel}
         </Button>
       ) : null}
     </div>

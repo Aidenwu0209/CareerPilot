@@ -44,9 +44,18 @@ next-env.d.ts
 # database
 /data/
 
+# career catalog crawler working data. Reviewed, compact catalog artifacts live
+# under /careerpilot-data/catalog and are intentionally versioned.
+/careerpilot-data/raw/
+/careerpilot-data/cache/
+/careerpilot-data/tmp/
+/careerpilot-data/catalog/*.sqlite*
+
 .claude
 
 careerpilot-data/*
+!careerpilot-data/catalog/
+!careerpilot-data/catalog/*.json
 
 .superpowers
 

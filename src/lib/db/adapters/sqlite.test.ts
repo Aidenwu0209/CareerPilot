@@ -140,6 +140,15 @@ describe('SQLiteAdapter.initialize — development seed path', () => {
 
     expect(mocks.seedFn).not.toHaveBeenCalled();
   });
+
+  it('strictly skips demo seed when the catalog CLI guard is set to 1', async () => {
+    setNodeEnv('development');
+    enableDemoMode();
+    process.env.CAREERPILOT_SKIP_DEMO_SEED = '1';
+    const adapter = new SQLiteAdapter('./data/test.db');
+    await adapter.initialize();
+    expect(mocks.seedFn).not.toHaveBeenCalled();
+  });
 });
 
 describe('SQLiteAdapter.initialize — repeated startup idempotency', () => {

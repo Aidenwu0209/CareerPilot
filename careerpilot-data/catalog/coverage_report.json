@@ -1,0 +1,794 @@
+{
+  "catalog_version": "gcc-2026-20260812-p2-84190f91",
+  "generated_at": "2026-08-12T13:37:00Z",
+  "items": [
+    {
+      "major_id": "major-5161a41b9a13",
+      "major_name": "会计学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-89abf0e082cb",
+      "major_name": "财务管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-1feb8f993d52",
+      "major_name": "审计学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-f207ee0a1bf2",
+      "major_name": "税收学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-4f2111e269e5",
+      "major_name": "视觉传达设计",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-54ee8b2b6063",
+      "major_name": "环境设计",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-35a89aaed949",
+      "major_name": "产品设计",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-0dfe8f7c338f",
+      "major_name": "数字媒体艺术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c531b996463d",
+      "major_name": "公共艺术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-67d0b6d04256",
+      "major_name": "互联网金融",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-d5ae026c114f",
+      "major_name": "物流管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-9c8feb01d621",
+      "major_name": "国际商务",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-0397181e92e0",
+      "major_name": "财务管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-a82baa4056ec",
+      "major_name": "金融学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-72ea8080dfc8",
+      "major_name": "市场营销",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-41be67722c33",
+      "major_name": "会计学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c4d68bd815af",
+      "major_name": "电子商务",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-d7ae0f2c5b36",
+      "major_name": "智能科学与技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-9e93f3c685bb",
+      "major_name": "计算机科学与技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-2eda6b9d0e86",
+      "major_name": "软件工程",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-78c8050fa3f3",
+      "major_name": "商务英语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-3c5a36036119",
+      "major_name": "国际商务",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-b583a37a6cce",
+      "major_name": "大数据与会计",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c2939865b0c0",
+      "major_name": "国际金融",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-7123d4335abf",
+      "major_name": "商务英语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-5dee7aa019e2",
+      "major_name": "视觉传达",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-e43f25e27073",
+      "major_name": "物流管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-d5b88415ab15",
+      "major_name": "供应链管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-21e51675187c",
+      "major_name": "市场营销",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-dcef7a00d447",
+      "major_name": "旅游管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-64033e9600a1",
+      "major_name": "健康服务与管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-99ad48fd9530",
+      "major_name": "酒店管理",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c37c7b919163",
+      "major_name": "金融学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-84665a8e90aa",
+      "major_name": "国际经济与贸易",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-154ae046dfb8",
+      "major_name": "投资学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-7d4b0638b10f",
+      "major_name": "互联网金融",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-f4a1bc2bb03a",
+      "major_name": "金融科技",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-e966c68fb6bc",
+      "major_name": "英语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-b59a683114d5",
+      "major_name": "商务英语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-ac59a8a0634d",
+      "major_name": "日语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-515742e97bcc",
+      "major_name": "德语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-1c3541aa6817",
+      "major_name": "西班牙语",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-7284c4a38cc7",
+      "major_name": "法学",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-1c60924b4131",
+      "major_name": "信用风险管理与法律防控",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-5602511fb14f",
+      "major_name": "国际经贸规则",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-26b91cb34b37",
+      "major_name": "电子商务",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-7b38068aa8ce",
+      "major_name": "大数据管理与应用",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-d609c030b632",
+      "major_name": "国际经济与贸易",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-4d726bdff471",
+      "major_name": "数字经济",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c87465df3f29",
+      "major_name": "软件工程",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-ae1da1d76f6f",
+      "major_name": "计算机科学与技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-3fe37274f17b",
+      "major_name": "物联网工程",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-17b50731a99b",
+      "major_name": "人工智能",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-a701b501f929",
+      "major_name": "数据科学与大数据技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-9ec918d33cfa",
+      "major_name": "计算机应用技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-f5fa8295aa2f",
+      "major_name": "软件技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-81c051b2f072",
+      "major_name": "计算机科学与技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-051f23f781f5",
+      "major_name": "软件工程",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-f64ebf174852",
+      "major_name": "物联网工程",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-9eca050e4129",
+      "major_name": "数据科学与大数据技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 2,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-ace4e394b530",
+      "major_name": "信息管理与信息系统",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-a8bd6e0f9569",
+      "major_name": "人工智能",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-7047af4703d9",
+      "major_name": "网络空间安全",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 1,
+      "review_required_edges": 3
+    },
+    {
+      "major_id": "major-c5444d389da6",
+      "major_name": "智能科学与技术",
+      "orphan": false,
+      "relations": {
+        "adjacent": 1,
+        "primary": 1,
+        "stretch": 1
+      },
+      "resolved_occupation_edges": 0,
+      "review_required_edges": 3
+    }
+  ],
+  "reconciliation": {
+    "benchmark_source_url": "https://www.gcc.edu.cn/xxgk/xxjj/index.htm",
+    "explanation": "The ten 2026 college pages include international and industry-class variants that duplicate majors across colleges, while the school-level introduction reports 41 undergraduate and 10 vocational majors. Records are intentionally not deduplicated across delivery colleges until a reviewer reconciles program identity and enrollment status.",
+    "parsed_undergraduate_records": 57,
+    "parsed_vocational_records": 7,
+    "status": "review_required"
+  },
+  "schema_version": "1.0.0",
+  "summary": {
+    "candidate_titles": 89,
+    "colleges": 10,
+    "edges": 192,
+    "majors": 64,
+    "official_school_benchmark_undergraduate_majors": 41,
+    "official_school_benchmark_vocational_majors": 10,
+    "orphan_majors": 0,
+    "resolved_occupations": 0,
+    "review_required_edges": 192,
+    "unresolved_occupation_candidates": 81
+  }
+}
