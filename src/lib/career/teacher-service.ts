@@ -260,6 +260,9 @@ export async function getAssignedStudentDetail(teacherUserId: string, studentId:
     sourceLabel: evidence.sourceType,
     abilityName,
     status: evidence.status === 'verified' ? 'confirmed' : evidence.status,
+    assessedScore: evidence.assessedScore,
+    reviewReason: evidence.reviewReason,
+    reviewedAt: evidence.reviewedAt,
     updatedAt: evidence.createdAt,
   }));
   const teacherTasks: TeacherGrowthTask[] = tasks.map((task) => {

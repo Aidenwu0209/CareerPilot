@@ -1,9 +1,17 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Header } from '@/components/layout/header';
 import { CareerSubnav, type CareerNavItem } from '@/components/career/career-subnav';
 
-export default async function CareerLayout({ children }: { children: React.ReactNode }) {
-  const t = await getTranslations('career');
+export default async function CareerLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   const items: CareerNavItem[] = [
     { key: 'overview', href: '/career', label: t('subnav.overview') },
     { key: 'profile', href: '/career/profile', label: t('subnav.profile') },

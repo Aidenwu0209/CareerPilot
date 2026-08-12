@@ -30,6 +30,8 @@ ALLOWED_HOSTS = {
     "www.mohrss.gov.cn",
     "mohrss.gov.cn",
     "chinajob.mohrss.gov.cn",
+    "www.onetcenter.org",
+    "onetcenter.org",
 }
 
 

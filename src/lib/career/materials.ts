@@ -7,6 +7,8 @@ import {
   careerEvidence,
   interviewReports,
   interviewSessions,
+  occupationRequirements,
+  occupations,
   resumes,
   resumeSections,
 } from '@/lib/db/schema';
@@ -22,7 +24,6 @@ interface EvidenceCandidate {
   title: string;
   excerpt: string;
   occurredAt: Date | null;
-  score?: number;
 }
 
 const KEYWORD_RULES: Array<{ abilityCode: string; patterns: RegExp[] }> = [
@@ -57,6 +58,13 @@ function candidate(
 ): EvidenceCandidate | null {
   const ability = abilityByCode.get(abilityCode);
   return ability ? { ...input, abilityCode, abilityName: ability.name, dimension: ability.dimension } : null;
+}
+
+function requirementCandidate(
+  requirement: Pick<EvidenceCandidate, 'abilityCode' | 'abilityName' | 'dimension'>,
+  input: Omit<EvidenceCandidate, 'abilityCode' | 'abilityName' | 'dimension'>,
+): EvidenceCandidate {
+  return { ...input, ...requirement };
 }
 
 function resumeCandidates(section: {
@@ -118,14 +126,13 @@ async function persistCandidate(userId: string, item: EvidenceCandidate): Promis
     code: item.abilityCode,
     name: item.abilityName,
     dimension: item.dimension,
-    score: item.score ?? null,
-    confidence: item.score == null ? null : 70,
+    score: null,
+    confidence: null,
   } as never).onConflictDoUpdate({
     target: [careerAbilities.userId, careerAbilities.code],
     set: {
       name: item.abilityName,
       dimension: item.dimension,
-      ...(item.score == null ? {} : { score: item.score, confidence: 70 }),
       updatedAt: new Date(),
     },
   });
@@ -167,7 +174,6 @@ export async function syncCareerMaterials(userId: string): Promise<CareerMateria
   const reportRows = await db.select({
     id: interviewReports.id,
     title: interviewSessions.jobTitle,
-    score: interviewReports.overallScore,
     feedback: interviewReports.overallFeedback,
     createdAt: interviewReports.createdAt,
   }).from(interviewReports)
@@ -175,12 +181,36 @@ export async function syncCareerMaterials(userId: string): Promise<CareerMateria
     .where(eq(interviewSessions.userId, userId)) as Array<{
       id: string;
       title: string;
-      score: number;
       feedback: string;
       createdAt: Date;
     }>;
+  const requirementRows = await db.select({
+    abilityCode: occupationRequirements.abilityCode,
+    abilityName: occupationRequirements.abilityName,
+    dimension: occupationRequirements.dimension,
+  }).from(occupationRequirements)
+    .innerJoin(occupations, and(
+      eq(occupations.code, occupationRequirements.occupationCode),
+      eq(occupations.active, true),
+    )) as Array<Pick<EvidenceCandidate, 'abilityCode' | 'abilityName' | 'dimension'>>;
+  const activeRequirements = [...new Map(requirementRows.map((item) => [item.abilityCode, item])).values()];
 
   const candidates = sectionRows.flatMap(resumeCandidates);
+  for (const section of sectionRows) {
+    const content = flattenText(section.content).trim();
+    if (!content) continue;
+    const normalized = content.toLocaleLowerCase('zh-CN');
+    for (const requirement of activeRequirements) {
+      if (requirement.abilityName.length < 2 || !normalized.includes(requirement.abilityName.toLocaleLowerCase('zh-CN'))) continue;
+      candidates.push(requirementCandidate(requirement, {
+        sourceType: section.type === 'projects' ? 'project' : section.type === 'certifications' ? 'certificate' : 'resume',
+        sourceId: `resume-section:${section.id}:${requirement.abilityCode}`,
+        title: `${section.resumeTitle} · ${section.title}`,
+        excerpt: content.slice(0, 500),
+        occurredAt: section.updatedAt,
+      }));
+    }
+  }
   for (const report of reportRows) {
     const item = candidate('interview', {
       sourceType: 'interview',
@@ -188,9 +218,19 @@ export async function syncCareerMaterials(userId: string): Promise<CareerMateria
       title: `${report.title || '目标岗位'}模拟面试报告`,
       excerpt: report.feedback.slice(0, 500),
       occurredAt: report.createdAt,
-      score: report.score,
     });
     if (item) candidates.push(item);
+    const normalized = report.feedback.toLocaleLowerCase('zh-CN');
+    for (const requirement of activeRequirements) {
+      if (requirement.abilityName.length < 2 || !normalized.includes(requirement.abilityName.toLocaleLowerCase('zh-CN'))) continue;
+      candidates.push(requirementCandidate(requirement, {
+        sourceType: 'interview',
+        sourceId: `interview-report:${report.id}:${requirement.abilityCode}`,
+        title: `${report.title || '目标岗位'}模拟面试报告`,
+        excerpt: report.feedback.slice(0, 500),
+        occurredAt: report.createdAt,
+      }));
+    }
   }
 
   let evidenceCreated = 0;

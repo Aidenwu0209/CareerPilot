@@ -5,7 +5,7 @@ import { join } from 'node:path';
 const root = process.cwd();
 
 describe('career UI product rules', () => {
-  it('keeps every required catalog filter and pagination control', () => {
+  it('renders only API-provided active catalog facets and keeps pagination controls', () => {
     const browser = readFileSync(join(root, 'src/components/career/occupation-browser.tsx'), 'utf8');
     for (const field of [
       'collegeCode', 'majorCode', 'jobFamily', 'industry', 'city',
@@ -15,6 +15,11 @@ describe('career UI product rules', () => {
     }
     expect(browser).toContain('pageInfo.hasMore');
     expect(browser).toContain('next.size < 3');
+    expect(browser).toContain('options.length > 0');
+    expect(browser).toContain("responseKey: 'relevanceTypes'");
+    expect(browser).toContain("responseKey: 'relationTypes'");
+    expect(browser).not.toContain("(['primary', 'adjacent', 'cross_major', 'stretch']");
+    expect(browser).not.toContain("(['progresses_to', 'transfers_to', 'related_to']");
   });
 
   it('does not expose internal algorithm versions or legacy cockpit wording', () => {
@@ -61,5 +66,41 @@ describe('career UI product rules', () => {
     expect(en.career.common.knowledgePendingReview).toBeTruthy();
     expect(en.career.matching.notEligible.description).not.toContain('sync');
     expect(en.career.reviewStatus.review_required).toBe('Review required');
+  });
+
+  it('limits goals and comparison to scoreable occupations while preserving legacy goal context', () => {
+    const goalForm = readFileSync(join(root, 'src/components/career/goal-form.tsx'), 'utf8');
+    const matching = readFileSync(join(root, 'src/app/[locale]/career/matching/page.tsx'), 'utf8');
+    expect(goalForm).toContain('occupation.scoringEligible === true');
+    expect(goalForm).toContain('currentGoalUnavailable');
+    expect(matching).toContain('occupation.scoringEligible === true');
+    expect(matching).toContain('selectedUnavailableOccupation');
+  });
+
+  it('supports student evidence submission without any self-score input', () => {
+    const submission = readFileSync(join(root, 'src/components/career/career-evidence-submission-form.tsx'), 'utf8');
+    const matching = readFileSync(join(root, 'src/app/[locale]/career/matching/page.tsx'), 'utf8');
+    const profile = readFileSync(join(root, 'src/app/[locale]/career/profile/page.tsx'), 'utf8');
+    expect(submission).toContain("fetch('/api/career/evidence'");
+    expect(submission).toContain('occupationCode');
+    expect(submission).toContain('abilityCode');
+    expect(submission).toContain('sourceUrl');
+    expect(submission).not.toContain('name="score"');
+    expect(matching).toContain('CareerEvidenceSubmissionForm');
+    expect(profile).toContain('CareerEvidenceSubmissionForm');
+    expect(profile).toContain('evidence.assessedScore');
+    expect(profile).toContain('evidence.reviewReason');
+  });
+
+  it('requires teachers to score confirmed evidence from zero to one hundred', () => {
+    const review = readFileSync(join(root, 'src/components/teacher/evidence-review-form.tsx'), 'utf8');
+    const detail = readFileSync(join(root, 'src/components/teacher/teacher-student-detail.tsx'), 'utf8');
+    expect(review).toContain('name="score"');
+    expect(review).toContain('min={0}');
+    expect(review).toContain('max={100}');
+    expect(review).toContain("decision === 'confirmed' ? { score } : {}");
+    expect(detail).toContain('evidence.assessedScore');
+    expect(detail).toContain('evidence.reviewReason');
+    expect(detail).toContain('aria-valuemax={100}');
   });
 });

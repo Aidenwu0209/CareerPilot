@@ -26,10 +26,23 @@ export interface CareerEvidence {
   excerpt: string;
   sourceUrl: string | null;
   status: EvidenceStatus;
+  assessedScore: number | null;
   reviewReason: string;
   reviewedAt: string | null;
   occurredAt: string | null;
   createdAt: string;
+}
+
+export interface CareerEvidenceSubmission {
+  occupationCode: string;
+  abilityCode: string;
+  title: string;
+  description: string;
+  sourceUrl?: string;
+}
+
+export interface SubmittedCareerEvidence extends CareerEvidence {
+  occupationCode: string;
 }
 
 export interface CareerAbility {
@@ -121,7 +134,7 @@ export interface OccupationSummary {
     collegeName: string;
     relevanceType: MajorOccupationRelationType;
   }>;
-  canonicalType?: 'national_occupation' | 'market_alias' | 'unresolved_placeholder';
+  canonicalType?: 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
   reviewStatus?: string;
   scoringEligible?: boolean;
 }
@@ -160,6 +173,8 @@ export interface OccupationFilterFacets {
   industries: string[];
   cities: string[];
   educationLevels: string[];
+  relevanceTypes: MajorOccupationRelationType[];
+  relationTypes: OccupationRelationType[];
 }
 
 export interface OccupationPage {

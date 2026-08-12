@@ -31,8 +31,14 @@ export function GoalForm({
 }) {
   const t = useTranslations('career');
   const router = useRouter();
+  const scoreableOccupations = occupations.filter((occupation) => occupation.scoringEligible === true);
+  const currentGoalIsUnavailable = Boolean(
+    currentGoal && !scoreableOccupations.some((occupation) => occupation.code === currentGoal.occupationCode),
+  );
   const [isSaving, setIsSaving] = useState(false);
-  const [occupationCode, setOccupationCode] = useState(currentGoal?.occupationCode ?? '');
+  const [occupationCode, setOccupationCode] = useState(
+    currentGoal && !currentGoalIsUnavailable ? currentGoal.occupationCode : '',
+  );
   const [targetDate, setTargetDate] = useState(currentGoal?.targetDate?.slice(0, 10) ?? '');
   const [rationale, setRationale] = useState(currentGoal?.rationale ?? '');
   const [industries, setIndustries] = useState(asCommaList(currentGoal?.preferences.industries));
@@ -88,12 +94,17 @@ export function GoalForm({
           className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
         >
           <option value="">{t('goals.form.occupationPlaceholder')}</option>
-          {occupations.map((occupation) => (
+          {scoreableOccupations.map((occupation) => (
             <option key={occupation.code} value={occupation.code}>
               {occupation.name} · {occupation.category}
             </option>
           ))}
         </select>
+        {currentGoalIsUnavailable ? (
+          <p role="note" className="rounded-md bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+            {t('goals.form.currentGoalUnavailable', { occupation: currentGoal!.occupationName })}
+          </p>
+        ) : null}
         <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">{t('goals.form.occupationHelp')}</p>
       </div>
 
@@ -154,7 +165,7 @@ export function GoalForm({
         </div>
       </fieldset>
 
-      <Button type="submit" disabled={isSaving || occupations.length === 0} className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
+      <Button type="submit" disabled={isSaving || scoreableOccupations.length === 0} className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
         {isSaving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Save className="h-4 w-4" aria-hidden="true" />}
         {isSaving ? t('goals.form.saving') : currentGoal ? t('goals.form.update') : t('goals.form.create')}
       </Button>

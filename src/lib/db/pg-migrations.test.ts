@@ -618,6 +618,16 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       const checkNames = checkRows.map((r) => r.conname);
       expect(checkNames).toContain('credit_accounts_balance_non_negative');
       expect(checkNames).toContain('credit_transactions_balance_before_non_negative');
+      expect(checkNames).toContain('career_evidence_assessed_score_check');
+
+      await pg.exec(`
+        INSERT INTO users (id, auth_type) VALUES ('career-score-check-user', 'email');
+        INSERT INTO career_evidence (id, user_id, ability_code, source_type, title)
+          VALUES ('career-score-check-evidence', 'career-score-check-user', 'communication', 'manual', 'Evidence');
+      `);
+      await expect(pg.exec(`
+        UPDATE career_evidence SET assessed_score = 101 WHERE id = 'career-score-check-evidence'
+      `)).rejects.toThrow();
       expect(checkNames).toContain('credit_transactions_balance_after_non_negative');
       expect(checkNames).toContain('credit_rules_value_non_negative');
       expect(checkNames).toContain('ai_models_fixed_price_check');

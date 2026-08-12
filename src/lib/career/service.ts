@@ -11,6 +11,8 @@ import {
   careerProfiles,
   careerProfileSnapshots,
   careerTasks,
+  occupationRequirements,
+  occupations,
   users,
 } from '@/lib/db/schema';
 import type {
@@ -18,6 +20,7 @@ import type {
   AbilityDimensionCode,
   CareerAbility,
   CareerEvidence,
+  CareerEvidenceSubmission,
   CareerGoal,
   CareerGoalInput,
   CareerMatchResult,
@@ -33,6 +36,7 @@ import type {
   OccupationListFilters,
   OccupationPage,
   OccupationSummary,
+  SubmittedCareerEvidence,
 } from '@/types/career';
 import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
 import { careerKnowledgeProvider } from './knowledge-provider';
@@ -89,6 +93,7 @@ function mapEvidence(row: typeof careerEvidence.$inferSelect): CareerEvidence {
     excerpt: row.excerpt,
     sourceUrl: row.sourceUrl,
     status: row.status,
+    assessedScore: row.assessedScore,
     reviewReason: row.reviewReason,
     reviewedAt: toNullableIso(row.reviewedAt),
     occurredAt: toNullableIso(row.occurredAt),
@@ -222,6 +227,14 @@ export async function getOccupationByCode(code: string): Promise<OccupationDetai
   return careerKnowledgeProvider.getOccupationByCode(code);
 }
 
+async function isActiveScorableOccupation(code: string): Promise<boolean> {
+  const rows = await db.select({ code: occupations.code }).from(occupations)
+    .innerJoin(occupationRequirements, eq(occupationRequirements.occupationCode, occupations.code))
+    .where(and(eq(occupations.code, code), eq(occupations.active, true), eq(occupations.scoringEligible, true)))
+    .limit(1);
+  return Boolean(rows[0]);
+}
+
 export async function listCareerGoals(userId: string): Promise<CareerGoal[]> {
   await dbReady;
   const rows = await db.select().from(careerGoals)
@@ -236,6 +249,67 @@ export async function listCareerTasks(userId: string): Promise<CareerTask[]> {
     .where(eq(careerTasks.userId, userId))
     .orderBy(asc(careerTasks.dueAt), desc(careerTasks.updatedAt));
   return rows.map(mapTask);
+}
+
+/** Submit unscored evidence for a requirement on one of the student's active goals. */
+export async function submitCareerEvidence(
+  userId: string,
+  input: CareerEvidenceSubmission,
+): Promise<SubmittedCareerEvidence> {
+  await ensureProfileRow(userId);
+  const goalRows = await db.select({ id: careerGoals.id }).from(careerGoals).where(and(
+    eq(careerGoals.userId, userId),
+    eq(careerGoals.occupationCode, input.occupationCode),
+    ne(careerGoals.status, 'archived'),
+  )).limit(1);
+  if (!goalRows[0]) throw new CareerValidationError('Evidence can only be submitted for an active career goal.');
+
+  const requirementRows = await db.select({
+    abilityName: occupationRequirements.abilityName,
+    dimension: occupationRequirements.dimension,
+  }).from(occupationRequirements)
+    .innerJoin(occupations, and(
+      eq(occupations.code, occupationRequirements.occupationCode),
+      eq(occupations.active, true),
+    ))
+    .where(and(
+      eq(occupationRequirements.occupationCode, input.occupationCode),
+      eq(occupationRequirements.abilityCode, input.abilityCode),
+    ))
+    .limit(1);
+  const requirement = requirementRows[0];
+  if (!requirement) throw new CareerValidationError('Ability is not a requirement of the active goal occupation.');
+
+  const id = crypto.randomUUID();
+  await db.insert(careerAbilities).values({
+    userId,
+    code: input.abilityCode,
+    name: requirement.abilityName,
+    dimension: requirement.dimension,
+    score: null,
+    confidence: null,
+  } as never).onConflictDoUpdate({
+    target: [careerAbilities.userId, careerAbilities.code],
+    set: { name: requirement.abilityName, dimension: requirement.dimension, updatedAt: new Date() },
+  });
+  await db.insert(careerEvidence).values({
+    id,
+    userId,
+    abilityCode: input.abilityCode,
+    sourceType: 'manual',
+    sourceId: `manual:${input.occupationCode}:${id}`,
+    title: input.title.trim(),
+    excerpt: input.description.trim(),
+    sourceUrl: input.sourceUrl?.trim() || null,
+    status: 'pending',
+    assessedScore: null,
+  });
+  const row = await db.select().from(careerEvidence).where(and(
+    eq(careerEvidence.id, id),
+    eq(careerEvidence.userId, userId),
+  )).limit(1);
+  if (!row[0]) throw new CareerNotFoundError('Evidence could not be created.');
+  return { ...mapEvidence(row[0]), occupationCode: input.occupationCode };
 }
 
 function taskAction(abilityName: string, state: 'met' | 'gap' | 'unknown', gap: number | null): string {
@@ -274,7 +348,7 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
       knownWeight += requirement.weight;
       weightedAchievement += Math.min(studentScore / requirement.targetScore, 1) * requirement.weight;
     }
-    if (student?.evidence.some((item) => item.status === 'verified')) {
+    if (student?.evidence.some((item) => item.status === 'verified' && item.assessedScore != null)) {
       evidencedWeight += requirement.weight;
     }
     return {
@@ -308,7 +382,7 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     ? clampScore((knownCoverage * 0.4) + (evidenceCoverage * 0.6))
     : null;
   const strengths = dimensionBreakdown
-    .filter((item) => item.state === 'met' && item.studentEvidence.some((evidence) => evidence.status === 'verified'))
+    .filter((item) => item.state === 'met' && item.studentEvidence.some((evidence) => evidence.status === 'verified' && evidence.assessedScore != null))
     .sort((a, b) => b.requirement.weight - a.requirement.weight)
     .slice(0, 3);
   const priorityGaps = dimensionBreakdown
@@ -548,7 +622,9 @@ async function createDefaultGoalTasks(userId: string, goal: CareerGoal): Promise
 export async function upsertCareerGoal(userId: string, input: CareerGoalInput): Promise<CareerGoal> {
   await ensureProfileRow(userId);
   const occupation = await getOccupationByCode(input.occupationCode);
-  if (!occupation) throw new CareerValidationError('Unknown occupation code.');
+  if (!occupation || !(await isActiveScorableOccupation(input.occupationCode))) {
+    throw new CareerValidationError('Career goals require an active, scoring-eligible occupation with requirements.');
+  }
   const isPrimary = input.isPrimary ?? true;
   const now = new Date();
   if (isPrimary) {
@@ -604,8 +680,13 @@ export async function createCareerTask(userId: string, input: CareerTaskInput): 
       .limit(1);
     if (!goal[0]) throw new CareerNotFoundError('Goal not found.');
   }
-  if (input.occupationCode && !(await getOccupationByCode(input.occupationCode))) {
-    throw new CareerValidationError('Unknown occupation code.');
+  if (input.occupationCode && !(await isActiveScorableOccupation(input.occupationCode))) {
+    const legacyGoal = await db.select({ id: careerGoals.id }).from(careerGoals).where(and(
+      eq(careerGoals.userId, userId),
+      eq(careerGoals.occupationCode, input.occupationCode),
+      ne(careerGoals.status, 'archived'),
+    )).limit(1);
+    if (!legacyGoal[0]) throw new CareerValidationError('Task occupation must be active or belong to an existing legacy goal.');
   }
 
   const id = crypto.randomUUID();

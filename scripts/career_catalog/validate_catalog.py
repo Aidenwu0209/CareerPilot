@@ -14,6 +14,7 @@ REQUIRED_FILES = {
     "occupation_aliases.json",
     "major_occupation_edges.json",
     "occupation_requirements.json",
+    "occupation_relations.json",
     "sources.json",
     "legacy_occupation_map.json",
     "coverage_report.json",
@@ -24,10 +25,10 @@ RELATIONS = {"primary", "adjacent", "cross_major", "stretch"}
 def validate(catalog_dir: Path) -> list[str]:
     errors: list[str] = []
     manifest = read_json(catalog_dir / "catalog_manifest.json")
-    if manifest.get("scoring_safe") is not False:
-        errors.append("unreviewed catalog must declare scoring_safe=false")
-    if manifest.get("publication_status") != "candidate":
-        errors.append("unreviewed placeholder catalog must declare publication_status=candidate")
+    if manifest.get("scoring_safe") is not True:
+        errors.append("approved O*NET catalog must declare scoring_safe=true")
+    if manifest.get("publication_status") != "approved":
+        errors.append("approved O*NET catalog must declare publication_status=approved")
     missing = REQUIRED_FILES - set(manifest.get("files", {}))
     if missing:
         errors.append(f"manifest missing files: {sorted(missing)}")
@@ -50,6 +51,8 @@ def validate(catalog_dir: Path) -> list[str]:
     aliases = read_json(catalog_dir / "occupation_aliases.json")["items"]
     edges = read_json(catalog_dir / "major_occupation_edges.json")["items"]
     requirements = read_json(catalog_dir / "occupation_requirements.json")["items"]
+    occupation_relations = read_json(catalog_dir / "occupation_relations.json")["items"]
+    legacy_maps = read_json(catalog_dir / "legacy_occupation_map.json")["items"]
     sources = read_json(catalog_dir / "sources.json")["items"]
     college_ids = unique_ids(colleges, "college", errors)
     major_ids = unique_ids(majors, "major", errors)
@@ -61,10 +64,11 @@ def validate(catalog_dir: Path) -> list[str]:
     if not majors:
         errors.append("catalog has no majors")
     if not occupations:
-        errors.append("catalog has no occupation candidates")
+        errors.append("catalog has no occupations")
     gates = manifest.get("quality_gates", {})
-    if not gates.get("non_empty_major_catalog"):
-        errors.append("non_empty_major_catalog quality gate failed")
+    for gate in ["all_45_unique_majors_mapped", "every_major_has_three_resolved_edges", "every_occupation_has_requirements", "curated_mapping_complete"]:
+        if gates.get(gate) is not True:
+            errors.append(f"{gate} quality gate failed")
 
     for major in majors:
         if major.get("college_id") not in college_ids:
@@ -95,16 +99,58 @@ def validate(catalog_dir: Path) -> list[str]:
     for alias in aliases:
         if alias.get("occupation_code") not in occupation_codes:
             errors.append(f"alias {alias.get('id')} references unknown occupation")
+        check_sources(alias, source_ids, errors)
+    requirement_counts: dict[str, dict[str, int]] = {
+        code: {"skill": 0, "knowledge": 0, "total": 0} for code in occupation_codes
+    }
     for requirement in requirements:
         if requirement.get("occupation_code") not in occupation_codes:
             errors.append(f"requirement {requirement.get('id')} references unknown occupation")
+            continue
+        kind = requirement.get("requirement_type")
+        if kind not in {"skill", "knowledge"}:
+            errors.append(f"requirement {requirement.get('id')} has invalid requirement_type")
+        else:
+            requirement_counts[requirement["occupation_code"]][kind] += 1
+        requirement_counts[requirement["occupation_code"]]["total"] += 1
+        check_sources(requirement, source_ids, errors)
+        if requirement.get("review_status") != "approved":
+            errors.append(f"requirement {requirement.get('id')} is not approved")
+        if not isinstance(requirement.get("target_score"), int) or not isinstance(requirement.get("weight"), int):
+            errors.append(f"requirement {requirement.get('id')} is not scoreable")
+    for code, counts in requirement_counts.items():
+        if counts["skill"] < 5 or counts["knowledge"] < 3 or counts["total"] < 8:
+            errors.append(f"occupation {code} requirements below minimum: {counts}")
     for occupation in occupations:
         check_sources(occupation, source_ids, errors)
-        if occupation.get("canonical_type") == "unresolved_placeholder" and occupation.get("scoring_eligible") is not False:
-            errors.append(f"placeholder {occupation.get('code')} must not be scoring eligible")
-        if occupation.get("review_status") not in {"approved", "reviewed"}:
-            if occupation.get("scoring_eligible") is not False:
-                errors.append(f"unreviewed occupation {occupation.get('code')} cannot be scoring eligible")
+        if occupation.get("canonical_type") != "standard_occupation":
+            errors.append(f"occupation {occupation.get('code')} is not canonical")
+        if occupation.get("review_status") != "approved" or occupation.get("scoring_eligible") is not True:
+            errors.append(f"occupation {occupation.get('code')} is not approved and scoring eligible")
+        direct_sources = [source for source in sources if source.get("id") in occupation.get("source_ids", []) and "onetonline.org/link/summary/" in source.get("url", "")]
+        if not direct_sources:
+            errors.append(f"occupation {occupation.get('code')} lacks direct O*NET citation")
+    for relation in occupation_relations:
+        if relation.get("from_code") not in occupation_codes or relation.get("to_code") not in occupation_codes:
+            errors.append(f"occupation relation {relation.get('id')} references unknown occupation")
+        check_sources(relation, source_ids, errors)
+    relation_type_counts = {
+        relation_type: sum(relation.get("relation_type") == relation_type for relation in occupation_relations)
+        for relation_type in {"progresses_to", "transfers_to", "related_to"}
+    }
+    for relation_type, count in relation_type_counts.items():
+        if count == 0:
+            errors.append(f"occupation graph has no {relation_type} relations")
+    for mapping in legacy_maps:
+        if mapping.get("new_code") not in occupation_codes or mapping.get("review_required") is not False:
+            errors.append(f"legacy mapping {mapping.get('old_code')} is not resolved to an approved occupation")
+    for source in sources:
+        if not isinstance(source.get("url"), str) or not source["url"].startswith("https://"):
+            errors.append(f"source {source.get('id')} URL is not traceable HTTPS")
+    for major_id in major_ids:
+        resolved = [edge for edge in edges if edge.get("major_id") == major_id and edge.get("occupation_code") in occupation_codes]
+        if len(resolved) != 3 or any(edge.get("review_required") for edge in resolved):
+            errors.append(f"major {major_id} must have exactly three resolved approved edges")
     return errors
 
 
@@ -140,7 +186,10 @@ def main() -> None:
             print(f"- {error}")
         sys.exit(1)
     coverage = read_json(args.catalog_dir / "coverage_report.json")["summary"]
-    print(f"validation=ok majors={coverage['majors']} edges={coverage['edges']} review_required={coverage['review_required_edges']}")
+    print(
+        f"validation=ok major_records={coverage['major_records']} unique_majors={coverage['unique_majors']} "
+        f"occupations={coverage['occupations']} requirements={coverage['requirements']} edges={coverage['edges']}"
+    )
 
 
 if __name__ == "__main__":

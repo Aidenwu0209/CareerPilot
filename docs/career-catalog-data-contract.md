@@ -1,100 +1,111 @@
 # Career catalog data contract
 
-This document defines the auditable hand-off between the Python source pipeline and the application importer. The crawler does not publish directly to the product database.
+This document defines the auditable hand-off between the Python source pipeline and the application importer. The crawler never writes directly to the product database.
 
-## Trust boundary
+## Authority and scope
 
-- Guangzhou College of Commerce (`zsb.gcc.edu.cn`, `gcc.edu.cn`) is authoritative for current colleges, majors, curriculum summaries, and stated employment directions.
-- The Ministry of Education is authoritative for standard major names and codes.
-- The Ministry of Human Resources and Social Security is authoritative for Chinese occupation classifications and codes.
-- Commercial recruitment websites are not crawled without a licensed API or explicit permission.
-- A deterministic parser output is still only a candidate. Extracted titles are marked `review_required` until a reviewer maps them to a national occupation.
-- A `candidate` catalog may be activated for browse and discovery, but every unresolved record must remain `canonical_type=unresolved_placeholder`, `review_status=review_required`, and `scoring_eligible=false`. It must not be presented as a national occupation or used in matching scores.
+- Guangzhou College of Commerce (`zsb.gcc.edu.cn`, `gcc.edu.cn`) is authoritative for its colleges, 2026 major pages, stated curricula and employment directions.
+- The Ministry of Education is authoritative for Chinese major names and codes. The Ministry of Human Resources and Social Security is authoritative for Chinese occupation classifications.
+- O*NET 30.3 is used as a structured standard-occupation and competency source. O*NET-SOC codes are **not** Chinese MHRSS occupation codes and the UI must label them accordingly.
+- The downloaded O*NET database is a derivative-data source under CC BY 4.0. Product records retain US DOL/ETA attribution, direct O*NET OnLine citations, English source titles, Chinese translations and the normalization formula.
+- Commercial recruitment sites are not crawled without a licensed API or explicit permission.
 
-## Commands
+## Reproducible commands
 
-Run a real, rate-limited fetch and rebuild:
+Run the real, rate-limited source pipeline:
 
 ```bash
 python3 -m scripts.career_catalog.run_pipeline --delay 1.25
 ```
 
-Run offline tests and validation:
+Force a fresh official O*NET archive download when intentionally refreshing the source version:
+
+```bash
+python3 -m scripts.career_catalog.crawl_onet_catalog --force --delay 1.25
+```
+
+Run offline checks and import previews:
 
 ```bash
 python3 -m unittest discover -s scripts/career_catalog/tests -v
 python3 -m compileall -q scripts/career_catalog
 python3 -m scripts.career_catalog.validate_catalog
 python3 -m scripts.career_catalog.load_catalog
+catalog_tmp_dir="$(mktemp -d)"
+SQLITE_PATH="$catalog_tmp_dir/catalog.db" pnpm career:catalog dry-run careerpilot-data/catalog
 ```
 
-`load_catalog` is a crawler-side dry-run and never mutates the product database. The Part 3 application importer owns transactional stage/apply/rollback. It may activate a `candidate` catalog for browse and discovery, while enforcing that placeholders stay unapproved and non-scoreable. Only an `approved` catalog with `scoring_safe=true` may contribute structured requirements to matching scores.
+`load_catalog` is a Python-side dry-run. The application importer owns transactionally verified `dry-run`, `stage`, `apply` and `rollback` operations.
 
-## Storage
+## Fetch controls and storage
 
-Raw HTML, caches, and temporary files are written below `careerpilot-data/raw`, `careerpilot-data/cache`, and `careerpilot-data/tmp`; these directories are ignored by Git. Compact reviewed outputs under `careerpilot-data/catalog` are versioned.
+- HTTPS host allowlist, `robots.txt`, explicit User-Agent, timeout, retry and request delay are mandatory.
+- `careerpilot-data/raw`, `cache` and `tmp` are ignored by Git. Compact normalized JSON under `careerpilot-data/catalog` is versioned.
+- The O*NET ZIP is downloaded once to a controlled cache path. A cache hit must match the previously audited SHA-256 and retains the original HTTP, robots and fetch metadata; it does not invent a new fetch time.
+- The builder uses only `occupation_data.csv`, `essential_skills.csv`, `knowledge.csv`, `job_zones.csv` and `related_occupations.csv` extracted from the official O*NET 30.3 CSV archive.
 
-All normalized data files use this envelope:
+All normalized entity files use:
 
 ```json
 {
   "schema_version": "1.0.0",
-  "catalog_version": "gcc-2026-YYYYMMDD-pN-SOURCEHASH",
+  "catalog_version": "gcc-onet-30.3-YYYYMMDD-INPUTHASH",
   "generated_at": "ISO-8601 UTC",
   "items": []
 }
 ```
 
-## Files and fields
+`INPUTHASH` is the first eight hexadecimal characters of a SHA-256 over the audited O*NET archive hash plus sorted GCC source hashes. Identical inputs reproduce the same immutable version; any source-byte change creates a new version.
 
-### `colleges.json`
+## Files
 
-`id`, `name`, `source_ids[]`, `review_status`.
+### `colleges.json` and `majors.json`
 
-### `majors.json`
-
-`id`, `college_id`, `name`, `degree_level`, `is_currently_recruiting`, `admission_year`, `source_ids[]`, `source_excerpt`, `employment_text`, `review_status`.
+Colleges contain `id`, `name`, `source_ids[]`, and `review_status`. Majors contain `id`, `college_id`, `name`, `degree_level`, recruitment status, source excerpt, employment text and citations. The 64 delivery records resolve to 45 unique major names; cross-college and international/industry-class duplicates are intentionally retained.
 
 ### `occupations.json`
 
-Reviewed canonical occupations and explicitly unresolved browse candidates belong here: `code`, `name`, `canonical_type` (`national_occupation`, reviewed market occupation, or `unresolved_placeholder`), `category`, `summary`, `description`, `entry_level`, `industry`, `cities[]`, `education_levels[]`, `source_ids[]`, `review_status`, `scoring_eligible`. A placeholder must remain `review_required` and `scoring_eligible=false` until authoritative mapping and review are complete.
+Each record has an actual O*NET-SOC `code`, reviewed Chinese `name`, `canonical_type=standard_occupation`, Chinese `job_family`, Chinese `summary`, bilingual `description`, `industry`, aggregated GCC `education_levels[]`, `source_ids[]`, `review_status=approved`, and `scoring_eligible=true`.
+
+These are O*NET standard occupations, not Chinese nationally classified occupations. City data remains empty because O*NET does not provide Guangzhou demand evidence.
 
 ### `occupation_aliases.json`
 
-`id`, `occupation_code`, `alias`, `source_ids[]`, `review_status`. An unreviewed extracted title must not be inserted here because it has no canonical target.
+Contains the exact official English O*NET occupation title as an approved alias of the matching code. Unmapped GCC title candidates are not published.
 
 ### `major_occupation_edges.json`
 
-`id`, `major_id`, `occupation_code` (nullable), `proposed_title` (nullable), `relation_type` (`primary`, `adjacent`, `cross_major`, `stretch`), `source_ids[]`, `evidence_excerpt`, `review_required`, `review_reason`.
-
-An unresolved record uses a null `occupation_code` plus a visible `proposed_title`, reason, and `review_required=true`. It proves a coverage gap; it does not assert a real mapping.
+Every GCC major delivery record has exactly one resolved `primary`, `adjacent`, and `stretch` edge. Each edge references a real occupation code, the GCC source and O*NET source, and has `review_required=false`.
 
 ### `occupation_requirements.json`
 
-`id`, `occupation_code`, `ability_code`, `ability_name`, `dimension`, `target_score` (nullable), `weight` (nullable), `required`, `description`, `education_level`, `experience_level`, `region`, `source_ids[]`, `review_status`. No requirements are emitted until authoritative evidence exists.
+Requirements are derived from O*NET Essential Skills and Knowledge Importance ratings. An occupation is publishable only when it has at least five skill and three knowledge requirements.
+
+- `target_score = round(Data Value / 5 * 100)`, bounded to 0–100.
+- `weight = max(1, round(Data Value))`.
+- The top five skills and top three knowledge elements are `required=true`; remaining selected elements are preferred.
+- `ability_name` is reviewed Chinese. `description` retains the O*NET English element name, element ID and original importance value.
+
+### `occupation_relations.json`
+
+Contains only O*NET related-occupation pairs whose endpoints are both published. Relation type is derived transparently:
+
+- higher Job Zone → `progresses_to`;
+- different SOC family at the same or lower zone → `transfers_to`;
+- same SOC family at the same or lower zone → `related_to`.
+
+The description preserves the O*NET relatedness tier/index and the compared Job Zones.
 
 ### `sources.json`
 
-`id`, `url`, `title`, `publisher`, `source_type`, `published_at`, `fetched_at`, `content_sha256`, `http_status`, `robots_status`, `license_notes`. `raw_path` is an audit pointer and is not a deploy-time dependency.
+Contains the fetched official archive and GCC pages plus direct O*NET OnLine citation URLs. Direct profile links marked `citation_only_not_fetched` do not claim an HTTP response or fetch timestamp. Every derived O*NET record cites the archive and its direct occupation profile.
 
 ### `legacy_occupation_map.json`
 
-`old_code`, `new_code` (nullable), `review_required`, `reason`. Null mappings instruct the importer to preserve legacy `J-*` rows and their user references.
+Contains reviewed mappings from the 12 former `J-*` demo codes to approved O*NET-SOC records so existing goals can continue. Historical match snapshots remain immutable.
 
-### `coverage_report.json`
+### `coverage_report.json` and `catalog_manifest.json`
 
-Contains total colleges, majors, canonical occupations, unresolved occupation candidates, extracted candidate titles, edge records, review-required edges, and orphan majors. Each major reports counts for relation types and resolved edges.
+Coverage proves all 45 unique majors and all 64 delivery records are mapped, with three resolved edges per record. The manifest records exact byte SHA-256 and count for every file, source failures and quality gates. This release is `publication_status=approved` and `scoring_safe=true` only because every published occupation has O*NET occupation, skill and knowledge evidence.
 
-### `catalog_manifest.json`
-
-Contains per-file SHA-256 and record counts, source failures, quality gates, `publication_status`, and `scoring_safe`. The importer must verify every hash before opening a transaction. Candidate data may be activated for browsing, but review-required placeholders must stay visibly non-canonical and must never enter scoring.
-
-## Review and release
-
-1. Run the crawler and retain raw snapshots locally.
-2. Reconcile source failures and page-count inconsistencies.
-3. Review major records and map extracted titles to authoritative occupation codes.
-4. Add evidence-backed requirements and aliases.
-5. Re-run validation.
-6. A human reviewer changes the release manifest to `approved` and `scoring_safe=true` only when every scoring input is authoritative and supported. Until then, the candidate catalog is browse-only.
-7. Use the Part 3 importer to preview, apply transactionally, and roll back by catalog version.
+The importer must verify all manifest hashes before opening a transaction.

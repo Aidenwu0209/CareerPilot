@@ -1,0 +1,2 @@
+ALTER TABLE "career_evidence" ADD COLUMN "assessed_score" integer;--> statement-breakpoint
+ALTER TABLE "career_evidence" ADD CONSTRAINT "career_evidence_assessed_score_check" CHECK ("career_evidence"."assessed_score" is null or ("career_evidence"."assessed_score" between 0 and 100));

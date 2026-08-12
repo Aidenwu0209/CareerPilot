@@ -13,7 +13,7 @@ import {
   TrendingUp,
   UserRoundCheck,
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { getCareerOverview, getCareerPath } from '@/lib/career/service';
@@ -40,11 +40,12 @@ export default async function CareerOverviewPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const [{ locale }, t, context] = await Promise.all([
+  const [{ locale }, context] = await Promise.all([
     params,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career');
 
   const [overview, path] = await Promise.all([

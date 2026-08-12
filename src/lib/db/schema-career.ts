@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { index, integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
+import { check, index, integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
 import { organizations, users } from './schema';
 
 const now = sql`(unixepoch())`;
@@ -46,6 +46,7 @@ export const careerEvidence = sqliteTable('career_evidence', {
   excerpt: text('excerpt').notNull().default(''),
   sourceUrl: text('source_url'),
   status: text('status', { enum: ['pending', 'verified', 'rejected'] }).notNull().default('pending'),
+  assessedScore: integer('assessed_score'),
   reviewedBy: text('reviewed_by').references(() => users.id, { onDelete: 'set null' }),
   reviewReason: text('review_reason').notNull().default(''),
   reviewedAt: integer('reviewed_at', { mode: 'timestamp' }),
@@ -56,13 +57,14 @@ export const careerEvidence = sqliteTable('career_evidence', {
   userIdx: index('career_evidence_user_id_idx').on(table.userId),
   userAbilityIdx: index('career_evidence_user_id_ability_code_idx').on(table.userId, table.abilityCode),
   statusIdx: index('career_evidence_status_idx').on(table.status),
+  assessedScoreCheck: check('career_evidence_assessed_score_check', sql`${table.assessedScore} is null or (${table.assessedScore} between 0 and 100)`),
 }));
 
 export const occupations = sqliteTable('occupations', {
   code: text('code').primaryKey(),
   name: text('name').notNull(),
   category: text('category').notNull(),
-  canonicalType: text('canonical_type', { enum: ['national_occupation', 'market_alias', 'unresolved_placeholder'] }).notNull().default('national_occupation'),
+  canonicalType: text('canonical_type', { enum: ['national_occupation', 'standard_occupation', 'market_alias', 'unresolved_placeholder'] }).notNull().default('national_occupation'),
   jobFamily: text('job_family').notNull().default(''),
   industry: text('industry').notNull().default(''),
   cities: text('cities', { mode: 'json' }).notNull().default('[]'),

@@ -1,5 +1,5 @@
 import { CalendarDays, CheckCircle2, Compass, ShieldQuestion } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { getCareerOverview, listOccupations } from '@/lib/career/service';
@@ -21,11 +21,12 @@ export default async function CareerGoalsPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const [{ locale }, t, context] = await Promise.all([
+  const [{ locale }, context] = await Promise.all([
     params,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/goals');
 
   const [overview, occupations] = await Promise.all([
@@ -33,6 +34,7 @@ export default async function CareerGoalsPage({
     listOccupations(),
   ]);
   const goal = overview.primaryGoal;
+  const scoreableOccupations = occupations.filter((occupation) => occupation.scoringEligible === true);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -125,7 +127,7 @@ export default async function CareerGoalsPage({
             <CardDescription>{t('goals.form.description')}</CardDescription>
           </CardHeader>
           <CardContent className="px-5 sm:px-6">
-            {occupations.length > 0 ? (
+            {scoreableOccupations.length > 0 ? (
               <GoalForm occupations={occupations} currentGoal={goal} />
             ) : (
               <p className="rounded-lg bg-zinc-50 p-4 text-sm leading-6 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">

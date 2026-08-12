@@ -1,15 +1,18 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { listOccupations } from '@/lib/career/service';
 import { CareerPageHeader } from '@/components/career/career-shell';
 import { OccupationBrowser, type CatalogOccupation } from '@/components/career/occupation-browser';
 
-export default async function CareerJobsPage() {
-  const [t, context] = await Promise.all([
-    getTranslations('career'),
-    resolveServerContext(),
-  ]);
+export default async function CareerJobsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const [{ locale }, context] = await Promise.all([params, resolveServerContext()]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/jobs');
 
   const occupations = await listOccupations();

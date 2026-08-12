@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Tags,
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
@@ -31,11 +31,12 @@ export default async function OccupationDetailPage({
 }: {
   params: Promise<{ locale: string; code: string }>;
 }) {
-  const [{ locale, code }, t, context] = await Promise.all([
+  const [{ locale, code }, context] = await Promise.all([
     params,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin(`/career/jobs/${code}`);
 
   const occupation = await getOccupationByCode(code);
@@ -75,6 +76,9 @@ export default async function OccupationDetailPage({
 
       <div className="flex flex-wrap gap-2">
         <StatusPill>{t('jobDetail.code', { code: occupation.code })}</StatusPill>
+        {occupation.canonicalType === 'standard_occupation' && isMatchEligible ? (
+          <StatusPill tone="positive">{t('jobDetail.standardOccupation')}</StatusPill>
+        ) : null}
         <StatusPill tone="positive">{t('jobDetail.entryLevel', { level: occupation.entryLevel })}</StatusPill>
         {occupation.jobFamily ? <StatusPill>{t('jobDetail.jobFamily', { value: occupation.jobFamily })}</StatusPill> : null}
         {occupation.industry ? <StatusPill>{t('jobDetail.industry', { value: occupation.industry })}</StatusPill> : null}
@@ -203,6 +207,12 @@ export default async function OccupationDetailPage({
           </CareerSection>
 
           <CareerSection title={t('jobDetail.sources.title')} description={t('jobDetail.sources.description')}>
+            {occupation.canonicalType === 'standard_occupation' ? (
+              <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm leading-6 text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
+                <p className="font-medium">{t('jobDetail.sources.onetTitle')}</p>
+                <p className="mt-1 text-xs">{t('jobDetail.sources.onetDescription')}</p>
+              </div>
+            ) : null}
             {(sourceVersion || occupation.reviewStatus || !isMatchEligible) ? (
               <div className="mb-4 flex flex-wrap gap-2">
                 {sourceVersion ? <StatusPill>{t('jobDetail.sources.sourceVersion', { version: sourceVersion })}</StatusPill> : null}

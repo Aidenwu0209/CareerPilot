@@ -11,7 +11,7 @@
  *
  * SQLite remains as a development-only adapter and is NOT the production migration source.
  */
-import { pgTable, text, integer, unique, index } from 'drizzle-orm/pg-core';
+import { check, pgTable, text, integer, unique, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 const epochNow = sql`extract(epoch from now())::integer`;
@@ -777,6 +777,7 @@ export const careerEvidence = pgTable('career_evidence', {
   excerpt: text('excerpt').notNull().default(''),
   sourceUrl: text('source_url'),
   status: text('status').notNull().default('pending'),
+  assessedScore: integer('assessed_score'),
   reviewedBy: text('reviewed_by').references(() => users.id, { onDelete: 'set null' }),
   reviewReason: text('review_reason').notNull().default(''),
   reviewedAt: integer('reviewed_at'),
@@ -787,6 +788,7 @@ export const careerEvidence = pgTable('career_evidence', {
   userIdx: index('career_evidence_user_id_idx').on(table.userId),
   userAbilityIdx: index('career_evidence_user_id_ability_code_idx').on(table.userId, table.abilityCode),
   statusIdx: index('career_evidence_status_idx').on(table.status),
+  assessedScoreCheck: check('career_evidence_assessed_score_check', sql`${table.assessedScore} is null or (${table.assessedScore} between 0 and 100)`),
 }));
 
 export const occupations = pgTable('occupations', {
