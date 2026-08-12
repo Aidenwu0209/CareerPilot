@@ -79,6 +79,14 @@ interface TeacherStudentDetailCopy {
       description: string;
       reasonLabel: string;
       reasonPlaceholder: string;
+      decisionLabel: string;
+      confirmDecision: string;
+      rejectDecision: string;
+      scoreLabel: string;
+      scoreHelp: string;
+      scorePlaceholder: string;
+      assessedScore: string;
+      reviewReason: string;
       confirm: string;
       reject: string;
       submitting: string;
@@ -252,7 +260,7 @@ function ProfileTab({ student, copy }: { student: TeacherStudentDetail; copy: Te
                     role="progressbar"
                     aria-label={ability.name}
                     aria-valuemin={0}
-                    aria-valuemax={5}
+                    aria-valuemax={100}
                     aria-valuenow={ability.level}
                     className="h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800"
                   >
@@ -286,10 +294,18 @@ function ProfileTab({ student, copy }: { student: TeacherStudentDetail; copy: Te
                   </div>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4 px-5 sm:flex-row sm:items-end sm:justify-between">
-                  <dl className="grid min-w-0 gap-x-6 gap-y-2 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-2">
-                    <div><dt className="inline">{copy.profile.ability}：</dt><dd className="inline text-zinc-900 dark:text-zinc-100">{evidence.abilityName}</dd></div>
-                    <div><dt className="inline">{copy.profile.source}：</dt><dd className="inline text-zinc-900 dark:text-zinc-100">{copy.profile.sourceTypes[evidence.sourceType]} · {evidence.sourceLabel}</dd></div>
-                  </dl>
+                  <div className="min-w-0 space-y-3">
+                    <dl className="grid min-w-0 gap-x-6 gap-y-2 text-xs text-zinc-600 dark:text-zinc-400 sm:grid-cols-2">
+                      <div><dt className="inline">{copy.profile.ability}：</dt><dd className="inline text-zinc-900 dark:text-zinc-100">{evidence.abilityName}</dd></div>
+                      <div><dt className="inline">{copy.profile.source}：</dt><dd className="inline text-zinc-900 dark:text-zinc-100">{copy.profile.sourceTypes[evidence.sourceType]} · {evidence.sourceLabel}</dd></div>
+                    </dl>
+                    {evidence.status === 'confirmed' && typeof evidence.assessedScore === 'number' ? (
+                      <div className="rounded-md bg-emerald-50 px-3 py-2 text-xs leading-5 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
+                        <p className="font-medium">{copy.profile.review.assessedScore.replace('{score}', String(evidence.assessedScore))}</p>
+                        {evidence.reviewReason ? <p className="mt-1">{copy.profile.review.reviewReason.replace('{reason}', evidence.reviewReason)}</p> : null}
+                      </div>
+                    ) : null}
+                  </div>
                   {evidence.status === 'pending' && (
                     <EvidenceReviewForm studentId={student.id} evidenceId={evidence.id} copy={copy.profile.review} />
                   )}

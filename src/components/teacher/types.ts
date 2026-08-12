@@ -43,6 +43,9 @@ export interface TeacherAbilityEvidence {
   sourceLabel: string;
   abilityName: string;
   status: EvidenceStatus;
+  assessedScore?: number | null;
+  reviewReason?: string;
+  reviewedAt?: string | null;
   updatedAt: string;
 }
 

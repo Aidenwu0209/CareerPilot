@@ -127,6 +127,13 @@
       "when": 1786540908483,
       "tag": "0017_ambitious_talos",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1786545911991,
+      "tag": "0018_career_evidence_assessment",
+      "breakpoints": true
     }
   ]
 }

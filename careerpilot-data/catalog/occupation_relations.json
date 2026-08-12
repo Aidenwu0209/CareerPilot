@@ -1,0 +1,3318 @@
+{
+  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
+  "generated_at": "2026-08-12T14:40:20Z",
+  "items": [
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-2dbb3c62ca10",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-04deb15dca81",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-841c1a7494c1",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-ff2ba5bc7de3",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-816036035d76",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-2021.00",
+      "id": "onet-related-44f14d233305",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-f57f85e7ddbe",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-0f649d63ae44",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-f9ce6f4aba2d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-f5d6ef64e4aa",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.03"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-0ce5f54e6de6",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3031.00",
+      "id": "onet-related-5660ccf382e6",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-e3c54af680cb",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (5→5).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-7ea85c57e384",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2099.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-787ac2464273",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-33c41beacd0f",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-16f3816c643f",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-ea28d235a94c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-a416178ef77e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "11-3031.03",
+      "id": "onet-related-bcbd1708ab70",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3071.04",
+      "id": "onet-related-a19835638dd1",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3071.04",
+      "id": "onet-related-64cce70b5891",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3071.04",
+      "id": "onet-related-0c487881e90c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3071.04",
+      "id": "onet-related-2f83f02d2cac",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-3071.04",
+      "id": "onet-related-b1d029b2cec5",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-2021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→2).",
+      "from_code": "11-9081.00",
+      "id": "onet-related-a5a9a9b5c8c8",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-4081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "11-9111.00",
+      "id": "onet-related-31f10f3b4227",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9111.00",
+      "id": "onet-related-b575e4dfb114",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "21-1091.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9111.00",
+      "id": "onet-related-7256bae9852a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9199.02",
+      "id": "onet-related-9a568e6a2f03",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9199.02",
+      "id": "onet-related-e954b6470173",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1041.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9199.02",
+      "id": "onet-related-c09d1dd27fad",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9199.02",
+      "id": "onet-related-8ff80322b271",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "11-9199.02",
+      "id": "onet-related-0180f89b9d90",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1041.00",
+      "id": "onet-related-fef63dacf87f",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9199.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-1041.00",
+      "id": "onet-related-12a864e9c439",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "23-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1041.00",
+      "id": "onet-related-94604d2af86e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-1041.00",
+      "id": "onet-related-6ed5d8f00ff8",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "13-1041.00",
+      "id": "onet-related-81096f55a10b",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "23-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.00",
+      "id": "onet-related-70edaf27ab81",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.00",
+      "id": "onet-related-1b88895139cd",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3071.04"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.00",
+      "id": "onet-related-a7e9df1f189f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.00",
+      "id": "onet-related-ef5b44f556c7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.00",
+      "id": "onet-related-667069cfb50c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.01",
+      "id": "onet-related-2ab213b0dda0",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.01",
+      "id": "onet-related-12246f8632a8",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.01",
+      "id": "onet-related-9387103c9333",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3071.04"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.01",
+      "id": "onet-related-f7bf1524d9ae",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-1081.01",
+      "id": "onet-related-c0795d86e48a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-e411025326af",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3071.04"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-c1cb4d022efc",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-10b7f00b539d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-1bced2911936",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-65665dd95f19",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-f572c8847821",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1081.02",
+      "id": "onet-related-ce6829ca12d0",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1111.00",
+      "id": "onet-related-6f4f5371e281",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1111.00",
+      "id": "onet-related-0129dba8da14",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1111.00",
+      "id": "onet-related-1df611a14e89",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9199.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1111.00",
+      "id": "onet-related-9218a109ce66",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-3fc2e5cfea44",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-2021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-a38f6f53e2a1",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-7b55636f3912",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-545a19ba799f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-79c2708f3f5a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.00",
+      "id": "onet-related-ca003c6d45a3",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-dfd196944687",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-52dc4029a401",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-2021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-5b8374fbb960",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-474efc41698e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-50b866ab9e4b",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-70148659c5ce",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-e06fde64ad9c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-1161.01",
+      "id": "onet-related-967a1dc16a73",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-bbdc4bed21bf",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-0050c9734c0f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-09befc58f325",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2082.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-997e9e779fed",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-fade10383be4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-2ec541037074",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2011.00",
+      "id": "onet-related-0d53711c8761",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-6d810dfa8044",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.03"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-7c1ce56ab5dc",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-e89e621fadb6",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-60c79d4cc278",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-a2f8018610a5",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2082.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2052.00",
+      "id": "onet-related-038effa5ddea",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-035113c28563",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-f1d0c748ee0a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9199.02"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-7cfcd15b3cf2",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-ac80e18b319b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-62aa138de6aa",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-aaf1b6107b03",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.03"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-5d7e3b518466",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "13-2061.00",
+      "id": "onet-related-6cf91056fbb7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-343e6f7f71e0",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2082.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-e165d37498e4",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-1dedeab43956",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-031e1c4cb1ba",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-9e0b9897a63e",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1041.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2081.00",
+      "id": "onet-related-db9d84a0e242",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-4144e574e445",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-54f83952af40",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-1a58bf630385",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-689fb1e5406e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-7966d2ec31e0",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-6d4aa6978f66",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "13-2082.00",
+      "id": "onet-related-3286f1b560af",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "23-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→5).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-0ba2f37a2ead",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.03"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-d1c9ba6e006d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-993fdb63ff4b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-959b1ad3b81d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2052.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-b98741fb87f5",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-e52bfa066223",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "13-2099.01",
+      "id": "onet-related-287384930e01",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-ffedcbe9816d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-f6f05f27f96b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-c0ac1db13a34",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-9f92b340d2f3",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-9bdedc0a1301",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-1bb6a2a4b784",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-cf0c8d80a1ba",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-293d3331db29",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-e7b571324186",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-6dfdf4ba7164",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1211.00",
+      "id": "onet-related-890ce60944a7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1211.01",
+      "id": "onet-related-f46ee20ee6d6",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1211.01",
+      "id": "onet-related-e3597d54bb1d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "21-1091.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1211.01",
+      "id": "onet-related-06ca1f43ebae",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-113d29db223e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-dd28eaf909b3",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-68839f5d23fc",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-4119d5a1004e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-3af37243e0ad",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-6368f12d8755",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-b8d8cb6c0570",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1212.00",
+      "id": "onet-related-dd8365241dea",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1221.00",
+      "id": "onet-related-ef99e034b49e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→3).",
+      "from_code": "15-1221.00",
+      "id": "onet-related-6cf66e8d9479",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1221.00",
+      "id": "onet-related-150ab8fccf0d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "15-1221.00",
+      "id": "onet-related-0676913e50b8",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-849f4fd1a9a8",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-972ce0e90638",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-ccbba07fd6d4",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-71d58e765409",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-44fa8ba4770e",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-f4e2bb19e2ac",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-b59bc4723da6",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1232.00",
+      "id": "onet-related-f0e21ea453a6",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-a9e6675040fd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-1b4c571cdfe2",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-537e5a1f35bd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-6d74fc7bfad3",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-a06586fbcf7d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-03510a55d743",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-86306561fbbe",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1241.00",
+      "id": "onet-related-b1a973c7f4ca",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-1eb7518d92d4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-578093a21f33",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-b7220202eb10",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-c529fe627f00",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-01fadd139777",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-2051.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-e6cff2c6516a",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-51b1f5f61ecf",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1081.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-203f5953cf48",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-1f534a6d25e2",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1243.01",
+      "id": "onet-related-3d2da1611ae5",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-77031923610a",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-19fc204ecbd2",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-93ccac75f5b5",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-0a53119d3349",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-335bd1704511",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-006f1f8e31cf",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-e23f9a80a138",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-493396fe58b4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1244.00",
+      "id": "onet-related-5c05ca906542",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-856c94621306",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-09d4d772cf6b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-e9870178110d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-e6ca4198e197",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-6c0eba08063d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-2a485594a5e3",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-783983541aa6",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-fb82a62eb594",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1252.00",
+      "id": "onet-related-bc108e726d69",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-0a212164d54a",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-7decb99ec199",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-1a6a123638ba",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-8d5f394da76c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-e77bebe3a537",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-479f3e7ab4bc",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1253.00",
+      "id": "onet-related-bf1d7281544d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-358ed55a33ca",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-4a11e4825a81",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-fd59de6d1e8a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-20307c39322c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-29601e479075",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-ea36eb53e7a3",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-679fbe519a46",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-41c76be3bd72",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-a91161154bf9",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-c9f2f73a53ed",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1254.00",
+      "id": "onet-related-15a61c5aed28",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-879962540deb",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-a02657c35209",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-d1cadbb6c9a8",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-3b6fc032cb2f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-c5b9e85c8549",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-a290e68db4cc",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-dae93c34f231",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-1299.05",
+      "id": "onet-related-862471261c3e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-8250a1b16f95",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-d9ba7138ed52",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-816eb910ea0b",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1241.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-42ce7fffd3e3",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1244.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-f4f77a66837a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.05"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-25513fcc9d3c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-1d1dd2b26e05",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "17-2061.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-5eb58cd0566e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1232.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-578480899a56",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1212.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "15-1299.08",
+      "id": "onet-related-de728061dfa5",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-5ae26b7e792b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-277d260e2953",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-aed8dd5ca857",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-2021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-33822b00b2cf",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-d8a1d1c4166e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-ec6480080f6e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1243.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-407d1c7fe208",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-b4118e359a8d",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2099.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "15-2051.01",
+      "id": "onet-related-e565f013aaf7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "17-2061.00",
+      "id": "onet-related-79a7dd390503",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "17-2061.00",
+      "id": "onet-related-82aadbbac34c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1299.08"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "17-2061.00",
+      "id": "onet-related-f979935395e8",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1253.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "17-2061.00",
+      "id": "onet-related-35c98d925ddb",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "21-1091.00",
+      "id": "onet-related-d64ab09a84de",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1211.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "21-1091.00",
+      "id": "onet-related-c04b7514fd7c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (5→3).",
+      "from_code": "23-1011.00",
+      "id": "onet-related-5931da298e43",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "23-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "23-1011.00",
+      "id": "onet-related-261ee41b2fe9",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1041.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (5→3).",
+      "from_code": "23-1011.00",
+      "id": "onet-related-72a36089501c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→5).",
+      "from_code": "23-2011.00",
+      "id": "onet-related-261e9a86517b",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "23-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "23-2011.00",
+      "id": "onet-related-89507dc4081c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1041.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "23-2011.00",
+      "id": "onet-related-8afe2bfbc25d",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→5).",
+      "from_code": "25-1123.00",
+      "id": "onet-related-93495c46f6cd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "25-1124.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (5→5).",
+      "from_code": "25-1124.00",
+      "id": "onet-related-c6c5ab9a2734",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "25-1123.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "25-1124.00",
+      "id": "onet-related-2bf74fe90950",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3091.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-9d88b24f6283",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-cefc6840710e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1014.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-ba41df07fee9",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-2012.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-10ecf7c46acc",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1027.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-c65bd019ee02",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "27-1011.00",
+      "id": "onet-related-afd7a53ca872",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1013.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-45f078e56279",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1014.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-cb90cc8338e4",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-dadf308d1ed7",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (3→5).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-7e2d938d40e1",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1027.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-bf28b4e05961",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "27-1013.00",
+      "id": "onet-related-864f6a8648b9",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1025.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-8689f3e4fcdf",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-7fb75785fcde",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-7095976b1a69",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-2012.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-cb89116af07e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-53871ca90bf4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1013.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "27-1014.00",
+      "id": "onet-related-1bae221a9dc0",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1021.00",
+      "id": "onet-related-812c02657d75",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1025.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-425c78188bda",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1014.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-b1232191d493",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-e385a4e60ca7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1013.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-2795d30eb01f",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1027.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-de7e4e473a77",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-8d7985061f67",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1025.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-99e95f676aa4",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1252.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-0d7782524797",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "15-1254.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1024.00",
+      "id": "onet-related-3cf68b6ecee4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-2012.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1025.00",
+      "id": "onet-related-f7fbaa82b279",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "27-1025.00",
+      "id": "onet-related-ec82ea4f3ca9",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1027.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1025.00",
+      "id": "onet-related-9eef6f777c85",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-1025.00",
+      "id": "onet-related-401385b52fd7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-5c62c1267bdd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→3).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-e02d728a86e2",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1013.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-4243656b6ba7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-30a538a46d3e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-f9629038ec0e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1025.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (5→4).",
+      "from_code": "27-1027.00",
+      "id": "onet-related-1d2bb03bedbf",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1014.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-2012.00",
+      "id": "onet-related-63e86ea67f24",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-2012.00",
+      "id": "onet-related-1dcef12b5860",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1014.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-2012.00",
+      "id": "onet-related-b2d704691f57",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-2012.00",
+      "id": "onet-related-3c46e00d1a8e",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "27-1024.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-3031.00",
+      "id": "onet-related-e2f56f67cf40",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-3031.00",
+      "id": "onet-related-7d224731e76f",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-2021.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-3031.00",
+      "id": "onet-related-e017b123c5d7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1111.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
+      "from_code": "27-3031.00",
+      "id": "onet-related-25b3494f33d4",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-1161.01"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "27-3091.00",
+      "id": "onet-related-17f681369efc",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "25-1124.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→5).",
+      "from_code": "27-3091.00",
+      "id": "onet-related-f44be0e3e8a9",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "25-1123.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "39-7011.00",
+      "id": "onet-related-1f0aa6604f55",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "41-3041.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "41-3041.00",
+      "id": "onet-related-2f1eab634aeb",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "39-7011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→2).",
+      "from_code": "41-3041.00",
+      "id": "onet-related-f3ed89dc5b46",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "43-4081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "43-3031.00",
+      "id": "onet-related-8364ac4bbe3f",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2011.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (3→4).",
+      "from_code": "43-3031.00",
+      "id": "onet-related-6c926ec453c4",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-3031.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "43-3031.00",
+      "id": "onet-related-b9ff84823169",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2082.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→3).",
+      "from_code": "43-3031.00",
+      "id": "onet-related-da7f2cc095e7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "13-2081.00"
+    },
+    {
+      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (2→4).",
+      "from_code": "43-4081.00",
+      "id": "onet-related-cb3a3e924446",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "onet-30.3-csv"
+      ],
+      "to_code": "11-9081.00"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

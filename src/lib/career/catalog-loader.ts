@@ -10,6 +10,7 @@ const FILES = {
   occupation_aliases: 'occupation_aliases.json',
   major_occupation_edges: 'major_occupation_edges.json',
   occupation_requirements: 'occupation_requirements.json',
+  occupation_relations: 'occupation_relations.json',
   sources: 'sources.json',
   legacy_occupation_map: 'legacy_occupation_map.json',
 } as const;

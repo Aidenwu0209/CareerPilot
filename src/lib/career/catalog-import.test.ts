@@ -25,7 +25,7 @@ import {
   majorOccupationEdges,
   occupationAliases,
 } from '@/lib/db/schema-career';
-import { careerKnowledgeDocuments, occupationRequirements, occupations } from '@/lib/db/schema';
+import { careerGoals, careerKnowledgeDocuments, careerTasks, occupationRelations, occupationRequirements, occupations, users } from '@/lib/db/schema';
 import { applyCareerCatalog, dryRunCareerCatalog, rollbackCareerCatalog, stageCareerCatalog, type CareerCatalogBundle } from './catalog-import';
 import { careerKnowledgeProvider } from './knowledge-provider';
 
@@ -49,6 +49,10 @@ function bundle(version: string, code: string, name: string): CareerCatalogBundl
       dimension: 'domain_knowledge' as const, target_score: 70, weight: 5, required: true, description: '掌握软件工程基础',
       education_level: '本科', experience_level: '应届', region: '广州', source_ids: ['src-1'], review_status: 'approved',
     }]),
+    occupation_relations: envelope(version, [{
+      id: `relation-${code}`, from_code: code, to_code: code, relation_type: 'related_to' as const,
+      description: '同一标准职业的关联入口。', source_ids: ['src-1'], review_status: 'approved',
+    }]),
     sources: envelope(version, [{
       id: 'src-1', url: 'https://example.edu/occupation', title: '职业说明', publisher: '测试来源', source_type: 'official',
       fetched_at: '2026-08-12T00:00:00.000Z', content_sha256: 'a'.repeat(64), http_status: 200, robots_status: 'allowed',
@@ -59,16 +63,20 @@ function bundle(version: string, code: string, name: string): CareerCatalogBundl
 }
 
 beforeEach(async () => {
+  await db.delete(careerTasks);
+  await db.delete(careerGoals);
   await db.delete(majorOccupationEdges);
   await db.delete(occupationAliases);
   await db.delete(careerMajors);
   await db.delete(careerColleges);
   await db.delete(careerSourceSnapshots);
   await db.delete(careerKnowledgeDocuments);
+  await db.delete(occupationRelations);
   await db.delete(occupationRequirements);
   await db.delete(occupations);
   await db.delete(careerCatalogEntries);
   await db.delete(careerCatalogVersions);
+  await db.delete(users);
 });
 
 describe('versioned career catalog import', () => {
@@ -91,6 +99,15 @@ describe('versioned career catalog import', () => {
     expect(page.filters.colleges).toEqual([{ value: 'gcc-it', label: '信息技术学院' }]);
     expect(page.filters.majors).toEqual([{ value: 'major-se', label: '软件工程 · 信息技术学院' }]);
     expect(page.filters.cities).toEqual(['广州']);
+    expect(page.filters.relevanceTypes).toEqual(['primary']);
+    expect(page.filters.relationTypes).toEqual(['related_to']);
+    expect((await careerKnowledgeProvider.listOccupations({ relationType: 'related_to' })).pageInfo.total).toBe(1);
+    for (const major of page.filters.majors) {
+      expect((await careerKnowledgeProvider.listOccupations({ collegeCode: 'gcc-it', majorCode: major.value })).pageInfo.total).toBeGreaterThan(0);
+    }
+    for (const relationType of page.filters.relationTypes) {
+      expect((await careerKnowledgeProvider.listOccupations({ majorCode: 'major-se', relationType })).pageInfo.total).toBeGreaterThan(0);
+    }
     expect(after).toHaveLength(before.length);
   });
 
@@ -131,5 +148,30 @@ describe('versioned career catalog import', () => {
     const diff = await dryRunCareerCatalog(input);
     expect(diff.blockingErrors).toContain('Unknown source in occupation OCC-BAD: missing-source');
     await expect(stageCareerCatalog(input)).rejects.toThrow(/validation failed/);
+  });
+
+  it('rejects scoreable occupations without a scorable requirement', async () => {
+    const input = bundle('gcc-2026-no-requirements', 'OCC-NO-REQ', '无要求岗位');
+    input.occupation_requirements.items = [];
+    const diff = await dryRunCareerCatalog(input);
+    expect(diff.blockingErrors).toContain('Scoring occupation OCC-NO-REQ must have at least one scorable requirement.');
+  });
+
+  it('maps goals and tasks through an approved legacy mapping while keeping the old occupation readable', async () => {
+    await db.insert(users).values({ id: 'legacy-user', email: 'legacy@example.com', authType: 'oauth' });
+    await db.insert(occupations).values({
+      code: 'J-LEGACY', name: '旧岗位', category: '旧目录', summary: '', description: '', entryLevel: '', active: true,
+    });
+    await db.insert(careerGoals).values({ id: 'legacy-goal', userId: 'legacy-user', occupationCode: 'J-LEGACY' });
+    await db.insert(careerTasks).values({
+      id: 'legacy-task', userId: 'legacy-user', goalId: 'legacy-goal', occupationCode: 'J-LEGACY', title: '旧目标任务',
+    });
+    const input = bundle('gcc-2026-legacy-map', 'OCC-CANONICAL', '标准岗位');
+    input.legacy_occupation_map!.items = [{ old_code: 'J-LEGACY', new_code: 'OCC-CANONICAL', review_required: false }];
+    await stageCareerCatalog(input);
+    await applyCareerCatalog('gcc-2026-legacy-map');
+    expect((await db.select().from(careerGoals))[0].occupationCode).toBe('OCC-CANONICAL');
+    expect((await db.select().from(careerTasks))[0].occupationCode).toBe('OCC-CANONICAL');
+    expect((await careerKnowledgeProvider.getOccupationByCode('J-LEGACY'))?.name).toBe('旧岗位');
   });
 });

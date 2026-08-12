@@ -1,6 +1,6 @@
 {
-  "catalog_version": "gcc-2026-20260812-p2-84190f91",
-  "generated_at": "2026-08-12T13:37:00Z",
+  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
+  "generated_at": "2026-08-12T14:40:20Z",
   "items": [
     {
       "major_id": "major-5161a41b9a13",
@@ -12,7 +12,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-89abf0e082cb",
@@ -24,7 +24,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-1feb8f993d52",
@@ -35,8 +35,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-f207ee0a1bf2",
@@ -48,7 +48,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-4f2111e269e5",
@@ -60,7 +60,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-54ee8b2b6063",
@@ -72,7 +72,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-35a89aaed949",
@@ -84,7 +84,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-0dfe8f7c338f",
@@ -95,8 +95,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c531b996463d",
@@ -107,8 +107,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-67d0b6d04256",
@@ -119,8 +119,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-d5ae026c114f",
@@ -131,8 +131,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-9c8feb01d621",
@@ -143,8 +143,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-0397181e92e0",
@@ -155,8 +155,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-a82baa4056ec",
@@ -167,8 +167,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-72ea8080dfc8",
@@ -179,8 +179,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-41be67722c33",
@@ -191,8 +191,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c4d68bd815af",
@@ -203,8 +203,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-d7ae0f2c5b36",
@@ -215,8 +215,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-9e93f3c685bb",
@@ -227,8 +227,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-2eda6b9d0e86",
@@ -239,8 +239,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-78c8050fa3f3",
@@ -251,8 +251,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-3c5a36036119",
@@ -263,8 +263,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-b583a37a6cce",
@@ -275,8 +275,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c2939865b0c0",
@@ -287,8 +287,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-7123d4335abf",
@@ -299,8 +299,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-5dee7aa019e2",
@@ -311,8 +311,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-e43f25e27073",
@@ -324,7 +324,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-d5b88415ab15",
@@ -335,8 +335,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-21e51675187c",
@@ -348,7 +348,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-dcef7a00d447",
@@ -359,8 +359,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-64033e9600a1",
@@ -371,8 +371,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-99ad48fd9530",
@@ -383,8 +383,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c37c7b919163",
@@ -396,7 +396,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-84665a8e90aa",
@@ -407,8 +407,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-154ae046dfb8",
@@ -419,8 +419,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-7d4b0638b10f",
@@ -432,7 +432,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-f4a1bc2bb03a",
@@ -444,7 +444,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-e966c68fb6bc",
@@ -455,8 +455,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-b59a683114d5",
@@ -467,8 +467,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-ac59a8a0634d",
@@ -479,8 +479,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-515742e97bcc",
@@ -491,8 +491,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-1c3541aa6817",
@@ -503,8 +503,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-7284c4a38cc7",
@@ -516,7 +516,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-1c60924b4131",
@@ -527,8 +527,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-5602511fb14f",
@@ -539,8 +539,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-26b91cb34b37",
@@ -552,7 +552,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-7b38068aa8ce",
@@ -563,8 +563,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-d609c030b632",
@@ -576,7 +576,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-4d726bdff471",
@@ -587,8 +587,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c87465df3f29",
@@ -599,8 +599,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-ae1da1d76f6f",
@@ -611,8 +611,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-3fe37274f17b",
@@ -623,8 +623,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-17b50731a99b",
@@ -635,8 +635,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-a701b501f929",
@@ -647,8 +647,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-9ec918d33cfa",
@@ -659,8 +659,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-f5fa8295aa2f",
@@ -671,8 +671,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-81c051b2f072",
@@ -683,8 +683,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-051f23f781f5",
@@ -695,8 +695,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-f64ebf174852",
@@ -707,8 +707,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-9eca050e4129",
@@ -719,8 +719,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 2,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-ace4e394b530",
@@ -732,7 +732,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-a8bd6e0f9569",
@@ -744,7 +744,7 @@
         "stretch": 1
       },
       "resolved_occupation_edges": 3,
-      "review_required_edges": 3
+      "review_required_edges": 0
     },
     {
       "major_id": "major-7047af4703d9",
@@ -755,8 +755,8 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 1,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     },
     {
       "major_id": "major-c5444d389da6",
@@ -767,28 +767,19 @@
         "primary": 1,
         "stretch": 1
       },
-      "resolved_occupation_edges": 0,
-      "review_required_edges": 3
+      "resolved_occupation_edges": 3,
+      "review_required_edges": 0
     }
   ],
-  "reconciliation": {
-    "benchmark_source_url": "https://www.gcc.edu.cn/xxgk/xxjj/index.htm",
-    "explanation": "The ten 2026 college pages include international and industry-class variants that duplicate majors across colleges, while the school-level introduction reports 41 undergraduate and 10 vocational majors. Records are intentionally not deduplicated across delivery colleges until a reviewer reconciles program identity and enrollment status.",
-    "parsed_undergraduate_records": 57,
-    "parsed_vocational_records": 7,
-    "status": "review_required"
-  },
   "schema_version": "1.0.0",
   "summary": {
-    "candidate_titles": 89,
     "colleges": 10,
     "edges": 192,
-    "majors": 64,
-    "official_school_benchmark_undergraduate_majors": 41,
-    "official_school_benchmark_vocational_majors": 10,
+    "major_records": 64,
+    "occupation_relations": 301,
+    "occupations": 54,
     "orphan_majors": 0,
-    "resolved_occupations": 0,
-    "review_required_edges": 192,
-    "unresolved_occupation_candidates": 81
+    "requirements": 702,
+    "unique_majors": 45
   }
 }

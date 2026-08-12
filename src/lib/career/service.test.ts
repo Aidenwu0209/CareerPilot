@@ -35,12 +35,14 @@ import {
 import {
   calculateAndPersistCareerMatch,
   CareerGoalRequiredError,
+  CareerValidationError,
   getCareerMatch,
   getCareerPath,
   getCareerProfile,
   getOccupationByCode,
   listCareerTasks,
   listOccupations,
+  submitCareerEvidence,
   updateCareerTaskStatus,
   upsertCareerGoal,
 } from './service';
@@ -135,8 +137,8 @@ describe('deterministic occupation matching', () => {
       { userId: ALICE_ID, code: 'project_delivery', name: '项目交付', dimension: 'project_practice', score: 65, confidence: 90 },
     ]);
     await db.insert(careerEvidence).values([
-      { userId: ALICE_ID, abilityCode: 'web_frontend', sourceType: 'project', sourceId: 'verified-web', title: '前端项目', status: 'verified' },
-      { userId: ALICE_ID, abilityCode: 'project_delivery', sourceType: 'project', sourceId: 'verified-project', title: '交付项目', status: 'verified' },
+      { userId: ALICE_ID, abilityCode: 'web_frontend', sourceType: 'project', sourceId: 'verified-web', title: '前端项目', status: 'verified', assessedScore: 72 },
+      { userId: ALICE_ID, abilityCode: 'project_delivery', sourceType: 'project', sourceId: 'verified-project', title: '交付项目', status: 'verified', assessedScore: 65 },
     ]);
 
     const match = await calculateAndPersistCareerMatch(ALICE_ID, 'J-FE-001');
@@ -151,9 +153,62 @@ describe('deterministic occupation matching', () => {
     const match = await getCareerMatch(ALICE_ID, 'J-FE-001');
     expect(match).toMatchObject({ scoringStatus: 'not_eligible', score: null, confidence: null });
   });
+
+  it('does not count verified evidence without an assessed score toward coverage or readiness', async () => {
+    await db.insert(careerAbilities).values([
+      { userId: ALICE_ID, code: 'web_frontend', name: 'Web 前端基础', dimension: 'professional_skills', score: 72, confidence: 90 },
+      { userId: ALICE_ID, code: 'testing', name: '软件测试与质量', dimension: 'professional_skills', score: 55, confidence: 90 },
+      { userId: ALICE_ID, code: 'project_delivery', name: '项目交付', dimension: 'project_practice', score: 65, confidence: 90 },
+    ]);
+    await db.insert(careerEvidence).values([
+      { userId: ALICE_ID, abilityCode: 'web_frontend', sourceType: 'project', sourceId: 'unscored-web', title: '未量化前端项目', status: 'verified' },
+      { userId: ALICE_ID, abilityCode: 'project_delivery', sourceType: 'project', sourceId: 'unscored-project', title: '未量化交付项目', status: 'verified' },
+    ]);
+    const match = await getCareerMatch(ALICE_ID, 'J-FE-001');
+    expect(match).toMatchObject({ scoringStatus: 'insufficient_evidence', score: null, evidenceCoverage: 0 });
+    expect(match.strengths).toEqual([]);
+  });
 });
 
 describe('goal and growth-task loop', () => {
+  it('rejects inactive legacy or requirement-free occupations as new goals', async () => {
+    await db.update(occupations).set({ active: false }).where(eq(occupations.code, 'J-FE-001'));
+    await expect(upsertCareerGoal(ALICE_ID, { occupationCode: 'J-FE-001' })).rejects.toBeInstanceOf(CareerValidationError);
+    await expect(upsertCareerGoal(ALICE_ID, { occupationCode: 'J-FS-001' })).rejects.toBeInstanceOf(CareerValidationError);
+  });
+
+  it('allows only active-goal requirements to be submitted as unscored pending evidence', async () => {
+    await expect(submitCareerEvidence(ALICE_ID, {
+      occupationCode: 'J-FE-001',
+      abilityCode: 'web_frontend',
+      title: '课程平台前端实现',
+      description: '实现响应式页面并补充测试。',
+      sourceUrl: 'https://example.com/project',
+    })).rejects.toBeInstanceOf(CareerValidationError);
+
+    await upsertCareerGoal(ALICE_ID, { occupationCode: 'J-FE-001' });
+    const submitted = await submitCareerEvidence(ALICE_ID, {
+      occupationCode: 'J-FE-001',
+      abilityCode: 'web_frontend',
+      title: '课程平台前端实现',
+      description: '实现响应式页面并补充测试。',
+      sourceUrl: 'https://example.com/project',
+    });
+    expect(submitted).toMatchObject({
+      occupationCode: 'J-FE-001',
+      abilityCode: 'web_frontend',
+      status: 'pending',
+      assessedScore: null,
+    });
+    expect((await db.select().from(careerAbilities).where(eq(careerAbilities.code, 'web_frontend')))[0].score).toBeNull();
+    await expect(submitCareerEvidence(ALICE_ID, {
+      occupationCode: 'J-FE-001',
+      abilityCode: 'not-a-requirement',
+      title: '无关材料',
+      description: '不应被接收。',
+    })).rejects.toBeInstanceOf(CareerValidationError);
+  });
+
   it('persists a primary goal, creates a three-stage path, and turns completion into pending evidence once', async () => {
     const goal = await upsertCareerGoal(ALICE_ID, {
       occupationCode: 'J-FE-001',

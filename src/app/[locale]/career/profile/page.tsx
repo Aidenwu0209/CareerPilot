@@ -1,8 +1,8 @@
-import { CircleHelp, FileText, History, ShieldCheck, Sparkles } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { CircleHelp, ExternalLink, FileText, History, ShieldCheck, Sparkles } from 'lucide-react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
-import { getCareerOverview, getCareerProfile } from '@/lib/career/service';
+import { getCareerOverview, getCareerProfile, getOccupationByCode } from '@/lib/career/service';
 import {
   CareerMetricCard,
   CareerPageHeader,
@@ -12,6 +12,7 @@ import {
 } from '@/components/career/career-shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MaterialSyncButton } from '@/components/career/material-sync-button';
+import { CareerEvidenceSubmissionForm } from '@/components/career/career-evidence-submission-form';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -25,17 +26,21 @@ export default async function CareerProfilePage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const [{ locale }, t, context] = await Promise.all([
+  const [{ locale }, context] = await Promise.all([
     params,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/profile');
 
   const [profile, overview] = await Promise.all([
     getCareerProfile(context.actor.userId),
     getCareerOverview(context.actor.userId),
   ]);
+  const targetOccupation = overview.primaryGoal
+    ? await getOccupationByCode(overview.primaryGoal.occupationCode)
+    : null;
   const evidenceTotal = profile.dimensions.reduce(
     (dimensionTotal, dimension) =>
       dimensionTotal + dimension.abilities.reduce((abilityTotal, ability) => abilityTotal + ability.evidenceCount, 0),
@@ -48,7 +53,23 @@ export default async function CareerProfilePage({
         eyebrow={t('profile.eyebrow')}
         title={t('profile.title')}
         description={t('profile.description')}
-        action={<MaterialSyncButton />}
+        action={(
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            {targetOccupation?.scoringEligible ? (
+              <CareerEvidenceSubmissionForm
+                occupationCode={targetOccupation.code}
+                occupationName={targetOccupation.name}
+                requirements={targetOccupation.requirements.map((requirement) => ({
+                  abilityCode: requirement.abilityCode,
+                  abilityName: requirement.abilityName,
+                  required: requirement.required,
+                  description: requirement.description,
+                }))}
+              />
+            ) : null}
+            <MaterialSyncButton />
+          </div>
+        )}
       />
 
       <Card className="gap-5 overflow-hidden border-brand/20 bg-gradient-to-br from-brand/10 via-white to-white py-6 shadow-none dark:via-zinc-950 dark:to-zinc-950">
@@ -179,6 +200,23 @@ export default async function CareerProfilePage({
                                   </StatusPill>
                                 </div>
                                 <p className="mt-1 leading-5 text-zinc-500 dark:text-zinc-400">{evidence.excerpt}</p>
+                                {evidence.sourceUrl ? (
+                                  <a
+                                    href={evidence.sourceUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+                                  >
+                                    {t('evidenceSubmission.viewSource')}
+                                    <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </a>
+                                ) : null}
+                                {typeof evidence.assessedScore === 'number' ? (
+                                  <div className="mt-2 rounded-md bg-emerald-50 px-3 py-2 text-xs leading-5 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
+                                    <p className="font-medium">{t('profile.abilities.assessedScore', { score: evidence.assessedScore })}</p>
+                                    {evidence.reviewReason ? <p className="mt-1">{t('profile.abilities.reviewReason', { reason: evidence.reviewReason })}</p> : null}
+                                  </div>
+                                ) : null}
                                 <p className="mt-2 text-xs text-zinc-400">
                                   {t(`evidenceSource.${evidence.sourceType}`)} ·{' '}
                                   {formatDate(evidence.occurredAt ?? evidence.createdAt, locale, t('common.notSet'))}

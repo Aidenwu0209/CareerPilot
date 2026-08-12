@@ -60,12 +60,14 @@ type CatalogResponse = {
 };
 
 const FILTER_FIELDS = [
-  ['collegeCode', 'colleges'],
-  ['majorCode', 'majors'],
-  ['jobFamily', 'jobFamilies'],
-  ['industry', 'industries'],
-  ['city', 'cities'],
-  ['educationLevel', 'educationLevels'],
+  { field: 'collegeCode', responseKey: 'colleges' },
+  { field: 'majorCode', responseKey: 'majors' },
+  { field: 'jobFamily', responseKey: 'jobFamilies' },
+  { field: 'industry', responseKey: 'industries' },
+  { field: 'city', responseKey: 'cities' },
+  { field: 'educationLevel', responseKey: 'educationLevels' },
+  { field: 'relevanceType', responseKey: 'relevanceTypes', translationKey: 'relevanceType' },
+  { field: 'relationType', responseKey: 'relationTypes', translationKey: 'relationType' },
 ] as const;
 
 const PAGE_SIZE = 24;
@@ -94,33 +96,8 @@ export function normalizeFilterOptions(value: unknown): FilterOption[] {
   return [...unique.values()].sort((a, b) => a.label.localeCompare(b.label, 'zh-CN'));
 }
 
-function derivedOptions(items: CatalogOccupation[], field: string): FilterOption[] {
-  if (field === 'collegeCode') {
-    return normalizeFilterOptions(items.flatMap((item) => item.majorMappings ?? []).map((mapping) => ({
-      value: mapping.collegeCode,
-      label: mapping.collegeName,
-    })));
-  }
-  if (field === 'majorCode') {
-    return normalizeFilterOptions(items.flatMap((item) => item.majorMappings ?? []).map((mapping) => ({
-      value: mapping.majorCode,
-      label: mapping.majorName,
-    })));
-  }
-  if (field === 'city') return normalizeFilterOptions(items.flatMap((item) => item.cities ?? (item.city ? [item.city] : [])));
-  if (field === 'educationLevel') return normalizeFilterOptions(items.flatMap((item) => item.educationLevels ?? (item.educationLevel ? [item.educationLevel] : [])));
-  return normalizeFilterOptions(items.map((item) => item[field as keyof CatalogOccupation]));
-}
-
-function filterOptions(
-  filters: CatalogFilters,
-  items: CatalogOccupation[],
-  field: string,
-  responseKey: string,
-): FilterOption[] {
-  return normalizeFilterOptions(filters[responseKey] ?? filters[field]).length > 0
-    ? normalizeFilterOptions(filters[responseKey] ?? filters[field])
-    : derivedOptions(items, field);
+function filterOptions(filters: CatalogFilters, field: string, responseKey: string): FilterOption[] {
+  return normalizeFilterOptions(filters[responseKey] ?? filters[field]);
 }
 
 function matchComparisonHref(items: CatalogOccupation[]): string {
@@ -156,6 +133,10 @@ export function OccupationBrowser({ initialItems }: { initialItems: CatalogOccup
   const [error, setError] = useState(false);
 
   const selectedItems = useMemo(() => [...selected.values()], [selected]);
+  const availableFilters = useMemo(() => FILTER_FIELDS.flatMap((definition) => {
+    const options = filterOptions(filters, definition.field, definition.responseKey);
+    return options.length > 0 ? [{ ...definition, options }] : [];
+  }), [filters]);
 
   async function load(offset = 0, nextValues = values) {
     setIsLoading(true);
@@ -242,14 +223,13 @@ export function OccupationBrowser({ initialItems }: { initialItems: CatalogOccup
           </Button>
         </div>
 
-        <fieldset className="mt-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+        {availableFilters.length > 0 ? <fieldset className="mt-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
           <legend className="flex items-center gap-2 pr-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
             {t('jobs.filters.title')}
           </legend>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {FILTER_FIELDS.map(([field, responseKey]) => {
-              const options = filterOptions(filters, items, field, responseKey);
+            {availableFilters.map(({ field, options, ...definition }) => {
               return (
                 <label key={field} className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
                   {t(`jobs.filters.${field}`)}
@@ -259,39 +239,19 @@ export function OccupationBrowser({ initialItems }: { initialItems: CatalogOccup
                     className="mt-1.5 flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
                   >
                     <option value="">{t('jobs.filters.all')}</option>
-                    {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    {options.map((option) => {
+                      const translationKey = 'translationKey' in definition ? definition.translationKey : null;
+                      const labelKey = translationKey ? `${translationKey}.${option.value}` : null;
+                      return (
+                        <option key={option.value} value={option.value}>
+                          {labelKey && t.has(labelKey) ? t(labelKey) : option.label}
+                        </option>
+                      );
+                    })}
                   </select>
                 </label>
               );
             })}
-
-            <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              {t('jobs.filters.relevanceType')}
-              <select
-                value={values.relevanceType}
-                onChange={(event) => updateValue('relevanceType', event.target.value)}
-                className="mt-1.5 flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
-              >
-                <option value="">{t('jobs.filters.all')}</option>
-                {(['primary', 'adjacent', 'cross_major', 'stretch'] as const).map((value) => (
-                  <option key={value} value={value}>{t(`relevanceType.${value}`)}</option>
-                ))}
-              </select>
-            </label>
-
-            <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              {t('jobs.filters.relationType')}
-              <select
-                value={values.relationType}
-                onChange={(event) => updateValue('relationType', event.target.value)}
-                className="mt-1.5 flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
-              >
-                <option value="">{t('jobs.filters.all')}</option>
-                {(['progresses_to', 'transfers_to', 'related_to'] as const).map((value) => (
-                  <option key={value} value={value}>{t(`relationType.${value}`)}</option>
-                ))}
-              </select>
-            </label>
           </div>
           <div className="mt-4 flex justify-end">
             <Button type="button" variant="ghost" size="sm" onClick={resetFilters} disabled={isLoading}>
@@ -299,7 +259,7 @@ export function OccupationBrowser({ initialItems }: { initialItems: CatalogOccup
               {t('jobs.filters.reset')}
             </Button>
           </div>
-        </fieldset>
+        </fieldset> : null}
       </form>
 
       <div className="flex flex-wrap items-center justify-between gap-3" aria-live="polite">

@@ -62,6 +62,7 @@ import { POST as reviewEvidence } from './students/[studentId]/evidence/[evidenc
 import { db } from '@/lib/db';
 import {
   careerEvidence,
+  careerAbilities,
   careerGuidanceNotes,
   careerProfileSnapshots,
   careerTasks,
@@ -229,6 +230,7 @@ describe('teacher student mutation routes', () => {
       jsonRequest(`/api/teacher/students/${otherId}/evidence/${evidenceId}/review`, {
         decision: 'confirmed',
         reason: '尝试跨学生审核。',
+        score: 75,
       }),
       { params: Promise.resolve({ studentId: otherId, evidenceId }) },
     );
@@ -249,9 +251,20 @@ describe('teacher student mutation routes', () => {
       title: '校园项目复盘',
       excerpt: '负责前端性能优化并提供量化指标。',
     });
+    await db.insert(careerEvidence).values({
+      id: `${evidenceId}-existing`,
+      userId: studentId,
+      abilityCode: 'project_practice',
+      sourceType: 'teacher',
+      title: '既有量化证据',
+      status: 'verified',
+      assessedScore: 60,
+      reviewedBy: teacherId,
+      reviewedAt: new Date(),
+    });
     allow(teacherId, studentId);
 
-    const requestBody = { decision: 'confirmed' as const, reason: '材料与项目记录一致。' };
+    const requestBody = { decision: 'confirmed' as const, reason: '材料与项目记录一致。', score: 84 };
     const firstResponse = await reviewEvidence(
       jsonRequest(`/api/teacher/students/${studentId}/evidence/${evidenceId}/review`, requestBody),
       { params: Promise.resolve({ studentId, evidenceId }) },
@@ -263,8 +276,14 @@ describe('teacher student mutation routes', () => {
       status: 'verified',
       reviewedBy: teacherId,
       reviewReason: requestBody.reason,
+      assessedScore: 84,
     });
     expect(reviewed.reviewedAt).toBeInstanceOf(Date);
+    const ability = (await db.select().from(careerAbilities).where(and(
+      eq(careerAbilities.userId, studentId),
+      eq(careerAbilities.code, 'project_practice'),
+    )))[0];
+    expect(ability).toMatchObject({ score: 72, confidence: 70, evidenceCount: 2 });
 
     const auditNotes = await db.select().from(careerGuidanceNotes).where(and(
       eq(careerGuidanceNotes.userId, studentId),
@@ -285,5 +304,41 @@ describe('teacher student mutation routes', () => {
     );
     expect(duplicateResponse.status).toBe(409);
     await expect(duplicateResponse.json()).resolves.toMatchObject({ error: 'EVIDENCE_ALREADY_REVIEWED' });
+  });
+
+  it('requires a 0-100 integer score to confirm evidence and performs no write when absent or invalid', async () => {
+    const teacherId = `teacher-score-${crypto.randomUUID()}`;
+    const studentId = `student-score-${crypto.randomUUID()}`;
+    const evidenceId = `evidence-score-${crypto.randomUUID()}`;
+    await seedUsers(teacherId, studentId);
+    await db.insert(careerEvidence).values({
+      id: evidenceId,
+      userId: studentId,
+      abilityCode: 'communication',
+      sourceType: 'manual',
+      title: '沟通协作证据',
+    });
+    allow(teacherId, studentId);
+
+    for (const score of [undefined, -1, 101, 70.5]) {
+      const response = await reviewEvidence(
+        jsonRequest(`/api/teacher/students/${studentId}/evidence/${evidenceId}/review`, {
+          decision: 'confirmed',
+          reason: '需要量化确认。',
+          ...(score === undefined ? {} : { score }),
+        }),
+        { params: Promise.resolve({ studentId, evidenceId }) },
+      );
+      expect(response.status).toBe(400);
+    }
+    const rejectedWithScore = await reviewEvidence(
+      jsonRequest(`/api/teacher/students/${studentId}/evidence/${evidenceId}/review`, {
+        decision: 'rejected', reason: '退回时不应携带量化分。', score: 70,
+      }),
+      { params: Promise.resolve({ studentId, evidenceId }) },
+    );
+    expect(rejectedWithScore.status).toBe(400);
+    const evidence = (await db.select().from(careerEvidence).where(eq(careerEvidence.id, evidenceId)))[0];
+    expect(evidence).toMatchObject({ status: 'pending', assessedScore: null, reviewedBy: null });
   });
 });

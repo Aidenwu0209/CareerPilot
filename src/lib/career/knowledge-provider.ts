@@ -72,13 +72,14 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     await dbReady;
     const { limit, offset } = pageBounds(filters);
     const normalized = normalizeQuery(filters.query);
-    const [rawOccupationRows, rawAliasRows, rawEdgeRows, rawMajorRows, rawCollegeRows, rawRequirementRows] = await Promise.all([
+    const [rawOccupationRows, rawAliasRows, rawEdgeRows, rawMajorRows, rawCollegeRows, rawRequirementRows, rawRelationRows] = await Promise.all([
       db.select().from(occupations).where(eq(occupations.active, true)).orderBy(occupations.code),
       db.select().from(occupationAliases).where(eq(occupationAliases.active, true)),
       db.select().from(majorOccupationEdges).where(eq(majorOccupationEdges.active, true)),
       db.select().from(careerMajors).where(eq(careerMajors.active, true)),
       db.select().from(careerColleges).where(eq(careerColleges.active, true)),
       db.select({ occupationCode: occupationRequirements.occupationCode }).from(occupationRequirements),
+      db.select().from(occupationRelations),
     ]);
     const occupationRows = rawOccupationRows as Array<typeof occupations.$inferSelect>;
     const aliasRows = rawAliasRows as Array<typeof occupationAliases.$inferSelect>;
@@ -86,6 +87,14 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const majorRows = rawMajorRows as Array<typeof careerMajors.$inferSelect>;
     const collegeRows = rawCollegeRows as Array<typeof careerColleges.$inferSelect>;
     const requirementRows = rawRequirementRows as Array<{ occupationCode: string }>;
+    const relationRows = rawRelationRows as Array<typeof occupationRelations.$inferSelect>;
+    const activeOccupationCodes = new Set(occupationRows.map((row) => row.code));
+    const connectedEdgeRows = edgeRows.filter((row) => row.occupationCode && activeOccupationCodes.has(row.occupationCode));
+    const connectedMajorCodes = new Set(connectedEdgeRows.map((row) => row.majorCode));
+    const connectedMajorRows = majorRows.filter((row) => connectedMajorCodes.has(row.code));
+    const connectedCollegeCodes = new Set(connectedMajorRows.map((row) => row.collegeCode));
+    const connectedCollegeRows = collegeRows.filter((row) => connectedCollegeCodes.has(row.code));
+    const activeRelationRows = relationRows.filter((row) => activeOccupationCodes.has(row.fromCode) && activeOccupationCodes.has(row.toCode));
     const occupationsWithRequirements = new Set(requirementRows.map((row) => row.occupationCode));
 
     const aliasesByOccupation = new Map<string, string[]>();
@@ -97,7 +106,7 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const majorByCode = new Map(majorRows.map((row) => [row.code, row]));
     const collegeByCode = new Map(collegeRows.map((row) => [row.code, row]));
     const edgesByOccupation = new Map<string, typeof edgeRows>();
-    for (const row of edgeRows) {
+    for (const row of connectedEdgeRows) {
       if (!row.occupationCode) continue;
       const current = edgesByOccupation.get(row.occupationCode) ?? [];
       current.push(row);
@@ -137,27 +146,30 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
       };
     });
 
-    const filtered = mapped.filter((occupation) => {
+    type FacetKey = 'collegeCode' | 'majorCode' | 'relevanceType' | 'relationType' | 'jobFamily' | 'industry' | 'city' | 'educationLevel';
+    const relationsByFromCode = new Map<string, typeof activeRelationRows>();
+    for (const relation of activeRelationRows) {
+      const current = relationsByFromCode.get(relation.fromCode) ?? [];
+      current.push(relation);
+      relationsByFromCode.set(relation.fromCode, current);
+    }
+    const matchesFilters = (occupation: OccupationSummary, omit?: FacetKey) => {
       const mappings = occupation.majorMappings ?? [];
       const haystack = `${occupation.name} ${occupation.category} ${occupation.summary} ${occupation.jobFamily ?? ''} ${occupation.industry ?? ''} ${(occupation.aliases ?? []).join(' ')}`.toLocaleLowerCase('zh-CN');
       return (!normalized || normalized.split(/\s+/).every((token) => haystack.includes(token)))
-        && (!filters.collegeCode || mappings.some((item) => item.collegeCode === filters.collegeCode))
-        && (!filters.majorCode || mappings.some((item) => item.majorCode === filters.majorCode))
-        && (!filters.relevanceType || mappings.some((item) => item.relevanceType === filters.relevanceType))
-        && (!filters.jobFamily || normalizeQuery(occupation.jobFamily) === normalizeQuery(filters.jobFamily))
-        && (!filters.industry || normalizeQuery(occupation.industry) === normalizeQuery(filters.industry))
-        && includesValue(occupation.cities ?? [], filters.city)
-        && includesValue(occupation.educationLevels ?? [], filters.educationLevel);
-    });
-
-    let relationFiltered = filtered;
-    if (filters.relationType) {
-      const relationRows = await db.select({ fromCode: occupationRelations.fromCode })
-        .from(occupationRelations)
-        .where(eq(occupationRelations.relationType, filters.relationType)) as Array<{ fromCode: string }>;
-      const codes = new Set(relationRows.map((row) => row.fromCode));
-      relationFiltered = filtered.filter((item) => codes.has(item.code));
-    }
+        && (omit === 'collegeCode' || !filters.collegeCode || mappings.some((item) => item.collegeCode === filters.collegeCode))
+        && (omit === 'majorCode' || !filters.majorCode || mappings.some((item) => item.majorCode === filters.majorCode))
+        && (omit === 'relevanceType' || !filters.relevanceType || mappings.some((item) => item.relevanceType === filters.relevanceType))
+        && (omit === 'jobFamily' || !filters.jobFamily || normalizeQuery(occupation.jobFamily) === normalizeQuery(filters.jobFamily))
+        && (omit === 'industry' || !filters.industry || normalizeQuery(occupation.industry) === normalizeQuery(filters.industry))
+        && (omit === 'city' || includesValue(occupation.cities ?? [], filters.city))
+        && (omit === 'educationLevel' || includesValue(occupation.educationLevels ?? [], filters.educationLevel))
+        && (omit === 'relationType' || !filters.relationType || (relationsByFromCode.get(occupation.code) ?? []).some((item) => item.relationType === filters.relationType));
+    };
+    const relationFiltered = mapped.filter((occupation) => matchesFilters(occupation));
+    const facetOccupations = (omit: FacetKey) => mapped.filter((occupation) => matchesFilters(occupation, omit));
+    const collegeFacetCodes = new Set(facetOccupations('collegeCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.collegeCode) ?? []));
+    const majorFacetCodes = new Set(facetOccupations('majorCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.majorCode) ?? []));
 
     return {
       items: relationFiltered.slice(offset, offset + limit),
@@ -171,19 +183,21 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
         ...filters,
         limit,
         offset,
-        colleges: collegeRows
+        colleges: connectedCollegeRows.filter((item) => collegeFacetCodes.has(item.code))
           .map((item) => ({ value: item.code, label: item.name }))
           .sort((a, b) => a.label.localeCompare(b.label, 'zh-CN')),
-        majors: majorRows
+        majors: connectedMajorRows.filter((item) => majorFacetCodes.has(item.code))
           .map((item) => ({
             value: item.code,
             label: `${item.name} · ${collegeByCode.get(item.collegeCode)?.name ?? item.collegeCode}`,
           }))
           .sort((a, b) => a.label.localeCompare(b.label, 'zh-CN')),
-        jobFamilies: uniqueSorted(mapped.map((item) => item.jobFamily)),
-        industries: uniqueSorted(mapped.map((item) => item.industry)),
-        cities: uniqueSorted(mapped.flatMap((item) => item.cities ?? [])),
-        educationLevels: uniqueSorted(mapped.flatMap((item) => item.educationLevels ?? [])),
+        jobFamilies: uniqueSorted(facetOccupations('jobFamily').map((item) => item.jobFamily)),
+        industries: uniqueSorted(facetOccupations('industry').map((item) => item.industry)),
+        cities: uniqueSorted(facetOccupations('city').flatMap((item) => item.cities ?? [])),
+        educationLevels: uniqueSorted(facetOccupations('educationLevel').flatMap((item) => item.educationLevels ?? [])),
+        relevanceTypes: uniqueSorted(facetOccupations('relevanceType').flatMap((item) => item.majorMappings?.map((mapping) => mapping.relevanceType) ?? [])) as OccupationPage['filters']['relevanceTypes'],
+        relationTypes: uniqueSorted(facetOccupations('relationType').flatMap((item) => (relationsByFromCode.get(item.code) ?? []).map((relation) => relation.relationType))) as OccupationPage['filters']['relationTypes'],
       },
     };
   }

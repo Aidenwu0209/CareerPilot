@@ -3,12 +3,11 @@ import {
   CheckCircle2,
   ExternalLink,
   FileQuestion,
-  GitCompareArrows,
   SearchCheck,
   ShieldCheck,
   Target,
 } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { getCareerMatch, getCareerOverview, listOccupations } from '@/lib/career/service';
@@ -24,6 +23,8 @@ import {
 } from '@/components/career/career-shell';
 import { MaterialSyncButton } from '@/components/career/material-sync-button';
 import { MatchReviewFeedback } from '@/components/career/match-review-feedback';
+import { CareerEvidenceSubmissionForm } from '@/components/career/career-evidence-submission-form';
+import { MatchRecalculationButton } from '@/components/career/match-recalculation-button';
 import { Button } from '@/components/ui/button';
 
 function formatDate(value: string, locale: string) {
@@ -136,8 +137,34 @@ function RequirementDetails({
               <ul className="mt-2 space-y-2">
                 {item.studentEvidence.map((evidence) => (
                   <li key={evidence.id} className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">
-                    <span className="font-medium">{evidence.title}</span>
+                    <span className="flex flex-wrap items-center gap-2 font-medium">
+                      {evidence.title}
+                      <StatusPill tone={evidence.status === 'verified' ? 'positive' : evidence.status === 'pending' ? 'warning' : 'neutral'}>
+                        {locale === 'zh'
+                          ? { pending: '待教师审核', verified: '已确认', rejected: '已退回' }[evidence.status]
+                          : { pending: 'Teacher review pending', verified: 'Verified', rejected: 'Returned' }[evidence.status]}
+                      </StatusPill>
+                    </span>
                     <span className="block text-xs text-zinc-500 dark:text-zinc-400">{evidence.excerpt}</span>
+                    {evidence.sourceUrl ? (
+                      <a
+                        href={evidence.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+                      >
+                        {locale === 'zh' ? '查看材料来源' : 'View evidence source'}
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    ) : null}
+                    {typeof evidence.assessedScore === 'number' ? (
+                      <span className="mt-1 block text-xs text-emerald-700 dark:text-emerald-300">
+                        {locale === 'zh' ? `教师确认分：${evidence.assessedScore} / 100` : `Teacher-verified score: ${evidence.assessedScore} / 100`}
+                        {evidence.reviewReason
+                          ? locale === 'zh' ? ` · 审核理由：${evidence.reviewReason}` : ` · Review reason: ${evidence.reviewReason}`
+                          : ''}
+                      </span>
+                    ) : null}
                   </li>
                 ))}
               </ul>
@@ -173,12 +200,13 @@ export default async function CareerMatchingPage({
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ occupationCode?: string | string[]; compare?: string | string[] }>;
 }) {
-  const [{ locale }, query, t, context] = await Promise.all([
+  const [{ locale }, query, context] = await Promise.all([
     params,
     searchParams,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/matching');
 
   const [overview, occupations] = await Promise.all([
@@ -195,6 +223,21 @@ export default async function CareerMatchingPage({
     ? await Promise.all(codes.map((code) => getCareerMatch(context.actor.userId, code)))
     : [];
   const match = matches[0] ?? null;
+  const matchableOccupations = occupations.filter((occupation) => occupation.scoringEligible === true);
+  const selectedUnavailableOccupation = selectedCode && !matchableOccupations.some((item) => item.code === selectedCode)
+    ? occupations.find((occupation) => occupation.code === selectedCode) ?? match?.occupation ?? null
+    : null;
+  const canSubmitEvidence = Boolean(
+    match
+    && overview.primaryGoal?.occupationCode === match.occupation.code
+    && !isNotEligible(match),
+  );
+  const evidenceRequirements = match?.dimensionBreakdown.map((item) => ({
+    abilityCode: item.abilityCode,
+    abilityName: item.abilityName,
+    required: item.requirement.required,
+    description: item.requirement.description,
+  })) ?? [];
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -203,9 +246,18 @@ export default async function CareerMatchingPage({
         title={t('matching.title')}
         description={t('matching.description')}
         action={match ? (
-          <Button asChild variant="outline" className="w-full sm:w-auto">
-            <Link href={`/career/jobs/${match.occupation.code}`}>{t('matching.viewOccupation')}</Link>
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            {canSubmitEvidence ? (
+              <CareerEvidenceSubmissionForm
+                occupationCode={match.occupation.code}
+                occupationName={match.occupation.name}
+                requirements={evidenceRequirements}
+              />
+            ) : null}
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link href={`/career/jobs/${match.occupation.code}`}>{t('matching.viewOccupation')}</Link>
+            </Button>
+          </div>
         ) : undefined}
       />
 
@@ -223,9 +275,14 @@ export default async function CareerMatchingPage({
                 className="mt-1.5 flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
               >
                 <option value="">{t('matching.selectPlaceholder')}</option>
-                {occupations.map((occupation) => (
-                  <option key={occupation.code} value={occupation.code} disabled={occupation.scoringEligible === false}>
-                    {occupation.name} · {occupation.category}{occupation.scoringEligible === false ? ` · ${t('common.knowledgePendingReview')}` : ''}
+                {selectedUnavailableOccupation ? (
+                  <option value={selectedUnavailableOccupation.code} disabled>
+                    {selectedUnavailableOccupation.name} · {t('common.knowledgePendingReview')}
+                  </option>
+                ) : null}
+                {matchableOccupations.map((occupation) => (
+                  <option key={occupation.code} value={occupation.code}>
+                    {occupation.name} · {occupation.category}
                   </option>
                 ))}
               </select>
@@ -239,19 +296,20 @@ export default async function CareerMatchingPage({
                   className="mt-1.5 flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm text-zinc-900 shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30 dark:text-zinc-100"
                 >
                   <option value="">{t('matching.compareForm.none')}</option>
-                  {occupations.map((occupation) => (
-                    <option key={occupation.code} value={occupation.code} disabled={occupation.scoringEligible === false}>
-                      {occupation.name} · {occupation.category}{occupation.scoringEligible === false ? ` · ${t('common.knowledgePendingReview')}` : ''}
+                  {matchableOccupations.map((occupation) => (
+                    <option key={occupation.code} value={occupation.code}>
+                      {occupation.name} · {occupation.category}
                     </option>
                   ))}
                 </select>
               </label>
             ))}
           </div>
-          <Button type="submit" className="mt-4 bg-brand hover:bg-brand-hover">
-            <GitCompareArrows className="h-4 w-4" aria-hidden="true" />
-            {t('matching.recalculate')}
-          </Button>
+          <MatchRecalculationButton
+            label={t('matching.recalculate')}
+            pendingLabel={t('matching.recalculating')}
+            errorLabel={t('matching.recalculateError')}
+          />
         </fieldset>
       </form>
 

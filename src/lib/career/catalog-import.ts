@@ -6,6 +6,7 @@ import {
   careerGoals,
   careerKnowledgeDocuments,
   careerTasks,
+  occupationRelations,
   occupationRequirements,
   occupations,
 } from '@/lib/db/schema';
@@ -35,7 +36,7 @@ interface MajorInput {
   source_excerpt?: string; employment_text?: string; review_status?: ReviewStatus;
 }
 interface OccupationInput {
-  code: string; name: string; canonical_type?: 'national_occupation' | 'market_alias' | 'unresolved_placeholder';
+  code: string; name: string; canonical_type?: 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
   category?: string; summary?: string; description?: string; entry_level?: string; job_family?: string;
   industry?: string; cities?: string[]; education_levels?: string[]; source_ids?: string[];
   review_status?: ReviewStatus; scoring_eligible?: boolean;
@@ -52,6 +53,12 @@ interface RequirementInput {
   target_score?: number | null; weight?: number | null; required?: boolean; description?: string;
   education_level?: string; experience_level?: string; region?: string; source_ids?: string[];
   review_status?: ReviewStatus;
+  requirement_type?: 'skill' | 'knowledge';
+}
+interface OccupationRelationInput {
+  id: string; from_code: string; to_code: string;
+  relation_type: 'progresses_to' | 'transfers_to' | 'related_to';
+  description?: string; source_ids?: string[]; review_status?: ReviewStatus;
 }
 interface SourceInput {
   id: string; url: string; title: string; publisher?: string; source_type?: string;
@@ -67,6 +74,7 @@ export interface CareerCatalogBundle {
   occupation_aliases: CatalogEnvelope<AliasInput>;
   major_occupation_edges: CatalogEnvelope<EdgeInput>;
   occupation_requirements: CatalogEnvelope<RequirementInput>;
+  occupation_relations: CatalogEnvelope<OccupationRelationInput>;
   sources: CatalogEnvelope<SourceInput>;
   legacy_occupation_map?: CatalogEnvelope<LegacyMapInput>;
   manifest?: Record<string, unknown>;
@@ -83,7 +91,7 @@ export interface CatalogDiff {
 
 const ENTITY_KEYS = [
   'colleges', 'majors', 'occupations', 'occupation_aliases',
-  'major_occupation_edges', 'occupation_requirements', 'sources', 'legacy_occupation_map',
+  'major_occupation_edges', 'occupation_requirements', 'occupation_relations', 'sources', 'legacy_occupation_map',
 ] as const;
 
 function stableJson(value: unknown): string {
@@ -163,6 +171,21 @@ function assertBundle(bundle: CareerCatalogBundle): { version: string; schemaVer
     if (!occupationCodes.has(requirement.occupation_code)) errors.push(`Unknown occupation in requirement ${requirement.id}.`);
     if (requirement.target_score == null || requirement.weight == null) warnings.push(`Requirement ${requirement.id} is informational and will not be scored.`);
     validateSources('occupation requirement', requirement.id, requirement.source_ids);
+  }
+  const requirementCountByOccupation = new Map<string, number>();
+  for (const requirement of bundle.occupation_requirements?.items ?? []) {
+    if (typeof requirement.target_score !== 'number' || typeof requirement.weight !== 'number') continue;
+    requirementCountByOccupation.set(requirement.occupation_code, (requirementCountByOccupation.get(requirement.occupation_code) ?? 0) + 1);
+  }
+  for (const occupation of bundle.occupations?.items ?? []) {
+    if (occupation.scoring_eligible === true && !requirementCountByOccupation.get(occupation.code)) {
+      errors.push(`Scoring occupation ${occupation.code} must have at least one scorable requirement.`);
+    }
+  }
+  for (const relation of bundle.occupation_relations?.items ?? []) {
+    if (!occupationCodes.has(relation.from_code)) errors.push(`Unknown from occupation in relation ${relation.id}: ${relation.from_code}`);
+    if (!occupationCodes.has(relation.to_code)) errors.push(`Unknown to occupation in relation ${relation.id}: ${relation.to_code}`);
+    validateSources('occupation relation', relation.id, relation.source_ids);
   }
   return { version, schemaVersion, errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
 }
@@ -297,6 +320,7 @@ function materializeStatements(
   const aliases = grouped.get('occupation_aliases') ?? [];
   const edges = grouped.get('major_occupation_edges') ?? [];
   const requirements = grouped.get('occupation_requirements') ?? [];
+  const relations = grouped.get('occupation_relations') ?? [];
   const sources = grouped.get('sources') ?? [];
   const legacyMappings = grouped.get('legacy_occupation_map') ?? [];
   const sourceById = new Map(sources.map((source) => [String(source.id), source]));
@@ -308,6 +332,7 @@ function materializeStatements(
     tx.update(careerMajors).set({ active: false }),
     tx.update(occupationAliases).set({ active: false }),
     tx.update(majorOccupationEdges).set({ active: false }),
+    tx.delete(occupationRelations),
     tx.delete(careerColleges).where(eq(careerColleges.catalogVersion, version)),
     tx.delete(careerMajors).where(eq(careerMajors.catalogVersion, version)),
     tx.delete(occupationAliases).where(eq(occupationAliases.catalogVersion, version)),
@@ -406,6 +431,13 @@ function materializeStatements(
       reviewStatus: String(item.review_status ?? 'pending'), catalogVersion: version,
     }}));
   });
+  relations.forEach((item) => statements.push(tx.insert(occupationRelations).values({
+    id: `${version}:${String(item.id)}`,
+    fromCode: String(item.from_code),
+    toCode: String(item.to_code),
+    relationType: item.relation_type,
+    description: String(item.description ?? ''),
+  } as never)));
   sources.forEach((item) => statements.push(tx.insert(careerSourceSnapshots).values({
     id: `${version}:${String(item.id)}`, catalogVersion: version, sourceId: String(item.id), url: String(item.url), title: String(item.title),
     publisher: String(item.publisher ?? ''), sourceType: String(item.source_type ?? ''),

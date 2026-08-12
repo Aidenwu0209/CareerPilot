@@ -1,5 +1,5 @@
 import { CalendarClock, CheckCircle2, CircleDashed, Crosshair, Flag, LockKeyhole, Route } from 'lucide-react';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { getCareerPath } from '@/lib/career/service';
@@ -22,11 +22,12 @@ export default async function CareerPathPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const [{ locale }, t, context] = await Promise.all([
+  const [{ locale }, context] = await Promise.all([
     params,
-    getTranslations('career'),
     resolveServerContext(),
   ]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/path');
 
   const path = await getCareerPath(context.actor.userId);
