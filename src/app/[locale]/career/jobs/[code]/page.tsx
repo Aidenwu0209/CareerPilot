@@ -43,7 +43,8 @@ export default async function OccupationDetailPage({
   if (!occupation) notFound();
   const sourceVersion = (occupation as typeof occupation & { sourceVersion?: string | null }).sourceVersion;
   const isMatchEligible = occupation.scoringEligible !== false && occupation.requirements.length > 0;
-  const effectiveReviewStatus = isMatchEligible && occupation.reviewStatus === 'reviewed'
+  const effectiveReviewStatus = isMatchEligible
+    && ['reviewed', 'approved'].includes(occupation.reviewStatus ?? '')
     ? 'reviewed'
     : 'review_required';
 
@@ -76,7 +77,7 @@ export default async function OccupationDetailPage({
 
       <div className="flex flex-wrap gap-2">
         <StatusPill>{t('jobDetail.code', { code: occupation.code })}</StatusPill>
-        {occupation.canonicalType === 'standard_occupation' && isMatchEligible ? (
+        {occupation.canonicalType === 'china_national_occupation' && isMatchEligible ? (
           <StatusPill tone="positive">{t('jobDetail.standardOccupation')}</StatusPill>
         ) : null}
         <StatusPill tone="positive">{t('jobDetail.entryLevel', { level: occupation.entryLevel })}</StatusPill>
@@ -207,10 +208,10 @@ export default async function OccupationDetailPage({
           </CareerSection>
 
           <CareerSection title={t('jobDetail.sources.title')} description={t('jobDetail.sources.description')}>
-            {occupation.canonicalType === 'standard_occupation' ? (
+            {occupation.canonicalType === 'china_national_occupation' ? (
               <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm leading-6 text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
-                <p className="font-medium">{t('jobDetail.sources.onetTitle')}</p>
-                <p className="mt-1 text-xs">{t('jobDetail.sources.onetDescription')}</p>
+                <p className="font-medium">{t('jobDetail.sources.standardTitle')}</p>
+                <p className="mt-1 text-xs">{t('jobDetail.sources.standardDescription')}</p>
               </div>
             ) : null}
             {(sourceVersion || occupation.reviewStatus || !isMatchEligible) ? (

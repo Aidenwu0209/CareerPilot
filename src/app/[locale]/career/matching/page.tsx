@@ -261,6 +261,11 @@ export default async function CareerMatchingPage({
         ) : undefined}
       />
 
+      <div role="note" className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
+        <p className="font-semibold">{t('matching.disclaimer.title')}</p>
+        <p className="mt-1">{t('matching.disclaimer.description')}</p>
+      </div>
+
       <form method="get" className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 sm:p-5">
         <fieldset>
           <legend className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{t('matching.compareForm.legend')}</legend>

@@ -1,491 +1,833 @@
 {
-  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
-  "generated_at": "2026-08-12T14:40:20Z",
+  "catalog_version": "gcc-cn-2022-20260812-a47edb7d63",
+  "generated_at": "2026-08-12T17:14:03Z",
   "items": [
     {
-      "alias": "Marketing Managers",
-      "id": "alias-005e34b16e59",
-      "occupation_code": "11-2021.00",
+      "alias": "计算机硬件工程师",
+      "id": "alias-3605785ec724",
+      "occupation_code": "2-02-10-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Financial Managers",
-      "id": "alias-b877f3a0ce51",
-      "occupation_code": "11-3031.00",
+      "alias": "计算机软件工程师",
+      "id": "alias-6336ed5cd27c",
+      "occupation_code": "2-02-10-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Investment Fund Managers",
-      "id": "alias-e76beacb7093",
-      "occupation_code": "11-3031.03",
+      "alias": "计算机网络工程师",
+      "id": "alias-d4e44a8db1dc",
+      "occupation_code": "2-02-10-04",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Supply Chain Managers",
-      "id": "alias-636e1b0fed76",
-      "occupation_code": "11-3071.04",
+      "alias": "信息系统分析工程师",
+      "id": "alias-22118afc0959",
+      "occupation_code": "2-02-10-05",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Lodging Managers",
-      "id": "alias-db058dbb17b9",
-      "occupation_code": "11-9081.00",
+      "alias": "嵌入式系统设计工程师",
+      "id": "alias-82ea3ada498b",
+      "occupation_code": "2-02-10-06",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Medical and Health Services Managers",
-      "id": "alias-006bdf49d162",
-      "occupation_code": "11-9111.00",
+      "alias": "信息安全工程师",
+      "id": "alias-357582f958f8",
+      "occupation_code": "2-02-10-07",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Compliance Managers",
-      "id": "alias-50f79a90434b",
-      "occupation_code": "11-9199.02",
+      "alias": "建筑和市政设计工程师",
+      "id": "alias-f813f1e95d68",
+      "occupation_code": "2-02-18-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Compliance Officers",
-      "id": "alias-281206adcaed",
-      "occupation_code": "13-1041.00",
+      "alias": "物流工程师",
+      "id": "alias-e2b5242a61de",
+      "occupation_code": "2-02-30-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Logisticians",
-      "id": "alias-a2f72f6ad7f6",
-      "occupation_code": "13-1081.00",
+      "alias": "项目管理工程师",
+      "id": "alias-42981d34c2f7",
+      "occupation_code": "2-02-30-04",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Logistics Engineers",
-      "id": "alias-c7e16deff8b5",
-      "occupation_code": "13-1081.01",
+      "alias": "信息管理工程师",
+      "id": "alias-a7236cc25035",
+      "occupation_code": "2-02-30-08",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Logistics Analysts",
-      "id": "alias-b73f00122b7a",
-      "occupation_code": "13-1081.02",
+      "alias": "数据分析处理工程师",
+      "id": "alias-c617a92d1120",
+      "occupation_code": "2-02-30-09",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Management Analysts",
-      "id": "alias-a888fcc450c4",
-      "occupation_code": "13-1111.00",
+      "alias": "供应链工程师",
+      "id": "alias-1f7654896a49",
+      "occupation_code": "2-02-30-11",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Market Research Analysts and Marketing Specialists",
-      "id": "alias-f908bddf3dbc",
-      "occupation_code": "13-1161.00",
+      "alias": "产品设计工程师",
+      "id": "alias-b058a5d5c349",
+      "occupation_code": "2-02-34-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Search Marketing Strategists",
-      "id": "alias-239d10e08144",
-      "occupation_code": "13-1161.01",
+      "alias": "人工智能工程师",
+      "id": "alias-71f4537c0d76",
+      "occupation_code": "2-02-38-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Accountants and Auditors",
-      "id": "alias-bff6f5553f70",
-      "occupation_code": "13-2011.00",
+      "alias": "物联网工程师",
+      "id": "alias-9727e4c640a2",
+      "occupation_code": "2-02-38-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Personal Financial Advisors",
-      "id": "alias-c3cb4922d261",
-      "occupation_code": "13-2052.00",
+      "alias": "大数据工程师",
+      "id": "alias-b8ca9f37d0d8",
+      "occupation_code": "2-02-38-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Financial Examiners",
-      "id": "alias-1b235774a4fb",
-      "occupation_code": "13-2061.00",
+      "alias": "会计",
+      "id": "alias-cd01c3f7f200",
+      "occupation_code": "2-06-03-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Tax Examiners and Collectors, and Revenue Agents",
-      "id": "alias-a0086a538ce9",
-      "occupation_code": "13-2081.00",
+      "alias": "审计",
+      "id": "alias-252d56dd8c45",
+      "occupation_code": "2-06-04-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Tax Preparers",
-      "id": "alias-61fd3610443c",
-      "occupation_code": "13-2082.00",
+      "alias": "税务",
+      "id": "alias-21923140b62a",
+      "occupation_code": "2-06-05-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Financial Quantitative Analysts",
-      "id": "alias-3922b4f86841",
-      "occupation_code": "13-2099.01",
+      "alias": "国际商务",
+      "id": "alias-04cc247eb32b",
+      "occupation_code": "2-06-07-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer Systems Analysts",
-      "id": "alias-721690d08d6e",
-      "occupation_code": "15-1211.00",
+      "alias": "市场营销",
+      "id": "alias-f3dbef2ee6f1",
+      "occupation_code": "2-06-07-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Health Informatics Specialists",
-      "id": "alias-f6b2ee7bfb26",
-      "occupation_code": "15-1211.01",
+      "alias": "商务策划",
+      "id": "alias-7d6350a38c5a",
+      "occupation_code": "2-06-07-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Information Security Analysts",
-      "id": "alias-cc2991a5e24c",
-      "occupation_code": "15-1212.00",
+      "alias": "管理咨询",
+      "id": "alias-8bcb5d1d4a6c",
+      "occupation_code": "2-06-07-08",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer and Information Research Scientists",
-      "id": "alias-ab9a570cec4a",
-      "occupation_code": "15-1221.00",
+      "alias": "数字化管理师",
+      "id": "alias-994f04cf017c",
+      "occupation_code": "2-06-07-13",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer User Support Specialists",
-      "id": "alias-65fd2276c0e2",
-      "occupation_code": "15-1232.00",
+      "alias": "企业合规师",
+      "id": "alias-5442cf0919a5",
+      "occupation_code": "2-06-07-14",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer Network Architects",
-      "id": "alias-662f8043956d",
-      "occupation_code": "15-1241.00",
+      "alias": "招标采购",
+      "id": "alias-c870a00fcd99",
+      "occupation_code": "2-06-07-15",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Data Warehousing Specialists",
-      "id": "alias-92ad6ebf9111",
-      "occupation_code": "15-1243.01",
+      "alias": "银行金融市场业务",
+      "id": "alias-93af6b44775a",
+      "occupation_code": "2-06-09-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Network and Computer Systems Administrators",
-      "id": "alias-35a4aa9699a4",
-      "occupation_code": "15-1244.00",
+      "alias": "公司金融顾问",
+      "id": "alias-30be4249b3b3",
+      "occupation_code": "2-06-09-06",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Software Developers",
-      "id": "alias-531183216c7f",
-      "occupation_code": "15-1252.00",
+      "alias": "保险理赔",
+      "id": "alias-bc430c22e1cc",
+      "occupation_code": "2-06-10-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Software Quality Assurance Analysts and Testers",
-      "id": "alias-eda0f104d5c2",
-      "occupation_code": "15-1253.00",
+      "alias": "证券投资",
+      "id": "alias-047a742e1dbc",
+      "occupation_code": "2-06-11-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Web Developers",
-      "id": "alias-37f1e3bc5b6b",
-      "occupation_code": "15-1254.00",
+      "alias": "专利代理",
+      "id": "alias-f5b623e0a099",
+      "occupation_code": "2-06-12-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Information Security Engineers",
-      "id": "alias-428ac314954a",
-      "occupation_code": "15-1299.05",
+      "alias": "金融科技师",
+      "id": "alias-85d429c5f3d6",
+      "occupation_code": "2-06-14-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer Systems Engineers/Architects",
-      "id": "alias-f6f007485f89",
-      "occupation_code": "15-1299.08",
+      "alias": "律师",
+      "id": "alias-54c1b2c9eb4f",
+      "occupation_code": "2-07-04-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Business Intelligence Analysts",
-      "id": "alias-f87cf7cbb63f",
-      "occupation_code": "15-2051.01",
+      "alias": "法律顾问",
+      "id": "alias-e7e06ba6364e",
+      "occupation_code": "2-07-08-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Computer Hardware Engineers",
-      "id": "alias-eb9502fec6a9",
-      "occupation_code": "17-2061.00",
+      "alias": "视觉传达设计人员",
+      "id": "alias-53ac4f0e97b8",
+      "occupation_code": "2-09-06-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Health Education Specialists",
-      "id": "alias-4470d26d28ce",
-      "occupation_code": "21-1091.00",
+      "alias": "动画设计人员",
+      "id": "alias-d6ad788cba6e",
+      "occupation_code": "2-09-06-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Lawyers",
-      "id": "alias-6cd5c3ed54a0",
-      "occupation_code": "23-1011.00",
+      "alias": "环境设计人员",
+      "id": "alias-941d2221765e",
+      "occupation_code": "2-09-06-04",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Paralegals and Legal Assistants",
-      "id": "alias-9f11c7276e18",
-      "occupation_code": "23-2011.00",
+      "alias": "数字媒体艺术",
+      "id": "alias-7ace0b42b7a6",
+      "occupation_code": "2-09-06-07",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "English Language and Literature Teachers, Postsecondary",
-      "id": "alias-f13c5c82d8f6",
-      "occupation_code": "25-1123.00",
+      "alias": "公共艺术",
+      "id": "alias-703a8eae8729",
+      "occupation_code": "2-09-06-08",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Foreign Language and Literature Teachers, Postsecondary",
-      "id": "alias-363e1fdcc460",
-      "occupation_code": "25-1124.00",
+      "alias": "陈列展览设计人员",
+      "id": "alias-1d07234b66cd",
+      "occupation_code": "2-09-06-09",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Art Directors",
-      "id": "alias-efb348f8215e",
-      "occupation_code": "27-1011.00",
+      "alias": "网络编辑",
+      "id": "alias-53a1d2a193c6",
+      "occupation_code": "2-10-02-05",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Fine Artists, Including Painters, Sculptors, and Illustrators",
-      "id": "alias-ac80b686b84f",
-      "occupation_code": "27-1013.00",
+      "alias": "翻译",
+      "id": "alias-16fba757f3dd",
+      "occupation_code": "2-10-05-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Special Effects Artists and Animators",
-      "id": "alias-45ecf023c4e6",
-      "occupation_code": "27-1014.00",
+      "alias": "基层法律服务工作者",
+      "id": "alias-cebad8d46c96",
+      "occupation_code": "3-01-04-05",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Commercial and Industrial Designers",
-      "id": "alias-a80f3e24422c",
-      "occupation_code": "27-1021.00",
+      "alias": "采购员",
+      "id": "alias-049e00843ae9",
+      "occupation_code": "4-01-01-00",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Graphic Designers",
-      "id": "alias-4dfdc89f913a",
-      "occupation_code": "27-1024.00",
+      "alias": "营销员",
+      "id": "alias-b855b081f55c",
+      "occupation_code": "4-01-02-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Interior Designers",
-      "id": "alias-4b3da3041509",
-      "occupation_code": "27-1025.00",
+      "alias": "电子商务师",
+      "id": "alias-dcc45a7b5c01",
+      "occupation_code": "4-01-06-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Set and Exhibit Designers",
-      "id": "alias-3ef8fe402b2f",
-      "occupation_code": "27-1027.00",
+      "alias": "互联网营销师",
+      "id": "alias-6cb32c85327d",
+      "occupation_code": "4-01-06-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Producers and Directors",
-      "id": "alias-f3b69654f096",
-      "occupation_code": "27-2012.00",
+      "alias": "仓储管理员",
+      "id": "alias-b022c314d652",
+      "occupation_code": "4-02-06-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Public Relations Specialists",
-      "id": "alias-3564498dd002",
-      "occupation_code": "27-3031.00",
+      "alias": "物流服务师",
+      "id": "alias-c45736279618",
+      "occupation_code": "4-02-06-03",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Interpreters and Translators",
-      "id": "alias-77f76754cdb4",
-      "occupation_code": "27-3091.00",
+      "alias": "供应链管理师",
+      "id": "alias-161c66461870",
+      "occupation_code": "4-02-06-05",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Tour Guides and Escorts",
-      "id": "alias-41689bb6f78e",
-      "occupation_code": "39-7011.00",
+      "alias": "前厅服务员",
+      "id": "alias-5c13a851b310",
+      "occupation_code": "4-03-01-01",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Travel Agents",
-      "id": "alias-c87a18ae6d2a",
-      "occupation_code": "41-3041.00",
+      "alias": "客房服务员",
+      "id": "alias-7a96c4cc3627",
+      "occupation_code": "4-03-01-02",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Bookkeeping, Accounting, and Auditing Clerks",
-      "id": "alias-609846421866",
-      "occupation_code": "43-3031.00",
+      "alias": "餐厅服务员",
+      "id": "alias-7d8eae61d140",
+      "occupation_code": "4-03-02-05",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ]
     },
     {
-      "alias": "Hotel, Motel, and Resort Desk Clerks",
-      "id": "alias-00914f830428",
-      "occupation_code": "43-4081.00",
+      "alias": "食品安全管理师",
+      "id": "alias-1ccd8d7afc8a",
+      "occupation_code": "4-03-02-11",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "信息通信网络运行管理员",
+      "id": "alias-83b63134d7d1",
+      "occupation_code": "4-04-04-01",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "网络与信息安全管理员",
+      "id": "alias-bd975beb46cf",
+      "occupation_code": "4-04-04-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "信息通信信息化系统管理员",
+      "id": "alias-3c162432d51b",
+      "occupation_code": "4-04-04-03",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "信息安全测试员",
+      "id": "alias-af5e6c913f52",
+      "occupation_code": "4-04-04-04",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "数字化解决方案设计师",
+      "id": "alias-d496200482e7",
+      "occupation_code": "4-04-04-05",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "网络安全等级保护测评师",
+      "id": "alias-e2bcbddb4551",
+      "occupation_code": "4-04-04-06",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "计算机程序设计员",
+      "id": "alias-1f8df49fca5f",
+      "occupation_code": "4-04-05-01",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "计算机软件测试员",
+      "id": "alias-5ad76fc6cdc2",
+      "occupation_code": "4-04-05-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "数据库运行管理员",
+      "id": "alias-fdfcc172ebf2",
+      "occupation_code": "4-04-05-04",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "人工智能训练师",
+      "id": "alias-5027fafb3b24",
+      "occupation_code": "4-04-05-05",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "电子数据取证分析师",
+      "id": "alias-f645f655b268",
+      "occupation_code": "4-04-05-08",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "信息系统适配验证师",
+      "id": "alias-8695082922fc",
+      "occupation_code": "4-04-05-09",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "数字孪生应用技术员",
+      "id": "alias-0e579912d060",
+      "occupation_code": "4-04-05-10",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "虚拟现实产品设计师",
+      "id": "alias-4ac5d6bbcf2e",
+      "occupation_code": "4-04-05-11",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "证券期货服务师",
+      "id": "alias-29baeaa2da34",
+      "occupation_code": "4-05-02-00",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "资产管理师",
+      "id": "alias-00a80f53cdf2",
+      "occupation_code": "4-05-05-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "风险管理师",
+      "id": "alias-a4716e84148c",
+      "occupation_code": "4-07-02-01",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "信用管理师",
+      "id": "alias-be1c72efeb94",
+      "occupation_code": "4-07-02-04",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "商务数据分析师",
+      "id": "alias-1b945ef817cd",
+      "occupation_code": "4-07-02-05",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "导游",
+      "id": "alias-954209b52ee3",
+      "occupation_code": "4-07-04-01",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "旅游团队领队",
+      "id": "alias-ae520406bdda",
+      "occupation_code": "4-07-04-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "旅游咨询员",
+      "id": "alias-7829cc42dbf4",
+      "occupation_code": "4-07-04-04",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "景区运营管理师",
+      "id": "alias-3ccf7b1901cd",
+      "occupation_code": "4-07-04-07",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "工艺美术品设计师",
+      "id": "alias-29a27dfc523c",
+      "occupation_code": "4-08-08-05",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "装潢美术设计师",
+      "id": "alias-025cbc45471b",
+      "occupation_code": "4-08-08-06",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "室内装饰设计师",
+      "id": "alias-1380d678de26",
+      "occupation_code": "4-08-08-07",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "广告设计师",
+      "id": "alias-2cec1178e4f6",
+      "occupation_code": "4-08-08-08",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "包装设计师",
+      "id": "alias-321157125e4e",
+      "occupation_code": "4-08-08-09",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "玩具设计师",
+      "id": "alias-e11c9a4df907",
+      "occupation_code": "4-08-08-10",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "会展设计师",
+      "id": "alias-3336a32a4c0f",
+      "occupation_code": "4-08-08-21",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "工业设计工艺师",
+      "id": "alias-cf9f6ad7adcf",
+      "occupation_code": "4-08-08-26",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "全媒体运营师",
+      "id": "alias-6147899eb83c",
+      "occupation_code": "4-13-01-05",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "动画制作员",
+      "id": "alias-5de203f50df4",
+      "occupation_code": "4-13-02-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "健康照护师",
+      "id": "alias-051728bc2c25",
+      "occupation_code": "4-14-01-03",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "健康管理师",
+      "id": "alias-3f164971084e",
+      "occupation_code": "4-14-02-02",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "生殖健康咨询师",
+      "id": "alias-e65ae4219d79",
+      "occupation_code": "4-14-02-03",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "社群健康助理员",
+      "id": "alias-55815b4c872c",
+      "occupation_code": "4-14-04-04",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ]
+    },
+    {
+      "alias": "物联网安装调试员",
+      "id": "alias-f6343e7c0070",
+      "occupation_code": "6-25-04-09",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
       ]
     }
   ],

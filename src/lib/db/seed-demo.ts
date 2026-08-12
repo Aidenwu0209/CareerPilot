@@ -6,7 +6,10 @@ import {
   careerProfiles,
   careerProfileSnapshots,
   careerTasks,
+  careerKnowledgeDocuments,
   educationRoleAssignments,
+  occupationRelations,
+  occupationRequirements,
   occupations,
   organizationMemberships,
   organizations,
@@ -16,7 +19,7 @@ import {
   users,
 } from './schema';
 import { and, eq } from 'drizzle-orm';
-import { DEMO_OCCUPATIONS } from '@/lib/career/catalog';
+import { DEMO_OCCUPATION_BY_CODE, DEMO_OCCUPATIONS } from '@/lib/career/catalog';
 
 export const DEMO_STUDENT_FINGERPRINT = 'demo-fingerprint';
 export const DEMO_TEACHER_FINGERPRINT = 'teacher-demo-fingerprint';
@@ -296,6 +299,8 @@ export async function seedDemoUser(db: any) {
   // explicitly assigned teacher guidance. It is only used for a fresh local DB.
   const goalId = crypto.randomUUID();
   const { teacherId } = await ensureDemoTeacherWorkspace(db, userId);
+  const targetOccupation = DEMO_OCCUPATION_BY_CODE.get('4-04-05-01');
+  if (!targetOccupation) throw new Error('Chinese demo occupation 4-04-05-01 is missing from the committed catalog.');
 
   for (const occupation of DEMO_OCCUPATIONS) {
     await db.insert(occupations).values({
@@ -305,78 +310,96 @@ export async function seedDemoUser(db: any) {
       summary: occupation.summary,
       description: occupation.description,
       entryLevel: occupation.entryLevel,
+      canonicalType: occupation.canonicalType,
+      jobFamily: occupation.jobFamily,
+      industry: occupation.industry,
+      cities: occupation.cities,
+      educationLevels: occupation.educationLevels,
+      catalogVersion: occupation.catalogVersion,
+      reviewStatus: occupation.reviewStatus,
+      scoringEligible: occupation.scoringEligible,
       active: true,
     });
+    if (occupation.requirements.length) {
+      await db.insert(occupationRequirements).values(occupation.requirements.map((requirement) => ({
+        id: `demo:${occupation.code}:${requirement.abilityCode}`,
+        occupationCode: occupation.code,
+        abilityCode: requirement.abilityCode,
+        abilityName: requirement.abilityName,
+        dimension: requirement.dimension,
+        targetScore: requirement.targetScore,
+        weight: requirement.weight,
+        required: requirement.required,
+        description: requirement.description,
+        region: '中国',
+        reviewStatus: 'approved',
+        catalogVersion: occupation.catalogVersion,
+      })));
+    }
+    if (occupation.citations.length) {
+      await db.insert(careerKnowledgeDocuments).values(occupation.citations.map((citation) => ({
+        id: citation.id,
+        occupationCode: occupation.code,
+        title: citation.title,
+        content: `${occupation.description}\n${occupation.summary}`,
+        sourceLabel: citation.sourceLabel,
+        sourceUrl: citation.sourceUrl,
+        publishedAt: citation.publishedAt ? new Date(citation.publishedAt) : null,
+        verifiedAt: new Date(citation.verifiedAt),
+        catalogVersion: occupation.catalogVersion,
+        contentHash: '',
+      })));
+    }
   }
+  await db.insert(occupationRelations).values(DEMO_OCCUPATIONS.flatMap((occupation) => occupation.relations.map((relation) => ({
+    id: `demo:${occupation.code}:${relation.toCode}`,
+    fromCode: occupation.code,
+    toCode: relation.toCode,
+    relationType: relation.relationType,
+    description: relation.description,
+  }))));
 
   await db.insert(careerProfiles).values({
     userId,
-    headline: '面向前端工程方向的软件工程学生',
-    summary: '已完成响应式 Web 项目，正在补充测试、部署和面试表达证据。',
+    headline: '面向计算机程序设计员方向的软件工程学生',
+    summary: '已完成响应式 Web 项目，正在按中国职业分类岗位要求补充开发、测试与交付证据。',
     stage: 'preparing',
     completeness: 78,
     evidenceCoverage: 67,
   });
 
-  const abilitySeeds = [
-    { code: 'software_fundamentals', name: '软件工程基础', dimension: 'domain_knowledge', score: 68, confidence: 78, evidenceCount: 1 },
-    { code: 'web_frontend', name: 'Web 前端基础', dimension: 'professional_skills', score: 76, confidence: 88, evidenceCount: 2 },
-    { code: 'project_delivery', name: '项目交付', dimension: 'project_practice', score: 64, confidence: 72, evidenceCount: 1 },
-    { code: 'problem_solving', name: '问题分析与解决', dimension: 'general_competencies', score: 70, confidence: 74, evidenceCount: 1 },
-    { code: 'portfolio', name: '作品与成果证明', dimension: 'job_readiness', score: 58, confidence: 62, evidenceCount: 1 },
-    { code: 'continuous_learning', name: '持续学习', dimension: 'growth_potential', score: 73, confidence: 70, evidenceCount: 1 },
-  ] as const;
+  const demoScores = [76, 72, 68, 74, 70, 66] as const;
+  const abilitySeeds = targetOccupation.requirements.slice(0, 6).map((requirement, index) => ({
+    code: requirement.abilityCode,
+    name: requirement.abilityName,
+    dimension: requirement.dimension,
+    score: demoScores[index] ?? 65,
+    confidence: 80,
+    evidenceCount: 1,
+  }));
   await db.insert(careerAbilities).values(abilitySeeds.map((ability) => ({ userId, ...ability })));
 
-  await db.insert(careerEvidence).values([
-    {
-      userId,
-      abilityCode: 'web_frontend',
-      sourceType: 'project',
-      sourceId: resumeId,
-      title: 'CareerPilot 响应式前端项目',
-      excerpt: '使用 Next.js、React 与 TypeScript 完成多端页面和实时预览，并记录个人贡献。',
-      status: 'verified',
-      occurredAt: new Date(),
-    },
-    {
-      userId,
-      abilityCode: 'project_delivery',
-      sourceType: 'resume',
-      sourceId: resumeId,
-      title: '项目交付经历',
-      excerpt: '具备从需求拆解、实现到部署的项目经历，部署地址仍待教师确认。',
-      status: 'pending',
-      occurredAt: new Date(),
-    },
-    {
-      userId,
-      abilityCode: 'problem_solving',
-      sourceType: 'project',
-      sourceId: resumeId,
-      title: '性能问题定位与优化',
-      excerpt: '通过性能监控定位加载瓶颈，并给出可复核的优化结果。',
-      status: 'verified',
-      occurredAt: new Date(),
-    },
-    {
-      userId,
-      abilityCode: 'portfolio',
-      sourceType: 'resume',
-      sourceId: resumeId,
-      title: '前端作品材料',
-      excerpt: '简历已呈现项目结构、技术栈与个人职责。',
-      status: 'verified',
-      occurredAt: new Date(),
-    },
-  ]);
+  await db.insert(careerEvidence).values(abilitySeeds.map((ability, index) => ({
+    userId,
+    abilityCode: ability.code,
+    sourceType: index % 2 === 0 ? 'project' as const : 'resume' as const,
+    sourceId: resumeId,
+    title: `${ability.name}项目证据`,
+    excerpt: `通过课程项目、代码与交付记录说明“${ability.name}”能力及个人贡献。`,
+    status: 'verified' as const,
+    assessedScore: ability.score,
+    confirmedBy: teacherId,
+    reviewReason: '演示教师已核对项目材料、个人贡献和结果。',
+    reviewedAt: new Date(),
+    occurredAt: new Date(),
+  })));
 
   const targetDate = new Date();
   targetDate.setMonth(targetDate.getMonth() + 9);
   await db.insert(careerGoals).values({
     id: goalId,
     userId,
-    occupationCode: 'J-FE-001',
+    occupationCode: targetOccupation.code,
     isPrimary: true,
     status: 'active',
     targetDate,
@@ -393,12 +416,12 @@ export async function seedDemoUser(db: any) {
     {
       userId,
       goalId,
-      occupationCode: 'J-FE-001',
-      abilityCode: 'testing',
-      title: '为核心组件补充自动化测试',
-      description: '提交测试代码、覆盖的关键场景和一次可复核的测试运行结果。',
-      reason: '自动化测试是目标岗位当前最明显的证据缺口。',
-      completionCriteria: '新增至少 3 个关键场景测试并保存一次通过的运行结果。',
+      occupationCode: targetOccupation.code,
+      abilityCode: targetOccupation.requirements[6]?.abilityCode ?? targetOccupation.requirements[0].abilityCode,
+      title: '补充目标岗位能力证据',
+      description: '按国家职业标准或职业分类大典任务提交代码、文档与一次可复核的运行结果。',
+      reason: '补足当前目标岗位中尚未覆盖的必要能力。',
+      completionCriteria: '提交成果链接、个人贡献说明和至少一项可复核结果。',
       category: 'practice',
       status: 'in_progress',
       dueAt: taskDueSoon,
@@ -406,9 +429,9 @@ export async function seedDemoUser(db: any) {
     {
       userId,
       goalId,
-      occupationCode: 'J-FE-001',
-      abilityCode: 'portfolio',
-      title: '整理前端项目作品说明',
+      occupationCode: targetOccupation.code,
+      abilityCode: targetOccupation.requirements[7]?.abilityCode ?? targetOccupation.requirements[1].abilityCode,
+      title: '整理程序设计项目作品说明',
       description: '用问题、行动、结果结构说明个人贡献，并附可访问的演示或截图。',
       reason: '将已有项目转换为招聘方可快速核验的作品证据。',
       completionCriteria: '提交项目链接、三段式个人贡献说明和至少一张关键界面截图。',
@@ -439,7 +462,7 @@ export async function seedDemoUser(db: any) {
     userId,
     teacherId,
     visibility: 'student',
-    content: '你的前端基础和问题分析已有证据支撑。下一步优先补齐自动化测试与可访问部署证据。',
+    content: '你已形成一批与中国职业分类岗位要求对应的项目证据。下一步优先补齐尚未覆盖的程序开发与验证要求。',
   });
 
   console.log('[DB] Auto-seed complete: demo student, career profile, and assigned teacher created');

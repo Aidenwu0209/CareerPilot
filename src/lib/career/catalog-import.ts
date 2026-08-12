@@ -36,7 +36,7 @@ interface MajorInput {
   source_excerpt?: string; employment_text?: string; review_status?: ReviewStatus;
 }
 interface OccupationInput {
-  code: string; name: string; canonical_type?: 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
+  code: string; name: string; canonical_type?: 'china_national_occupation' | 'national_occupation' | 'standard_occupation' | 'market_alias' | 'unresolved_placeholder';
   category?: string; summary?: string; description?: string; entry_level?: string; job_family?: string;
   industry?: string; cities?: string[]; education_levels?: string[]; source_ids?: string[];
   review_status?: ReviewStatus; scoring_eligible?: boolean;

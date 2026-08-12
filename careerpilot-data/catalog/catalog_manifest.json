@@ -1,57 +1,62 @@
 {
-  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
+  "catalog_version": "gcc-cn-2022-20260812-a47edb7d63",
   "files": {
     "colleges.json": {
       "count": 10,
-      "sha256": "9e49810d58f45866dd45e6fa94314742879dacaed2828eb39a4bd05dc050a3a4"
+      "sha256": "5e04878a57dd40c166858d3ecc5608b8b5d974ed574d15b75f0642a963fe2783"
     },
     "coverage_report.json": {
       "count": 64,
-      "sha256": "b1e95a9d6158b7aea9552ef0472929991bacddfe4cfb6512fe1df40127d8c310"
+      "sha256": "888e4a361e5ddfa41aa853bf23148d131bbdf4dcf9c304e112c1f7fcb80b1d57"
     },
     "legacy_occupation_map.json": {
-      "count": 12,
-      "sha256": "023ddd3fecc704ae5af669b8450174c615ce29f4142e0357968e3f11b4ff24dc"
+      "count": 66,
+      "sha256": "4d7fac285ef6fec60e9f8fcd26445893ac9f169fac1ea693a9a99f048a7d6110"
     },
     "major_occupation_edges.json": {
-      "count": 192,
-      "sha256": "a7d27b9538eba6d233eafc6ed9e05d0c8a07b0bb2a0817f9a839616f1fa0f7db"
+      "count": 320,
+      "sha256": "65fb1975fe2299ea9ea84a24c21b5ddd616e722205b0975b8d5906ad81b6beca"
     },
     "majors.json": {
       "count": 64,
-      "sha256": "4f6b3ace2018de0ae2c5e5481f6ad4cda59ed0ea5cb0bd7651539261671047b8"
+      "sha256": "7c45bba6b73509d2c66e7b7e6a0de9058209472025d6026916d3e0bf4ad39dac"
     },
     "occupation_aliases.json": {
-      "count": 54,
-      "sha256": "bd2768be1d38c17521f5b19e0caed084218241009ef370ad7acd4640cafe76f1"
+      "count": 92,
+      "sha256": "584786746c8251233663d4955a591f37dded0d285815d2622d0f0a7d14127ee7"
     },
     "occupation_relations.json": {
-      "count": 301,
-      "sha256": "0ff585d66d6a7af3a4ada5eba5f373f551d0a0ed4bce98865bee9a9f3d95edca"
+      "count": 206,
+      "sha256": "97aa3c37f1cd3b5b75e39b382cfd211b12e2395928ea114d8c24ab8fafac1243"
     },
     "occupation_requirements.json": {
-      "count": 702,
-      "sha256": "1445f0211c6cb0cd9ef117b6182d1a5f3cd2f33fef3d585cbbac66f9a91f91a4"
+      "count": 765,
+      "sha256": "bdc407f4957734c750e0fa1aefff923dfc7942a4e61d4e1a040d161c1f601565"
     },
     "occupations.json": {
-      "count": 54,
-      "sha256": "8616012a55fc5d22051df925e3c89542e5c765413ea3585387f3267445acbf8a"
+      "count": 92,
+      "sha256": "cd2b6b69f1bc5f33325570e76c9c185a08295109e278abd9a22dc42e11b9a808"
     },
     "sources.json": {
-      "count": 67,
-      "sha256": "d2e6482d9412efde14ef7b0c836e8347adc688e3de8db473492c403a93604256"
+      "count": 49,
+      "sha256": "fafd7b5cce2d462f3b5fb0000389dcb4e814a03f2c1e68a24a644208b1dbe211"
     }
   },
-  "generated_at": "2026-08-12T14:40:20Z",
-  "license": "Based on O*NET 30.3 (US DOL/ETA), CC BY 4.0; Chinese translation and normalized scoring are derivative work.",
+  "generated_at": "2026-08-12T17:14:03Z",
   "publication_status": "approved",
   "quality_gates": {
     "all_45_unique_majors_mapped": true,
+    "china_codes_only": true,
     "curated_mapping_complete": true,
-    "every_major_has_three_resolved_edges": true,
-    "every_occupation_has_requirements": true
+    "every_major_has_five_resolved_edges": true,
+    "every_occupation_has_traceable_requirements": true
   },
   "schema_version": "1.0.0",
+  "scoring_disclaimer": "CareerPilot evidence match is not a national vocational qualification or skill-level examination result.",
   "scoring_safe": true,
-  "source_failures": []
+  "source_failures": [],
+  "standard_system": "中华人民共和国职业分类大典（2022年版）+现行国家职业标准",
+  "transport_notes": [
+    "OSTA HTTPS certificate/request failed; official HTTP endpoint used without disabling TLS verification: URLError"
+  ]
 }

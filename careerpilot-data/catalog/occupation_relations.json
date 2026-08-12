@@ -1,3317 +1,2272 @@
 {
-  "catalog_version": "gcc-onet-30.3-20260812-a3a0b95d",
-  "generated_at": "2026-08-12T14:40:20Z",
+  "catalog_version": "gcc-cn-2022-20260812-a47edb7d63",
+  "generated_at": "2026-08-12T17:14:03Z",
   "items": [
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-2dbb3c62ca10",
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-02",
+      "id": "cn-relation-6132c3745c5f",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1161.00"
+      "to_code": "2-02-10-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-04deb15dca81",
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-02",
+      "id": "cn-relation-a37fb77c5fcd",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1161.01"
+      "to_code": "2-02-38-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-841c1a7494c1",
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-03",
+      "id": "cn-relation-d9ebdc061032",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-2051.01"
+      "to_code": "2-02-30-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-ff2ba5bc7de3",
-      "relation_type": "transfers_to",
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-03",
+      "id": "cn-relation-677a4497dc33",
+      "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-3031.00"
+      "to_code": "4-04-05-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-816036035d76",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-2021.00",
-      "id": "onet-related-44f14d233305",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-f57f85e7ddbe",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-0f649d63ae44",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-f9ce6f4aba2d",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-f5d6ef64e4aa",
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-03",
+      "id": "cn-relation-a9096b77cb7a",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.03"
+      "to_code": "4-04-05-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-0ce5f54e6de6",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "43-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3031.00",
-      "id": "onet-related-5660ccf382e6",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-e3c54af680cb",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (5→5).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-7ea85c57e384",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2099.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-787ac2464273",
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-03",
+      "id": "cn-relation-7d7427537d64",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.00"
+      "to_code": "4-04-05-09"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-33c41beacd0f",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-16f3816c643f",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-ea28d235a94c",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-a416178ef77e",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "11-3031.03",
-      "id": "onet-related-bcbd1708ab70",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3071.04",
-      "id": "onet-related-a19835638dd1",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.02"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3071.04",
-      "id": "onet-related-64cce70b5891",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3071.04",
-      "id": "onet-related-0c487881e90c",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3071.04",
-      "id": "onet-related-2f83f02d2cac",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-3071.04",
-      "id": "onet-related-b1d029b2cec5",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-2021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→2).",
-      "from_code": "11-9081.00",
-      "id": "onet-related-a5a9a9b5c8c8",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "43-4081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "11-9111.00",
-      "id": "onet-related-31f10f3b4227",
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-03",
+      "id": "cn-relation-0ce393a87e18",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1211.01"
+      "to_code": "4-04-05-11"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9111.00",
-      "id": "onet-related-b575e4dfb114",
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-04",
+      "id": "cn-relation-a12b2b995ea2",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "21-1091.00"
+      "to_code": "2-02-10-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9111.00",
-      "id": "onet-related-7256bae9852a",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9199.02",
-      "id": "onet-related-9a568e6a2f03",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9199.02",
-      "id": "onet-related-e954b6470173",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1041.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9199.02",
-      "id": "onet-related-c09d1dd27fad",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9199.02",
-      "id": "onet-related-8ff80322b271",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "11-9199.02",
-      "id": "onet-related-0180f89b9d90",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1041.00",
-      "id": "onet-related-fef63dacf87f",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-9199.02"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-1041.00",
-      "id": "onet-related-12a864e9c439",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "23-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1041.00",
-      "id": "onet-related-94604d2af86e",
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-05",
+      "id": "cn-relation-6af9ecbac744",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1111.00"
+      "to_code": "2-02-10-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-1041.00",
-      "id": "onet-related-6ed5d8f00ff8",
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-05",
+      "id": "cn-relation-d06ce9fd24a3",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2081.00"
+      "to_code": "2-02-10-04"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "13-1041.00",
-      "id": "onet-related-81096f55a10b",
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-05",
+      "id": "cn-relation-e10637fc398a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-05",
+      "id": "cn-relation-4d3a2118a457",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "23-1011.00"
+      "to_code": "4-04-04-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.00",
-      "id": "onet-related-70edaf27ab81",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.02"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.00",
-      "id": "onet-related-1b88895139cd",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-3071.04"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.00",
-      "id": "onet-related-a7e9df1f189f",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.00",
-      "id": "onet-related-ef5b44f556c7",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.00",
-      "id": "onet-related-667069cfb50c",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.01",
-      "id": "onet-related-2ab213b0dda0",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.02"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.01",
-      "id": "onet-related-12246f8632a8",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.01",
-      "id": "onet-related-9387103c9333",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-3071.04"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.01",
-      "id": "onet-related-f7bf1524d9ae",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-1081.01",
-      "id": "onet-related-c0795d86e48a",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-e411025326af",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-3071.04"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-c1cb4d022efc",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-10b7f00b539d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1081.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-1bced2911936",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-65665dd95f19",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-f572c8847821",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1081.02",
-      "id": "onet-related-ce6829ca12d0",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1111.00",
-      "id": "onet-related-6f4f5371e281",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1111.00",
-      "id": "onet-related-0129dba8da14",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1111.00",
-      "id": "onet-related-1df611a14e89",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-9199.02"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1111.00",
-      "id": "onet-related-9218a109ce66",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-3fc2e5cfea44",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-2021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-a38f6f53e2a1",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-7b55636f3912",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-545a19ba799f",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-79c2708f3f5a",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.00",
-      "id": "onet-related-ca003c6d45a3",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-dfd196944687",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-52dc4029a401",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-2021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-5b8374fbb960",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1254.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-474efc41698e",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-50b866ab9e4b",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-70148659c5ce",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-e06fde64ad9c",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-1161.01",
-      "id": "onet-related-967a1dc16a73",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-bbdc4bed21bf",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "43-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-0050c9734c0f",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-09befc58f325",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2082.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-997e9e779fed",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-fade10383be4",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-2ec541037074",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2011.00",
-      "id": "onet-related-0d53711c8761",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-6d810dfa8044",
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-05",
+      "id": "cn-relation-8bcbc66e111f",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.03"
+      "to_code": "4-04-04-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-7c1ce56ab5dc",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-e89e621fadb6",
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-06",
+      "id": "cn-relation-c12dce6bfbf1",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.00"
+      "to_code": "2-02-38-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-60c79d4cc278",
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-07",
+      "id": "cn-relation-ef27b1b99bc0",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2061.00"
+      "to_code": "4-04-04-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-a2f8018610a5",
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-07",
+      "id": "cn-relation-b579ba8f636c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-04-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-07",
+      "id": "cn-relation-d7575d22468e",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2082.00"
+      "to_code": "4-04-04-06"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2052.00",
-      "id": "onet-related-038effa5ddea",
-      "relation_type": "related_to",
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-10-07",
+      "id": "cn-relation-b3a10b2990c6",
+      "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1111.00"
+      "to_code": "4-04-05-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-035113c28563",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-f1d0c748ee0a",
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-18-01",
+      "id": "cn-relation-9fbe99dc5417",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-9199.02"
+      "to_code": "2-09-06-04"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-7cfcd15b3cf2",
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-02",
+      "id": "cn-relation-7b2eba8b52da",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-01-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-02",
+      "id": "cn-relation-502052a0a785",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-02-06-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-02",
+      "id": "cn-relation-d849553ec5b4",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-02-06-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-02",
+      "id": "cn-relation-d65eb4558590",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-02-06-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-04",
+      "id": "cn-relation-becb49a47315",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.00"
+      "to_code": "2-06-07-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-ac80e18b319b",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-62aa138de6aa",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-aaf1b6107b03",
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-08",
+      "id": "cn-relation-843338fc2bd8",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.03"
+      "to_code": "2-02-10-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-5d7e3b518466",
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-08",
+      "id": "cn-relation-aa5b361342b1",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2081.00"
+      "to_code": "2-02-10-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "13-2061.00",
-      "id": "onet-related-6cf91056fbb7",
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-08",
+      "id": "cn-relation-049a391be968",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-04-04-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-08",
+      "id": "cn-relation-285966ee47cb",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-04-05-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-09",
+      "id": "cn-relation-8191b2115c36",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "43-3031.00"
+      "to_code": "2-02-38-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-343e6f7f71e0",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2082.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-e165d37498e4",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-1dedeab43956",
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-09",
+      "id": "cn-relation-ee8205d7d734",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "43-3031.00"
+      "to_code": "2-02-38-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-031e1c4cb1ba",
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-11",
+      "id": "cn-relation-6e7ee3954d34",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2061.00"
+      "to_code": "2-06-07-15"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-9e0b9897a63e",
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-11",
+      "id": "cn-relation-d551259737d0",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1041.00"
+      "to_code": "4-01-01-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2081.00",
-      "id": "onet-related-db9d84a0e242",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2052.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-4144e574e445",
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-11",
+      "id": "cn-relation-cce0c8f35c04",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2081.00"
+      "to_code": "4-02-06-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-54f83952af40",
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-30-11",
+      "id": "cn-relation-439717fb2396",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-02-06-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-34-01",
+      "id": "cn-relation-3454e2769246",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2011.00"
+      "to_code": "4-08-08-09"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-1a58bf630385",
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-34-01",
+      "id": "cn-relation-f2d69f18d8fd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-10"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-34-01",
+      "id": "cn-relation-c0a665b6d6b1",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2052.00"
+      "to_code": "4-08-08-21"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-689fb1e5406e",
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-34-01",
+      "id": "cn-relation-97c25d29e3d0",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-26"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-01",
+      "id": "cn-relation-2f5219fe3918",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-09"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-01",
+      "id": "cn-relation-0dc8dd2811e0",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "43-3031.00"
+      "to_code": "2-02-38-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-7966d2ec31e0",
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-01",
+      "id": "cn-relation-96df5bce204d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-04-05-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-01",
+      "id": "cn-relation-ecf9b1eaaf84",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2061.00"
+      "to_code": "4-04-05-10"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-6d4aa6978f66",
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-02",
+      "id": "cn-relation-28f84fb16211",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-02",
+      "id": "cn-relation-a123d9db8a36",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-06"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-02",
+      "id": "cn-relation-60104fae079e",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.00"
+      "to_code": "4-04-04-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "13-2082.00",
-      "id": "onet-related-3286f1b560af",
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-02",
+      "id": "cn-relation-8ff115901a6c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "6-25-04-09"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-03",
+      "id": "cn-relation-c920b6e11f8f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-09"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-03",
+      "id": "cn-relation-d4e1eedb3d87",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-03",
+      "id": "cn-relation-42d29fc2a952",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-04-05-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-02-38-03",
+      "id": "cn-relation-51f0b878f01a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-03-00",
+      "id": "cn-relation-32c254cbf32b",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-04-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-03-00",
+      "id": "cn-relation-8ef44f4f620a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-05-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-03-00",
+      "id": "cn-relation-c53dd622f748",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-03-00",
+      "id": "cn-relation-5b05331fb891",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-04-00",
+      "id": "cn-relation-8e36df88276e",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "23-2011.00"
+      "to_code": "2-06-03-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→5).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-0ba2f37a2ead",
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-04-00",
+      "id": "cn-relation-599cf25ed7b6",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-3031.03"
+      "to_code": "2-06-05-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-d1c9ba6e006d",
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-05-00",
+      "id": "cn-relation-74d26c15274f",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-2051.01"
+      "to_code": "2-06-03-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-993fdb63ff4b",
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-05-00",
+      "id": "cn-relation-659f7fdca39a",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1111.00"
+      "to_code": "2-06-04-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-959b1ad3b81d",
-      "relation_type": "related_to",
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-05-00",
+      "id": "cn-relation-0a3a433e48c7",
+      "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2052.00"
+      "to_code": "2-06-07-14"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-b98741fb87f5",
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-05-00",
+      "id": "cn-relation-045fcbe44732",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-01",
+      "id": "cn-relation-460e852d7e91",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1243.01"
+      "to_code": "2-10-05-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-e52bfa066223",
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-01",
+      "id": "cn-relation-dbe6ed444de6",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-02-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-01",
+      "id": "cn-relation-cfd5a1691dbd",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-06-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-01",
+      "id": "cn-relation-bedcb32b60f3",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-06-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-01",
+      "id": "cn-relation-c370af4c98b5",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-02",
+      "id": "cn-relation-c73536b8e568",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-02",
+      "id": "cn-relation-6cc64254f28d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-02-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-02",
+      "id": "cn-relation-075c5b62e4d7",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-06-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-02",
+      "id": "cn-relation-f47fc7727856",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-03",
+      "id": "cn-relation-b3d9a5186418",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1211.00"
+      "to_code": "2-06-07-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "13-2099.01",
-      "id": "onet-related-287384930e01",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-ffedcbe9816d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-f6f05f27f96b",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-c0ac1db13a34",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-9f92b340d2f3",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-9bdedc0a1301",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-1bb6a2a4b784",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-cf0c8d80a1ba",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-293d3331db29",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-e7b571324186",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-6dfdf4ba7164",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1211.00",
-      "id": "onet-related-890ce60944a7",
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-03",
+      "id": "cn-relation-4c43895638ea",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1111.00"
+      "to_code": "2-06-07-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1211.01",
-      "id": "onet-related-f46ee20ee6d6",
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-08",
+      "id": "cn-relation-c186b5dc6bed",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-08",
+      "id": "cn-relation-c103023c3af0",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-9111.00"
+      "to_code": "2-06-03-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1211.01",
-      "id": "onet-related-e3597d54bb1d",
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-08",
+      "id": "cn-relation-15edeb079f1d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-08",
+      "id": "cn-relation-bdbdae33fe44",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-13"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-08",
+      "id": "cn-relation-65fb8d7fa33d",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-13",
+      "id": "cn-relation-1ecd6efa057c",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "21-1091.00"
+      "to_code": "2-06-07-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1211.01",
-      "id": "onet-related-06ca1f43ebae",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-113d29db223e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-dd28eaf909b3",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-68839f5d23fc",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-4119d5a1004e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-3af37243e0ad",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-6368f12d8755",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-b8d8cb6c0570",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1212.00",
-      "id": "onet-related-dd8365241dea",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1221.00",
-      "id": "onet-related-ef99e034b49e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (5→3).",
-      "from_code": "15-1221.00",
-      "id": "onet-related-6cf66e8d9479",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1221.00",
-      "id": "onet-related-150ab8fccf0d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "15-1221.00",
-      "id": "onet-related-0676913e50b8",
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-14",
+      "id": "cn-relation-40890d31caab",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "17-2061.00"
+      "to_code": "2-06-05-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-849f4fd1a9a8",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-972ce0e90638",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-ccbba07fd6d4",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-71d58e765409",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-44fa8ba4770e",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-f4e2bb19e2ac",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-b59bc4723da6",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1232.00",
-      "id": "onet-related-f0e21ea453a6",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-a9e6675040fd",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-1b4c571cdfe2",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-537e5a1f35bd",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-6d74fc7bfad3",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-a06586fbcf7d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-03510a55d743",
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-14",
+      "id": "cn-relation-04b5c0b576d3",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "17-2061.00"
+      "to_code": "2-07-08-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-86306561fbbe",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1241.00",
-      "id": "onet-related-b1a973c7f4ca",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-1eb7518d92d4",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-578093a21f33",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-b7220202eb10",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-c529fe627f00",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-01fadd139777",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-2051.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-e6cff2c6516a",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-51b1f5f61ecf",
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-14",
+      "id": "cn-relation-f34a7b56e177",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1081.01"
+      "to_code": "4-07-02-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-203f5953cf48",
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-07-15",
+      "id": "cn-relation-c7de3d6ae02b",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "17-2061.00"
+      "to_code": "2-02-30-11"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-1f534a6d25e2",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1254.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1243.01",
-      "id": "onet-related-3d2da1611ae5",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-77031923610a",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-19fc204ecbd2",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-93ccac75f5b5",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-0a53119d3349",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-335bd1704511",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-006f1f8e31cf",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-e23f9a80a138",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-493396fe58b4",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1244.00",
-      "id": "onet-related-5c05ca906542",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1254.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-856c94621306",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-09d4d772cf6b",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-e9870178110d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-e6ca4198e197",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-09-02",
+      "id": "cn-relation-018aaaf3bc70",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "17-2061.00"
+      "to_code": "2-06-14-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-6c0eba08063d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-2a485594a5e3",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1254.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-783983541aa6",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-fb82a62eb594",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1252.00",
-      "id": "onet-related-bc108e726d69",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-0a212164d54a",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-7decb99ec199",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-1a6a123638ba",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-8d5f394da76c",
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-09-06",
+      "id": "cn-relation-bd354a67cb66",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "17-2061.00"
+      "to_code": "4-07-02-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-e77bebe3a537",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-479f3e7ab4bc",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1253.00",
-      "id": "onet-related-bf1d7281544d",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-358ed55a33ca",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-4a11e4825a81",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-fd59de6d1e8a",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-20307c39322c",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-29601e479075",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-ea36eb53e7a3",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-679fbe519a46",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-41c76be3bd72",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-a91161154bf9",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-c9f2f73a53ed",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1254.00",
-      "id": "onet-related-15a61c5aed28",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "17-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-879962540deb",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-a02657c35209",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-d1cadbb6c9a8",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-3b6fc032cb2f",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-c5b9e85c8549",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-a290e68db4cc",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-dae93c34f231",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-1299.05",
-      "id": "onet-related-862471261c3e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-8250a1b16f95",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-d9ba7138ed52",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-816eb910ea0b",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1241.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-42ce7fffd3e3",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1244.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-f4f77a66837a",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.05"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-25513fcc9d3c",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-1d1dd2b26e05",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "17-2061.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-5eb58cd0566e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1232.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-578480899a56",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1212.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "15-1299.08",
-      "id": "onet-related-de728061dfa5",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1243.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-5ae26b7e792b",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-277d260e2953",
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-10-03",
+      "id": "cn-relation-689a501eebf1",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1161.00"
+      "to_code": "4-07-02-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-aed8dd5ca857",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-11-03",
+      "id": "cn-relation-43e48ac3499b",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-2021.00"
+      "to_code": "2-06-14-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-33822b00b2cf",
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-12-01",
+      "id": "cn-relation-2d60540b9c86",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1161.01"
+      "to_code": "2-07-08-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-d8a1d1c4166e",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 13) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-ec6480080f6e",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-14-00",
+      "id": "cn-relation-e2d3f21ee945",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1243.01"
+      "to_code": "2-06-09-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-407d1c7fe208",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-14-00",
+      "id": "cn-relation-42f743dbd4d7",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1252.00"
+      "to_code": "2-06-11-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-b4118e359a8d",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-14-00",
+      "id": "cn-relation-e1000cec355c",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2099.01"
+      "to_code": "4-05-02-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "15-2051.01",
-      "id": "onet-related-e565f013aaf7",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "17-2061.00",
-      "id": "onet-related-79a7dd390503",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "17-2061.00",
-      "id": "onet-related-82aadbbac34c",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1299.08"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "17-2061.00",
-      "id": "onet-related-f979935395e8",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1253.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "17-2061.00",
-      "id": "onet-related-35c98d925ddb",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1211.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "21-1091.00",
-      "id": "onet-related-d64ab09a84de",
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-06-14-00",
+      "id": "cn-relation-e8deaff2c3c6",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1211.01"
+      "to_code": "4-05-05-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "21-1091.00",
-      "id": "onet-related-c04b7514fd7c",
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-07-04-00",
+      "id": "cn-relation-d60729091d17",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-9111.00"
+      "to_code": "2-07-08-00"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (5→3).",
-      "from_code": "23-1011.00",
-      "id": "onet-related-5931da298e43",
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-07-08-00",
+      "id": "cn-relation-526ec005cb75",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "23-2011.00"
+      "to_code": "2-06-07-14"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "23-1011.00",
-      "id": "onet-related-261ee41b2fe9",
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-07-08-00",
+      "id": "cn-relation-14bd2ac801bf",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-12-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-07-08-00",
+      "id": "cn-relation-47838a651e72",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-07-04-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-07-08-00",
+      "id": "cn-relation-56a9f38cb00a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "3-01-04-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-01",
+      "id": "cn-relation-519d6015c6b9",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-01",
+      "id": "cn-relation-4c9b909b8cac",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-01",
+      "id": "cn-relation-980a584ddfcf",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-21"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-01",
+      "id": "cn-relation-efda70b52618",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-13-01-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-03",
+      "id": "cn-relation-93ac4d7a1df6",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-1041.00"
+      "to_code": "2-09-06-07"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (5→3).",
-      "from_code": "23-1011.00",
-      "id": "onet-related-72a36089501c",
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-04",
+      "id": "cn-relation-df147304a532",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-18-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-04",
+      "id": "cn-relation-c33f0b3fb909",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-06"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-04",
+      "id": "cn-relation-5472c8487559",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-04",
+      "id": "cn-relation-b8df3dd5444c",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-08-08-21"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-3462e9215060",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2081.00"
+      "to_code": "2-09-06-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→5).",
-      "from_code": "23-2011.00",
-      "id": "onet-related-261e9a86517b",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "23-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "23-2011.00",
-      "id": "onet-related-89507dc4081c",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1041.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "23-2011.00",
-      "id": "onet-related-8afe2bfbc25d",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-2011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→5).",
-      "from_code": "25-1123.00",
-      "id": "onet-related-93495c46f6cd",
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-7e81bc6df51b",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "25-1124.00"
+      "to_code": "2-09-06-03"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (5→5).",
-      "from_code": "25-1124.00",
-      "id": "onet-related-c6c5ab9a2734",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "25-1123.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "25-1124.00",
-      "id": "onet-related-2bf74fe90950",
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-9083440e2be7",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-3091.00"
+      "to_code": "2-09-06-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-9d88b24f6283",
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-88d59a9ab11a",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1024.00"
+      "to_code": "4-04-05-11"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-cefc6840710e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1014.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-ba41df07fee9",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-2012.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-10ecf7c46acc",
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-dfaa0b22b2ea",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1027.00"
+      "to_code": "4-13-01-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-c65bd019ee02",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "27-1011.00",
-      "id": "onet-related-afd7a53ca872",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1013.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-45f078e56279",
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-07",
+      "id": "cn-relation-c9d495f0334c",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1014.00"
+      "to_code": "4-13-02-02"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-cb90cc8338e4",
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-08",
+      "id": "cn-relation-337c7f6554d1",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1024.00"
+      "to_code": "2-09-06-07"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-dadf308d1ed7",
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-08",
+      "id": "cn-relation-a32cf972ff1f",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-09"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-08",
+      "id": "cn-relation-e23d091c835e",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1011.00"
+      "to_code": "4-08-08-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (3→5).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-7e2d938d40e1",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1027.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-bf28b4e05961",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "27-1013.00",
-      "id": "onet-related-864f6a8648b9",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1025.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-8689f3e4fcdf",
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-08",
+      "id": "cn-relation-4d9c19874acd",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1024.00"
+      "to_code": "4-08-08-21"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-7fb75785fcde",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-7095976b1a69",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-2012.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-cb89116af07e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-53871ca90bf4",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1013.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "27-1014.00",
-      "id": "onet-related-1bae221a9dc0",
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-09-06-09",
+      "id": "cn-relation-9b79e65a986e",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "15-1254.00"
+      "to_code": "2-09-06-08"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 19) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1021.00",
-      "id": "onet-related-812c02657d75",
-      "relation_type": "related_to",
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-02-05",
+      "id": "cn-relation-95769a57833d",
+      "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1025.00"
+      "to_code": "2-10-05-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-425c78188bda",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1014.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-b1232191d493",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-e385a4e60ca7",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1013.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-2795d30eb01f",
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-05-01",
+      "id": "cn-relation-3432bc77bcce",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1027.00"
+      "to_code": "2-06-07-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-de7e4e473a77",
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-05-01",
+      "id": "cn-relation-94dafa45b6ed",
       "relation_type": "related_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1021.00"
+      "to_code": "2-10-02-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-8d7985061f67",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1025.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 10) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-99e95f676aa4",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1252.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 18) plus Job Zone/SOC-family comparison (4→3).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-0d7782524797",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "15-1254.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 20) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1024.00",
-      "id": "onet-related-3cf68b6ecee4",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-2012.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1025.00",
-      "id": "onet-related-f7fbaa82b279",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 6) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "27-1025.00",
-      "id": "onet-related-ec82ea4f3ca9",
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-05-01",
+      "id": "cn-relation-67990c1adf39",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "27-1027.00"
+      "to_code": "4-01-06-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1025.00",
-      "id": "onet-related-9eef6f777c85",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1024.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 9) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-1025.00",
-      "id": "onet-related-401385b52fd7",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-5c62c1267bdd",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1024.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (5→3).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-e02d728a86e2",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1013.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-4243656b6ba7",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-30a538a46d3e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 7) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-f9629038ec0e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1025.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (5→4).",
-      "from_code": "27-1027.00",
-      "id": "onet-related-1d2bb03bedbf",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1014.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-2012.00",
-      "id": "onet-related-63e86ea67f24",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-2012.00",
-      "id": "onet-related-1dcef12b5860",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1014.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 15) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-2012.00",
-      "id": "onet-related-b2d704691f57",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-2012.00",
-      "id": "onet-related-3c46e00d1a8e",
-      "relation_type": "related_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "27-1024.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 3) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-3031.00",
-      "id": "onet-related-e2f56f67cf40",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-3031.00",
-      "id": "onet-related-7d224731e76f",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-2021.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-3031.00",
-      "id": "onet-related-e017b123c5d7",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1111.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 14) plus Job Zone/SOC-family comparison (4→4).",
-      "from_code": "27-3031.00",
-      "id": "onet-related-25b3494f33d4",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "13-1161.01"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 2) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "27-3091.00",
-      "id": "onet-related-17f681369efc",
+      "description": "CareerPilot 基于广州商学院专业方向形成的english职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-05-01",
+      "id": "cn-relation-760047b54fc3",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "25-1124.00"
+      "to_code": "4-07-02-05"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 5) plus Job Zone/SOC-family comparison (4→5).",
-      "from_code": "27-3091.00",
-      "id": "onet-related-f44be0e3e8a9",
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "2-10-05-01",
+      "id": "cn-relation-9f096df7393d",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-13-01-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的law职业发展关系，不代表官方晋升资格。",
+      "from_code": "3-01-04-05",
+      "id": "cn-relation-5eaaf173d41c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-07-08-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-01-00",
+      "id": "cn-relation-4d7284853489",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-01-00",
+      "id": "cn-relation-c93c56a0ace3",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-11"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-02-01",
+      "id": "cn-relation-1b5a14e47375",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-02-01",
+      "id": "cn-relation-a3c5321ab87a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-06-01",
+      "id": "cn-relation-10f92c8e9cd2",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-06-01",
+      "id": "cn-relation-eb6f02d8be28",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-10-05-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-06-02",
+      "id": "cn-relation-49bd6252d3c2",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-06-02",
+      "id": "cn-relation-05bf7a39ea0d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-01-06-02",
+      "id": "cn-relation-dba4046c3c21",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-02-06-01",
+      "id": "cn-relation-b5c0b1507136",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-02-06-03",
+      "id": "cn-relation-3464d9f6774c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-02-06-03",
+      "id": "cn-relation-b31387cb2cb9",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-11"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的logistics职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-02-06-05",
+      "id": "cn-relation-92902e3fb5ca",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的supply职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-02-06-05",
+      "id": "cn-relation-9cb5773f79d4",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-11"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-01-01",
+      "id": "cn-relation-3081f664a789",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-03-01-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-01-01",
+      "id": "cn-relation-e0e1865380ff",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-03-02-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-01-01",
+      "id": "cn-relation-e4a62dfe6def",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "25-1123.00"
+      "to_code": "4-03-02-11"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 4) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "39-7011.00",
-      "id": "onet-related-1f0aa6604f55",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "41-3041.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Primary-Long, index 8) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "41-3041.00",
-      "id": "onet-related-2f1eab634aeb",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "39-7011.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→2).",
-      "from_code": "41-3041.00",
-      "id": "onet-related-f3ed89dc5b46",
-      "relation_type": "transfers_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "43-4081.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 11) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "43-3031.00",
-      "id": "onet-related-8364ac4bbe3f",
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-01-01",
+      "id": "cn-relation-b2a18d7e3399",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2011.00"
+      "to_code": "4-07-04-04"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 12) plus Job Zone/SOC-family comparison (3→4).",
-      "from_code": "43-3031.00",
-      "id": "onet-related-6c926ec453c4",
-      "relation_type": "progresses_to",
-      "review_status": "approved",
-      "source_ids": [
-        "onet-30.3-csv"
-      ],
-      "to_code": "11-3031.00"
-    },
-    {
-      "description": "Derived from O*NET relatedness (Supplemental, index 16) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "43-3031.00",
-      "id": "onet-related-b9ff84823169",
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-01-02",
+      "id": "cn-relation-6fe028bedcca",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2082.00"
+      "to_code": "4-03-01-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Supplemental, index 17) plus Job Zone/SOC-family comparison (3→3).",
-      "from_code": "43-3031.00",
-      "id": "onet-related-da7f2cc095e7",
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-02-05",
+      "id": "cn-relation-a26b656292c6",
       "relation_type": "transfers_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "13-2081.00"
+      "to_code": "4-03-01-01"
     },
     {
-      "description": "Derived from O*NET relatedness (Primary-Short, index 1) plus Job Zone/SOC-family comparison (2→4).",
-      "from_code": "43-4081.00",
-      "id": "onet-related-cb3a3e924446",
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-02-11",
+      "id": "cn-relation-29c90b145ecd",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-03-01-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-03-02-11",
+      "id": "cn-relation-3f45ed999e83",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-02-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-01",
+      "id": "cn-relation-e792a078946e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-01",
+      "id": "cn-relation-1c52091dff3f",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-02",
+      "id": "cn-relation-2832b59e65ad",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的computer职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-03",
+      "id": "cn-relation-ef931df137fa",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-05"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-04",
+      "id": "cn-relation-b2c0079c5b71",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-05",
+      "id": "cn-relation-1705a8aef92e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-04-06",
+      "id": "cn-relation-180d8d320bcb",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-01",
+      "id": "cn-relation-1fa1554f8f6b",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-02",
+      "id": "cn-relation-c8a95ca45119",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的information职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-04",
+      "id": "cn-relation-7ce54386cb56",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-30-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-04",
+      "id": "cn-relation-4adb7519c922",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-05",
+      "id": "cn-relation-b7d631fb6a90",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的security职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-08",
+      "id": "cn-relation-9daf1675aece",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-09",
+      "id": "cn-relation-32e8d7eceaa2",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的ai职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-10",
+      "id": "cn-relation-7905d166613b",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的software职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-11",
+      "id": "cn-relation-81067e9d3e1b",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-10-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-04-05-11",
+      "id": "cn-relation-9bb99433e907",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-05-02-00",
+      "id": "cn-relation-b3a9221c2c85",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-14-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的finance职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-05-05-02",
+      "id": "cn-relation-c2343f1d1793",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-14-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tax职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-01",
+      "id": "cn-relation-705f06ac0c22",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-05-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-01",
+      "id": "cn-relation-f18c71a316d8",
       "relation_type": "progresses_to",
       "review_status": "approved",
       "source_ids": [
-        "onet-30.3-csv"
+        "china-occupation-classification-2022"
       ],
-      "to_code": "11-9081.00"
+      "to_code": "2-06-07-14"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-01",
+      "id": "cn-relation-a4bda0d1d098",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-09-06"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-01",
+      "id": "cn-relation-11c2444a1edb",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-10-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-01",
+      "id": "cn-relation-5b95f5d859c6",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的risk职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-04",
+      "id": "cn-relation-8c5c4ac13c62",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-02-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的data职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-51e137aecc46",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的accounting职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-616abbb869f7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-03-00"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的commerce职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-910af3a5886e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的marketing职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-33bc299b21c7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的management职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-4e636648f327",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-06-07-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的english职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-02-05",
+      "id": "cn-relation-f68d4990468a",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-10-05-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-01",
+      "id": "cn-relation-724a3afa510c",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-02",
+      "id": "cn-relation-c22b397fc958",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-04",
+      "id": "cn-relation-d9becc2f2edf",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-01-06-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的hotel职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-04",
+      "id": "cn-relation-d9addf5e7339",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-03-01-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-04",
+      "id": "cn-relation-fb9730b15af6",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-04",
+      "id": "cn-relation-4da2bf024904",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-04",
+      "id": "cn-relation-f8a7403c94ee",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的tourism职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-07-04-07",
+      "id": "cn-relation-9a2dee9997d1",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-07-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-05",
+      "id": "cn-relation-9c5e8d3c8fd1",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-06",
+      "id": "cn-relation-5b2894724fdb",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-07",
+      "id": "cn-relation-84a1e1ed3008",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-08",
+      "id": "cn-relation-e5c6cb229470",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-09",
+      "id": "cn-relation-c6a097a376ef",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-34-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-10",
+      "id": "cn-relation-79896999e684",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-34-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-21",
+      "id": "cn-relation-2b2deb6a84fe",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-34-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-21",
+      "id": "cn-relation-b5d32775b98d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的environment职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-21",
+      "id": "cn-relation-9326259dfafe",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的public_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-21",
+      "id": "cn-relation-3042339caee5",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-08"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的product职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-08-08-26",
+      "id": "cn-relation-5b59136e911e",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-34-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的visual职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-13-01-05",
+      "id": "cn-relation-02170966c13d",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-13-01-05",
+      "id": "cn-relation-cf25e1567544",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的language职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-13-01-05",
+      "id": "cn-relation-b258f4487e66",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-10-05-01"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的digital_art职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-13-02-02",
+      "id": "cn-relation-77f33ea39f63",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-09-06-07"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-01-03",
+      "id": "cn-relation-e1e49146bce7",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-02-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-02-02",
+      "id": "cn-relation-17d54f9c3272",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-03-02-11"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-02-02",
+      "id": "cn-relation-d5b17bc54f0a",
+      "relation_type": "progresses_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-01-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-02-02",
+      "id": "cn-relation-6ce9c029baf1",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-02-03"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-02-02",
+      "id": "cn-relation-7596f7b946b8",
+      "relation_type": "related_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-04-04"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-02-03",
+      "id": "cn-relation-17719fdf92c6",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-02-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的health职业发展关系，不代表官方晋升资格。",
+      "from_code": "4-14-04-04",
+      "id": "cn-relation-6cd916a57cbe",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "4-14-02-02"
+    },
+    {
+      "description": "CareerPilot 基于广州商学院专业方向形成的iot职业发展关系，不代表官方晋升资格。",
+      "from_code": "6-25-04-09",
+      "id": "cn-relation-5c154d7c5430",
+      "relation_type": "transfers_to",
+      "review_status": "approved",
+      "source_ids": [
+        "china-occupation-classification-2022"
+      ],
+      "to_code": "2-02-38-02"
     }
   ],
   "schema_version": "1.0.0"

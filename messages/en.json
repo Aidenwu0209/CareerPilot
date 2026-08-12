@@ -2129,8 +2129,8 @@
       "back": "Back to occupation knowledge",
       "matchAction": "Evaluate my match",
       "matchUnavailable": "Pending review; matching unavailable",
-      "code": "O*NET-SOC standard code: {code}",
-      "standardOccupation": "Standard occupation · eligible for matching",
+      "code": "Chinese occupation classification code: {code}",
+      "standardOccupation": "Chinese standard occupation · eligible for matching",
       "entryLevel": "Entry level: {level}",
       "jobFamily": "Job family: {value}",
       "industry": "Industry: {value}",
@@ -2145,7 +2145,7 @@
       },
       "requirements": {
         "title": "Ability requirements",
-        "description": "Weights and target scores drive deterministic matching. Missing student evidence is never treated as zero.",
+        "description": "Requirements come from official Chinese occupation sources. CareerPilot applies one evidence scale for deterministic matching and never treats missing evidence as zero.",
         "required": "Required",
         "preferred": "Preferred",
         "target": "Target for {name}",
@@ -2167,8 +2167,8 @@
         "title": "Knowledge sources",
         "description": "Occupation explanations come from traceable sources, not model invention.",
         "verified": "Verified {date}",
-        "onetTitle": "Direct source: U.S. Department of Labor O*NET 30.3",
-        "onetDescription": "Occupation titles, tasks, skills, and knowledge requirements come from structured O*NET 30.3 data. Open the citations on this page to verify them directly.",
+        "standardTitle": "Chinese sources: 2022 occupation classification and current national standards",
+        "standardDescription": "Codes and work tasks follow China's 2022 occupation classification. Where a current national occupation standard exists, its entry-level skill requirements take priority; other occupations use a simple model derived from the classification's official work tasks.",
         "sourceVersion": "Source version: {version}",
         "reviewStatus": "Review status: {status}",
         "empty": "Source material is insufficient, so no unsupported conclusion is provided."
@@ -2177,7 +2177,11 @@
     "matching": {
       "eyebrow": "Explainable occupation matching",
       "title": "See the size of the gap—and the reason behind it",
-      "description": "Structured rules determine scores and evidence determines confidence. RAG is used only for retrieval, explanation, and citations.",
+      "description": "Official Chinese occupation requirements define each role, structured rules determine matching, and evidence determines confidence. RAG is used only for retrieval, explanation, and citations.",
+      "disclaimer": {
+        "title": "A match score is not a vocational qualification or skill-level decision",
+        "description": "CareerPilot compares student evidence with occupation requirements on one 0–100 scale. The product threshold of 60 is not a national qualification exam score, skill-level assessment, hiring result, or licence."
+      },
       "viewOccupation": "View occupation knowledge",
       "selectLabel": "Choose an occupation to evaluate",
       "selectPlaceholder": "Choose an occupation",
