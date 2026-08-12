@@ -24,13 +24,20 @@ export interface NewAuthIdentity {
   };
 }
 
+function usesSynchronousSQLiteTransactions(database: typeof db): boolean {
+  return database.session?.constructor?.name === 'BetterSQLiteSession';
+}
+
 /** Atomically create the user and its first auth account on either DB adapter. */
 export async function createAuthIdentityWithDatabase(
   database: typeof db,
   dbType: 'sqlite' | 'postgresql',
   identity: NewAuthIdentity,
 ): Promise<void> {
-  if (dbType === 'sqlite') {
+  // Unit/integration tests frequently inject a real better-sqlite3 database
+  // while retaining production-like DB_TYPE values. Prefer the actual session
+  // capability so a synchronous SQLite transaction never receives a Promise.
+  if (dbType === 'sqlite' || usesSynchronousSQLiteTransactions(database)) {
     database.transaction((tx: typeof db) => {
       tx.insert(users).values(identity.user).run();
       tx.insert(authAccounts).values(identity.account).run();

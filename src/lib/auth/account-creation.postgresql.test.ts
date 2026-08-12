@@ -2,6 +2,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
+import Database from 'better-sqlite3';
+import { drizzle as drizzleSqlite } from 'drizzle-orm/better-sqlite3';
+import { migrate as migrateSqlite } from 'drizzle-orm/better-sqlite3/migrator';
 import { eq } from 'drizzle-orm';
 import { resolve } from 'node:path';
 import { authAccounts, users } from '@/lib/db/schema';
@@ -97,5 +100,28 @@ describe('PostgreSQL auth identity creation', () => {
       .from(users)
       .where(eq(users.id, 'rolled-back-user'));
     expect(rolledBack).toHaveLength(0);
+  });
+
+  it('uses synchronous transactions for an injected SQLite test DB despite a PostgreSQL env', async () => {
+    const sqlite = new Database(':memory:');
+    const sqliteDb = drizzleSqlite(sqlite);
+    migrateSqlite(sqliteDb, {
+      migrationsFolder: resolve(process.cwd(), 'drizzle/migrations'),
+    });
+
+    try {
+      await createAuthIdentityWithDatabase(
+        sqliteDb as unknown as Parameters<typeof createAuthIdentityWithDatabase>[0],
+        'postgresql',
+        identity('sqlite-mock-user', 'sqlite-mock@test.com'),
+      );
+      const [user] = await sqliteDb
+        .select()
+        .from(users)
+        .where(eq(users.id, 'sqlite-mock-user'));
+      expect(user?.email).toBe('sqlite-mock@test.com');
+    } finally {
+      sqlite.close();
+    }
   });
 });

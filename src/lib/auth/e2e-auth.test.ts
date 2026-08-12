@@ -68,6 +68,7 @@ function uniqueEmail(prefix: string): string {
 }
 
 beforeEach(() => {
+  Object.assign(process.env, { NODE_ENV: 'test' });
   clearRateLimits();
   setMailAdapter(null);
   const adapter = getMailAdapter();

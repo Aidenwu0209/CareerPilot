@@ -6,7 +6,7 @@ Verified on 2026-08-12 from `wu/auth-product-flow` with fresh SQLite databases f
 
 - `pnpm type-check`: passed
 - `pnpm lint`: passed with 0 errors and 115 pre-existing warnings
-- `pnpm test`: 471/471 suites and 1371/1371 tests passed; 0 failed or pending
+- `pnpm test`: 471/471 suites and 1372/1372 tests passed; 0 failed or pending
 - `pnpm build`: passed; Next.js reported `Proxy (Middleware)`
 - `pnpm audit --prod --audit-level high`: no known vulnerabilities
 - `git diff --check`: passed
