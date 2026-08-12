@@ -21,6 +21,13 @@ vi.mock('@/lib/db', async () => {
   return { db, dbReady: Promise.resolve() };
 });
 
+// The route selects the transaction API from the configured database type.
+// Keep that configuration aligned with the in-memory SQLite database above,
+// even when CI exports DB_TYPE=postgresql for production build validation.
+vi.mock('@/lib/config', () => ({
+  config: { db: { type: 'sqlite' as const } },
+}));
+
 vi.mock('@/lib/auth/guards', () => ({
   resolveActiveContext: vi.fn(async () => {
     if (authState.userId === null) return null;
