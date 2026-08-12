@@ -1,6 +1,6 @@
 import type { UIMessage } from 'ai';
 
-interface DBMessage {
+export interface DBMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;

@@ -23,6 +23,14 @@
     "loginWithGoogle": "Sign in with Google",
     "welcomeBack": "Welcome back",
     "loginDescription": "Sign in to manage your resumes",
+    "demo": {
+      "loginDescription": "Choose a safe local demo entry",
+      "title": "Demo mode is active",
+      "description": "Email and Google setup are not required. Demo identities only work in local development with AUTH_ENABLED=false.",
+      "continueVisitor": "Continue as this visitor",
+      "student": "Student demo",
+      "teacher": "Teacher workbench"
+    },
     "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
     "otp": {
       "emailLabel": "Email Address",

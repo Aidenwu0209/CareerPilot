@@ -15,7 +15,108 @@ import {
   teacherStudentAssignments,
   users,
 } from './schema';
+import { and, eq } from 'drizzle-orm';
 import { DEMO_OCCUPATIONS } from '@/lib/career/catalog';
+
+export const DEMO_STUDENT_FINGERPRINT = 'demo-fingerprint';
+export const DEMO_TEACHER_FINGERPRINT = 'teacher-demo-fingerprint';
+export const DEMO_SCHOOL_SLUG = 'careerpilot-demo-school';
+
+/**
+ * Ensure the fixed local demo identities are connected to an active teacher
+ * workspace. This is idempotent so `pnpm db:seed` also repairs older local
+ * databases that predate the teacher demo.
+ */
+export async function ensureDemoTeacherWorkspace(db: any, studentUserId: string) {
+  const [existingTeacher] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.fingerprint, DEMO_TEACHER_FINGERPRINT))
+    .limit(1);
+  const teacherId = existingTeacher?.id ?? crypto.randomUUID();
+
+  if (!existingTeacher) {
+    await db.insert(users).values({
+      id: teacherId,
+      name: '周老师',
+      authType: 'fingerprint',
+      fingerprint: DEMO_TEACHER_FINGERPRINT,
+    });
+  }
+
+  const [existingOrganization] = await db
+    .select({ id: organizations.id })
+    .from(organizations)
+    .where(eq(organizations.slug, DEMO_SCHOOL_SLUG))
+    .limit(1);
+  const organizationId = existingOrganization?.id ?? crypto.randomUUID();
+
+  if (!existingOrganization) {
+    await db.insert(organizations).values({
+      id: organizationId,
+      slug: DEMO_SCHOOL_SLUG,
+      name: 'CareerPilot 演示学院',
+      status: 'active',
+      seatLimit: 50,
+      createdBy: teacherId,
+    });
+  }
+
+  await db.insert(organizationMemberships).values([
+    { organizationId, userId: studentUserId, role: 'member', status: 'active' },
+    { organizationId, userId: teacherId, role: 'member', status: 'active' },
+  ]).onConflictDoNothing();
+  await db.update(organizationMemberships).set({ status: 'active' }).where(
+    and(
+      eq(organizationMemberships.organizationId, organizationId),
+      eq(organizationMemberships.userId, studentUserId),
+    ),
+  );
+  await db.update(organizationMemberships).set({ status: 'active' }).where(
+    and(
+      eq(organizationMemberships.organizationId, organizationId),
+      eq(organizationMemberships.userId, teacherId),
+    ),
+  );
+
+  await db.insert(educationRoleAssignments).values([
+    { organizationId, userId: studentUserId, role: 'student', status: 'active' },
+    { organizationId, userId: teacherId, role: 'teacher', status: 'active' },
+  ]).onConflictDoNothing();
+  await db.update(educationRoleAssignments).set({ status: 'active' }).where(
+    and(
+      eq(educationRoleAssignments.organizationId, organizationId),
+      eq(educationRoleAssignments.userId, studentUserId),
+      eq(educationRoleAssignments.role, 'student'),
+    ),
+  );
+  await db.update(educationRoleAssignments).set({ status: 'active' }).where(
+    and(
+      eq(educationRoleAssignments.organizationId, organizationId),
+      eq(educationRoleAssignments.userId, teacherId),
+      eq(educationRoleAssignments.role, 'teacher'),
+    ),
+  );
+  await db.insert(teacherStudentAssignments).values({
+    organizationId,
+    teacherUserId: teacherId,
+    studentUserId,
+    status: 'active',
+    accessLevel: 'guide',
+  }).onConflictDoNothing();
+  await db.update(teacherStudentAssignments).set({
+    status: 'active',
+    accessLevel: 'guide',
+  }).where(
+    and(
+      eq(teacherStudentAssignments.organizationId, organizationId),
+      eq(teacherStudentAssignments.teacherUserId, teacherId),
+      eq(teacherStudentAssignments.studentUserId, studentUserId),
+    ),
+  );
+
+  return { teacherId, organizationId };
+}
 
 /**
  * Seed a demo-fingerprint user with a sample resume.
@@ -27,7 +128,7 @@ export async function seedDemoUser(db: any) {
     id: userId,
     name: '陈思远',
     authType: 'fingerprint',
-    fingerprint: 'demo-fingerprint',
+    fingerprint: DEMO_STUDENT_FINGERPRINT,
     settings: { program: '软件工程', cohort: '2027 届' },
   });
 
@@ -193,41 +294,8 @@ export async function seedDemoUser(db: any) {
   // The demo seed also exposes the smallest auditable career-development loop:
   // reviewed occupation knowledge -> student evidence/profile -> goal/tasks ->
   // explicitly assigned teacher guidance. It is only used for a fresh local DB.
-  const teacherId = crypto.randomUUID();
-  const organizationId = crypto.randomUUID();
   const goalId = crypto.randomUUID();
-
-  await db.insert(users).values({
-    id: teacherId,
-    name: '周老师',
-    authType: 'fingerprint',
-    fingerprint: 'teacher-demo-fingerprint',
-  });
-
-  await db.insert(organizations).values({
-    id: organizationId,
-    slug: 'careerpilot-demo-school',
-    name: 'CareerPilot 演示学院',
-    status: 'active',
-    seatLimit: 50,
-    createdBy: teacherId,
-  });
-
-  await db.insert(organizationMemberships).values([
-    { organizationId, userId, role: 'member', status: 'active' },
-    { organizationId, userId: teacherId, role: 'member', status: 'active' },
-  ]);
-  await db.insert(educationRoleAssignments).values([
-    { organizationId, userId, role: 'student', status: 'active' },
-    { organizationId, userId: teacherId, role: 'teacher', status: 'active' },
-  ]);
-  await db.insert(teacherStudentAssignments).values({
-    organizationId,
-    teacherUserId: teacherId,
-    studentUserId: userId,
-    status: 'active',
-    accessLevel: 'guide',
-  });
+  const { teacherId } = await ensureDemoTeacherWorkspace(db, userId);
 
   for (const occupation of DEMO_OCCUPATIONS) {
     await db.insert(occupations).values({

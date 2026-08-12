@@ -18,6 +18,18 @@ function errorCodeFromBody(body: unknown, fallback: string): string {
   return fallback;
 }
 
+/** Parse an optional JSON body without throwing when a proxy returns text. */
+export async function readOptionalJsonBody<T>(response: Response): Promise<T | null> {
+  const rawBody = await response.text();
+  if (!rawBody) return null;
+
+  try {
+    return JSON.parse(rawBody) as T;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Parse a JSON API response without leaking `Unexpected token` errors to the UI.
  * Non-JSON error bodies (for example a proxy's plain-text "Unauthorized") are
@@ -33,7 +45,7 @@ export async function readJsonResponse<T>(response: Response): Promise<T> {
     } catch {
       const fallback = response.ok
         ? 'INVALID_JSON_RESPONSE'
-        : rawBody.trim() || `HTTP_${response.status}`;
+        : `HTTP_${response.status}`;
       throw new ApiResponseError(response.status, fallback);
     }
   }

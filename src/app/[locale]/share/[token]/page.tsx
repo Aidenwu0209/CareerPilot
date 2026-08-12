@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Lock, FileX2 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { Resume } from '@/types/resume';
+import { readJsonResponse, readOptionalJsonBody } from '@/lib/http/json-client';
 
 export default function SharePage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = use(params);
@@ -39,8 +40,8 @@ export default function SharePage({ params }: { params: Promise<{ token: string 
       }
 
       if (res.status === 401) {
-        const data = await res.json();
-        if (data.passwordRequired) {
+        const data = await readOptionalJsonBody<{ passwordRequired?: boolean }>(res);
+        if (data?.passwordRequired) {
           if (pwd) {
             setPasswordError(true);
           }
@@ -56,7 +57,7 @@ export default function SharePage({ params }: { params: Promise<{ token: string 
         return;
       }
 
-      const data = await res.json();
+      const data = await readJsonResponse<Resume>(res);
       setResume(data);
       setNeedsPassword(false);
     } catch {

@@ -23,6 +23,14 @@
     "loginWithGoogle": "使用 Google 登录",
     "welcomeBack": "欢迎回来",
     "loginDescription": "登录以管理你的简历",
+    "demo": {
+      "loginDescription": "选择一个安全的本地演示入口",
+      "title": "当前为演示模式",
+      "description": "无需配置邮箱或 Google 登录。演示身份仅在 AUTH_ENABLED=false 的本地开发模式生效。",
+      "continueVisitor": "以当前访客继续",
+      "student": "学生演示",
+      "teacher": "教师工作台"
+    },
     "agreeTerms": "登录即表示你同意我们的服务条款和隐私政策",
     "otp": {
       "emailLabel": "邮箱地址",
