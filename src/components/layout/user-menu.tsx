@@ -1,8 +1,8 @@
 'use client';
 
 import { useAuth } from '@/hooks/use-auth';
-import { useTranslations } from 'next-intl';
-import { User, LogOut, UserCircle } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { GraduationCap, LogOut, User, UserCircle, UsersRound } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -14,12 +14,23 @@ import {
 import { BrandSwitcher } from '@/components/layout/brand-switcher';
 import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
 import { Link } from '@/i18n/routing';
+import {
+  demoIdentityDestination,
+  persistDemoIdentity,
+  type DemoIdentity,
+} from '@/lib/auth/demo-mode';
 
 export function UserMenu() {
   const { user, signOut } = useAuth();
   const t = useTranslations('auth');
   const tNav = useTranslations('nav');
+  const locale = useLocale();
   const { authEnabled } = useRuntimeConfig();
+
+  const enterDemo = (identity: DemoIdentity) => {
+    persistDemoIdentity(identity);
+    window.location.assign(demoIdentityDestination(locale, identity));
+  };
 
   if (!user) return null;
 
@@ -51,6 +62,19 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <BrandSwitcher />
+        {!authEnabled && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => enterDemo('student')} className="cursor-pointer">
+              <UsersRound className="mr-2 h-4 w-4" />
+              {t('demo.student')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => enterDemo('teacher')} className="cursor-pointer">
+              <GraduationCap className="mr-2 h-4 w-4" />
+              {t('demo.teacher')}
+            </DropdownMenuItem>
+          </>
+        )}
         {authEnabled && (
           <>
             <DropdownMenuSeparator />

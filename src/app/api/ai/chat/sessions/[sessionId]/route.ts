@@ -15,12 +15,12 @@ export async function GET(
     const { sessionId } = await params;
 
     const session = await chatRepository.findSession(sessionId);
-    if (!session) return new Response('Not found', { status: 404 });
+    if (!session) return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
 
     // Verify session's resume belongs to the current user
     const resume = await resumeRepository.findById(session.resumeId);
     if (!resume || resume.userId !== user.id) {
-      return new Response('Not found', { status: 404 });
+      return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
     }
 
     const cursor = request.nextUrl.searchParams.get('cursor') || undefined;
@@ -32,7 +32,7 @@ export async function GET(
     return NextResponse.json({ session, messages, hasMore, nextCursor });
   } catch (error) {
     console.error('GET /api/ai/chat/sessions/[id] error:', error);
-    return new Response('Internal server error', { status: 500 });
+    return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }
 
@@ -48,18 +48,18 @@ export async function DELETE(
     const { sessionId } = await params;
 
     const session = await chatRepository.findSession(sessionId);
-    if (!session) return new Response('Not found', { status: 404 });
+    if (!session) return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
 
     // Verify session's resume belongs to the current user
     const resume = await resumeRepository.findById(session.resumeId);
     if (!resume || resume.userId !== user.id) {
-      return new Response('Not found', { status: 404 });
+      return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
     }
 
     await chatRepository.deleteSession(sessionId);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/ai/chat/sessions/[id] error:', error);
-    return new Response('Internal server error', { status: 500 });
+    return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }

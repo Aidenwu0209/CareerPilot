@@ -414,6 +414,17 @@ describe('US-018: GET /api/ai/chat/sessions — ownership', () => {
     const req = makeGetRequest(`/api/ai/chat/sessions?resumeId=r-nonexistent`);
     const res = await sessionsGet(req);
     expect(res.status).toBe(404);
+    await expect(res.json()).resolves.toEqual({ error: 'NOT_FOUND' });
+  });
+
+  it('returns a JSON validation error when resumeId is missing', async () => {
+    await loginUser(ALICE_ID);
+    const req = makeGetRequest('/api/ai/chat/sessions');
+    const res = await sessionsGet(req);
+
+    expect(res.status).toBe(400);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    await expect(res.json()).resolves.toEqual({ error: 'RESUME_ID_REQUIRED' });
   });
 
   it('returns sessions for owned resumeId', async () => {
@@ -483,6 +494,8 @@ describe('US-018: GET /api/ai/chat/sessions/[sessionId] — ownership', () => {
     const req = makeGetRequest('/api/ai/chat/sessions/s-nonexistent');
     const res = await sessionDetailGet(req, { params: Promise.resolve({ sessionId: 's-nonexistent' }) });
     expect(res.status).toBe(404);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    await expect(res.json()).resolves.toEqual({ error: 'NOT_FOUND' });
   });
 
   it('returns session and messages when user owns it', async () => {

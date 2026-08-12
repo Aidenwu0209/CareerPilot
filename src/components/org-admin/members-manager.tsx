@@ -28,6 +28,7 @@ import {
   Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { readJsonResponse, readOptionalJsonBody } from '@/lib/http/json-client';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -102,7 +103,7 @@ export function MembersManager({
         setError(true);
         return;
       }
-      const data = await res.json();
+      const data = await readJsonResponse<{ members: Member[]; seats: Seats }>(res);
       setMembers(data.members);
       setSeats(data.seats);
     } catch {
@@ -132,10 +133,10 @@ export function MembersManager({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      const data = await res.json();
+      const data = await readOptionalJsonBody<{ error?: string }>(res);
       if (!res.ok) {
         const msg =
-          data.error && KNOWN_API_ERRORS.has(data.error)
+          data?.error && KNOWN_API_ERRORS.has(data.error)
             ? t(`errApi.${data.error}`)
             : t('addFailed');
         toast.error(msg);
@@ -163,10 +164,10 @@ export function MembersManager({
         `/api/organizations/${orgId}/members/${removeTarget.userId}`,
         { method: 'DELETE' },
       );
-      const data = await res.json();
+      const data = await readOptionalJsonBody<{ error?: string }>(res);
       if (!res.ok) {
         const msg =
-          data.error && KNOWN_API_ERRORS.has(data.error)
+          data?.error && KNOWN_API_ERRORS.has(data.error)
             ? t(`errApi.${data.error}`)
             : t('removeFailed');
         toast.error(msg);

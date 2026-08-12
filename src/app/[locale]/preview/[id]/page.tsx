@@ -9,6 +9,7 @@ import { ResumePreview } from '@/components/preview/resume-preview';
 import { PreviewErrorBoundary } from '@/components/preview/preview-error-boundary';
 import { usePdfExport } from '@/hooks/use-pdf-export';
 import { normalizeSections } from '@/lib/resume/normalize-content';
+import { readJsonResponse } from '@/lib/http/json-client';
 import type { Resume } from '@/types/resume';
 
 export default function PreviewPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,18 +17,51 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
   const router = useRouter();
   const t = useTranslations();
   const { exportPdf, isExporting } = usePdfExport();
-  const [resume, setResume] = useState<Resume | null>(null);
+  const [loadState, setLoadState] = useState<{
+    id: string;
+    resume: Resume | null;
+    failed: boolean;
+  }>({ id, resume: null, failed: false });
 
   useEffect(() => {
+    let cancelled = false;
     const fingerprint = localStorage.getItem('jade_fingerprint');
     fetch(`/api/resume/${id}`, {
       headers: fingerprint ? { 'x-fingerprint': fingerprint } : {},
     })
-      .then((res) => res.json())
+      .then((res) => readJsonResponse<Resume>(res))
       // Heal AI-corrupted content so a bad shape can't crash the preview (issue #87).
-      .then((data: Resume) => setResume({ ...data, sections: normalizeSections(data.sections || []) }))
-      .catch(console.error);
+      .then((data) => {
+        if (!cancelled) {
+          setLoadState({
+            id,
+            resume: { ...data, sections: normalizeSections(data.sections || []) },
+            failed: false,
+          });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoadState({ id, resume: null, failed: true });
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
+
+  const resume = loadState.id === id ? loadState.resume : null;
+  const loadFailed = loadState.id === id && loadState.failed;
+
+  if (loadFailed) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="text-sm text-zinc-500">{t('editor.toolbar.previewError')}</p>
+        <Button variant="outline" onClick={() => router.push('/dashboard')}>
+          {t('common.back')}
+        </Button>
+      </div>
+    );
+  }
 
   if (!resume) {
     return <div className="flex h-screen items-center justify-center text-zinc-400">{t('common.loading')}</div>;

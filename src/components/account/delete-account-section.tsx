@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { signOut } from 'next-auth/react';
+import { readOptionalJsonBody } from '@/lib/http/json-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -144,9 +145,13 @@ export function DeleteAccountSection({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ otp: otpCode }),
       });
-      const data = await res.json();
+      const data = await readOptionalJsonBody<{ error?: string; token?: string }>(res);
       if (!res.ok) {
-        setError(data.error || 'INVALID_OTP');
+        setError(data?.error || 'INVALID_OTP');
+        return;
+      }
+      if (!data?.token) {
+        setError('INVALID_RESPONSE');
         return;
       }
       // Token received — move to final confirmation
@@ -171,9 +176,9 @@ export function DeleteAccountSection({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: deletionToken }),
       });
-      const data = await res.json();
+      const data = await readOptionalJsonBody<{ error?: string }>(res);
       if (!res.ok) {
-        setError(data.error || 'DELETE_FAILED');
+        setError(data?.error || 'DELETE_FAILED');
         return;
       }
       // Success — sign out and redirect

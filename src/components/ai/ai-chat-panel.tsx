@@ -12,6 +12,7 @@ import { useSettingsStore } from '@/stores/settings-store';
 import { useAIChat } from '@/hooks/use-ai-chat';
 import { useMessagePagination } from '@/hooks/use-message-pagination';
 import { useCredits } from '@/hooks/use-credits';
+import { readJsonResponse } from '@/lib/http/json-client';
 import { AIMessage } from './ai-message';
 import { AIInput } from './ai-input';
 
@@ -83,7 +84,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
 
     let cancelled = false;
     fetch(`/api/ai/chat/sessions?resumeId=${resumeId}`, { headers: JSON_HEADERS })
-      .then((res) => res.json())
+      .then((res) => readJsonResponse<{ sessions: ChatSession[] }>(res))
       .then(async (data: { sessions: ChatSession[] }) => {
         if (cancelled) return;
         if (data.sessions.length > 0) {
@@ -115,7 +116,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
         headers: JSON_HEADERS,
         body: JSON.stringify({ resumeId }),
       });
-      const data = await res.json();
+      const data = await readJsonResponse<{ session?: ChatSession }>(res);
       const newSession = data.session;
       if (newSession) {
         setSessions((prev) => [{ id: newSession.id, title: newSession.title, updatedAt: newSession.updatedAt }, ...prev]);
@@ -141,7 +142,11 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
 
   const deleteSession = useCallback(async (sessionId: string) => {
     try {
-      await fetch(`/api/ai/chat/sessions/${sessionId}`, { method: 'DELETE', headers: JSON_HEADERS });
+      const response = await fetch(`/api/ai/chat/sessions/${sessionId}`, {
+        method: 'DELETE',
+        headers: JSON_HEADERS,
+      });
+      await readJsonResponse<{ success: boolean }>(response);
     } catch (err) {
       console.error('Failed to delete session:', err);
       return;

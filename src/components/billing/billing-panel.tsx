@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CreditCard, Loader2, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { readOptionalJsonBody } from '@/lib/http/json-client';
 
 interface Plan { id: string; name: string; description: string; kind: 'credit_pack' | 'subscription'; userLevel: string; priceMinor: number; currency: string; credits: number; billingInterval: 'month' | 'year' | null }
 interface OrderRow { order: { id: string; status: string; amountMinor: number; currency: string; credits: number; paidAt: string | null; createdAt: string }; planName: string; planCode: string }
@@ -44,9 +45,9 @@ export function BillingPanel({ personalAccount }: { personalAccount: boolean }) 
       headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
       body: JSON.stringify({ planId, locale }),
     });
-    const data = await response.json();
-    if (response.ok && data.checkoutUrl) window.location.assign(data.checkoutUrl);
-    else setMessage(zh ? `无法发起支付：${data.error ?? '未知错误'}` : `Unable to start payment: ${data.error ?? 'Unknown error'}`);
+    const data = await readOptionalJsonBody<{ checkoutUrl?: string; error?: string }>(response);
+    if (response.ok && data?.checkoutUrl) window.location.assign(data.checkoutUrl);
+    else setMessage(zh ? `无法发起支付：${data?.error ?? '未知错误'}` : `Unable to start payment: ${data?.error ?? 'Unknown error'}`);
     setWorking(null);
   }
 
@@ -56,17 +57,17 @@ export function BillingPanel({ personalAccount }: { personalAccount: boolean }) 
     const response = await fetch('/api/billing/refunds', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId }),
     });
-    const data = await response.json();
-    setMessage(response.ok ? (zh ? '退款申请已提交。' : 'Refund submitted.') : (zh ? `退款失败：${data.error}` : `Refund failed: ${data.error}`));
+    const data = await readOptionalJsonBody<{ error?: string }>(response);
+    setMessage(response.ok ? (zh ? '退款申请已提交。' : 'Refund submitted.') : (zh ? `退款失败：${data?.error ?? '未知错误'}` : `Refund failed: ${data?.error ?? 'Unknown error'}`));
     await load(); setWorking(null);
   }
 
   async function openPortal() {
     setWorking('portal');
     const response = await fetch('/api/billing/subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ locale }) });
-    const data = await response.json();
-    if (response.ok) window.location.assign(data.url);
-    else setMessage(zh ? `无法打开订阅管理：${data.error}` : `Unable to open subscription portal: ${data.error}`);
+    const data = await readOptionalJsonBody<{ url?: string; error?: string }>(response);
+    if (response.ok && data?.url) window.location.assign(data.url);
+    else setMessage(zh ? `无法打开订阅管理：${data?.error ?? '未知错误'}` : `Unable to open subscription portal: ${data?.error ?? 'Unknown error'}`);
     setWorking(null);
   }
 

@@ -2,7 +2,8 @@
 
 import type { UIMessage } from 'ai';
 import { useCallback, useRef, useState } from 'react';
-import { dbMessagesToUIMessages } from '@/lib/ai/utils';
+import { dbMessagesToUIMessages, type DBMessage } from '@/lib/ai/utils';
+import { readJsonResponse } from '@/lib/http/json-client';
 
 function getHeaders(): Record<string, string> {
   const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
@@ -33,7 +34,11 @@ export function useMessagePagination() {
         headers: getHeaders(),
         signal: controller.signal,
       });
-      const data = await res.json();
+      const data = await readJsonResponse<{
+        messages?: DBMessage[];
+        hasMore?: boolean;
+        nextCursor?: string;
+      }>(res);
 
       // Guard against stale responses after session switch
       if (activeSessionIdRef.current !== sessionId) return [];
@@ -65,7 +70,11 @@ export function useMessagePagination() {
         `/api/ai/chat/sessions/${sessionId}?cursor=${encodeURIComponent(cursor)}`,
         { headers: getHeaders() },
       );
-      const data = await res.json();
+      const data = await readJsonResponse<{
+        messages?: DBMessage[];
+        hasMore?: boolean;
+        nextCursor?: string;
+      }>(res);
 
       if (activeSessionIdRef.current !== sessionId) return;
 

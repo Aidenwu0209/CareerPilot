@@ -13,7 +13,6 @@ import {
   ImageIcon,
   Loader2,
   ArrowLeft,
-  Sparkles,
   Video,
   X,
   Check,
@@ -36,6 +35,7 @@ import { ModelSelector } from '@/components/ai/model-selector';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useCredits } from '@/hooks/use-credits';
 import { ApiResponseError, readJsonResponse } from '@/lib/http/json-client';
+import { GenerationButtonContent } from '@/components/linkedin-photo/generation-button-content';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -404,7 +404,7 @@ export default function LinkedInPhotoPage() {
   };
 
   return (
-    <div>
+    <div className="notranslate" translate="no">
       {/* Header */}
       <div className="mb-8 flex items-center gap-4">
         <Link href="/dashboard">
@@ -668,18 +668,13 @@ export default function LinkedInPhotoPage() {
             onClick={handleGenerate}
             disabled={isGenerating || !uploadedImage || !selectedModel}
             className="w-full cursor-pointer gap-2 bg-brand py-6 text-base font-medium hover:bg-brand-hover disabled:opacity-50"
+            translate="no"
           >
-            {isGenerating ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin" />
-                {t('generating')}
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-5 w-5" />
-                {t('generate')}
-              </>
-            )}
+            <GenerationButtonContent
+              isGenerating={isGenerating}
+              generateLabel={t('generate')}
+              generatingLabel={t('generating')}
+            />
           </Button>
         </div>
 
