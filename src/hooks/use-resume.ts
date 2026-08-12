@@ -4,11 +4,7 @@ import { useState, useCallback } from 'react';
 import type { Resume } from '@/types/resume';
 
 function getHeaders() {
-  const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return {
-    'Content-Type': 'application/json',
-    ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-  };
+  return { 'Content-Type': 'application/json' };
 }
 
 export function useResume() {
@@ -18,7 +14,7 @@ export function useResume() {
   const fetchResumes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/resume', { headers: getHeaders() });
+      const res = await fetch('/api/resume');
       if (res.ok) {
         const data = await res.json();
         setResumes(data);

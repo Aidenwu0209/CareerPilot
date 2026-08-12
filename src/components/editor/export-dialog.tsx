@@ -72,10 +72,7 @@ export function ExportDialog({ open, onOpenChange, resumeId }: ExportDialogProps
   // where the user can "Save as PDF" (issue #85).
   const handlePrintFallback = useCallback(async () => {
     try {
-      const fingerprint = localStorage.getItem('jade_fingerprint');
-      const res = await fetch(`/api/resume/${resumeId}/export?format=html&forPrint=true`, {
-        headers: { ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}) },
-      });
+      const res = await fetch(`/api/resume/${resumeId}/export?format=html&forPrint=true`);
       if (!res.ok) throw new Error('Failed to load resume HTML');
       const html = await res.text();
 
@@ -115,14 +112,9 @@ export function ExportDialog({ open, onOpenChange, resumeId }: ExportDialogProps
       // Save first if dirty
       if (isDirty) await save();
 
-      const fingerprint = localStorage.getItem('jade_fingerprint');
       const queryFormat = selectedFormat === 'pdf-one-page' ? 'pdf' : selectedFormat;
       const fitParam = selectedFormat === 'pdf-one-page' ? '&fitOnePage=true' : '';
-      const res = await fetch(`/api/resume/${resumeId}/export?format=${queryFormat}${fitParam}`, {
-        headers: {
-          ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-        },
-      });
+      const res = await fetch(`/api/resume/${resumeId}/export?format=${queryFormat}${fitParam}`);
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));

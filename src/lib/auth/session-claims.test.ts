@@ -57,6 +57,8 @@ describe('US-013: Session role & status sync', () => {
         userId: created!.id,
         platformRole: 'user',
         status: 'active',
+        onboardingRequired: false,
+        authType: 'email',
       });
     });
 
@@ -108,7 +110,13 @@ describe('US-013: Session role & status sync', () => {
       });
       const claims = await refreshUserClaims(created!.id);
       // Claims should only contain userId, platformRole, status
-      expect(Object.keys(claims!)).toEqual(['userId', 'platformRole', 'status']);
+      expect(Object.keys(claims!)).toEqual([
+        'userId',
+        'platformRole',
+        'status',
+        'onboardingRequired',
+        'authType',
+      ]);
       expect(claims).not.toHaveProperty('password');
       expect(claims).not.toHaveProperty('token');
       expect(claims).not.toHaveProperty('apiKey');

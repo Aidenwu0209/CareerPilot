@@ -62,6 +62,10 @@ function setNodeEnv(env: string) {
   Object.assign(process.env, { NODE_ENV: env });
 }
 
+function enableDemoMode() {
+  process.env.DEMO_MODE = 'true';
+}
+
 beforeEach(() => {
   vi.clearAllMocks();
   // Default: migrations succeed
@@ -113,6 +117,7 @@ describe('SQLiteAdapter.initialize — empty production startup path', () => {
 describe('SQLiteAdapter.initialize — development seed path', () => {
   it('seeds demo user when DB is empty in development', async () => {
     setNodeEnv('development');
+    enableDemoMode();
     mocks.prepareFn.mockReturnValue({
       get: () => ({ count: 0 }),
     });
@@ -125,6 +130,7 @@ describe('SQLiteAdapter.initialize — development seed path', () => {
 
   it('does not seed when DB already has users in development', async () => {
     setNodeEnv('development');
+    enableDemoMode();
     mocks.prepareFn.mockReturnValue({
       get: () => ({ count: 3 }),
     });
@@ -139,6 +145,7 @@ describe('SQLiteAdapter.initialize — development seed path', () => {
 describe('SQLiteAdapter.initialize — repeated startup idempotency', () => {
   it('does not re-seed on second initialization when users exist', async () => {
     setNodeEnv('development');
+    enableDemoMode();
     mocks.prepareFn.mockReturnValue({
       get: () => ({ count: 1 }),
     });
@@ -147,6 +154,14 @@ describe('SQLiteAdapter.initialize — repeated startup idempotency', () => {
     await adapter.initialize();
     await adapter.initialize();
 
+    expect(mocks.seedFn).not.toHaveBeenCalled();
+  });
+
+  it('does not seed an empty development database in product mode', async () => {
+    setNodeEnv('development');
+    process.env.DEMO_MODE = 'false';
+    const adapter = new SQLiteAdapter('./data/test.db');
+    await adapter.initialize();
     expect(mocks.seedFn).not.toHaveBeenCalled();
   });
 });

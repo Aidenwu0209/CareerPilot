@@ -1,6 +1,17 @@
+const demoMode = process.env.DEMO_MODE === 'true';
+const googleConfigured = Boolean(
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+);
+
 export const config = {
+  runtime: {
+    mode: (demoMode ? 'demo' : 'product') as 'demo' | 'product',
+    demoMode,
+    productMode: !demoMode,
+  },
   auth: {
-    enabled: process.env.AUTH_ENABLED === 'true',
+    enabled: true,
+    googleEnabled: googleConfigured,
     providers: ['google'] as const,
   },
   db: {

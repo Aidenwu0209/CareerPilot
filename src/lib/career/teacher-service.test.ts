@@ -66,6 +66,17 @@ describe('teacher education authorization', () => {
     await expect(getAssignedStudentDetail(ADMIN_ID, STUDENT_ID)).resolves.toBeNull();
   });
 
+  it('does not expose the workbench for a teacher role without an active student relationship', async () => {
+    await db.insert(educationRoleAssignments).values({
+      id: 'role-teacher-only',
+      organizationId: ORG_ID,
+      userId: TEACHER_ID,
+      role: 'teacher',
+    });
+
+    await expect(resolveTeacherWorkspace(TEACHER_ID)).resolves.toEqual({ status: 'unconfigured' });
+  });
+
   it('returns real assigned students only after education roles and explicit assignment exist', async () => {
     await db.insert(educationRoleAssignments).values([
       { id: 'role-teacher', organizationId: ORG_ID, userId: TEACHER_ID, role: 'teacher' },
@@ -87,5 +98,39 @@ describe('teacher education authorization', () => {
     }
     const student = await getAssignedStudentDetail(TEACHER_ID, STUDENT_ID);
     expect(student).toMatchObject({ name: '李同学', program: '软件工程', cohort: '2026届' });
+  });
+
+  it('selects a later organization when the first teacher role has no student relationship', async () => {
+    await db.insert(organizations).values({
+      id: 'school-0',
+      slug: 'empty-school',
+      name: '空作用域学校',
+      createdBy: ADMIN_ID,
+    });
+    await db.insert(organizationMemberships).values({
+      id: 'membership-teacher-empty',
+      organizationId: 'school-0',
+      userId: TEACHER_ID,
+      role: 'member',
+    });
+    await db.insert(educationRoleAssignments).values([
+      { id: 'role-teacher-empty', organizationId: 'school-0', userId: TEACHER_ID, role: 'teacher' },
+      { id: 'role-teacher-valid', organizationId: ORG_ID, userId: TEACHER_ID, role: 'teacher' },
+      { id: 'role-student-valid', organizationId: ORG_ID, userId: STUDENT_ID, role: 'student' },
+    ]);
+    await db.insert(teacherStudentAssignments).values({
+      id: 'assignment-valid-school',
+      organizationId: ORG_ID,
+      teacherUserId: TEACHER_ID,
+      studentUserId: STUDENT_ID,
+      accessLevel: 'guide',
+    });
+
+    const workspace = await resolveTeacherWorkspace(TEACHER_ID);
+    expect(workspace.status).toBe('ready');
+    if (workspace.status === 'ready') {
+      expect(workspace.organizationId).toBe(ORG_ID);
+      expect(workspace.view.recentStudents.map((student) => student.id)).toEqual([STUDENT_ID]);
+    }
   });
 });

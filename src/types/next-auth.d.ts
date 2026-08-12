@@ -6,6 +6,8 @@ declare module 'next-auth' {
       id: string;
       platformRole: 'super_admin' | 'user';
       status: 'active' | 'suspended' | 'deleted';
+      onboardingRequired: boolean;
+      authType: 'oauth' | 'fingerprint' | 'email';
     } & DefaultSession['user'];
   }
 }
@@ -16,5 +18,7 @@ declare module 'next-auth/jwt' {
     platformRole?: 'super_admin' | 'user';
     status?: 'active' | 'suspended' | 'deleted';
     lastRefreshAt?: number;
+    onboardingRequired?: boolean;
+    authType?: 'oauth' | 'fingerprint' | 'email';
   }
 }

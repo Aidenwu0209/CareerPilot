@@ -17,8 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      AUTH_ENABLED: 'true'
+      DEMO_MODE: 'false'
       AUTH_SECRET: ci-only-auth-secret-0123456789abcdef
+      SMTP_HOST: smtp.invalid
+      SMTP_FROM: ci@careerpilot.invalid
+      GOOGLE_CLIENT_ID: ci-google-client-id
+      GOOGLE_CLIENT_SECRET: ci-google-client-secret
       AI_CREDENTIAL_MASTER_KEY: ci-only-ai-key-abcdef0123456789xyz
       DB_TYPE: postgresql
       DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/careerpilot_ci

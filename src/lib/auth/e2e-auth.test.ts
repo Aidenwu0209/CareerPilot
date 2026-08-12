@@ -212,6 +212,38 @@ describe('US-085 AC1+AC2: Registration → legal consent → dashboard eligibili
 // ═══════════════════════════════════════════════════════════════
 
 describe('US-085 AC3: Session restoration after refresh', () => {
+  it('keeps different verified emails in separate stable accounts', async () => {
+    const firstEmail = uniqueEmail('isolated-first');
+    const secondEmail = uniqueEmail('isolated-second');
+
+    const firstCode = await requestAndGetCode(firstEmail, '203.0.113.62');
+    const firstResult = await verifyOtp(firstEmail, firstCode);
+    clearRateLimits();
+    const secondCode = await requestAndGetCode(secondEmail, '203.0.113.63');
+    const secondResult = await verifyOtp(secondEmail, secondCode);
+
+    expect(firstResult.success).toBe(true);
+    expect(secondResult.success).toBe(true);
+    expect(firstResult.userId).not.toBe(secondResult.userId);
+
+    const [firstUser, secondUser] = await Promise.all([
+      userRepository.findById(firstResult.userId!),
+      userRepository.findById(secondResult.userId!),
+    ]);
+    expect(firstUser).toMatchObject({ id: firstResult.userId, email: firstEmail });
+    expect(secondUser).toMatchObject({ id: secondResult.userId, email: secondEmail });
+
+    const firstToken = await createSessionToken(firstResult.userId!, firstEmail);
+    const secondToken = await createSessionToken(secondResult.userId!, secondEmail);
+    const [firstSession, secondSession] = await Promise.all([
+      decode({ token: firstToken, secret: SECRET, salt: COOKIE_NAME }),
+      decode({ token: secondToken, secret: SECRET, salt: COOKIE_NAME }),
+    ]);
+    expect(firstSession?.userId).toBe(firstResult.userId);
+    expect(secondSession?.userId).toBe(secondResult.userId);
+    expect(firstSession?.userId).not.toBe(secondSession?.userId);
+  });
+
   it('refreshing restores same authenticated user from session token', async () => {
     const testEmail = uniqueEmail('refresh');
 
@@ -433,13 +465,12 @@ describe('US-085 AC6: Forged x-fingerprint rejection in production', () => {
     vi.resetModules();
     // Mock config to avoid pulling in next-auth which needs next/server
     vi.doMock('./config', () => ({ auth: vi.fn() }));
-    vi.doMock('@/lib/config', () => ({ config: { auth: { enabled: false } } }));
+    vi.doMock('@/lib/config', () => ({ config: { runtime: { demoMode: false } } }));
     vi.doMock('@/lib/db', () => ({ dbReady: Promise.resolve() }));
     vi.doMock('@/lib/db/repositories/user.repository', () => ({
       userRepository: {
         findById: vi.fn(),
-        findByEmail: vi.fn(),
-        upsertByFingerprint: vi.fn().mockReturnValue({ id: 'should-not-be-created' }),
+        findByFingerprint: vi.fn(),
       },
     }));
   });
@@ -463,7 +494,7 @@ describe('US-085 AC6: Forged x-fingerprint rejection in production', () => {
     expect(user).toBeNull();
   });
 
-  it('resolveUser in production does not call upsertByFingerprint', async () => {
+  it('resolveUser in product mode does not query fingerprint users', async () => {
     Object.assign(process.env, { NODE_ENV: 'production' });
     const { resolveUser } = await import('./helpers');
 
@@ -471,7 +502,7 @@ describe('US-085 AC6: Forged x-fingerprint rejection in production', () => {
     expect(result).toBeNull();
   });
 
-  it('fingerprint-based authentication only works in development', async () => {
+  it('development alone does not enable fingerprint authentication', async () => {
     Object.assign(process.env, { NODE_ENV: 'development' });
     const { getUserIdFromRequest } = await import('./helpers');
 
@@ -479,8 +510,7 @@ describe('US-085 AC6: Forged x-fingerprint rejection in production', () => {
       headers: { 'x-fingerprint': 'dev-fp' },
     });
 
-    // In dev mode, fingerprint is read from the header
-    expect(getUserIdFromRequest(request)).toBe('dev-fp');
+    expect(getUserIdFromRequest(request)).toBeNull();
   });
 });
 

@@ -139,7 +139,7 @@ CareerPilot 覆盖从简历制作、JD 匹配到模拟面试与职业照生成�
 
 - **双语界面** — 完整的中文（zh）和英文（en）界面
 - **暗色模式** — 浅色、深色、跟随系统三种主题
-- **灵活认证** — Google OAuth 或浏览器指纹（零配置即用）
+- **正式账户认证** — 邮箱验证码免密登录、首次使用自动注册，并可选启用 Google OAuth
 - **双数据库** — SQLite（默认，零配置）或 PostgreSQL
 
 ## 技术栈
@@ -151,7 +151,7 @@ CareerPilot 覆盖从简历制作、JD 匹配到模拟面试与职业照生成�
 | 拖拽 | @dnd-kit |
 | 状态管理 | Zustand |
 | 数据库 | Drizzle ORM (SQLite / PostgreSQL) |
-| 认证 | NextAuth.js v5 + FingerprintJS |
+| 认证 | NextAuth.js v5 + 邮箱验证码 + Google OAuth |
 | AI | Vercel AI SDK v6 + 托管 GPT / Claude / GLM / DeepSeek / Gemini / ERNIE 供应商 |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | 国际化 | next-intl |
@@ -169,6 +169,10 @@ openssl rand -base64 32
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
   -e AUTH_SECRET=<你生成的密钥> \
+  -e SMTP_HOST=smtp.example.com \
+  -e SMTP_USER=<smtp-user> \
+  -e SMTP_PASS=<smtp-password> \
+  -e SMTP_FROM=noreply@example.com \
   -v careerpilot-data:/app/data \
   careerpilot
 ```
@@ -199,7 +203,6 @@ docker run -d -p 3000:3000 \
 ```bash
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
-  -e AUTH_ENABLED=true \
   -e AUTH_SECRET=your-secret \
   -e GOOGLE_CLIENT_ID=xxx \
   -e GOOGLE_CLIENT_SECRET=xxx \
@@ -234,8 +237,9 @@ cp .env.example .env.local
 # 数据库（默认 SQLite，无需额外配置）
 DB_TYPE=sqlite
 
-# 认证（默认指纹模式，无需额外配置）
-AUTH_ENABLED=false
+# 默认是正式产品模式。本地可使用内存测试邮件适配器，
+# 如需真实投递验证码，请配置 SMTP_*。
+DEMO_MODE=false
 ```
 
 > **AI 配置：** 请在 **管理后台 > AI 供应商** 中配置加密凭证，再通过托管模型目录发布可用模型。
@@ -266,9 +270,14 @@ pnpm dev
 | `DB_TYPE` | 否 | `sqlite` | 数据库类型：`sqlite` 或 `postgresql` |
 | `DATABASE_URL` | PostgreSQL 时 | — | PostgreSQL 连接字符串 |
 | `SQLITE_PATH` | 否 | `./data/careerpilot.db` | SQLite 数据库文件路径 |
-| `AUTH_ENABLED` | 否 | `false` | 启用 Google OAuth（`true`）或使用指纹模式（`false`） |
-| `GOOGLE_CLIENT_ID` | OAuth 时 | — | Google OAuth 客户端 ID |
-| `GOOGLE_CLIENT_SECRET` | OAuth 时 | — | Google OAuth 客户端密钥 |
+| `DEMO_MODE` | 否 | `false` | 在 locale-aware `/demo` 开启隔离的预置演示身份（生产环境禁止开启） |
+| `GOOGLE_CLIENT_ID` | 生产环境 | — | Google OAuth 客户端 ID |
+| `GOOGLE_CLIENT_SECRET` | 生产环境 | — | Google OAuth 客户端密钥 |
+| `SMTP_HOST` | 生产环境 | — | 用于投递邮箱验证码的 SMTP 服务器 |
+| `SMTP_PORT` | 否 | `587` | SMTP 服务端口 |
+| `SMTP_USER` | 取决于 SMTP | — | SMTP 用户名 |
+| `SMTP_PASS` | 取决于 SMTP | — | SMTP 密码 |
+| `SMTP_FROM` | 生产环境 | — | 验证邮件发件地址 |
 | `APP_NAME` | 否 | `CareerPilot` | 应用显示名称 |
 | `DEFAULT_LOCALE` | 否 | `zh` | 默认语言：`zh` 或 `en` |
 
@@ -433,9 +442,9 @@ CareerPilot 使用平台托管 AI 凭证。超级管理员在管理后台配置�
 </details>
 
 <details>
-<summary><b>不使用 OAuth 时认证如何工作？</b></summary>
+<summary><b>不使用 Google OAuth 时认证如何工作？</b></summary>
 
-本地开发设置 `AUTH_ENABLED=false` 时可使用浏览器指纹进行零配置演示；生产环境会拒绝该模式，必须设置 `AUTH_ENABLED=true` 并使用邮箱/OAuth 认证。
+正式产品模式始终支持邮箱验证码免密登录。新邮箱验证后会创建账户并进入必填资料与条款/隐私确认流程；已有邮箱会恢复同一个账户。Google OAuth 为可选配置。只有显式设置 `DEMO_MODE=true` 才会在 `/demo` 开放固定的学生和教师演示身份，正式模式不会创建 fingerprint 用户。历史 fingerprint 账户保持隔离，必须经过人工核验后显式绑定，不能按邮箱静默合并。
 
 </details>
 

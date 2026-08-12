@@ -108,10 +108,13 @@ async function buildStudentSummary(studentId: string): Promise<TeacherStudentSum
   };
 }
 
-async function listAssignedStudentsUncached(teacherUserId: string): Promise<TeacherStudentSummary[]> {
+async function resolveAssignedStudentScopeUncached(teacherUserId: string): Promise<{
+  organizationId: string;
+  students: TeacherStudentSummary[];
+} | null> {
   await dbReady;
   const contexts = (await listTeacherEducationContexts(teacherUserId)).sort((a, b) => a.organizationId.localeCompare(b.organizationId));
-  if (!contexts.length) return [];
+  if (!contexts.length) return null;
   const rows = await db.select({
     organizationId: teacherStudentAssignments.organizationId,
     studentUserId: teacherStudentAssignments.studentUserId,
@@ -121,19 +124,32 @@ async function listAssignedStudentsUncached(teacherUserId: string): Promise<Teac
       studentUserId: string;
     }>;
 
-  const activeOrganizationId = contexts[0].organizationId;
-  const studentIds = [...new Set(rows.filter((row) => row.organizationId === activeOrganizationId).map((row) => row.studentUserId))];
-  const summaries: TeacherStudentSummary[] = [];
-  for (const studentId of studentIds) {
-    const access = await resolveTeacherStudentAccess(teacherUserId, studentId, 'view');
-    if (!access) continue;
-    const summary = await buildStudentSummary(studentId);
-    if (summary) summaries.push(summary);
+  for (const context of contexts) {
+    const studentIds = [...new Set(rows
+      .filter((row) => row.organizationId === context.organizationId)
+      .map((row) => row.studentUserId))];
+    const summaries: TeacherStudentSummary[] = [];
+    for (const studentId of studentIds) {
+      const access = await resolveTeacherStudentAccess(teacherUserId, studentId, 'view');
+      if (!access || access.organizationId !== context.organizationId) continue;
+      const summary = await buildStudentSummary(studentId);
+      if (summary) summaries.push(summary);
+    }
+    if (summaries.length > 0) {
+      return {
+        organizationId: context.organizationId,
+        students: summaries.sort((a, b) => b.pendingItemCount - a.pendingItemCount || a.name.localeCompare(b.name, 'zh-CN')),
+      };
+    }
   }
-  return summaries.sort((a, b) => b.pendingItemCount - a.pendingItemCount || a.name.localeCompare(b.name, 'zh-CN'));
+  return null;
 }
 
-export const listAssignedStudents = cache(listAssignedStudentsUncached);
+const resolveAssignedStudentScope = cache(resolveAssignedStudentScopeUncached);
+
+export const listAssignedStudents = cache(async (teacherUserId: string) =>
+  (await resolveAssignedStudentScope(teacherUserId))?.students ?? [],
+);
 
 function buildWorkspaceView(students: TeacherStudentSummary[]): TeacherWorkspaceView {
   const records = students as TeacherStudentSummaryWithMetrics[];
@@ -153,8 +169,15 @@ async function resolveTeacherWorkspaceUncached(userId: string): Promise<TeacherW
   await dbReady;
   const contexts = (await listTeacherEducationContexts(userId)).sort((a, b) => a.organizationId.localeCompare(b.organizationId));
   if (contexts[0]) {
-    const students = await listAssignedStudents(userId);
-    return { status: 'ready', organizationId: contexts[0].organizationId, view: buildWorkspaceView(students) };
+    const scope = await resolveAssignedStudentScope(userId);
+    if (scope) {
+      return {
+        status: 'ready',
+        organizationId: scope.organizationId,
+        view: buildWorkspaceView(scope.students),
+      };
+    }
+    return { status: 'unconfigured' };
   }
 
   const roles = await db.select({ role: educationRoleAssignments.role })

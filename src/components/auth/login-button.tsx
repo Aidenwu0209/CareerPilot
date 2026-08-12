@@ -2,17 +2,23 @@
 
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { normalizeInternalCallbackUrl } from '@/lib/auth/login-redirect';
 
 export function LoginButton() {
   const t = useTranslations('auth');
+  const locale = useLocale();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = normalizeInternalCallbackUrl(
+    searchParams.get('callbackUrl'),
+    `/${locale}/dashboard`,
+  );
+  const completionUrl = `/${locale}/auth/complete?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 
   return (
     <Button
-      onClick={() => signIn('google', { callbackUrl })}
+      onClick={() => signIn('google', { callbackUrl: completionUrl })}
       variant="outline"
       className="h-11 w-full cursor-pointer gap-3 rounded-xl border-zinc-200 bg-white px-6 text-sm font-medium text-zinc-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
     >

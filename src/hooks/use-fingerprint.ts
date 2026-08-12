@@ -1,62 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
 import {
-  buildFingerprintCookie,
   FINGERPRINT_STORAGE_KEY,
 } from '@/lib/auth/providers/fingerprint';
-import { generateId } from '@/lib/utils';
+import { isDemoFingerprint } from '@/lib/auth/demo-mode';
 
 export function useFingerprint() {
-  const [fingerprint, setFingerprint] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { authEnabled } = useRuntimeConfig();
+  const [demoIdentity, setDemoIdentity] = useState<{
+    fingerprint: string | null;
+    isLoading: boolean;
+  }>({ fingerprint: null, isLoading: true });
+  const { demoMode } = useRuntimeConfig();
 
   useEffect(() => {
-    if (authEnabled) {
-      setIsLoading(false);
+    if (!demoMode) {
       return;
     }
 
-    function persistFingerprint(fingerprint: string) {
-      localStorage.setItem(FINGERPRINT_STORAGE_KEY, fingerprint);
-      document.cookie = buildFingerprintCookie(
-        fingerprint,
-        window.location.protocol === 'https:',
-      );
-    }
+    const timer = window.setTimeout(() => {
+      const stored = localStorage.getItem(FINGERPRINT_STORAGE_KEY);
+      setDemoIdentity({
+        fingerprint: isDemoFingerprint(stored) ? stored : null,
+        isLoading: false,
+      });
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [demoMode]);
 
-    async function getFingerprint() {
-      try {
-        // Check localStorage first
-        const stored = localStorage.getItem(FINGERPRINT_STORAGE_KEY);
-        if (stored) {
-          persistFingerprint(stored);
-          setFingerprint(stored);
-          setIsLoading(false);
-          return;
-        }
-
-        const fp = await FingerprintJS.load();
-        const result = await fp.get();
-        const visitorId = result.visitorId;
-
-        persistFingerprint(visitorId);
-        setFingerprint(visitorId);
-      } catch {
-        // Fallback: generate a random ID
-        const fallbackId = generateId();
-        persistFingerprint(fallbackId);
-        setFingerprint(fallbackId);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    getFingerprint();
-  }, [authEnabled]);
-
-  return { fingerprint, isLoading };
+  return demoMode ? demoIdentity : { fingerprint: null, isLoading: false };
 }

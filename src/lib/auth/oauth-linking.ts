@@ -1,15 +1,25 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { users, authAccounts } from '@/lib/db/schema';
+import { authAccounts } from '@/lib/db/schema';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { createSampleResume } from '@/lib/db/sample-resume';
 import { applyRegistrationGrant } from '@/lib/credits/registration-grant';
+import { assertRealAccountCanLink } from './onboarding';
+import { createAuthIdentity } from './account-creation';
 
 export interface OAuthLinkResult {
   userId: string;
   isNewUser: boolean;
   isNewLink: boolean;
+}
+
+export function isVerifiedGoogleProfile(profile: unknown): boolean {
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return false;
+  const value = profile as { email?: unknown; email_verified?: unknown };
+  return typeof value.email === 'string'
+    && value.email.length > 0
+    && value.email_verified === true;
 }
 
 /**
@@ -43,6 +53,7 @@ export async function resolveOAuthAccount(params: {
     // Verify the linked user still exists
     const linkedUser = await userRepository.findById(existingAccount.userId);
     if (linkedUser) {
+      assertRealAccountCanLink(linkedUser);
       return { userId: linkedUser.id, isNewUser: false, isNewLink: false };
     }
     // Orphaned account — clean it up and continue to create fresh
@@ -55,6 +66,7 @@ export async function resolveOAuthAccount(params: {
     : null;
 
   if (existingUser) {
+    assertRealAccountCanLink(existingUser);
     // Link the OAuth provider to the existing user
     await authAccountRepository.create({
       userId: existingUser.id,
@@ -69,17 +81,19 @@ export async function resolveOAuthAccount(params: {
     return { userId: existingUser.id, isNewUser: false, isNewLink: true };
   }
 
-  // Step 3: Create new user + auth account atomically (synchronous transaction for better-sqlite3)
+  // Step 3: Create new user + auth account atomically on either DB adapter.
   const newUserId = crypto.randomUUID();
-  db.transaction((tx: typeof db) => {
-    tx.insert(users).values({
+  await createAuthIdentity({
+    user: {
       id: newUserId,
       email: params.email || undefined,
       name: params.name || undefined,
       avatarUrl: params.avatarUrl || undefined,
       authType: 'oauth',
-    }).run();
-    tx.insert(authAccounts).values({
+      settings: { onboardingRequired: true },
+    },
+    account: {
+      id: crypto.randomUUID(),
       userId: newUserId,
       provider: params.provider,
       providerAccountId: params.providerAccountId,
@@ -88,7 +102,7 @@ export async function resolveOAuthAccount(params: {
       tokenType: params.tokenType,
       expiresAt: params.expiresAt,
       scope: params.scope,
-    }).run();
+    },
   });
 
   // Create sample resume outside the transaction (non-critical, idempotent)

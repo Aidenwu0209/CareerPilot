@@ -14,16 +14,14 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
+import { ProductEntryLink } from '@/components/auth/product-entry-link';
 
 export function LandingHeader() {
   const t = useTranslations('landing.header');
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
-  const { authEnabled } = useRuntimeConfig();
-
-  const isLoggedIn = authEnabled && !!session?.user;
+  const isLoggedIn = !!session?.user;
   const ctaLabel = isLoggedIn ? t('dashboard') : t('getStarted');
 
   useEffect(() => {
@@ -73,7 +71,7 @@ export function LandingHeader() {
             asChild
             className="hidden cursor-pointer bg-brand text-white hover:bg-brand-hover sm:inline-flex"
           >
-            <Link href="/dashboard">{ctaLabel}</Link>
+            <ProductEntryLink>{ctaLabel}</ProductEntryLink>
           </Button>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -115,7 +113,7 @@ export function LandingHeader() {
                     asChild
                     className="h-11 w-full cursor-pointer rounded-lg bg-brand text-[15px] font-medium text-white shadow-sm shadow-brand/20 hover:bg-brand-hover"
                   >
-                    <Link href="/dashboard" onClick={() => setOpen(false)}>{ctaLabel}</Link>
+                    <ProductEntryLink onClick={() => setOpen(false)}>{ctaLabel}</ProductEntryLink>
                   </Button>
                 </div>
               </div>

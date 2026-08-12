@@ -8,9 +8,8 @@ import { FINGERPRINT_COOKIE_NAME } from './providers/fingerprint';
  * development-only fingerprint mode.
  */
 export async function resolveServerContext(): Promise<RequestContext | null> {
-  if (config.auth.enabled) {
-    return resolveContext();
-  }
+  const sessionContext = await resolveContext();
+  if (sessionContext || !config.runtime.demoMode) return sessionContext;
 
   const cookieStore = await cookies();
   const fingerprint = cookieStore.get(FINGERPRINT_COOKIE_NAME)?.value ?? null;

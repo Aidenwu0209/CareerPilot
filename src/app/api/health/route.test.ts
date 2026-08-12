@@ -7,6 +7,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
  * - readiness returns 200 when DB is ready and migrations are current
  * - readiness returns 503 when DB initialization fails
  * - readiness returns 503 when migrations are behind the code's set
+ * - readiness returns 503 when production configuration is invalid
  * - response never leaks connection strings, secrets, or internal errors
  * - production checklist includes auth mode, db type, migration status,
  *   secret presence, public routes, and backup status
@@ -25,6 +26,7 @@ async function loadRoute(overrides: {
   dbReady?: Promise<unknown>;
   dbExecute?: ReturnType<typeof vi.fn>;
   dbType?: 'postgresql' | 'sqlite';
+  envValidation?: { ok: boolean; issues: Array<{ field: string; message: string }> };
 }) {
   const dbReady =
     overrides.dbReady !== undefined
@@ -43,13 +45,14 @@ async function loadRoute(overrides: {
   vi.doMock('@/lib/db', () => ({ dbReady, db: { execute: dbExecute }, adapter: {} }));
   vi.doMock('@/lib/config', () => ({
     config: {
+      runtime: { demoMode: false, productMode: true, mode: 'product' },
       auth: { enabled: true, providers: ['google'] },
       db: { type: overrides.dbType ?? 'postgresql' },
       i18n: { defaultLocale: 'zh', locales: ['zh', 'en'] },
     },
   }));
   vi.doMock('@/lib/env', () => ({
-    validateEnv: () => ({ ok: true, issues: [] }),
+    validateEnv: () => overrides.envValidation ?? { ok: true, issues: [] },
   }));
   vi.doMock('@/lib/db/migration-status', () => ({
     getExpectedPGMigrationCount: () => 12,
@@ -82,7 +85,36 @@ describe('Health endpoint — healthy instance', () => {
     expect(body.checks.process).toBe(true);
     expect(body.checks.database).toBe(true);
     expect(body.checks.migrations).toBe(true);
+    expect(body.checks.configuration).toBe(true);
     expect(body.migration).toEqual({ expected: 12, applied: 12 });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Production configuration invalid → fail
+// ---------------------------------------------------------------------------
+
+describe('Health endpoint — invalid production configuration', () => {
+  it('returns 503 when security-critical environment validation fails', async () => {
+    const GET = await loadRoute({
+      dbReady: Promise.resolve(),
+      dbExecute: vi.fn().mockResolvedValue([{ count: 12 }]),
+      dbType: 'postgresql',
+      envValidation: {
+        ok: false,
+        issues: [{ field: 'AUTH_SECRET', message: 'unsafe secret value' }],
+      },
+    });
+
+    const response = await GET();
+    expect(response.status).toBe(503);
+    const body = await response.json();
+
+    expect(body.status).toBe('unavailable');
+    expect(body.checks.configuration).toBe(false);
+    expect(body.checklist.env.configIssues).toBe(1);
+    expect(JSON.stringify(body)).not.toContain('AUTH_SECRET');
+    expect(JSON.stringify(body)).not.toContain('unsafe secret value');
   });
 });
 

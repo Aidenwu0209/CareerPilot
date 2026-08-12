@@ -4,6 +4,7 @@ import { Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TemplateThumbnail } from '@/components/dashboard/template-thumbnail';
+import { ProductEntryLink } from '@/components/auth/product-entry-link';
 
 export function HeroSection() {
   const t = useTranslations('landing.hero');
@@ -51,7 +52,7 @@ export function HeroSection() {
             asChild
             className="h-12 w-full cursor-pointer rounded-xl bg-brand px-8 text-base font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-xl hover:shadow-brand/30 sm:h-11 sm:w-auto sm:px-6 sm:text-sm"
           >
-            <Link href="/dashboard">{t('cta')}</Link>
+            <ProductEntryLink>{t('cta')}</ProductEntryLink>
           </Button>
           <Button
             asChild

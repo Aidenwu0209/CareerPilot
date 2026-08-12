@@ -7,6 +7,7 @@
  */
 
 import { userRepository } from '@/lib/db/repositories/user.repository';
+import { isOnboardingRequired } from './onboarding';
 
 /** How often (in seconds) the JWT should re-fetch claims from the DB. */
 export const REFRESH_INTERVAL_SECONDS = 60;
@@ -15,6 +16,8 @@ export interface UserClaims {
   userId: string;
   platformRole: 'super_admin' | 'user';
   status: 'active' | 'suspended' | 'deleted';
+  onboardingRequired: boolean;
+  authType: 'oauth' | 'fingerprint' | 'email';
 }
 
 /**
@@ -28,6 +31,8 @@ export async function refreshUserClaims(userId: string): Promise<UserClaims | nu
     userId: user.id,
     platformRole: user.platformRole,
     status: user.status,
+    onboardingRequired: isOnboardingRequired(user.settings),
+    authType: user.authType,
   };
 }
 

@@ -12,7 +12,7 @@
 | AI 简历优化 | 基于对话的 AI 助手，实时优化简历内容 |
 | PDF 导出 | 高保真 PDF 生成与下载 |
 | 多简历管理 | 新建、复制、删除、切换多份简历 |
-| 灵活认证 | 可插拔认证：Google 登录 / 浏览器指纹 fallback |
+| 正式账户认证 | 邮箱验证码自动注册/登录，可选 Google OAuth；演示身份独立隔离 |
 | 数据库抽象 | 统一接口，支持 PostgreSQL 和 SQLite |
 | 国际化 (i18n) | 支持中文和英文界面切换 |
 
@@ -30,7 +30,7 @@
 | 认证 | NextAuth.js (Auth.js v5) |
 | AI | Vercel AI SDK + OpenAI / Anthropic API |
 | PDF 生成 | @react-pdf/renderer |
-| 浏览器指纹 | FingerprintJS |
+| 邮件投递 | Nodemailer / SMTP |
 | 国际化 | next-intl |
 | 数据校验 | Zod |
 | 包管理器 | pnpm |
@@ -189,10 +189,10 @@ careerpilot/
 │   │   ├── auth/                       # 认证层
 │   │   │   ├── index.ts               # 认证入口
 │   │   │   ├── config.ts             # NextAuth 配置
-│   │   │   ├── provider.ts           # 认证提供者接口
-│   │   │   ├── providers/
-│   │   │   │   ├── google.ts         # Google OAuth 提供者
-│   │   │   │   └── fingerprint.ts    # 浏览器指纹提供者
+│   │   │   ├── email-otp.ts          # 邮箱验证码注册/登录
+│   │   │   ├── onboarding.ts         # 新用户资料与法律确认
+│   │   │   ├── demo-mode.ts          # 固定预置演示身份
+│   │   │   ├── session-cookie.ts     # 服务端 Auth.js 会话签发
 │   │   │   └── helpers.ts            # 认证工具函数
 │   │   │
 │   │   ├── ai/                         # AI 层
@@ -217,7 +217,7 @@ careerpilot/
 │   │   ├── use-editor.ts             # 编辑器状态管理
 │   │   ├── use-ai-chat.ts            # AI 对话交互
 │   │   ├── use-pdf-export.ts         # PDF 导出逻辑
-│   │   ├── use-fingerprint.ts        # 浏览器指纹
+│   │   ├── use-fingerprint.ts        # 仅解析固定演示身份
 │   │   └── use-auth.ts               # 认证状态
 │   │
 │   ├── stores/                         # Zustand 状态仓库
@@ -267,7 +267,7 @@ careerpilot/
 │  └──────────────────────┬────────────────────────────┘              │
 │                         │                                           │
 │  ┌──────────────────────┴────────────────────────────┐              │
-│  │        next-intl (国际化) + FingerprintJS          │              │
+│  │       next-intl（国际化）+ Auth.js 会话             │              │
 │  └───────────────────────────────────────────────────┘              │
 └────────────────────────────┬────────────────────────────────────────┘
                              │ HTTP / SSE
@@ -276,7 +276,7 @@ careerpilot/
 │                                                                     │
 │  ┌─────────────────────────────────────────────────────────┐        │
 │  │                    中间件层                               │        │
-│  │     （认证校验 / 指纹检查 / 国际化路由重定向）            │        │
+│  │       （认证校验 / 访问控制 / 国际化路由重定向）          │        │
 │  └─────────────────────────┬───────────────────────────────┘        │
 │                            │                                        │
 │  ┌─────────────────────────┴───────────────────────────────┐        │
@@ -437,54 +437,37 @@ AI 可以调用工具直接修改简历内容：
 
 #### 3.2.3 认证模块
 
-抽象化认证，支持可插拔的提供者。
+正式账户与演示身份是两个独立运行模式。正式产品模式为默认值，使用
+Auth.js HttpOnly JWT；只有显式设置 `DEMO_MODE=true` 才开放预置演示身份。
 
 ```
-┌─────────────────────────────────────────────┐
-│              认证配置                         │
-│   AUTH_ENABLED=true|false（环境变量）         │
-└──────────────────┬──────────────────────────┘
-                   │
-          ┌────────┴────────┐
-          │                 │
-    AUTH_ENABLED=true  AUTH_ENABLED=false
-          │                 │
-          ▼                 ▼
-┌─────────────────┐ ┌─────────────────┐
-│   NextAuth.js   │ │  指纹提供者      │
-│                 │ │                 │
-│  提供者:        │ │  FingerprintJS  │
-│  - Google OAuth │ │  生成稳定的     │
-│  -（可扩展）    │ │  浏览器 ID      │
-│                 │ │  作为 userId    │
-│  存储:          │ │                 │
-│  - OAuth ID     │ │  无需服务端     │
-│  - 邮箱         │ │  Session        │
-│  - 头像         │ │                 │
-└────────┬────────┘ └────────┬────────┘
-         │                   │
-         └─────────┬─────────┘
-                   │
-                   ▼
-         ┌─────────────────┐
-         │  统一用户解析    │
-         │                 │
-         │  getUserId():   │
-         │  - 认证会话     │
-         │    → user.id    │
-         │  - 指纹        │
-         │    → fp_xxxx    │
-         └─────────────────┘
+┌───────────────────────┐       ┌────────────────────────┐
+│ product（默认）       │       │ demo（显式开启）       │
+│                       │       │ DEMO_MODE=true         │
+│ - 邮箱 OTP            │       │ - /[locale]/demo       │
+│ - Google OAuth（可选）│       │ - 固定学生/教师种子    │
+│ - Auth.js JWT Cookie  │       │ - 不创建浏览器身份     │
+└───────────┬───────────┘       └───────────┬────────────┘
+            │                               │
+            └──────────────┬────────────────┘
+                           ▼
+                 ┌────────────────────┐
+                 │ 统一服务端用户解析 │
+                 │ product: session  │
+                 │ demo: fixed seed  │
+                 └────────────────────┘
 ```
 
 **应用配置 (`src/lib/config.ts`):**
 
 ```typescript
-// 通过环境变量控制的功能开关
 export const config = {
+  runtime: {
+    mode: process.env.DEMO_MODE === 'true' ? 'demo' : 'product',
+  },
   auth: {
-    enabled: process.env.AUTH_ENABLED === 'true',
-    providers: ['google'],  // 可扩展
+    enabled: true,
+    googleEnabled: Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET),
   },
   db: {
     type: process.env.DB_TYPE as 'postgresql' | 'sqlite',
@@ -1584,7 +1567,11 @@ pnpm drizzle-kit migrate
 
 ## 7. 认证流程
 
-### 7.1 OAuth 流程（AUTH_ENABLED=true）
+### 7.1 正式账户流程
+
+邮箱 OTP 是正式模式的基础登录方式。新邮箱验证成功后原子创建用户、认证账户和
+注册点数账户，并进入基础资料与法律确认引导；已有邮箱恢复原 userId。Google OAuth
+可选启用，最终进入同一个引导与访问控制流程。
 
 ```
 ┌──────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
@@ -1618,50 +1605,31 @@ pnpm drizzle-kit migrate
    │  (JWT/Cookie)│                                  │
 ```
 
-### 7.2 浏览器指纹流程（AUTH_ENABLED=false）
+### 7.2 独立演示流程（DEMO_MODE=true）
 
 ```
-┌──────┐                    ┌──────────────┐     ┌──────────┐
-│客户端│                    │FingerprintJS │     │  数据库  │
-└──┬───┘                    └──────┬───────┘     └────┬─────┘
-   │                               │                  │
-   │  页面加载                     │                  │
-   │  初始化 FingerprintJS        │                  │
-   ├──────────────────────────────▶│                  │
-   │                               │                  │
-   │  返回 visitorId              │                  │
-   │◀──────────────────────────────┤                  │
-   │                               │                  │
-   │  API 请求携带                 │                  │
-   │  X-Fingerprint: fp_xxx       │                  │
-   ├──────────────────────────────────────────────────▶│
-   │                                                   │
-   │  创建/查找指纹用户                                │
-   │  （不存在则创建）                                 │
-   │◀──────────────────────────────────────────────────┤
-   │                                                   │
-   │  指纹存入 localStorage                            │
-   │  作为后备                                         │
+用户打开 /[locale]/demo
+        │
+        ├── 选择学生 ──▶ 固定 demo-fingerprint ──▶ 已播种学生账户
+        │
+        └── 选择教师 ──▶ 固定 teacher-demo-fingerprint ──▶ 已播种教师账户
 ```
+
+演示模式不根据设备生成指纹，也不会创建 Anonymous User。正式模式完全忽略
+fingerprint header/cookie。历史 fingerprint 账户即使碰巧拥有相同邮箱，也不会自动
+与 OTP 或 Google 账户合并；必须由支持人员核验身份和数据归属后执行显式绑定。
 
 ### 7.3 用户解析中间件
 
 ```typescript
 // 中间件用户解析伪代码
 async function resolveUser(request):
-  if AUTH_ENABLED:
-    session = await getServerSession()
-    if session:
-      return { userId: session.user.id, authType: 'oauth' }
-    else:
-      redirect('/login')
-  else:
-    fingerprint = request.headers.get('X-Fingerprint')
-    if fingerprint:
-      user = await upsertFingerprintUser(fingerprint)
-      return { userId: user.id, authType: 'fingerprint' }
-    else:
-      return 401  // 需要指纹
+  session = await auth()
+  if session.user.id:
+    return findUserById(session.user.id)
+  if DEMO_MODE and request identity is one of the fixed demo seeds:
+    return findSeededDemoUser(request identity)
+  return 401
 ```
 
 ---
@@ -1747,8 +1715,15 @@ resume-store.updateSection(sectionId, newData)
 APP_NAME=CareerPilot
 
 # ===== 认证 =====
-AUTH_ENABLED=true           # 设为 'false' 使用浏览器指纹模式
-AUTH_SECRET=your-auth-secret-key        # NextAuth 密钥
+DEMO_MODE=false             # 仅本地显式演示时设为 true；生产环境禁止
+AUTH_SECRET=your-auth-secret-key        # Auth.js 密钥（至少 32 字符）
+
+# 邮箱验证码（正式环境必填）
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-user
+SMTP_PASS=your-smtp-password
+SMTP_FROM=noreply@example.com
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id

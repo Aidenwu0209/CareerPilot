@@ -2,21 +2,26 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Mail, ArrowLeft } from 'lucide-react';
+import { normalizeInternalCallbackUrl } from '@/lib/auth/login-redirect';
 
 type Step = 'email' | 'code' | 'verifying';
-type ErrorKind = null | 'INVALID_EMAIL' | 'RATE_LIMITED' | 'INVALID_CODE' | 'SERVER_ERROR' | 'EXPIRED' | 'USED';
+type ErrorKind = null | 'INVALID_EMAIL' | 'RATE_LIMITED' | 'INVALID_CODE' | 'SERVER_ERROR' | 'EXPIRED' | 'USED' | 'ACCOUNT_MIGRATION_REQUIRED';
 
 const RESEND_COOLDOWN = 60; // seconds
 
 export function EmailOtpLogin() {
   const t = useTranslations('auth.otp');
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = normalizeInternalCallbackUrl(
+    searchParams.get('callbackUrl'),
+    `/${locale}/dashboard`,
+  );
 
   const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
@@ -100,13 +105,17 @@ export function EmailOtpLogin() {
         const data = await res.json().catch(() => ({}));
         if (data.error === 'EXPIRED') setError('EXPIRED');
         else if (data.error === 'USED') setError('USED');
+        else if (data.error === 'ACCOUNT_MIGRATION_REQUIRED') setError('ACCOUNT_MIGRATION_REQUIRED');
         else setError('INVALID_CODE');
         setStep('code');
         return;
       }
 
-      // Success — redirect
-      router.push(callbackUrl);
+      const data = await res.json();
+      const destination = data.onboardingRequired
+        ? `/${locale}/onboarding?callbackUrl=${encodeURIComponent(callbackUrl)}`
+        : callbackUrl;
+      router.push(destination);
       router.refresh();
     } catch {
       setError('SERVER_ERROR');
@@ -195,9 +204,7 @@ export function EmailOtpLogin() {
           {t('codeLabel')}
         </label>
         <p className="text-xs text-zinc-400">
-          {t.rich('codeSentTo', {
-            email: () => <span className="font-medium text-zinc-600 dark:text-zinc-300">{maskedEmail(email)}</span>,
-          })}
+          {t('codeSentTo', { email: maskedEmail(email) })}
         </p>
         <Input
           id="code"
@@ -243,6 +250,9 @@ export function EmailOtpLogin() {
       )}
       {error === 'SERVER_ERROR' && (
         <p className="text-center text-xs text-red-500">{t('errors.serverError')}</p>
+      )}
+      {error === 'ACCOUNT_MIGRATION_REQUIRED' && (
+        <p className="text-center text-xs leading-5 text-red-500">{t('errors.accountMigrationRequired')}</p>
       )}
 
       {/* Resend */}

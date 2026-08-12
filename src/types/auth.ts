@@ -4,7 +4,7 @@ export interface AppUser {
   name?: string | null;
   avatarUrl?: string | null;
   fingerprint?: string | null;
-  authType: 'oauth' | 'fingerprint';
+  authType: 'oauth' | 'fingerprint' | 'email';
 }
 
 export interface AuthState {

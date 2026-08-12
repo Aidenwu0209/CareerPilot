@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "email": "browser-auth-1786530310110@example.test",
+  "ctas": [
+    {
+      "text": "立即开始",
+      "href": "http://127.0.0.1:3100/zh/login?callbackUrl=%2Fzh%2Fdashboard"
+    },
+    {
+      "text": "免费开始制作",
+      "href": "http://127.0.0.1:3100/zh/login?callbackUrl=%2Fzh%2Fdashboard"
+    },
+    {
+      "text": "立即创建简历",
+      "href": "http://127.0.0.1:3100/zh/login?callbackUrl=%2Fzh%2Fdashboard"
+    }
+  ],
+  "finalDesktopUrl": "http://127.0.0.1:3100/zh/dashboard",
+  "layoutChecks": [
+    {
+      "label": "product-login-desktop-light",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "dark": false,
+      "noHorizontalOverflow": true
+    },
+    {
+      "label": "new-user-onboarding-desktop-light",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "dark": false,
+      "noHorizontalOverflow": true
+    },
+    {
+      "label": "new-user-dashboard-desktop-light",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "dark": false,
+      "noHorizontalOverflow": true
+    },
+    {
+      "label": "product-login-mobile-dark",
+      "width": 390,
+      "scrollWidth": 390,
+      "dark": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "label": "existing-user-dashboard-mobile-dark",
+      "width": 390,
+      "scrollWidth": 390,
+      "dark": true,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "fingerprintRequests": []
+}

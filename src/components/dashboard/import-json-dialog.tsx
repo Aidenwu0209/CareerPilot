@@ -28,11 +28,7 @@ interface ImportJsonDialogProps {
 type ImportState = 'idle' | 'importing' | 'success' | 'error';
 
 function getHeaders() {
-  const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return {
-    'Content-Type': 'application/json',
-    ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-  };
+  return { 'Content-Type': 'application/json' };
 }
 
 export function ImportJsonDialog({ open, onOpenChange }: ImportJsonDialogProps) {

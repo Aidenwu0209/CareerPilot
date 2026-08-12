@@ -12,7 +12,7 @@
 import { createHash, randomBytes } from 'crypto';
 import { eq, and, isNull, gt, desc } from 'drizzle-orm';
 import { db } from '@/lib/db';
-import { emailOtps, users, authAccounts } from '@/lib/db/schema';
+import { emailOtps } from '@/lib/db/schema';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { createSampleResume } from '@/lib/db/sample-resume';
@@ -23,6 +23,11 @@ import {
   RATE_LIMIT_POLICIES,
   rateLimitKey,
 } from '@/lib/rate-limit/rate-limit';
+import {
+  assertRealAccountCanLink,
+  FingerprintAccountMigrationRequiredError,
+} from './onboarding';
+import { createAuthIdentity } from './account-creation';
 
 // ── Constants ──
 
@@ -69,10 +74,11 @@ export interface OtpRequestResult {
 
 export interface OtpVerifyResult {
   success: boolean;
-  error?: 'INVALID_CODE' | 'RATE_LIMITED';
+  error?: 'INVALID_CODE' | 'RATE_LIMITED' | 'ACCOUNT_MIGRATION_REQUIRED';
   userId?: string;
   email?: string;
   name?: string | null;
+  isNewUser?: boolean;
 }
 
 /**
@@ -197,13 +203,22 @@ export async function verifyOtp(
     .where(eq(emailOtps.id, record.id));
 
   // Resolve user identity
-  const result = await resolveEmailAccount(normalizedEmail);
+  let result: EmailAccountResult;
+  try {
+    result = await resolveEmailAccount(normalizedEmail);
+  } catch (error) {
+    if (error instanceof FingerprintAccountMigrationRequiredError) {
+      return { success: false, error: 'ACCOUNT_MIGRATION_REQUIRED' };
+    }
+    throw error;
+  }
 
   return {
     success: true,
     userId: result.userId,
     email: normalizedEmail,
     name: result.name,
+    isNewUser: result.isNewUser,
   };
 }
 
@@ -227,6 +242,7 @@ async function resolveEmailAccount(email: string): Promise<EmailAccountResult> {
   const existingUser = await userRepository.findByEmail(email);
 
   if (existingUser) {
+    assertRealAccountCanLink(existingUser);
     // Check if email auth account already exists
     const existingAccount = await authAccountRepository.findByProviderAndAccountId(
       EMAIL_PROVIDER,
@@ -248,19 +264,21 @@ async function resolveEmailAccount(email: string): Promise<EmailAccountResult> {
     };
   }
 
-  // Step 2: Create new user + auth account atomically
+  // Step 2: Create new user + auth account atomically on either DB adapter.
   const newUserId = crypto.randomUUID();
-  db.transaction((tx: typeof db) => {
-    tx.insert(users).values({
+  await createAuthIdentity({
+    user: {
       id: newUserId,
       email,
       authType: 'email',
-    }).run();
-    tx.insert(authAccounts).values({
+      settings: { onboardingRequired: true },
+    },
+    account: {
+      id: crypto.randomUUID(),
       userId: newUserId,
       provider: EMAIL_PROVIDER,
       providerAccountId: email,
-    }).run();
+    },
   });
 
   // Create sample resume (non-critical)
