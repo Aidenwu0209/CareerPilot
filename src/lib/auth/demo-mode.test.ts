@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   DEMO_FINGERPRINTS,
   demoIdentityDestination,
-  normalizeInternalCallbackUrl,
 } from './demo-mode';
+import { normalizeInternalCallbackUrl } from './login-redirect';
 
 describe('demo mode navigation', () => {
   it('uses the seeded fingerprints for student and teacher demos', () => {

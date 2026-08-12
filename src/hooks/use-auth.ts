@@ -3,13 +3,16 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRuntimeConfig } from '@/components/providers/runtime-config-provider';
 import { useFingerprint } from './use-fingerprint';
+import { clearDemoIdentity } from '@/lib/auth/demo-mode';
+import { useLocale } from 'next-intl';
 
 export function useAuth() {
   const session = useSession();
   const { fingerprint, isLoading: fpLoading } = useFingerprint();
-  const { authEnabled } = useRuntimeConfig();
+  const { demoMode } = useRuntimeConfig();
+  const locale = useLocale();
 
-  if (authEnabled) {
+  if (session.status === 'authenticated' || !demoMode) {
     return {
       user: session.data?.user
         ? {
@@ -17,7 +20,7 @@ export function useAuth() {
             name: session.data.user.name,
             email: session.data.user.email,
             avatarUrl: session.data.user.image,
-            authType: 'oauth' as const,
+            authType: session.data.user.authType,
             platformRole: (session.data.user.platformRole || 'user') as 'super_admin' | 'user',
             status: (session.data.user.status || 'active') as 'active' | 'suspended',
           }
@@ -33,7 +36,7 @@ export function useAuth() {
     user: fingerprint
       ? {
           id: `fp_${fingerprint}`,
-          name: 'Anonymous User',
+          name: fingerprint === 'teacher-demo-fingerprint' ? 'Demo Teacher' : 'Demo Student',
           email: null,
           avatarUrl: null,
           authType: 'fingerprint' as const,
@@ -42,6 +45,9 @@ export function useAuth() {
     isLoading: fpLoading,
     isAuthenticated: !!fingerprint,
     signIn: () => {},
-    signOut: () => {},
+    signOut: () => {
+      clearDemoIdentity();
+      window.location.assign(`/${locale}/demo`);
+    },
   };
 }

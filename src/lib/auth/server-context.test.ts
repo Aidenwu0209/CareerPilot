@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
-  config: { auth: { enabled: false } },
+  config: { runtime: { demoMode: false } },
   cookies: vi.fn(),
   resolveContext: vi.fn(),
 }));
@@ -14,29 +14,30 @@ import { resolveServerContext } from './server-context';
 
 describe('resolveServerContext', () => {
   beforeEach(() => {
-    mocks.config.auth.enabled = false;
+    mocks.config.runtime.demoMode = false;
     mocks.cookies.mockReset();
     mocks.resolveContext.mockReset();
   });
 
-  it('passes the development fingerprint cookie to context resolution', async () => {
-    mocks.cookies.mockResolvedValue({
-      get: vi.fn().mockReturnValue({ value: 'browser-fingerprint' }),
-    });
+  it('uses only the authenticated session path in product mode', async () => {
     mocks.resolveContext.mockResolvedValue({ actor: { userId: 'user-1' } });
-
     await resolveServerContext();
-
-    expect(mocks.resolveContext).toHaveBeenCalledWith('browser-fingerprint');
-  });
-
-  it('uses the authenticated session path when auth is enabled', async () => {
-    mocks.config.auth.enabled = true;
-    mocks.resolveContext.mockResolvedValue({ actor: { userId: 'user-1' } });
-
-    await resolveServerContext();
-
     expect(mocks.cookies).not.toHaveBeenCalled();
     expect(mocks.resolveContext).toHaveBeenCalledWith();
+  });
+
+  it('falls back to the explicit demo cookie only when no session exists', async () => {
+    mocks.config.runtime.demoMode = true;
+    mocks.resolveContext
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce({ actor: { userId: 'demo-user' } });
+    mocks.cookies.mockResolvedValue({
+      get: vi.fn().mockReturnValue({ value: 'demo-fingerprint' }),
+    });
+
+    await resolveServerContext();
+
+    expect(mocks.resolveContext).toHaveBeenNthCalledWith(1);
+    expect(mocks.resolveContext).toHaveBeenNthCalledWith(2, 'demo-fingerprint');
   });
 });

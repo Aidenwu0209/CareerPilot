@@ -75,7 +75,7 @@ export async function resolveActiveContext(
   // Reading it here prevents first-render API races without trusting any
   // fingerprint in production, where session auth remains mandatory.
   let effectiveFingerprint = fingerprint;
-  if (effectiveFingerprint === undefined && process.env.NODE_ENV === 'development' && !config.auth.enabled) {
+  if (effectiveFingerprint === undefined && config.runtime.demoMode) {
     const { cookies } = await import('next/headers');
     effectiveFingerprint = (await cookies()).get(FINGERPRINT_COOKIE_NAME)?.value ?? null;
   }

@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { db } from '@/lib/db';
-import { educationRoleAssignments, organizationMemberships, organizations } from '@/lib/db/schema';
+import {
+  educationRoleAssignments,
+  organizationMemberships,
+  organizations,
+} from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { resolveTeacherWorkspace } from '@/lib/career/teacher-service';
 
 /**
  * GET /api/user/nav-context
@@ -68,17 +73,21 @@ export async function GET() {
       ),
     );
 
-  const teacherRole = educationRoles.find(
-    (assignment: { orgId: string; role: string }) =>
+  const hasTeacherRole = educationRoles.some(
+    (assignment: { role: string }) =>
       assignment.role === 'teacher' || assignment.role === 'counselor',
   );
+  const teacherWorkspace = hasTeacherRole
+    ? await resolveTeacherWorkspace(userId)
+    : { status: 'denied' as const };
+  const isTeacher = teacherWorkspace.status === 'ready';
 
   return NextResponse.json({
     platformRole,
     isOrgAdmin,
-    isTeacher: Boolean(teacherRole),
+    isTeacher,
     orgId: memberships[0]?.orgId ?? null,
     orgName: memberships[0]?.orgName ?? null,
-    teacherOrgId: teacherRole?.orgId ?? null,
+    teacherOrgId: isTeacher ? teacherWorkspace.organizationId : null,
   });
 }

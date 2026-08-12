@@ -10,20 +10,8 @@ export const DEMO_FINGERPRINTS: Record<DemoIdentity, string> = {
   teacher: 'teacher-demo-fingerprint',
 };
 
-export function normalizeInternalCallbackUrl(
-  candidate: string | null,
-  fallback: string,
-): string {
-  if (!candidate?.startsWith('/') || candidate.startsWith('//')) return fallback;
-
-  try {
-    const base = new URL('https://careerpilot.local');
-    const parsed = new URL(candidate, base);
-    if (parsed.origin !== base.origin) return fallback;
-    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-  } catch {
-    return fallback;
-  }
+export function isDemoFingerprint(value: string | null | undefined): value is string {
+  return Object.values(DEMO_FINGERPRINTS).includes(value as string);
 }
 
 export function persistDemoIdentity(identity: DemoIdentity): void {
@@ -33,6 +21,11 @@ export function persistDemoIdentity(identity: DemoIdentity): void {
     fingerprint,
     window.location.protocol === 'https:',
   );
+}
+
+export function clearDemoIdentity(): void {
+  localStorage.removeItem(FINGERPRINT_STORAGE_KEY);
+  document.cookie = `${FINGERPRINT_STORAGE_KEY}=; Path=/; Max-Age=0; SameSite=Lax`;
 }
 
 export function demoIdentityDestination(locale: string, identity: DemoIdentity): string {

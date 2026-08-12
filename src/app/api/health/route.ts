@@ -11,25 +11,30 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const started = Date.now();
   const readiness = await checkReadiness({ dbReady, db, dbType: config.db.type });
-  const checklist = buildChecklist(readiness);
+  const envResult = validateEnv();
+  const ok = readiness.ok && envResult.ok;
+  const checks = { ...readiness.checks, configuration: envResult.ok };
+  const checklist = buildChecklist(readiness, envResult);
   const body: Record<string, unknown> = {
-    status: readiness.ok ? 'ok' : 'unavailable',
-    checks: readiness.checks,
+    status: ok ? 'ok' : 'unavailable',
+    checks,
     checklist,
     latencyMs: Date.now() - started,
     timestamp: new Date().toISOString(),
   };
   if (readiness.migration) body.migration = readiness.migration;
   return NextResponse.json(body, {
-    status: readiness.ok ? 200 : 503,
+    status: ok ? 200 : 503,
     headers: { 'Cache-Control': 'no-store' },
   });
 }
 
-function buildChecklist(readiness: Awaited<ReturnType<typeof checkReadiness>>): Record<string, unknown> {
-  const envResult = validateEnv();
+function buildChecklist(
+  readiness: Awaited<ReturnType<typeof checkReadiness>>,
+  envResult: ReturnType<typeof validateEnv>,
+): Record<string, unknown> {
   return {
-    authMode: config.auth.enabled ? 'oauth+email' : 'fingerprint',
+    authMode: config.runtime.demoMode ? 'demo' : 'product',
     dbType: config.db.type,
     migration: {
       expected: readiness.migration?.expected ?? null,
@@ -45,7 +50,7 @@ function buildChecklist(readiness: Awaited<ReturnType<typeof checkReadiness>>): 
       externalAlerts: process.env.ALERT_WEBHOOK_URL || process.env.ONCALL_EMAILS ? 'set' : 'missing',
     },
     publicRoutes: {
-      pages: ['/', '/login', '/privacy', '/terms'],
+      pages: ['/', '/login', '/privacy', '/terms', ...(config.runtime.demoMode ? ['/demo'] : [])],
       api: ['/api/auth', '/api/health', '/api/share', '/api/webhooks/stripe'],
     },
     backup: {

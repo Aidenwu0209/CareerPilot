@@ -139,7 +139,7 @@ The following resume sections support Markdown syntax:
 
 - **Bilingual UI** — Full Chinese (zh) and English (en) interface
 - **Dark Mode** — Light, dark, and system theme support
-- **Flexible Auth** — Google OAuth or browser fingerprint (zero-config)
+- **Product Auth** — Passwordless email verification with automatic first-use registration, plus optional Google OAuth
 - **Dual Database** — SQLite (default, zero-config) or PostgreSQL
 
 ## Tech Stack
@@ -151,7 +151,7 @@ The following resume sections support Markdown syntax:
 | Drag & Drop | @dnd-kit |
 | State | Zustand |
 | Database | Drizzle ORM (SQLite / PostgreSQL) |
-| Auth | NextAuth.js v5 + FingerprintJS |
+| Auth | NextAuth.js v5 + email OTP + Google OAuth |
 | AI | Vercel AI SDK v6 + managed GPT / Claude / GLM / DeepSeek / Gemini / ERNIE providers |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | i18n | next-intl |
@@ -169,6 +169,10 @@ openssl rand -base64 32
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
   -e AUTH_SECRET=<your-generated-secret> \
+  -e SMTP_HOST=smtp.example.com \
+  -e SMTP_USER=<smtp-user> \
+  -e SMTP_PASS=<smtp-password> \
+  -e SMTP_FROM=noreply@example.com \
   -v careerpilot-data:/app/data \
   careerpilot
 ```
@@ -199,7 +203,6 @@ docker run -d -p 3000:3000 \
 ```bash
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
-  -e AUTH_ENABLED=true \
   -e AUTH_SECRET=your-secret \
   -e GOOGLE_CLIENT_ID=xxx \
   -e GOOGLE_CLIENT_SECRET=xxx \
@@ -234,8 +237,9 @@ Edit `.env.local`:
 # Database (defaults to SQLite, no config needed)
 DB_TYPE=sqlite
 
-# Auth (defaults to fingerprint mode, no config needed)
-AUTH_ENABLED=false
+# Product mode is the default. Use the in-memory test mail adapter locally,
+# or configure SMTP_* to deliver real email verification codes.
+DEMO_MODE=false
 ```
 
 > **AI Configuration:** Configure providers and encrypted credentials in **Admin > AI Providers**, then publish approved models through the managed catalog.
@@ -266,9 +270,14 @@ Open [http://localhost:3000](http://localhost:3000).
 | `DB_TYPE` | No | `sqlite` | Database type: `sqlite` or `postgresql` |
 | `DATABASE_URL` | When PostgreSQL | — | PostgreSQL connection string |
 | `SQLITE_PATH` | No | `./data/careerpilot.db` | SQLite database file path |
-| `AUTH_ENABLED` | No | `false` | Enable Google OAuth (`true`) or use fingerprint mode (`false`) |
-| `GOOGLE_CLIENT_ID` | When OAuth | — | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | When OAuth | — | Google OAuth client secret |
+| `DEMO_MODE` | No | `false` | Enable isolated seeded identities at locale-aware `/demo` (never enable in production) |
+| `GOOGLE_CLIENT_ID` | Production | — | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Production | — | Google OAuth client secret |
+| `SMTP_HOST` | Production | — | SMTP server used to deliver email verification codes |
+| `SMTP_PORT` | No | `587` | SMTP server port |
+| `SMTP_USER` | Depending on SMTP | — | SMTP username |
+| `SMTP_PASS` | Depending on SMTP | — | SMTP password |
+| `SMTP_FROM` | Production | — | Sender address for verification emails |
 | `APP_NAME` | No | `CareerPilot` | Application display name |
 | `DEFAULT_LOCALE` | No | `zh` | Default language: `zh` or `en` |
 
@@ -433,9 +442,9 @@ Yes. Set the `DB_TYPE` environment variable to `sqlite` or `postgresql`. SQLite 
 </details>
 
 <details>
-<summary><b>How does authentication work without OAuth?</b></summary>
+<summary><b>How does authentication work without Google OAuth?</b></summary>
 
-When `AUTH_ENABLED=false` in local development, CareerPilot can use browser fingerprinting for a zero-config demo. Production startup rejects this mode and requires `AUTH_ENABLED=true` with email/OAuth authentication.
+Product mode always supports passwordless email verification. A new verified email creates an account and enters the required profile/consent onboarding flow; an existing email restores the same account. Google OAuth is optional. `DEMO_MODE=true` exposes only the fixed seeded student and teacher identities at `/demo`; product mode never creates fingerprint users. Legacy fingerprint accounts remain isolated and require a verified, explicit support binding rather than automatic email merging.
 
 </details>
 

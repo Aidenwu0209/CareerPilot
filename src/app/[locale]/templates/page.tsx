@@ -13,7 +13,6 @@ import {
 import { TEMPLATES } from '@/lib/constants';
 import { useResume } from '@/hooks/use-resume';
 import { Link, useRouter } from '@/i18n/routing';
-import { useFingerprint } from '@/hooks/use-fingerprint';
 import { ResumePreview } from '@/components/preview/resume-preview';
 import { TourOverlay, type TourStepConfig } from '@/components/tour/tour-overlay';
 import { useTourStore, hasCompletedTour } from '@/stores/tour-store';
@@ -226,7 +225,6 @@ export default function TemplatesPage() {
   const t = useTranslations();
   const router = useRouter();
   const { createResume } = useResume();
-  const { fingerprint } = useFingerprint();
   const [previewTemplate, setPreviewTemplate] = useState<string | null>(null);
   const [creatingTemplate, setCreatingTemplate] = useState<string | null>(null);
   const startTour = useTourStore((s) => s.startTour);

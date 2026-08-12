@@ -5,11 +5,6 @@ import { useCallback, useRef, useState } from 'react';
 import { dbMessagesToUIMessages, type DBMessage } from '@/lib/ai/utils';
 import { readJsonResponse } from '@/lib/http/json-client';
 
-function getHeaders(): Record<string, string> {
-  const fp = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return fp ? { 'x-fingerprint': fp, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
-}
-
 export function useMessagePagination() {
   const [historicalMessages, setHistoricalMessages] = useState<UIMessage[]>([]);
   const [hasMore, setHasMore] = useState(false);
@@ -31,7 +26,6 @@ export function useMessagePagination() {
 
     try {
       const res = await fetch(`/api/ai/chat/sessions/${sessionId}`, {
-        headers: getHeaders(),
         signal: controller.signal,
       });
       const data = await readJsonResponse<{
@@ -68,7 +62,6 @@ export function useMessagePagination() {
       const cursor = nextCursorRef.current;
       const res = await fetch(
         `/api/ai/chat/sessions/${sessionId}?cursor=${encodeURIComponent(cursor)}`,
-        { headers: getHeaders() },
       );
       const data = await readJsonResponse<{
         messages?: DBMessage[];

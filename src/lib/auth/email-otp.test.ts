@@ -348,6 +348,34 @@ describe('US-012: Email OTP Authentication Backend', () => {
       expect(emailAccount).toBeDefined();
     });
 
+    it('marks a new email account for onboarding and recognizes later logins as existing', async () => {
+      const code1 = await requestAndGetCode('onboarding@test.com');
+      const first = await verifyOtp('onboarding@test.com', code1);
+      expect(first).toMatchObject({ success: true, isNewUser: true });
+
+      const user = await userRepository.findByEmail('onboarding@test.com');
+      expect(user?.settings).toMatchObject({ onboardingRequired: true });
+
+      clearRateLimits();
+      const code2 = await requestAndGetCode('onboarding@test.com');
+      const second = await verifyOtp('onboarding@test.com', code2);
+      expect(second).toMatchObject({ success: true, isNewUser: false, userId: first.userId });
+    });
+
+    it('requires an explicit verified migration for a legacy fingerprint email collision', async () => {
+      await db.insert(users).values({
+        id: 'legacy-fingerprint-user',
+        email: 'legacy@test.com',
+        authType: 'fingerprint',
+        fingerprint: 'legacy-browser-fingerprint',
+      });
+      const code = await requestAndGetCode('legacy@test.com');
+      const result = await verifyOtp('legacy@test.com', code);
+
+      expect(result).toEqual({ success: false, error: 'ACCOUNT_MIGRATION_REQUIRED' });
+      expect(await authAccountRepository.findByUserId('legacy-fingerprint-user')).toHaveLength(0);
+    });
+
     it('normalizes email to lowercase before storing', async () => {
       // Request with mixed case email
       await requestOtp('MixedCase@Test.com', '203.0.113.50');

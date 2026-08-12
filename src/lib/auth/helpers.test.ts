@@ -1,142 +1,62 @@
-import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-/**
- * US-016 tests: resolveUser and getUserIdFromRequest hardening.
- *
- * Verifies that:
- * - In production, x-fingerprint header is never trusted for auth
- * - In production, resolveUser never creates users from fingerprint
- * - getUserIdFromRequest returns null in production regardless of headers
- */
-
-// Mock dependencies
-vi.mock('./config', () => ({
+const mocks = vi.hoisted(() => ({
   auth: vi.fn(),
+  config: { runtime: { demoMode: false } },
+  findById: vi.fn(),
+  findByFingerprint: vi.fn(),
 }));
 
-vi.mock('@/lib/config', () => ({
-  config: { auth: { enabled: false } },
-}));
-
-vi.mock('@/lib/db', () => ({
-  dbReady: Promise.resolve(),
-}));
-
-const mockUpsertByFingerprint = vi.fn();
+vi.mock('./config', () => ({ auth: mocks.auth }));
+vi.mock('@/lib/config', () => ({ config: mocks.config }));
+vi.mock('@/lib/db', () => ({ dbReady: Promise.resolve() }));
 vi.mock('@/lib/db/repositories/user.repository', () => ({
   userRepository: {
-    findById: vi.fn(),
-    findByEmail: vi.fn(),
-    upsertByFingerprint: mockUpsertByFingerprint,
+    findById: mocks.findById,
+    findByFingerprint: mocks.findByFingerprint,
   },
 }));
 
-describe('getUserIdFromRequest — production hardening', () => {
+import { getUserIdFromRequest, resolveUser } from './helpers';
+
+describe('product and demo identity resolution', () => {
   beforeEach(() => {
-    vi.resetModules();
-    mockUpsertByFingerprint.mockClear();
+    mocks.config.runtime.demoMode = false;
+    mocks.auth.mockReset().mockResolvedValue(null);
+    mocks.findById.mockReset();
+    mocks.findByFingerprint.mockReset();
   });
 
-  it('returns null in production regardless of x-fingerprint header', async () => {
-    Object.assign(process.env, { NODE_ENV: 'production' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
-    const request = new Request('http://localhost/api/resume', {
-      headers: { 'x-fingerprint': 'forged-fp-123' },
-    });
-
-    expect(getUserIdFromRequest(request)).toBeNull();
-  });
-
-  it('returns null in production regardless of fingerprint cookie', async () => {
-    Object.assign(process.env, { NODE_ENV: 'production' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
-    const request = new Request('http://localhost/api/resume', {
-      headers: { cookie: 'jade_fingerprint=forged-cookie-fp' },
-    });
-
-    expect(getUserIdFromRequest(request)).toBeNull();
-  });
-
-  it('returns fingerprint in development when header is present', async () => {
-    Object.assign(process.env, { NODE_ENV: 'development' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
-    const request = new Request('http://localhost/api/resume', {
-      headers: { 'x-fingerprint': 'dev-fp-456' },
-    });
-
-    expect(getUserIdFromRequest(request)).toBe('dev-fp-456');
-  });
-
-  it('falls back to the development fingerprint cookie when the header is absent', async () => {
-    Object.assign(process.env, { NODE_ENV: 'development' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
-    const request = new Request('http://localhost/api/resume', {
-      headers: { cookie: 'theme=dark; jade_fingerprint=cookie-fp-789' },
-    });
-    expect(getUserIdFromRequest(request)).toBe('cookie-fp-789');
-  });
-
-  it('prefers the explicit development header over the cookie', async () => {
-    Object.assign(process.env, { NODE_ENV: 'development' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
+  it('ignores fingerprint headers and cookies in product mode', () => {
     const request = new Request('http://localhost/api/resume', {
       headers: {
-        'x-fingerprint': 'header-fp',
-        cookie: 'jade_fingerprint=cookie-fp',
+        'x-fingerprint': 'demo-fingerprint',
+        cookie: 'jade_fingerprint=demo-fingerprint',
       },
     });
-    expect(getUserIdFromRequest(request)).toBe('header-fp');
-  });
-
-  it('returns null in development when neither header nor cookie is present', async () => {
-    Object.assign(process.env, { NODE_ENV: 'development' });
-    const { getUserIdFromRequest } = await import('./helpers');
-
-    const request = new Request('http://localhost/api/resume');
     expect(getUserIdFromRequest(request)).toBeNull();
   });
-});
 
-describe('resolveUser — production rejects fingerprint', () => {
-  beforeEach(() => {
-    vi.resetModules();
-    mockUpsertByFingerprint.mockClear();
+  it('resolves a product account only by the stable session user id', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'session-user', email: 'email@test.com' } });
+    mocks.findById.mockResolvedValue({ id: 'session-user' });
+    await expect(resolveUser()).resolves.toEqual({ id: 'session-user' });
+    expect(mocks.findById).toHaveBeenCalledWith('session-user');
+    expect(mocks.findByFingerprint).not.toHaveBeenCalled();
   });
 
-  it('returns null in production even with fingerprint (no user creation)', async () => {
-    Object.assign(process.env, { NODE_ENV: 'production' });
-    const { resolveUser } = await import('./helpers');
+  it('accepts only fixed seeded identities in explicit demo mode', async () => {
+    mocks.config.runtime.demoMode = true;
+    mocks.findByFingerprint.mockResolvedValue({ id: 'demo-student' });
 
-    const user = await resolveUser('forged-fingerprint');
-    expect(user).toBeNull();
-    expect(mockUpsertByFingerprint).not.toHaveBeenCalled();
+    expect(getUserIdFromRequest(new Request('http://localhost', {
+      headers: { 'x-fingerprint': 'demo-fingerprint' },
+    }))).toBe('demo-fingerprint');
+    expect(getUserIdFromRequest(new Request('http://localhost', {
+      headers: { 'x-fingerprint': 'random-browser-id' },
+    }))).toBeNull();
+    await expect(resolveUser('demo-fingerprint')).resolves.toEqual({ id: 'demo-student' });
+    await expect(resolveUser('random-browser-id')).resolves.toBeNull();
+    expect(mocks.findByFingerprint).toHaveBeenCalledTimes(1);
   });
-
-  it('returns null in production without fingerprint', async () => {
-    Object.assign(process.env, { NODE_ENV: 'production' });
-    const { resolveUser } = await import('./helpers');
-
-    const user = await resolveUser(null);
-    expect(user).toBeNull();
-    expect(mockUpsertByFingerprint).not.toHaveBeenCalled();
-  });
-
-  it('returns null in production even when fingerprint is empty string', async () => {
-    Object.assign(process.env, { NODE_ENV: 'production' });
-    const { resolveUser } = await import('./helpers');
-
-    const user = await resolveUser('');
-    expect(user).toBeNull();
-    expect(mockUpsertByFingerprint).not.toHaveBeenCalled();
-  });
-});
-
-// Cleanup
-afterAll(() => {
-  Object.assign(process.env, { NODE_ENV: 'test' });
 });

@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const { resumes, isLoading, fetchResumes, createResume, deleteResume, renameResume, duplicateResume } = useResume();
   const { openModal, activeModal, closeModal } = useUIStore();
   const { fingerprint, isLoading: fpLoading } = useFingerprint();
-  const { authEnabled } = useRuntimeConfig();
+  const { demoMode } = useRuntimeConfig();
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,10 +106,10 @@ export default function DashboardPage() {
     if (fpLoading) return;
     // OAuth mode: fingerprint is null, but we still need to fetch
     // Fingerprint mode: wait until fingerprint is resolved
-    if (authEnabled || fingerprint) {
+    if (!demoMode || fingerprint) {
       fetchResumes();
     }
-  }, [fpLoading, fingerprint, fetchResumes]);
+  }, [demoMode, fpLoading, fingerprint, fetchResumes]);
 
   // Filter and sort resumes
   const filteredResumes = useMemo(() => {

@@ -42,14 +42,25 @@ export function validateEnv(): EnvValidationResult {
   const issues: EnvValidationIssue[] = [];
   const prod = isProduction();
 
-  // --- AUTH_ENABLED ---
-  const authEnabled = process.env.AUTH_ENABLED === 'true';
-
-  if (prod && !authEnabled) {
+  // Demo identities must never be enabled in production.
+  if (prod && process.env.DEMO_MODE === 'true') {
     issues.push({
-      field: 'AUTH_ENABLED',
-      message:
-        'AUTH_ENABLED must be "true" in production. Fingerprint authentication is not allowed.',
+      field: 'DEMO_MODE',
+      message: 'DEMO_MODE must not be enabled in production.',
+    });
+  }
+
+  if (prod && !process.env.SMTP_HOST) {
+    issues.push({
+      field: 'SMTP_HOST',
+      message: 'SMTP_HOST is required for product email verification.',
+    });
+  }
+
+  if (prod && (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)) {
+    issues.push({
+      field: 'GOOGLE_CLIENT_ID',
+      message: 'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required for product Google login.',
     });
   }
 

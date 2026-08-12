@@ -34,7 +34,7 @@ vi.mock('@/lib/db/sample-resume', () => ({
 }));
 
 // --- Import AFTER mocks ---
-import { resolveOAuthAccount } from './oauth-linking';
+import { isVerifiedGoogleProfile, resolveOAuthAccount } from './oauth-linking';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { db } from '@/lib/db';
@@ -47,6 +47,21 @@ beforeEach(async () => {
 });
 
 describe('US-011: Persistent OAuth Account Linking', () => {
+  describe('Google profile verification', () => {
+    it('accepts only a verified Google email before account linking', () => {
+      expect(isVerifiedGoogleProfile({
+        email: 'verified@test.com',
+        email_verified: true,
+      })).toBe(true);
+      expect(isVerifiedGoogleProfile({
+        email: 'unverified@test.com',
+        email_verified: false,
+      })).toBe(false);
+      expect(isVerifiedGoogleProfile({ email_verified: true })).toBe(false);
+      expect(isVerifiedGoogleProfile(null)).toBe(false);
+    });
+  });
+
   describe('First login creates one user and one auth account', () => {
     it('creates exactly one user for a brand-new Google identity', async () => {
       const result = await resolveOAuthAccount({
@@ -172,6 +187,25 @@ describe('US-011: Persistent OAuth Account Linking', () => {
       const found = await userRepository.findByEmail('nodup@test.com');
       expect(found).toBeTruthy();
       expect(found!.id).toBe(existing!.id);
+    });
+
+    it('does not silently bind a Google login to a legacy fingerprint account', async () => {
+      await userRepository.create({
+        id: 'legacy-fingerprint-oauth',
+        email: 'legacy-oauth@test.com',
+        authType: 'fingerprint',
+        fingerprint: 'legacy-fingerprint-oauth',
+      });
+
+      await expect(resolveOAuthAccount({
+        provider: 'google',
+        providerAccountId: 'google-legacy-conflict',
+        email: 'legacy-oauth@test.com',
+      })).rejects.toMatchObject({ code: 'FINGERPRINT_ACCOUNT_MIGRATION_REQUIRED' });
+
+      expect(
+        await authAccountRepository.findByProviderAndAccountId('google', 'google-legacy-conflict'),
+      ).toBeNull();
     });
 
     it('does not create duplicate grants for email-linked existing user', async () => {

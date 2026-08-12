@@ -5,21 +5,13 @@ import { useResumeStore } from '@/stores/resume-store';
 import { useEditorStore } from '@/stores/editor-store';
 import type { ResumeSection } from '@/types/resume';
 
-function getHeaders() {
-  const fingerprint = typeof window !== 'undefined' ? localStorage.getItem('jade_fingerprint') : null;
-  return {
-    'Content-Type': 'application/json',
-    ...(fingerprint ? { 'x-fingerprint': fingerprint } : {}),
-  };
-}
-
 export function useEditor(resumeId: string) {
   const { setResume, sections, currentResume, updateSection, addSection, removeSection, reorderSections, reset: resetResume } = useResumeStore();
   const { pushSnapshot, reset: resetEditor } = useEditorStore();
 
   const loadResume = useCallback(async () => {
     try {
-      const res = await fetch(`/api/resume/${resumeId}`, { headers: getHeaders() });
+      const res = await fetch(`/api/resume/${resumeId}`);
       if (res.ok) {
         const data = await res.json();
         setResume({

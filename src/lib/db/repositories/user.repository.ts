@@ -1,8 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../index';
-import { users, resumes } from '../schema';
-import { resumeRepository } from './resume.repository';
-import { createSampleResume } from '../sample-resume';
+import { users } from '../schema';
 
 export const userRepository = {
   async findById(id: string) {
@@ -18,32 +16,6 @@ export const userRepository = {
   async findByFingerprint(fingerprint: string) {
     const result = await db.select().from(users).where(eq(users.fingerprint, fingerprint)).limit(1);
     return result[0] || null;
-  },
-
-  async upsertByFingerprint(fingerprint: string) {
-    const existing = await this.findByFingerprint(fingerprint);
-    if (existing) return existing;
-
-    const id = crypto.randomUUID();
-    await db.insert(users).values({
-      id,
-      fingerprint,
-      authType: 'fingerprint',
-      name: 'Anonymous User',
-    });
-
-    // Clone demo user's resumes, or create a sample if seed hasn't run
-    const demoUser = await this.findByFingerprint('demo-fingerprint');
-    if (demoUser) {
-      const demoResumes = await db.select().from(resumes).where(eq(resumes.userId, demoUser.id));
-      for (const r of demoResumes) {
-        await resumeRepository.duplicate(r.id, id, r.title);
-      }
-    } else {
-      await createSampleResume(id);
-    }
-
-    return this.findById(id);
   },
 
   async create(data: { id?: string; email?: string; name?: string; avatarUrl?: string; authType: 'oauth' | 'fingerprint' | 'email'; fingerprint?: string }) {

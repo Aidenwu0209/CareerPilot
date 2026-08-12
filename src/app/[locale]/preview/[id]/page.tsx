@@ -25,10 +25,7 @@ export default function PreviewPage({ params }: { params: Promise<{ id: string }
 
   useEffect(() => {
     let cancelled = false;
-    const fingerprint = localStorage.getItem('jade_fingerprint');
-    fetch(`/api/resume/${id}`, {
-      headers: fingerprint ? { 'x-fingerprint': fingerprint } : {},
-    })
+    fetch(`/api/resume/${id}`)
       .then((res) => readJsonResponse<Resume>(res))
       // Heal AI-corrupted content so a bad shape can't crash the preview (issue #87).
       .then((data) => {

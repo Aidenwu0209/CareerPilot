@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/layout/theme-provider';
 import { RuntimeConfigProvider } from '@/components/providers/runtime-config-provider';
 import { BrandProvider } from '@/components/layout/brand-provider';
 import { SettingsHydrator } from '@/components/providers/settings-hydrator';
+import { config } from '@/lib/config';
 
 export default async function LocaleLayout({
   children,
@@ -17,8 +18,6 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const authEnabled = process.env.AUTH_ENABLED === 'true';
-
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
@@ -27,7 +26,10 @@ export default async function LocaleLayout({
 
   return (
     <SessionProvider>
-      <RuntimeConfigProvider authEnabled={authEnabled}>
+      <RuntimeConfigProvider
+        mode={config.runtime.mode}
+        googleEnabled={config.auth.googleEnabled}
+      >
       <NextIntlClientProvider locale={locale} messages={messages}>
         <ThemeProvider
           attribute="class"

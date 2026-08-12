@@ -33,7 +33,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
 
   async initialize(): Promise<void> {
     // Skip auto-seeding in production — no demo/fingerprint users or sample resumes.
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.DEMO_MODE !== 'true') {
       return;
     }
 

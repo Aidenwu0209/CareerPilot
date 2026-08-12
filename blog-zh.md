@@ -136,7 +136,7 @@ AI 理解你的简历上下文，给出针对性的建议，并能**直接修改
 | 拖拽 | @dnd-kit |
 | 状态管理 | Zustand（5 个 Store：简历、编辑器、设置、UI、引导） |
 | 数据库 | **Drizzle ORM**（同时支持 SQLite 和 PostgreSQL） |
-| 认证 | NextAuth.js v5 + FingerprintJS（零配置指纹识别降级方案） |
+| 认证 | NextAuth.js v5 + 邮箱验证码 + Google OAuth |
 | AI | **Vercel AI SDK v6** + OpenAI / Anthropic / 自定义端点 |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | 国际化 | next-intl（中文 / 英文完整双语） |
@@ -146,7 +146,7 @@ AI 理解你的简历上下文，给出针对性的建议，并能**直接修改
 
 - **双数据库支持**：默认 SQLite 零配置开箱即用，也可以切换到 PostgreSQL。通过 Drizzle ORM 的适配器模式实现，一套 Schema 两种数据库。
 - **AI 密钥完全客户端**：服务端不存储任何 AI API Key，用户在浏览器内配置，存在 localStorage 里。你的 Key 你做主。
-- **指纹认证降级**：不想配 OAuth？默认使用浏览器指纹作为用户标识，打开就能用，零门槛。
+- **正式账户与演示隔离**：邮箱验证码支持首次使用自动注册，Google OAuth 可选；固定演示身份只在显式开启 `DEMO_MODE=true` 后通过 `/demo` 使用。
 - **50 套模板 + 独立导出**：每套模板都有对应的服务端 PDF 导出处理器，确保导出效果和预览一致。
 - **完整双语**：不是简单的翻译，UI 界面、AI 提示词、错误信息全部做了中英双语适配。
 - **暗色模式**：浅色、深色、跟随系统三种主题切换，编辑器和预览都完美适配。
@@ -196,13 +196,17 @@ src/
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
   -e AUTH_SECRET=$(openssl rand -base64 32) \
+  -e SMTP_HOST=smtp.example.com \
+  -e SMTP_USER=your-smtp-user \
+  -e SMTP_PASS=your-smtp-password \
+  -e SMTP_FROM=noreply@example.com \
   -v careerpilot-data:/app/data \
   careerpilot
 ```
 
 打开 `http://localhost:3000`，首次启动自动完成数据库迁移和初始化。
 
-只需要一个 `AUTH_SECRET` 环境变量（用于会话加密），其他全部零配置。AI 功能在应用内的 **设置 > AI** 里自己配置 API Key 和模型。
+正式部署需要 `AUTH_SECRET` 和 SMTP 投递配置。AI 供应商凭证由平台管理员在管理后台统一配置并加密保存。
 
 需要 PostgreSQL 或 Google OAuth？只需加几个环境变量：
 
@@ -211,7 +215,10 @@ docker run -d -p 3000:3000 \
 -e DB_TYPE=postgresql -e DATABASE_URL=postgresql://user:pass@host:5432/careerpilot
 
 # Google OAuth
--e AUTH_ENABLED=true -e GOOGLE_CLIENT_ID=xxx -e GOOGLE_CLIENT_SECRET=xxx
+-e GOOGLE_CLIENT_ID=xxx -e GOOGLE_CLIENT_SECRET=xxx
+
+# 独立本地演示（生产环境禁止）
+-e DEMO_MODE=true
 ```
 
 ### 本地开发
@@ -262,7 +269,7 @@ pnpm dev
 - 新手交互式引导
 - 中英双语界面
 - 暗色模式（浅色/深色/跟随系统）
-- Google OAuth 或浏览器指纹认证
+- 邮箱验证码自动注册/登录，可选 Google OAuth，独立演示模式
 - SQLite（默认）或 PostgreSQL
 
 ---
