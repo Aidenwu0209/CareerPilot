@@ -272,6 +272,26 @@ export const RATE_LIMIT_POLICIES = {
     windowMs: 60 * 60 * 1000, // 1 hour
     failClosed: false,
   },
+  passwordLoginIP: {
+    limit: 20,
+    windowMs: 15 * 60 * 1000,
+    failClosed: true,
+  },
+  passwordLoginEmail: {
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+    failClosed: true,
+  },
+  passwordRegisterIP: {
+    limit: 10,
+    windowMs: 60 * 60 * 1000,
+    failClosed: true,
+  },
+  passwordRegisterEmail: {
+    limit: 3,
+    windowMs: 60 * 60 * 1000,
+    failClosed: true,
+  },
   aiChat: {
     limit: 30,
     windowMs: 60 * 1000, // 1 minute

@@ -21,9 +21,11 @@
     "login": "登录",
     "logout": "退出登录",
     "loginWithGoogle": "使用 Google 登录",
-    "welcomeBack": "登录或创建账户",
-    "loginDescription": "使用邮箱验证码或 Google 继续",
-    "registrationNotice": "首次使用新邮箱验证后会自动创建账户；已有邮箱将直接登录，不需要密码。",
+    "welcomeBack": "欢迎来到 CareerPilot",
+    "loginDescription": "登录你的职业发展账户，或注册一个新账户",
+    "registrationNotice": "注册和登录是两个独立步骤，账户由你设置的邮箱与密码保护。",
+    "otherMethods": "其他登录方式",
+    "useEmailCode": "使用邮箱验证码登录",
     "demo": {
       "title": "当前为演示模式",
       "description": "这些是隔离的演示身份，不会与正式账户或正式数据合并。",
@@ -33,6 +35,35 @@
       "teacher": "教师工作台"
     },
     "agreeTerms": "登录即表示你同意我们的服务条款和隐私政策",
+    "password": {
+      "methodLabel": "账户操作",
+      "tabs": {
+        "login": "登录",
+        "register": "注册"
+      },
+      "nameLabel": "姓名",
+      "namePlaceholder": "请输入你的姓名",
+      "emailLabel": "邮箱地址",
+      "passwordLabel": "密码",
+      "confirmPasswordLabel": "确认密码",
+      "passwordHint": "至少 10 位，并同时包含英文字母和数字。",
+      "showPassword": "显示密码",
+      "hidePassword": "隐藏密码",
+      "submit": {
+        "login": "登录账户",
+        "register": "创建账户"
+      },
+      "useLogin": "返回登录",
+      "errors": {
+        "INVALID_INPUT": "请检查姓名、邮箱和密码格式。",
+        "INVALID_CREDENTIALS": "邮箱或密码不正确。",
+        "ACCOUNT_SUSPENDED": "该账户已暂停使用，请联系平台管理员。",
+        "EMAIL_EXISTS": "该邮箱已经注册。",
+        "RATE_LIMITED": "尝试次数过多，请稍后再试。",
+        "PASSWORD_MISMATCH": "两次输入的密码不一致。",
+        "SERVER_ERROR": "暂时无法完成操作，请稍后重试。"
+      }
+    },
     "otp": {
       "emailLabel": "邮箱地址",
       "sendCode": "获取验证码",
@@ -53,7 +84,7 @@
       }
     },
     "or": "或",
-    "agreeTermsLinks": "继续前可查看<terms>服务条款</terms>和<privacy>隐私政策</privacy>"
+    "agreeTermsLinks": "注册或登录前，请阅读<terms>服务条款</terms>和<privacy>隐私政策</privacy>"
   },
   "onboarding": {
     "title": "完善基础资料",
@@ -698,63 +729,58 @@
   "landing": {
     "header": {
       "features": "功能特色",
-      "templates": "模板库",
+      "templates": "精选模板",
       "interview": "模拟面试",
-      "getStarted": "立即开始",
+      "journey": "使用流程",
+      "resumeTools": "简历工具",
+      "getStarted": "登录 / 注册",
       "dashboard": "工作台"
     },
     "hero": {
-      "title": "用 AI 打造你的完美简历",
-      "subtitle": "几分钟内创建专业、ATS 友好的简历。AI 驱动，助你脱颖而出，拿下理想 Offer。",
-      "cta": "免费开始制作",
-      "secondaryCta": "浏览模板"
+      "eyebrow": "学生职业发展与就业指导平台",
+      "title": "看清方向，证明能力，走好职业发展的每一步",
+      "subtitle": "把专业、简历、项目、面试和教师指导汇入同一份职业档案，用中国职业标准理解岗位，用真实证据解释匹配结果。",
+      "cta": "开始职业规划",
+      "secondaryCta": "浏览精美模板",
+      "preview": {
+        "title": "你的职业发展总览",
+        "description": "目标、证据、差距和下一步行动集中呈现",
+        "profile": { "title": "六维职业画像", "description": "能力有证据支撑，未知数据不会按零分处理" },
+        "jobs": { "title": "中国岗位知识", "description": "92 个可评分岗位与可追溯的职业要求" },
+        "matching": { "title": "可解释人岗匹配", "description": "逐项查看岗位要求、学生证据、差距和行动" },
+        "path": { "title": "阶段成长路径", "description": "把能力差距转成可执行、可复核的成长任务" }
+      }
     },
     "features": {
-      "title": "求职路上，一站搞定",
-      "subtitle": "强大的工具集，让简历制作高效又专业",
-      "aiChat": {
-        "title": "AI 智能写作",
-        "description": "与 AI 对话优化简历内容，润色工作经历描述，精准适配目标岗位要求。"
-      },
-      "templates": {
-        "title": "精美专业模板",
-        "description": "精选多款现代化 ATS 友好模板，由招聘专家参与设计，助你通过筛选。"
-      },
-      "dragDrop": {
-        "title": "拖拽式编辑器",
-        "description": "轻松拖拽调整模块顺序、自定义布局，按你的方式构建简历。"
-      },
-      "export": {
-        "title": "导入与导出",
-        "description": "支持导出为 PDF、智能一页 PDF、Word、HTML、TXT、JSON，还可导入 JSON 文件一键还原或创建简历。"
-      },
-      "sharing": {
-        "title": "一键分享",
-        "description": "生成在线分享链接，支持密码保护和访问统计，安全便捷。"
-      },
-      "i18n": {
-        "title": "多语言支持",
-        "description": "支持多语种简历创建，AI 一键翻译，轻松投递海内外岗位。"
-      },
-      "jdMatch": {
-        "title": "JD 匹配",
-        "description": "粘贴职位描述，即刻获取匹配评分和优化建议，精准提升简历竞争力。"
-      },
-      "mockInterview": {
-        "title": "模拟面试",
-        "description": "基于 JD 的 AI 模拟面试，6 种预设面试官角色，智能追问，面试结束后生成详细报告和改进建议。"
-      },
-      "translate": {
-        "title": "AI 翻译",
-        "description": "一键翻译整份简历，AI 保持专业措辞和排版格式不变。"
-      },
-      "coverLetter": {
-        "title": "求职信生成",
-        "description": "根据简历与目标岗位 JD 自动生成求职信，支持正式、亲切、自信多种风格。"
-      },
-      "grammarCheck": {
-        "title": "语法检查",
-        "description": "检测语法错误、弱动词和模糊描述，给出写作质量评分和修改建议。"
+      "eyebrow": "从探索到行动",
+      "title": "不是一次测评，而是一份持续成长的职业档案",
+      "subtitle": "学生、岗位与教师指导围绕同一份证据链协作，每个判断都能回到材料来源和具体行动。",
+      "aiChat": { "title": "AI 智能写作", "description": "与 AI 对话优化简历内容，润色项目和经历描述，让材料更准确地呈现你的能力。" },
+      "templates": { "title": "精美专业模板", "description": "精选现代化 ATS 友好模板，在保留原有视觉表现的同时支持职业发展材料沉淀。" },
+      "dragDrop": { "title": "拖拽式编辑器", "description": "轻松调整模块顺序和页面布局，按你的真实经历构建清晰、专业的简历。" },
+      "export": { "title": "导入与导出", "description": "支持 PDF、Word、HTML、TXT 与 JSON 等格式，便于求职投递和材料持续维护。" },
+      "sharing": { "title": "一键分享", "description": "生成在线简历链接，支持密码保护与访问统计，安全地向教师或招聘方展示。" },
+      "jdMatch": { "title": "岗位匹配分析", "description": "结合中国标准岗位要求与个人证据，查看匹配结果、证据覆盖、差距与行动建议。" },
+      "mockInterview": { "title": "模拟面试", "description": "围绕目标岗位开展模拟面试，保留报告并将可核验结果纳入职业发展材料。" },
+      "translate": { "title": "AI 翻译", "description": "一键翻译简历内容，尽量保持专业表达、信息结构和排版一致。" },
+      "coverLetter": { "title": "求职信生成", "description": "根据简历与目标岗位生成求职信，并支持正式、亲切、自信等表达风格。" },
+      "grammarCheck": { "title": "语法与表达检查", "description": "识别语法问题、弱动词和模糊描述，提供可执行的内容修改建议。" },
+      "profile": { "title": "职业画像", "description": "把简历、项目、课程、证书和面试材料结构化为六维能力画像，并保留来源与确认状态。" },
+      "goals": { "title": "职业目标", "description": "设置主目标与备选方向，记录目标时间、选择理由和偏好，调整不会覆盖历史。" },
+      "jobs": { "title": "岗位知识与职业图谱", "description": "按学院、专业、岗位族、行业和学历筛选中国标准岗位，查看要求、别名与职业关系。" },
+      "matching": { "title": "人岗匹配", "description": "评分、证据覆盖和结果置信度分开呈现，证据不足时明确暂不评分。" },
+      "path": { "title": "成长路径", "description": "将岗位差距转换为阶段、里程碑和任务，完成成果经确认后才更新画像。" },
+      "guidance": { "title": "教师指导", "description": "教师在明确授权范围内审核证据、分派任务并留下学生可见或教师私有的指导记录。" }
+    },
+    "journey": {
+      "eyebrow": "使用流程",
+      "title": "每一步都有依据，也有下一步",
+      "subtitle": "先形成材料证据，再选择真实目标，最后用成长任务持续缩小差距。",
+      "standard": "岗位目录采用中国《中华人民共和国职业分类大典（2022年版）》标准编码，并保留来源与目录版本。",
+      "steps": {
+        "evidence": { "title": "汇集材料证据", "description": "同步简历、项目、课程、证书和面试结果，待核验材料不直接变成能力分。" },
+        "target": { "title": "选择目标岗位", "description": "从专业相关岗位中理解职责和要求，对比 2–3 个方向后设置主目标。" },
+        "growth": { "title": "执行成长路径", "description": "按差距完成任务、提交成果、接受教师确认，再重新计算匹配结果。" }
       }
     },
     "templates": {
@@ -763,34 +789,37 @@
       "viewAll": "查看全部模板"
     },
     "stats": {
-      "title": "全球求职者的信赖之选",
-      "templates": {
-        "value": "50+",
-        "label": "精选模板"
+      "title": "当前中国职业知识目录",
+      "occupations": {
+        "value": "92",
+        "label": "可评分岗位"
       },
-      "exportFormats": {
-        "value": "5",
-        "label": "导出格式"
+      "majors": {
+        "value": "64",
+        "label": "专业记录"
       },
-      "languages": {
-        "value": "10+",
-        "label": "支持语言"
+      "requirements": {
+        "value": "765",
+        "label": "岗位能力要求"
       },
-      "free": {
-        "value": "100%",
-        "label": "完全免费"
+      "dimensions": {
+        "value": "6",
+        "label": "职业画像维度"
       }
     },
     "cta": {
-      "title": "准备好打造你的最佳简历了吗？",
-      "subtitle": "已有数千名求职者通过 CareerPilot 收获面试机会。无需注册，即刻开始。",
-      "button": "立即创建简历"
+      "title": "从真实目标开始你的职业规划",
+      "subtitle": "创建账户，完善基础资料，再用岗位要求和个人证据形成第一条成长路径。",
+      "button": "注册并开始规划"
     },
     "footer": {
+      "tagline": "连接职业画像、岗位知识、人岗匹配、成长路径与教师指导。",
       "product": {
         "title": "产品",
         "features": "功能特色",
-        "templates": "模板库",
+        "templates": "简历工具",
+        "journey": "使用流程",
+        "resumeTools": "简历工具",
         "pricing": "价格方案",
         "changelog": "更新日志"
       },
@@ -799,7 +828,8 @@
         "blog": "博客",
         "resumeTips": "简历技巧",
         "careerGuide": "求职指南",
-        "examples": "简历示例"
+        "examples": "简历示例",
+        "occupationKnowledge": "岗位知识"
       },
       "legal": {
         "title": "法律信息",
@@ -1761,7 +1791,7 @@
       "suspended": "已冻结"
     },
     "authType": {
-      "email": "邮箱验证码",
+      "email": "邮箱账户",
       "oauth": "第三方登录",
       "fingerprint": "指纹"
     },

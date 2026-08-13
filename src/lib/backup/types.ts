@@ -268,6 +268,7 @@ export const BACKUP_TABLES_IN_FK_ORDER: string[] = [
   'email_otps',
   // Level 1: depend on users
   'auth_accounts',
+  'password_credentials',
   'resumes',
   'organizations',
   'legal_consents',

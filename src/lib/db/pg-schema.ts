@@ -55,6 +55,22 @@ export const authAccounts = pgTable(
   }),
 );
 
+/** Versioned local password credentials. Plaintext passwords are never stored. */
+export const passwordCredentials = pgTable(
+  'password_credentials',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId: text('user_id').notNull().unique().references(() => users.id, { onDelete: 'cascade' }),
+    passwordHash: text('password_hash').notNull(),
+    passwordVersion: integer('password_version').notNull().default(1),
+    createdAt: integer('created_at').notNull().default(epochNow),
+    updatedAt: integer('updated_at').notNull().default(epochNow),
+  },
+  (table) => ({
+    userIdx: index('password_credentials_user_id_idx').on(table.userId),
+  }),
+);
+
 export const resumes = pgTable(
   'resumes',
   {

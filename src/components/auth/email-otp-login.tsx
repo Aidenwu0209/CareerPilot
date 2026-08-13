@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,6 @@ const RESEND_COOLDOWN = 60; // seconds
 export function EmailOtpLogin() {
   const t = useTranslations('auth.otp');
   const locale = useLocale();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = normalizeInternalCallbackUrl(
     searchParams.get('callbackUrl'),
@@ -115,8 +114,7 @@ export function EmailOtpLogin() {
       const destination = data.onboardingRequired
         ? `/${locale}/onboarding?callbackUrl=${encodeURIComponent(callbackUrl)}`
         : callbackUrl;
-      router.push(destination);
-      router.refresh();
+      window.location.replace(destination);
     } catch {
       setError('SERVER_ERROR');
       setStep('code');

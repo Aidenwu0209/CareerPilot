@@ -13,17 +13,7 @@ const ORIGINAL_ENV = { ...process.env };
 function setEnv(overrides: Record<string, string | undefined>) {
   // Reset to a clean baseline
   process.env = { ...ORIGINAL_ENV };
-  const values = overrides.NODE_ENV === 'production' && !Object.hasOwn(overrides, 'SMTP_HOST')
-    ? { ...overrides, SMTP_HOST: 'smtp.example.com' }
-    : overrides;
-  const completeValues = overrides.NODE_ENV === 'production'
-    ? {
-        GOOGLE_CLIENT_ID: 'google-client-id',
-        GOOGLE_CLIENT_SECRET: 'google-client-secret',
-        ...values,
-      }
-    : values;
-  for (const [key, value] of Object.entries(completeValues)) {
+  for (const [key, value] of Object.entries(overrides)) {
     if (value === undefined) {
       delete process.env[key];
     } else {
@@ -300,7 +290,7 @@ describe('validateEnv', () => {
     expect(fields).toContain('AI_CREDENTIAL_MASTER_KEY');
   });
 
-  it('requires SMTP delivery for product email verification in production', () => {
+  it('allows password-only product authentication in production', () => {
     setEnv({
       NODE_ENV: 'production',
       DEMO_MODE: 'false',
@@ -309,11 +299,13 @@ describe('validateEnv', () => {
       AUTH_SECRET: 'a-very-long-and-secure-production-secret-key-32+chars',
       AI_CREDENTIAL_MASTER_KEY: 'a-different-very-long-encryption-key-32+chars',
       SMTP_HOST: undefined,
+      GOOGLE_CLIENT_ID: undefined,
+      GOOGLE_CLIENT_SECRET: undefined,
     });
-    expect(validateEnv().issues.some((issue) => issue.field === 'SMTP_HOST')).toBe(true);
+    expect(validateEnv().ok).toBe(true);
   });
 
-  it('requires Google OAuth credentials in production product mode', () => {
+  it('requires Google OAuth credentials to be configured as a pair', () => {
     setEnv({
       NODE_ENV: 'production',
       DEMO_MODE: 'false',
@@ -322,7 +314,7 @@ describe('validateEnv', () => {
       AUTH_SECRET: 'a-very-long-and-secure-production-secret-key-32+chars',
       AI_CREDENTIAL_MASTER_KEY: 'a-different-very-long-encryption-key-32+chars',
       SMTP_HOST: 'smtp.example.com',
-      GOOGLE_CLIENT_ID: undefined,
+      GOOGLE_CLIENT_ID: 'google-client-id',
       GOOGLE_CLIENT_SECRET: undefined,
     });
     expect(validateEnv().issues.some((issue) => issue.field === 'GOOGLE_CLIENT_ID')).toBe(true);

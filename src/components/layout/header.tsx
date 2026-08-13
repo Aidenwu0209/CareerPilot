@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { Settings, Menu } from 'lucide-react';
 import { LocaleSwitcher } from './locale-switcher';
 import { UserMenu } from './user-menu';
@@ -13,6 +12,7 @@ import { useTranslations } from 'next-intl';
 import { useNavContext } from '@/hooks/use-nav-context';
 import { cn } from '@/lib/utils';
 import { useBrand } from './brand-provider';
+import { CareerPilotLogo } from './careerpilot-logo';
 
 const NAV_ITEMS: { href: string; i18nKey: string; match: string; tourId?: string }[] = [
   { href: '/dashboard', i18nKey: 'dashboard.nav', match: '/dashboard' },
@@ -45,22 +45,14 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-background/95 dark:supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="flex items-center gap-1">
+          <Link href="/dashboard" aria-label={branding.productName} className="flex items-center gap-1">
             {branding.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element -- tenant-controlled HTTPS/relative logo is validated server-side
               <img src={branding.logoUrl} alt={branding.productName} className="h-9 max-w-40 object-contain" />
             ) : branding.productName !== 'CareerPilot' ? (
               <span className="max-w-40 truncate text-lg font-bold tracking-tight text-brand">{branding.productName}</span>
             ) : (
-              <Image
-                src="/logo.svg"
-                alt="CareerPilot"
-                width={280}
-                height={48}
-                priority
-                className="w-40"
-                style={{ height: 'auto' }}
-              />
+              <CareerPilotLogo preload />
             )}
           </Link>
           <nav className="hidden md:flex items-center gap-1">

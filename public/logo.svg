@@ -1,8 +1,8 @@
 <svg width="280" height="48" viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="cp-f" x1="2" y1="2" x2="46" y2="46" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#34D399"/>
-      <stop offset="100%" stop-color="#059669"/>
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#2563EB"/>
     </linearGradient>
   </defs>
 
@@ -34,7 +34,7 @@
   </g>
 
   <!-- Text: CareerPilot -->
-  <text x="54" y="33" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#064E3B" letter-spacing="-0.5">
-    Career<tspan fill="#10B981">Pilot</tspan>
+  <text x="54" y="33" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#173B67" letter-spacing="-0.5">
+    Career<tspan fill="#2563EB">Pilot</tspan>
   </text>
 </svg>

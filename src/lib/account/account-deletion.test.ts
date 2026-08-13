@@ -50,6 +50,7 @@ import { db } from '@/lib/db';
 import {
   users,
   authAccounts,
+  passwordCredentials,
   resumes,
   resumeSections,
   resumeShares,
@@ -263,6 +264,7 @@ beforeEach(async () => {
   await db.delete(organizationMemberships);
   await db.delete(organizations);
   await db.delete(creditAccounts);
+  await db.delete(passwordCredentials);
   await db.delete(authAccounts);
   await db.delete(emailOtps);
   await db.delete(users);
@@ -414,6 +416,20 @@ describe('deleteUserData', () => {
 
     const rows = await db.select().from(authAccounts).where(eq(authAccounts.userId, userId));
     expect(rows.length).toBe(0);
+  });
+
+  it('deletes password credentials', async () => {
+    const userId = await createTestUser();
+    await db.insert(passwordCredentials).values({
+      id: crypto.randomUUID(),
+      userId,
+      passwordHash: 'scrypt-v1$test-hash',
+    });
+
+    await deleteUserData(userId);
+
+    const rows = await db.select().from(passwordCredentials).where(eq(passwordCredentials.userId, userId));
+    expect(rows).toHaveLength(0);
   });
 
   it('soft-removes active organization memberships', async () => {

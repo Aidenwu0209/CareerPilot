@@ -130,7 +130,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       expect(rows[0].cnt).toBe(getAllMigrationTags().length);
     });
 
-    it('should create all 57 expected tables in public schema', async () => {
+    it('should create all 58 expected tables in public schema', async () => {
       pg = await createPglite();
       const db = drizzle(pg);
 
@@ -156,6 +156,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
         'interview_rounds', 'interview_sessions', 'jd_analyses',
         'legal_consents', 'major_occupation_edges', 'occupation_aliases', 'occupation_relations', 'occupation_requirements',
         'occupations', 'organization_memberships', 'organizations',
+        'password_credentials',
         'payment_orders', 'payment_refunds', 'payment_webhook_events',
         'plan_model_access', 'reconciliation_items', 'reconciliation_runs',
         'resume_sections', 'resume_shares', 'resumes', 'teacher_student_assignments', 'users',

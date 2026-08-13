@@ -21,9 +21,11 @@
     "login": "Log in",
     "logout": "Log out",
     "loginWithGoogle": "Sign in with Google",
-    "welcomeBack": "Sign in or create an account",
-    "loginDescription": "Continue with an email verification code or Google",
-    "registrationNotice": "Verifying a new email creates an account automatically. Existing emails sign in directly, with no password required.",
+    "welcomeBack": "Welcome to CareerPilot",
+    "loginDescription": "Sign in to your career account or create a new one",
+    "registrationNotice": "Registration and sign-in are separate steps, protected by your email and password.",
+    "otherMethods": "Other sign-in options",
+    "useEmailCode": "Sign in with an email code",
     "demo": {
       "title": "Demo mode is active",
       "description": "These isolated demo identities are never merged with product accounts or product data.",
@@ -33,6 +35,35 @@
       "teacher": "Teacher workbench"
     },
     "agreeTerms": "By signing in, you agree to our Terms of Service and Privacy Policy",
+    "password": {
+      "methodLabel": "Account action",
+      "tabs": {
+        "login": "Sign in",
+        "register": "Register"
+      },
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter your name",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "passwordHint": "Use at least 10 characters with both a letter and a number.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": {
+        "login": "Sign in",
+        "register": "Create account"
+      },
+      "useLogin": "Go to sign in",
+      "errors": {
+        "INVALID_INPUT": "Check your name, email, and password format.",
+        "INVALID_CREDENTIALS": "The email or password is incorrect.",
+        "ACCOUNT_SUSPENDED": "This account is suspended. Contact the platform administrator.",
+        "EMAIL_EXISTS": "An account already exists for this email.",
+        "RATE_LIMITED": "Too many attempts. Try again later.",
+        "PASSWORD_MISMATCH": "The passwords do not match.",
+        "SERVER_ERROR": "We could not complete this request. Try again shortly."
+      }
+    },
     "otp": {
       "emailLabel": "Email Address",
       "sendCode": "Send Code",
@@ -53,7 +84,7 @@
       }
     },
     "or": "or",
-    "agreeTermsLinks": "Review our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy> before continuing"
+    "agreeTermsLinks": "Review our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy> before registering or signing in"
   },
   "onboarding": {
     "title": "Complete your profile",
@@ -700,61 +731,56 @@
       "features": "Features",
       "templates": "Templates",
       "interview": "Mock Interview",
-      "getStarted": "Get Started",
+      "journey": "How it works",
+      "resumeTools": "Resume tools",
+      "getStarted": "Sign in / Register",
       "dashboard": "Dashboard"
     },
     "hero": {
-      "title": "Build Your Perfect Resume with AI",
-      "subtitle": "Create professional, ATS-friendly resumes in minutes. Powered by AI to help you stand out and land your dream job.",
-      "cta": "Start Building for Free",
-      "secondaryCta": "View Templates"
+      "eyebrow": "Student career development and guidance platform",
+      "title": "Understand your direction, prove your abilities, and take the next step",
+      "subtitle": "Bring your major, resume, projects, interviews, and teacher guidance into one career record. Understand occupations through Chinese standards and explain matching through real evidence.",
+      "cta": "Start career planning",
+      "secondaryCta": "Browse templates",
+      "preview": {
+        "title": "Your career development overview",
+        "description": "Goals, evidence, gaps, and next actions in one place",
+        "profile": { "title": "Six-dimension profile", "description": "Abilities are evidence-backed; unknown data is never treated as zero" },
+        "jobs": { "title": "Chinese occupation knowledge", "description": "92 scoreable occupations with traceable requirements" },
+        "matching": { "title": "Explainable matching", "description": "Review requirements, evidence, gaps, and actions item by item" },
+        "path": { "title": "Staged growth path", "description": "Turn ability gaps into actionable, reviewable tasks" }
+      }
     },
     "features": {
-      "title": "Everything You Need to Land the Job",
-      "subtitle": "Powerful tools designed to make resume building effortless and effective",
-      "aiChat": {
-        "title": "AI-Powered Writing",
-        "description": "Chat with AI to optimize your resume content, rewrite bullet points, and tailor your experience for any role."
-      },
-      "templates": {
-        "title": "Professional Templates",
-        "description": "Choose from a curated collection of modern, ATS-friendly templates designed by hiring experts."
-      },
-      "dragDrop": {
-        "title": "Drag & Drop Editor",
-        "description": "Easily rearrange sections, customize layouts, and build your resume exactly the way you want."
-      },
-      "export": {
-        "title": "Import & Export",
-        "description": "Export as PDF, Smart One-Page PDF, Word, HTML, TXT, or JSON. Import a previously exported JSON to instantly restore or create a resume."
-      },
-      "sharing": {
-        "title": "One-Click Sharing",
-        "description": "Generate a shareable link to your resume with optional password protection and view tracking."
-      },
-      "i18n": {
-        "title": "Multilingual Support",
-        "description": "Create resumes in multiple languages and translate between them instantly with AI assistance."
-      },
-      "jdMatch": {
-        "title": "JD Match Analysis",
-        "description": "Paste a job description and get an instant match score with actionable suggestions to improve your resume."
-      },
-      "mockInterview": {
-        "title": "Mock Interview",
-        "description": "AI-powered mock interviews based on JD. 6 preset interviewer roles with smart follow-ups, detailed report and improvement plan."
-      },
-      "translate": {
-        "title": "AI Translation",
-        "description": "Translate your entire resume between languages with one click. AI preserves professional tone and formatting."
-      },
-      "coverLetter": {
-        "title": "Cover Letter Generator",
-        "description": "Generate tailored cover letters based on your resume and the target job description — formal, friendly, or confident."
-      },
-      "grammarCheck": {
-        "title": "Grammar Check",
-        "description": "Detect grammar errors, weak verbs, and vague descriptions. Get a writing quality score with fix suggestions."
+      "eyebrow": "From exploration to action",
+      "title": "Not a one-time test, but a career record that grows with you",
+      "subtitle": "Students, occupations, and teacher guidance work from one evidence chain, so every conclusion links back to a source and an action.",
+      "aiChat": { "title": "AI-powered writing", "description": "Refine resume content, projects, and experience descriptions so your materials represent your abilities clearly." },
+      "templates": { "title": "Professional templates", "description": "Use polished ATS-friendly templates while preserving the visual quality of the original CareerPilot experience." },
+      "dragDrop": { "title": "Drag-and-drop editor", "description": "Rearrange sections and layouts to build a clear, professional resume from your real experience." },
+      "export": { "title": "Import and export", "description": "Work with PDF, Word, HTML, TXT, and JSON formats for applications and ongoing material maintenance." },
+      "sharing": { "title": "One-click sharing", "description": "Create a shareable resume link with password protection and view tracking for teachers or recruiters." },
+      "jdMatch": { "title": "Occupation matching", "description": "Compare Chinese-standard occupation requirements with personal evidence, coverage, gaps, and next actions." },
+      "mockInterview": { "title": "Mock interview", "description": "Practice around a target occupation, retain the report, and add reviewable outcomes to your career materials." },
+      "translate": { "title": "AI translation", "description": "Translate resume content while preserving professional tone, information structure, and formatting." },
+      "coverLetter": { "title": "Cover letter generator", "description": "Generate a tailored cover letter from your resume and target role in formal, friendly, or confident tones." },
+      "grammarCheck": { "title": "Grammar and clarity check", "description": "Identify grammar issues, weak verbs, and vague statements with actionable revision suggestions." },
+      "profile": { "title": "Career profile", "description": "Structure resumes, projects, courses, certificates, and interviews into a six-dimension profile with provenance and review status." },
+      "goals": { "title": "Career goals", "description": "Set primary and alternative directions, target dates, rationale, and preferences without overwriting history." },
+      "jobs": { "title": "Occupation knowledge and graph", "description": "Filter Chinese standard occupations by college, major, job family, industry, and education level." },
+      "matching": { "title": "Person-job matching", "description": "Keep match score, evidence coverage, and confidence separate; insufficient evidence remains unscored." },
+      "path": { "title": "Growth path", "description": "Turn occupation gaps into stages, milestones, and tasks. Confirmed outcomes update the profile." },
+      "guidance": { "title": "Teacher guidance", "description": "Authorized teachers review evidence, assign tasks, and keep student-visible or private guidance records." }
+    },
+    "journey": {
+      "eyebrow": "How it works",
+      "title": "Every step has a reason and a next action",
+      "subtitle": "Build evidence first, choose a real target, then close gaps through growth tasks.",
+      "standard": "The catalog uses China's 2022 National Occupational Classification codes and retains source and catalog versions.",
+      "steps": {
+        "evidence": { "title": "Gather evidence", "description": "Sync resumes, projects, courses, certificates, and interviews. Pending material never becomes an ability score automatically." },
+        "target": { "title": "Choose a target", "description": "Understand responsibilities and requirements, compare two or three relevant directions, then set a primary goal." },
+        "growth": { "title": "Follow the growth path", "description": "Complete tasks, submit outcomes, receive teacher review, and then recalculate the match." }
       }
     },
     "templates": {
@@ -763,34 +789,37 @@
       "viewAll": "View All Templates"
     },
     "stats": {
-      "title": "Trusted by Job Seekers Worldwide",
-      "templates": {
-        "value": "50+",
-        "label": "Templates"
+      "title": "Current Chinese occupation knowledge catalog",
+      "occupations": {
+        "value": "92",
+        "label": "Scoreable occupations"
       },
-      "exportFormats": {
-        "value": "5",
-        "label": "Export Formats"
+      "majors": {
+        "value": "64",
+        "label": "Major records"
       },
-      "languages": {
-        "value": "10+",
-        "label": "Languages"
+      "requirements": {
+        "value": "765",
+        "label": "Ability requirements"
       },
-      "free": {
-        "value": "100%",
-        "label": "Free"
+      "dimensions": {
+        "value": "6",
+        "label": "Profile dimensions"
       }
     },
     "cta": {
-      "title": "Ready to Build Your Best Resume?",
-      "subtitle": "Join thousands of job seekers who have landed interviews with CareerPilot. No sign-up required.",
-      "button": "Create Your Resume Now"
+      "title": "Start career planning from a real target",
+      "subtitle": "Create an account, complete your profile, and build your first growth path from occupation requirements and personal evidence.",
+      "button": "Register and start planning"
     },
     "footer": {
+      "tagline": "Connect career profiles, occupation knowledge, person-job matching, growth paths, and teacher guidance.",
       "product": {
         "title": "Product",
         "features": "Features",
-        "templates": "Templates",
+        "templates": "Resume tools",
+        "journey": "How it works",
+        "resumeTools": "Resume tools",
         "pricing": "Pricing",
         "changelog": "Changelog"
       },
@@ -799,7 +828,8 @@
         "blog": "Blog",
         "resumeTips": "Resume Tips",
         "careerGuide": "Career Guide",
-        "examples": "Resume Examples"
+        "examples": "Resume Examples",
+        "occupationKnowledge": "Occupation knowledge"
       },
       "legal": {
         "title": "Legal",
@@ -1761,7 +1791,7 @@
       "suspended": "Suspended"
     },
     "authType": {
-      "email": "Email Code",
+      "email": "Email account",
       "oauth": "OAuth",
       "fingerprint": "Fingerprint"
     },

@@ -85,12 +85,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  /* Brand: BOSS green (default) */
-  --brand: oklch(0.64 0.15 168);
+  /* Brand: professional blue */
+  --brand: oklch(0.65 0.17 250);
   --brand-foreground: oklch(1 0 0);
-  --brand-hover: oklch(0.56 0.14 168);
-  --brand-muted: oklch(0.94 0.05 168);
-  --brand-ring: oklch(0.64 0.15 168 / 40%);
+  --brand-hover: oklch(0.58 0.20 255);
+  --brand-muted: oklch(0.965 0.028 244);
+  --brand-ring: oklch(0.65 0.17 250 / 32%);
 }
 
 .dark {
@@ -125,6 +125,23 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --brand: oklch(0.76 0.14 244);
+  --brand-foreground: oklch(0.17 0.05 250);
+  --brand-hover: oklch(0.68 0.17 250);
+  --brand-muted: oklch(0.31 0.07 246);
+  --brand-ring: oklch(0.76 0.14 244 / 36%);
+}
+
+[data-brand="mint"] {
+  --brand: oklch(0.64 0.15 168);
+  --brand-foreground: oklch(1 0 0);
+  --brand-hover: oklch(0.56 0.14 168);
+  --brand-muted: oklch(0.94 0.05 168);
+  --brand-ring: oklch(0.64 0.15 168 / 40%);
+}
+
+.dark[data-brand="mint"],
+[data-brand="mint"] .dark {
   --brand: oklch(0.83 0.16 168);
   --brand-foreground: oklch(0.20 0.05 168);
   --brand-hover: oklch(0.74 0.16 168);
@@ -133,20 +150,20 @@
 }
 
 [data-brand="blue"] {
-  --brand: oklch(0.55 0.22 258);
+  --brand: oklch(0.65 0.17 250);
   --brand-foreground: oklch(1 0 0);
-  --brand-hover: oklch(0.48 0.22 258);
-  --brand-muted: oklch(0.95 0.04 258);
-  --brand-ring: oklch(0.55 0.22 258 / 40%);
+  --brand-hover: oklch(0.58 0.20 255);
+  --brand-muted: oklch(0.965 0.028 244);
+  --brand-ring: oklch(0.65 0.17 250 / 32%);
 }
 
 .dark[data-brand="blue"],
 [data-brand="blue"] .dark {
-  --brand: oklch(0.72 0.18 258);
-  --brand-foreground: oklch(0.18 0.05 258);
-  --brand-hover: oklch(0.62 0.20 258);
-  --brand-muted: oklch(0.32 0.10 258);
-  --brand-ring: oklch(0.72 0.18 258 / 40%);
+  --brand: oklch(0.76 0.14 244);
+  --brand-foreground: oklch(0.17 0.05 250);
+  --brand-hover: oklch(0.68 0.17 250);
+  --brand-muted: oklch(0.31 0.07 246);
+  --brand-ring: oklch(0.76 0.14 244 / 36%);
 }
 
 [data-brand="pink"] {

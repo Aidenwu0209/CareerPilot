@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 
-const STATS = ['templates', 'exportFormats', 'languages', 'free'] as const;
+const STATS = ['occupations', 'majors', 'requirements', 'dimensions'] as const;
 
 export function StatsSection() {
   const t = useTranslations('landing.stats');

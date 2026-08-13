@@ -41,15 +41,11 @@ const BrandContext = createContext<BrandContextValue | null>(null);
 
 function applyBrand(brand: Brand) {
   if (typeof document === 'undefined') return;
-  if (brand === 'mint') {
-    document.documentElement.removeAttribute('data-brand');
-  } else {
-    document.documentElement.setAttribute('data-brand', brand);
-  }
+  document.documentElement.setAttribute('data-brand', brand);
 }
 
 export function BrandProvider({ children }: { children: ReactNode }) {
-  const [brand, setBrandState] = useState<Brand>('mint');
+  const [brand, setBrandState] = useState<Brand>('blue');
   const [branding, setBranding] = useState<OrganizationBranding>(DEFAULT_BRANDING);
   const [managedBranding, setManagedBranding] = useState(false);
 

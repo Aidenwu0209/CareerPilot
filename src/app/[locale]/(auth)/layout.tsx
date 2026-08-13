@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
+import { CareerPilotLogo } from '@/components/layout/careerpilot-logo';
 
 export default function AuthLayout({
   children,
@@ -8,18 +8,18 @@ export default function AuthLayout({
 }) {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-50 px-4 dark:bg-zinc-950">
-      {/* Animated gradient blobs */}
+      {/* Quiet blue ambience aligned with the product brand */}
       <div
-        className="absolute right-[10%] top-[10%] h-[600px] w-[600px] rounded-full opacity-20 blur-[120px] dark:opacity-[0.07]"
-        style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }}
+        className="absolute right-[8%] top-[6%] h-[620px] w-[620px] rounded-full opacity-20 blur-[125px] dark:opacity-[0.09]"
+        style={{ background: 'radial-gradient(circle, #60a5fa, transparent 70%)' }}
       />
       <div
-        className="absolute -bottom-20 left-[5%] h-[500px] w-[500px] rounded-full opacity-15 blur-[120px] dark:opacity-[0.05]"
-        style={{ background: 'radial-gradient(circle, #a855f7, transparent 70%)' }}
+        className="absolute -bottom-24 left-[4%] h-[520px] w-[520px] rounded-full opacity-15 blur-[125px] dark:opacity-[0.07]"
+        style={{ background: 'radial-gradient(circle, #38bdf8, transparent 70%)' }}
       />
       <div
-        className="absolute left-[40%] top-[60%] h-[300px] w-[300px] rounded-full opacity-10 blur-[100px] dark:opacity-[0.05]"
-        style={{ background: 'radial-gradient(circle, #3b82f6, transparent 70%)' }}
+        className="absolute left-[38%] top-[58%] h-[320px] w-[320px] rounded-full opacity-10 blur-[110px] dark:opacity-[0.05]"
+        style={{ background: 'radial-gradient(circle, #bae6fd, transparent 70%)' }}
       />
 
       {/* Dot grid */}
@@ -33,14 +33,14 @@ export default function AuthLayout({
 
       {/* Logo - top left */}
       <div className="absolute left-6 top-6 z-20">
-        <Link href="/" className="transition-opacity hover:opacity-80">
-          <Image src="/logo.svg" alt="CareerPilot" width={140} height={30} />
+        <Link href="/" aria-label="CareerPilot" className="transition-opacity hover:opacity-80">
+          <CareerPilotLogo />
         </Link>
       </div>
 
       {/* Glass card */}
-      <div className="relative z-10 w-full max-w-[400px]">
-        <div className="rounded-2xl border border-white/60 bg-white/70 p-8 shadow-xl shadow-zinc-900/5 backdrop-blur-xl sm:p-10 dark:border-zinc-800/60 dark:bg-zinc-900/70 dark:shadow-black/20">
+      <div className="relative z-10 my-20 w-full max-w-[440px]">
+        <div className="rounded-2xl border border-blue-100/80 bg-white/90 p-8 shadow-2xl shadow-blue-950/8 backdrop-blur-xl sm:p-10 dark:border-blue-950/70 dark:bg-zinc-900/90 dark:shadow-black/25">
           {children}
         </div>
       </div>

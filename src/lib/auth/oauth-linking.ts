@@ -3,7 +3,6 @@ import { db } from '@/lib/db';
 import { authAccounts } from '@/lib/db/schema';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
 import { userRepository } from '@/lib/db/repositories/user.repository';
-import { createSampleResume } from '@/lib/db/sample-resume';
 import { applyRegistrationGrant } from '@/lib/credits/registration-grant';
 import { assertRealAccountCanLink } from './onboarding';
 import { createAuthIdentity } from './account-creation';
@@ -104,13 +103,6 @@ export async function resolveOAuthAccount(params: {
       scope: params.scope,
     },
   });
-
-  // Create sample resume outside the transaction (non-critical, idempotent)
-  try {
-    await createSampleResume(newUserId);
-  } catch {
-    // Sample resume failure should not block authentication
-  }
 
   // Apply one-time registration grant (idempotent — safe even on callback replay)
   try {

@@ -24,6 +24,7 @@ import { db } from '@/lib/db';
 import {
   users,
   authAccounts,
+  passwordCredentials,
   resumes,
   interviewSessions,
   organizationMemberships,
@@ -248,7 +249,8 @@ export async function deleteUserData(userId: string): Promise<void> {
       eq(teacherStudentAssignments.studentUserId, userId),
     ));
 
-  // Step 4: Delete auth accounts
+  // Step 4: Delete all authentication credentials and linked providers.
+  await db.delete(passwordCredentials).where(eq(passwordCredentials.userId, userId));
   await db.delete(authAccounts).where(eq(authAccounts.userId, userId));
 
   // Step 5: Soft-remove active organization memberships and education roles.

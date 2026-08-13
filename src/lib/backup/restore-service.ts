@@ -343,6 +343,7 @@ export function recordDrill(
 
 const KNOWN_FK_CONSTRAINTS = [
   { constraint_name: 'auth_accounts_user_id_users_id_fk', child_table: 'auth_accounts', child_column: 'user_id', parent_table: 'users', parent_column: 'id' },
+  { constraint_name: 'password_credentials_user_id_users_id_fk', child_table: 'password_credentials', child_column: 'user_id', parent_table: 'users', parent_column: 'id' },
   { constraint_name: 'resumes_user_id_users_id_fk', child_table: 'resumes', child_column: 'user_id', parent_table: 'users', parent_column: 'id' },
   { constraint_name: 'resume_sections_resume_id_resumes_id_fk', child_table: 'resume_sections', child_column: 'resume_id', parent_table: 'resumes', parent_column: 'id' },
   { constraint_name: 'chat_sessions_resume_id_resumes_id_fk', child_table: 'chat_sessions', child_column: 'resume_id', parent_table: 'resumes', parent_column: 'id' },

@@ -15,7 +15,6 @@ import {
   Mic,
   Upload,
   Download,
-  type LucideIcon,
 } from 'lucide-react';
 
 const FEATURES = [
@@ -226,7 +225,7 @@ function DemoJdMatch() {
         <svg width="100" height="100" className="-rotate-90">
           <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="6" className="text-zinc-200 dark:text-zinc-700" />
           <circle
-            cx="50" cy="50" r="40" fill="none" stroke="#ec4899" strokeWidth="6"
+            cx="50" cy="50" r="40" fill="none" stroke="var(--brand)" strokeWidth="6"
             strokeDasharray="251" strokeDashoffset="251" strokeLinecap="round"
             style={{ animation: 'demo-ring-fill 2s ease-out 0.5s forwards' }}
           />

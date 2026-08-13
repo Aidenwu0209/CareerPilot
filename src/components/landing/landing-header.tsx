@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { ProductEntryLink } from '@/components/auth/product-entry-link';
+import { CareerPilotLogo } from '@/components/layout/careerpilot-logo';
 
 export function LandingHeader() {
   const t = useTranslations('landing.header');
@@ -40,13 +40,14 @@ export function LandingHeader() {
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="CareerPilot" width={160} height={36} priority />
+          <Link href="/" aria-label="CareerPilot" className="flex items-center">
+            <CareerPilotLogo preload />
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {[
               { href: '#features', label: t('features') },
               { href: '#templates', label: t('templates') },
+              { href: '#journey', label: t('journey') },
             ].map((item) => (
               <a
                 key={item.href}
@@ -84,12 +85,13 @@ export function LandingHeader() {
               <SheetTitle className="sr-only">Navigation</SheetTitle>
               <div className="flex h-full flex-col">
                 <div className="flex h-14 items-center border-b border-zinc-100 px-5 dark:border-zinc-900">
-                  <Image src="/logo.svg" alt="CareerPilot" width={140} height={32} />
+                  <CareerPilotLogo />
                 </div>
                 <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
                   {[
                     { href: '#features', label: t('features') },
                     { href: '#templates', label: t('templates') },
+                    { href: '#journey', label: t('journey') },
                   ].map((item) => (
                     <a
                       key={item.href}

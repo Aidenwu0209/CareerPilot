@@ -15,7 +15,6 @@ import { db } from '@/lib/db';
 import { emailOtps } from '@/lib/db/schema';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { authAccountRepository } from '@/lib/db/repositories/auth-account.repository';
-import { createSampleResume } from '@/lib/db/sample-resume';
 import { applyRegistrationGrant } from '@/lib/credits/registration-grant';
 import { getMailAdapter } from './mail-adapter';
 import {
@@ -280,13 +279,6 @@ async function resolveEmailAccount(email: string): Promise<EmailAccountResult> {
       providerAccountId: email,
     },
   });
-
-  // Create sample resume (non-critical)
-  try {
-    await createSampleResume(newUserId);
-  } catch {
-    // Sample resume failure should not block authentication
-  }
 
   // Apply one-time registration grant (idempotent — safe even on replay)
   try {

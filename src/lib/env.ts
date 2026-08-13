@@ -50,17 +50,14 @@ export function validateEnv(): EnvValidationResult {
     });
   }
 
-  if (prod && !process.env.SMTP_HOST) {
-    issues.push({
-      field: 'SMTP_HOST',
-      message: 'SMTP_HOST is required for product email verification.',
-    });
-  }
-
-  if (prod && (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET)) {
+  // Password authentication is always available. Optional providers become
+  // active only when their complete configuration is present.
+  const hasGoogleClientId = Boolean(process.env.GOOGLE_CLIENT_ID);
+  const hasGoogleClientSecret = Boolean(process.env.GOOGLE_CLIENT_SECRET);
+  if (prod && hasGoogleClientId !== hasGoogleClientSecret) {
     issues.push({
       field: 'GOOGLE_CLIENT_ID',
-      message: 'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required for product Google login.',
+      message: 'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together.',
     });
   }
 

@@ -139,7 +139,7 @@ The following resume sections support Markdown syntax:
 
 - **Bilingual UI** — Full Chinese (zh) and English (en) interface
 - **Dark Mode** — Light, dark, and system theme support
-- **Product Auth** — Passwordless email verification with automatic first-use registration, plus optional Google OAuth
+- **Product Auth** — Separate password registration and login, plus optional email-code and Google login
 - **Dual Database** — SQLite (default, zero-config) or PostgreSQL
 
 ## Tech Stack
@@ -151,7 +151,7 @@ The following resume sections support Markdown syntax:
 | Drag & Drop | @dnd-kit |
 | State | Zustand |
 | Database | Drizzle ORM (SQLite / PostgreSQL) |
-| Auth | NextAuth.js v5 + email OTP + Google OAuth |
+| Auth | Signed sessions + salted scrypt password credentials + optional email OTP / Google OAuth |
 | AI | Vercel AI SDK v6 + managed GPT / Claude / GLM / DeepSeek / Gemini / ERNIE providers |
 | PDF | Puppeteer Core + @sparticuz/chromium |
 | i18n | next-intl |
@@ -169,10 +169,6 @@ openssl rand -base64 32
 docker build -t careerpilot .
 docker run -d -p 3000:3000 \
   -e AUTH_SECRET=<your-generated-secret> \
-  -e SMTP_HOST=smtp.example.com \
-  -e SMTP_USER=<smtp-user> \
-  -e SMTP_PASS=<smtp-password> \
-  -e SMTP_FROM=noreply@example.com \
   -v careerpilot-data:/app/data \
   careerpilot
 ```
@@ -237,8 +233,8 @@ Edit `.env.local`:
 # Database (defaults to SQLite, no config needed)
 DB_TYPE=sqlite
 
-# Product mode is the default. Use the in-memory test mail adapter locally,
-# or configure SMTP_* to deliver real email verification codes.
+# Product mode is the default and supports password registration/login.
+# Configure SMTP_* only when email-code login is also required.
 DEMO_MODE=false
 ```
 
@@ -271,13 +267,13 @@ Open [http://localhost:3000](http://localhost:3000).
 | `DATABASE_URL` | When PostgreSQL | — | PostgreSQL connection string |
 | `SQLITE_PATH` | No | `./data/careerpilot.db` | SQLite database file path |
 | `DEMO_MODE` | No | `false` | Enable isolated seeded identities at locale-aware `/demo` (never enable in production) |
-| `GOOGLE_CLIENT_ID` | Production | — | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Production | — | Google OAuth client secret |
-| `SMTP_HOST` | Production | — | SMTP server used to deliver email verification codes |
+| `GOOGLE_CLIENT_ID` | Optional | — | Google OAuth client ID; configure together with the client secret |
+| `GOOGLE_CLIENT_SECRET` | Optional | — | Google OAuth client secret; configure together with the client ID |
+| `SMTP_HOST` | Optional | — | SMTP server used to enable email-code login |
 | `SMTP_PORT` | No | `587` | SMTP server port |
 | `SMTP_USER` | Depending on SMTP | — | SMTP username |
 | `SMTP_PASS` | Depending on SMTP | — | SMTP password |
-| `SMTP_FROM` | Production | — | Sender address for verification emails |
+| `SMTP_FROM` | Depending on SMTP | — | Sender address for verification emails |
 | `APP_NAME` | No | `CareerPilot` | Application display name |
 | `DEFAULT_LOCALE` | No | `zh` | Default language: `zh` or `en` |
 
@@ -442,9 +438,9 @@ Yes. Set the `DB_TYPE` environment variable to `sqlite` or `postgresql`. SQLite 
 </details>
 
 <details>
-<summary><b>How does authentication work without Google OAuth?</b></summary>
+<summary><b>How does authentication work without Google OAuth or SMTP?</b></summary>
 
-Product mode always supports passwordless email verification. A new verified email creates an account and enters the required profile/consent onboarding flow; an existing email restores the same account. Google OAuth is optional. `DEMO_MODE=true` exposes only the fixed seeded student and teacher identities at `/demo`; product mode never creates fingerprint users. Legacy fingerprint accounts remain isolated and require a verified, explicit support binding rather than automatic email merging.
+Product mode always supports separate account/password registration and login. Passwords are stored as salted scrypt hashes, and new accounts enter the required profile/consent onboarding flow. Email-code login appears only when SMTP is configured; Google OAuth also remains optional. `DEMO_MODE=true` exposes only the fixed seeded student and teacher identities at `/demo`; product mode never creates fingerprint users. Legacy fingerprint accounts remain isolated and require a verified, explicit support binding rather than automatic email merging.
 
 </details>
 

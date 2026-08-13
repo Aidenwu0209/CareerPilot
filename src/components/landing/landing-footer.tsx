@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { Github } from 'lucide-react';
+import { CareerPilotLogo } from '@/components/layout/careerpilot-logo';
 
 export function LandingFooter() {
   const t = useTranslations('landing.footer');
@@ -12,14 +12,17 @@ export function LandingFooter() {
       titleKey: 'product.title' as const,
       links: [
         { key: 'product.features' as const, href: '#features' },
-        { key: 'product.templates' as const, href: '/templates' },
+        { key: 'product.templates' as const, href: '#templates' },
+        { key: 'product.journey' as const, href: '#journey' },
       ],
     },
     {
       titleKey: 'resources.title' as const,
       links: [
-        { key: 'resources.resumeTips' as const, href: '#' },
-        { key: 'resources.examples' as const, href: '#' },
+        { key: 'resources.resumeTips' as const, href: '/templates' },
+        { key: 'resources.careerGuide' as const, href: '#journey' },
+        { key: 'resources.examples' as const, href: '/templates' },
+        { key: 'resources.occupationKnowledge' as const, href: '#features' },
       ],
     },
     {
@@ -38,16 +41,17 @@ export function LandingFooter() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
             {/* Brand column */}
             <div className="sm:col-span-2 lg:col-span-1">
-              <Image src="/logo.svg" alt="CareerPilot" width={140} height={30} />
+              <CareerPilotLogo />
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-                AI-powered resume builder
+                {t('tagline')}
               </p>
               <div className="mt-6 flex items-center gap-4">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Aidenwu0209/careerpilot"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
+                  aria-label="GitHub"
+                  className="text-zinc-400 transition-colors hover:text-brand dark:text-zinc-500 dark:hover:text-brand"
                 >
                   <Github className="h-5 w-5" />
                 </a>

@@ -224,6 +224,23 @@ describe('US-003: Unique constraints are enforced', () => {
     }).not.toThrow();
   });
 
+  it('password credentials allow one hash per user and cascade on user deletion', () => {
+    sqlite.prepare(`INSERT INTO users (id, auth_type) VALUES ('u-password', 'email')`).run();
+    sqlite.prepare(
+      `INSERT INTO password_credentials (id, user_id, password_hash) VALUES ('pc-1', 'u-password', 'scrypt-v1$test')`,
+    ).run();
+
+    expect(() => {
+      sqlite.prepare(
+        `INSERT INTO password_credentials (id, user_id, password_hash) VALUES ('pc-2', 'u-password', 'scrypt-v1$other')`,
+      ).run();
+    }).toThrow();
+
+    sqlite.prepare(`DELETE FROM users WHERE id = 'u-password'`).run();
+    expect(sqlite.prepare(`SELECT count(*) as c FROM password_credentials WHERE user_id = 'u-password'`).get())
+      .toEqual({ c: 0 });
+  });
+
   it('interview_reports session_id unique prevents duplicate reports', () => {
     sqlite.prepare(`INSERT INTO users (id, auth_type) VALUES ('u-rpt-uniq', 'fingerprint')`).run();
     sqlite.prepare(
@@ -248,6 +265,7 @@ describe('US-003: PG schema has proper FK definitions', () => {
     // Verify all table exports exist
     expect(pgSchemaSource.users).toBeDefined();
     expect(pgSchemaSource.authAccounts).toBeDefined();
+    expect(pgSchemaSource.passwordCredentials).toBeDefined();
     expect(pgSchemaSource.resumes).toBeDefined();
     expect(pgSchemaSource.resumeSections).toBeDefined();
     expect(pgSchemaSource.chatSessions).toBeDefined();

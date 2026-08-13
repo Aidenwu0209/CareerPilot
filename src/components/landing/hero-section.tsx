@@ -14,11 +14,11 @@ export function HeroSection() {
       {/* Background effects */}
       <div
         className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full opacity-20 blur-[100px] dark:opacity-10"
-        style={{ background: 'radial-gradient(circle, #ec4899, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, #60a5fa, transparent 70%)' }}
       />
       <div
         className="absolute -bottom-40 -left-40 h-[400px] w-[400px] rounded-full opacity-15 blur-[100px] dark:opacity-10"
-        style={{ background: 'radial-gradient(circle, #f472b6, transparent 70%)' }}
+        style={{ background: 'radial-gradient(circle, #38bdf8, transparent 70%)' }}
       />
       <div
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
@@ -34,7 +34,7 @@ export function HeroSection() {
           className="mb-6 border-brand-muted bg-brand-muted px-4 py-1.5 text-sm text-brand dark:border-brand-muted dark:bg-brand-muted dark:text-brand"
         >
           <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-          AI-Powered
+          {t('eyebrow')}
         </Badge>
 
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">

@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { LoginButton } from '@/components/auth/login-button';
 import { EmailOtpLogin } from '@/components/auth/email-otp-login';
+import { PasswordAuthForm } from '@/components/auth/password-auth-form';
 import { Separator } from '@/components/ui/separator';
 import { config } from '@/lib/config';
+import { CareerPilotLogo } from '@/components/layout/careerpilot-logo';
 
 export default function LoginPage() {
   const t = useTranslations('auth');
@@ -13,12 +14,9 @@ export default function LoginPage() {
     <div className="flex flex-col items-center">
       {/* Logo */}
       <div className="mb-6">
-        <Image
-          src="/logo-icon.svg"
-          alt="CareerPilot"
-          width={48}
-          height={48}
-          className="drop-shadow-sm"
+        <CareerPilotLogo
+          compact
+          markClassName="h-16 w-16 rounded-2xl shadow-md ring-sky-100"
         />
       </div>
 
@@ -30,33 +28,44 @@ export default function LoginPage() {
         {t('loginDescription')}
       </p>
 
-      <p className="mt-3 text-center text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-        {t('registrationNotice')}
-      </p>
+      <div className="mt-6 w-full">
+        <Suspense fallback={null}>
+          <PasswordAuthForm />
+        </Suspense>
+      </div>
 
-      <>
-          {/* Email OTP login */}
-          <div className="mt-6 w-full">
-            <Suspense fallback={null}>
-              <EmailOtpLogin />
-            </Suspense>
+      {(config.auth.emailOtpEnabled || config.auth.googleEnabled) && (
+        <>
+          <div className="my-6 flex w-full items-center gap-3">
+            <Separator className="flex-1" />
+            <span className="text-xs text-zinc-400">{t('otherMethods')}</span>
+            <Separator className="flex-1" />
           </div>
 
-        {config.auth.googleEnabled && (
+          {config.auth.emailOtpEnabled && (
+            <details className="group w-full rounded-xl border border-zinc-200 bg-white/70 p-3 dark:border-zinc-700 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer list-none text-center text-sm font-medium text-zinc-600 marker:hidden dark:text-zinc-300">
+                {t('useEmailCode')}
+              </summary>
+              <div className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                <Suspense fallback={null}>
+                  <EmailOtpLogin />
+                </Suspense>
+              </div>
+            </details>
+          )}
+
+          {config.auth.googleEnabled && (
           <>
-            <div className="my-6 flex w-full items-center gap-3">
-              <Separator className="flex-1" />
-              <span className="text-xs text-zinc-400">{t('or')}</span>
-              <Separator className="flex-1" />
-            </div>
-            <div className="w-full">
+            <div className={config.auth.emailOtpEnabled ? 'mt-3 w-full' : 'w-full'}>
               <Suspense fallback={null}>
                 <LoginButton />
               </Suspense>
             </div>
           </>
-        )}
-      </>
+          )}
+        </>
+      )}
 
       {/* Terms with clickable links */}
       <p className="mt-6 text-center text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">

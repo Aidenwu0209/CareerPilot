@@ -31,6 +31,22 @@ export const authAccounts = sqliteTable('auth_accounts', {
   userIdx: index('auth_accounts_user_id_idx').on(table.userId),
 }));
 
+/**
+ * Local password credentials are deliberately separated from users and OAuth
+ * account metadata. Only a versioned scrypt hash is stored; plaintext
+ * passwords never reach the database or user-data exports.
+ */
+export const passwordCredentials = sqliteTable('password_credentials', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().unique().references(() => users.id, { onDelete: 'cascade' }),
+  passwordHash: text('password_hash').notNull(),
+  passwordVersion: integer('password_version').notNull().default(1),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (table) => ({
+  userIdx: index('password_credentials_user_id_idx').on(table.userId),
+}));
+
 export const resumes = sqliteTable('resumes', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().references(() => users.id),
