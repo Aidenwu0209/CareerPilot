@@ -33,7 +33,7 @@ vi.mock('@/lib/db/sample-resume', () => ({
 
 // --- Import AFTER mocks ---
 import { db } from '@/lib/db';
-import { users, resumes, resumeSections, chatSessions, chatMessages, resumeShares } from '@/lib/db/schema';
+import { users, resumes, resumeSections, chatSessions, chatMessages, resumeShares, supportTickets } from '@/lib/db/schema';
 import { jdAnalyses, grammarChecks } from '@/lib/db/schema';
 import { organizationMemberships, organizations } from '@/lib/db/schema-commercial';
 import { interviewSessions, interviewRounds, interviewMessages, interviewReports } from '@/lib/db/schema-interview';
@@ -275,6 +275,16 @@ describe('collectUserData', () => {
     await seedInterview('user-a');
     await seedCreditsAndConsents('user-a');
     await seedAIOperation('user-a');
+    await db.insert(supportTickets).values({
+      id: 'support-user-a',
+      userId: 'user-a',
+      category: 'career',
+      subject: 'Career match question',
+      description: 'Please review the explanation for my target occupation.',
+      status: 'replied',
+      adminReply: 'The evidence coverage needs one more verified project.',
+      repliedByUserId: 'user-b',
+    });
 
     // User B data
     await seedResume('r-b', 'user-b', 'My Resume B');
@@ -465,6 +475,14 @@ describe('collectUserData', () => {
     const data = await collectUserData('user-a');
     expect(data.aiOperations.length).toBeGreaterThanOrEqual(1);
     expect((data.aiOperations[0] as { actorId: string }).actorId).toBe('user-a');
+  });
+
+  it('includes owned support tickets without exposing the replying admin id', async () => {
+    const data = await collectUserData('user-a');
+    expect(data.supportTickets).toHaveLength(1);
+    expect(data.supportTickets[0]).toMatchObject({ id: 'support-user-a', status: 'replied' });
+    expect(data.supportTickets[0]).not.toHaveProperty('repliedByUserId');
+    expect(JSON.stringify(data.supportTickets)).not.toContain('user-b');
   });
 
   it('does NOT include other users data (AC3)', async () => {

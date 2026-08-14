@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Users, Cpu, Boxes, Building2, Menu, Coins, Activity, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Users, Cpu, Boxes, Building2, Menu, Coins, Activity, CreditCard, LifeBuoy } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/users', i18nKey: 'admin.sections.users.title', match: '/admin/users', icon: Users },
   { href: '/admin/credits/rules', i18nKey: 'admin.sections.creditRules.title', match: '/admin/credits/rules', icon: Coins },
   { href: '/admin/billing', i18nKey: 'admin.sections.billing.title', match: '/admin/billing', icon: CreditCard },
+  { href: '/admin/support', i18nKey: 'admin.sections.support.title', match: '/admin/support', icon: LifeBuoy },
   { href: '/admin/ai-providers', i18nKey: 'admin.sections.aiProviders.title', match: '/admin/ai-providers', icon: Cpu },
   { href: '/admin/ai/models', i18nKey: 'admin.sections.aiModels.title', match: '/admin/ai/models', icon: Boxes },
   { href: '/admin/organizations', i18nKey: 'admin.sections.organizations.title', match: '/admin/organizations', icon: Building2 },

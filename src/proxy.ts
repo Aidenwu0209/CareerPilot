@@ -11,6 +11,8 @@ const intlProxy = createMiddleware(routing);
 const PUBLIC_PAGE_PATHS = [
   '/',
   '/login',
+  '/forgot-password',
+  '/help',
   '/privacy',
   '/terms',
   '/share',
@@ -46,7 +48,7 @@ function isPublicApiPath(pathname: string): boolean {
 }
 
 function isOnboardingAllowedPage(pathname: string): boolean {
-  return ['/onboarding', '/auth/complete', '/privacy', '/terms'].includes(
+  return ['/onboarding', '/auth/complete', '/forgot-password', '/help', '/privacy', '/terms'].includes(
     stripLocale(pathname),
   );
 }

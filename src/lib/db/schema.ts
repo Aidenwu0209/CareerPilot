@@ -201,6 +201,10 @@ export {
 } from './schema-email-otp';
 
 export {
+  supportTickets,
+} from './schema-support';
+
+export {
   careerProfiles,
   careerAbilities,
   careerEvidence,

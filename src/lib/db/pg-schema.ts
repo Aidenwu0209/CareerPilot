@@ -74,6 +74,24 @@ export const passwordCredentials = pgTable(
   }),
 );
 
+export const supportTickets = pgTable('support_tickets', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  category: text('category').notNull(),
+  subject: text('subject').notNull(),
+  description: text('description').notNull(),
+  status: text('status').notNull().default('open'),
+  adminReply: text('admin_reply'),
+  repliedByUserId: text('replied_by_user_id').references(() => users.id, { onDelete: 'set null' }),
+  repliedAt: integer('replied_at'),
+  closedAt: integer('closed_at'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userCreatedIdx: index('support_tickets_user_id_created_at_idx').on(table.userId, table.createdAt),
+  statusUpdatedIdx: index('support_tickets_status_updated_at_idx').on(table.status, table.updatedAt),
+}));
+
 export const resumes = pgTable(
   'resumes',
   {
@@ -744,6 +762,7 @@ export const emailOtps = pgTable(
   {
     id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
     email: text('email').notNull(),
+    purpose: text('purpose').notNull().default('login'),
     codeHash: text('code_hash').notNull(),
     ipAddress: text('ip_address'),
     expiresAt: integer('expires_at').notNull(),
@@ -754,6 +773,7 @@ export const emailOtps = pgTable(
   (table) => ({
     emailIdx: index('email_otps_email_idx').on(table.email),
     emailUsedIdx: index('email_otps_email_used_at_idx').on(table.email, table.usedAt),
+    emailPurposeCreatedIdx: index('email_otps_email_purpose_created_at_idx').on(table.email, table.purpose, table.createdAt),
     ipIdx: index('email_otps_ip_address_idx').on(table.ipAddress),
   }),
 );

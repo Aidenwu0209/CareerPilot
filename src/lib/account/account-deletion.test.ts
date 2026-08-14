@@ -59,6 +59,7 @@ import {
   interviewSessions,
   organizationMemberships,
   organizations,
+  supportTickets,
 } from '@/lib/db/schema';
 import { creditAccounts } from '@/lib/db/schema-credits';
 import { emailOtps } from '@/lib/db/schema';
@@ -241,6 +242,7 @@ async function createTestCareerData(
 
 beforeEach(async () => {
   // Clean all tables in dependency order
+  await db.delete(supportTickets);
   await db.delete(teacherStudentAssignments);
   await db.delete(careerGuidanceNotes);
   await db.delete(careerMatches);
@@ -430,6 +432,20 @@ describe('deleteUserData', () => {
 
     const rows = await db.select().from(passwordCredentials).where(eq(passwordCredentials.userId, userId));
     expect(rows).toHaveLength(0);
+  });
+
+  it('deletes private support tickets before anonymizing the retained user row', async () => {
+    const userId = await createTestUser();
+    await db.insert(supportTickets).values({
+      userId,
+      category: 'account',
+      subject: 'Private account question',
+      description: 'This ticket contains private account troubleshooting details.',
+    });
+
+    await deleteUserData(userId);
+
+    expect(await db.select().from(supportTickets).where(eq(supportTickets.userId, userId))).toHaveLength(0);
   });
 
   it('soft-removes active organization memberships', async () => {

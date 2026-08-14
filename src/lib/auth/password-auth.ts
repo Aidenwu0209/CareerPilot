@@ -29,6 +29,10 @@ const passwordSchema = z
   .regex(/[A-Za-z]/)
   .regex(/[0-9]/);
 
+export function isValidPasswordInput(password: string): boolean {
+  return passwordSchema.safeParse(password).success;
+}
+
 const registrationSchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: emailSchema,

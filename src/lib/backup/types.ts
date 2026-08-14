@@ -274,6 +274,7 @@ export const BACKUP_TABLES_IN_FK_ORDER: string[] = [
   'legal_consents',
   'audit_events',
   'credit_rules',
+  'support_tickets',
   // Level 2
   'resume_sections',
   'chat_sessions',

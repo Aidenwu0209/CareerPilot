@@ -148,6 +148,13 @@
       "when": 1786693343572,
       "tag": "0020_dazzling_hex",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1786713605723,
+      "tag": "0021_new_solo",
+      "breakpoints": true
     }
   ]
 }
