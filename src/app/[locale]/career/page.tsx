@@ -17,6 +17,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirectToLogin } from '@/lib/auth/login-redirect';
 import { resolveServerContext } from '@/lib/auth/server-context';
 import { getCareerOverview, getCareerPath } from '@/lib/career/service';
+import { getCareerSelfAssessment } from '@/lib/career/self-assessment-service';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +28,7 @@ import {
   ScoreBar,
   StatusPill,
 } from '@/components/career/career-shell';
+import { CareerReportExport } from '@/components/career/career-report-export';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -48,9 +50,10 @@ export default async function CareerOverviewPage({
   const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career');
 
-  const [overview, path] = await Promise.all([
+  const [overview, path, assessment] = await Promise.all([
     getCareerOverview(context.actor.userId),
     getCareerPath(context.actor.userId),
+    getCareerSelfAssessment(context.actor.userId),
   ]);
   const currentStage = path.stages[path.currentStageIndex] ?? null;
   const knownDimensions = overview.profile.dimensions.filter((dimension) => dimension.score !== null);
@@ -62,14 +65,36 @@ export default async function CareerOverviewPage({
         title={t('overview.title')}
         description={t('overview.description')}
         action={
-          <Button asChild className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
-            <Link href={overview.primaryGoal ? '/career/matching' : '/career/goals'}>
-              {overview.primaryGoal ? t('overview.viewMatch') : t('overview.chooseGoal')}
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <CareerReportExport />
+            <Button asChild className="w-full bg-brand hover:bg-brand-hover sm:w-auto">
+              <Link href={overview.primaryGoal ? '/career/matching' : '/career/goals'}>
+                {overview.primaryGoal ? t('overview.viewMatch') : t('overview.chooseGoal')}
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
         }
       />
+
+      <Card className="gap-0 border-brand/20 bg-brand/5 py-0 shadow-none">
+        <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-brand">{t('overview.resume.eyebrow')}</p>
+            <h2 className="mt-1 font-semibold text-zinc-950 dark:text-zinc-50">
+              {!assessment?.completedAt ? t('overview.resume.assessmentTitle') : !overview.primaryGoal ? t('overview.resume.goalTitle') : overview.nextTasks[0] ? t('overview.resume.taskTitle') : t('overview.resume.matchTitle')}
+            </h2>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              {!assessment?.completedAt ? t('overview.resume.assessmentDescription') : !overview.primaryGoal ? t('overview.resume.goalDescription') : overview.nextTasks[0]?.title ?? t('overview.resume.matchDescription')}
+            </p>
+          </div>
+          <Button asChild className="w-full shrink-0 sm:w-auto">
+            <Link href={!assessment?.completedAt ? '/career/assessment' : !overview.primaryGoal ? '/career/goals' : overview.nextTasks[0] ? '/career/path' : '/career/matching'}>
+              {t('overview.resume.action')}<ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       {!overview.primaryGoal ? (
         <Card className="gap-0 border-brand/20 bg-gradient-to-br from-brand/10 via-white to-white py-0 shadow-none dark:via-zinc-950 dark:to-zinc-950">

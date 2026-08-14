@@ -9,6 +9,7 @@ import { RuntimeConfigProvider } from '@/components/providers/runtime-config-pro
 import { BrandProvider } from '@/components/layout/brand-provider';
 import { SettingsHydrator } from '@/components/providers/settings-hydrator';
 import { config } from '@/lib/config';
+import { NetworkStatusBanner } from '@/components/providers/network-status-banner';
 
 export default async function LocaleLayout({
   children,
@@ -40,6 +41,7 @@ export default async function LocaleLayout({
           <BrandProvider>
             <TooltipProvider>
               <SettingsHydrator />
+              <NetworkStatusBanner />
               {children}
               <Toaster />
             </TooltipProvider>

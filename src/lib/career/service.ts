@@ -40,6 +40,8 @@ import type {
 } from '@/types/career';
 import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
 import { careerKnowledgeProvider } from './knowledge-provider';
+import { extractRequirementTerms, rankOccupationsFromJd } from './jd-matcher';
+import type { CareerJdMatchResult } from '@/types/career';
 import { clampScore, parseJson, toIso, toNullableIso } from './serialization';
 
 export class CareerNotFoundError extends Error {
@@ -225,6 +227,26 @@ export async function listOccupationPage(filters: OccupationListFilters = {}): P
 
 export async function getOccupationByCode(code: string): Promise<OccupationDetail | null> {
   return careerKnowledgeProvider.getOccupationByCode(code);
+}
+
+export async function matchJobDescription(userId: string, jd: string): Promise<CareerJdMatchResult> {
+  const description = jd.trim();
+  if (description.length < 40) throw new CareerValidationError('Job description must contain at least 40 characters.');
+  if (description.length > 20_000) throw new CareerValidationError('Job description is too long.');
+  const occupationsPage = await listOccupationPage({ limit: 100, offset: 0 });
+  const ranked = rankOccupationsFromJd(description, occupationsPage.items.filter((item) => item.scoringEligible));
+  if (!ranked[0]) throw new CareerValidationError('No occupation could be inferred from this job description. Add the job title and key responsibilities.');
+  const detail = await getOccupationByCode(ranked[0].occupation.code);
+  if (!detail) throw new CareerNotFoundError('Inferred occupation not found.');
+  const topScore = ranked[0].score;
+  return {
+    occupation: ranked[0].occupation,
+    match: await getCareerMatch(userId, ranked[0].occupation.code),
+    confidence: topScore >= 10 ? 'high' : topScore >= 5 ? 'medium' : 'low',
+    matchedTerms: ranked[0].matchedTerms,
+    requirementTerms: extractRequirementTerms(description, detail),
+    alternatives: ranked.slice(1, 4).map((item) => item.occupation),
+  };
 }
 
 async function isActiveScorableOccupation(code: string): Promise<boolean> {

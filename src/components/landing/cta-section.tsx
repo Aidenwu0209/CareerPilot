@@ -27,7 +27,9 @@ export function CTASection() {
               asChild
               className="mt-10 h-12 cursor-pointer rounded-xl bg-white px-8 text-base font-semibold text-brand shadow-lg transition-all hover:-translate-y-0.5 hover:bg-zinc-50 hover:shadow-xl sm:h-11 sm:px-6 sm:text-sm"
             >
-              <ProductEntryLink>{t('button')}</ProductEntryLink>
+              <ProductEntryLink targetPath="/career" pendingLabel={t('buttonPending')}>
+                {t('button')}
+              </ProductEntryLink>
             </Button>
           </div>
         </div>

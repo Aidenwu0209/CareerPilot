@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2, Save } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -10,6 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { fetchJson } from '@/lib/http/client';
+
+const DRAFT_KEY = 'careerpilot:career-goal-draft';
 
 function asCommaList(values: string[] | undefined) {
   return values?.join(', ') ?? '';
@@ -47,6 +50,26 @@ export function GoalForm({
     asCommaList(currentGoal?.preferences.organizationTypes),
   );
 
+  useEffect(() => {
+    if (currentGoal) return;
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    try {
+      const draft = JSON.parse(raw) as Record<string, string>;
+      setOccupationCode(draft.occupationCode ?? '');
+      setTargetDate(draft.targetDate ?? '');
+      setRationale(draft.rationale ?? '');
+      setIndustries(draft.industries ?? '');
+      setCities(draft.cities ?? '');
+      setOrganizationTypes(draft.organizationTypes ?? '');
+    } catch { localStorage.removeItem(DRAFT_KEY); }
+  }, [currentGoal]);
+
+  useEffect(() => {
+    if (currentGoal) return;
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ occupationCode, targetDate, rationale, industries, cities, organizationTypes }));
+  }, [currentGoal, occupationCode, targetDate, rationale, industries, cities, organizationTypes]);
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!occupationCode) {
@@ -56,7 +79,7 @@ export function GoalForm({
 
     setIsSaving(true);
     try {
-      const response = await fetch('/api/career/goals', {
+      await fetchJson('/api/career/goals', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -71,8 +94,7 @@ export function GoalForm({
           },
         }),
       });
-
-      if (!response.ok) throw new Error('save_failed');
+      localStorage.removeItem(DRAFT_KEY);
       toast.success(t('goals.form.saved'));
       router.refresh();
     } catch {

@@ -252,6 +252,15 @@ export interface CareerOverview {
   generatedAt: string;
 }
 
+export interface CareerJdMatchResult {
+  occupation: OccupationSummary;
+  match: CareerMatchResult;
+  confidence: 'high' | 'medium' | 'low';
+  matchedTerms: string[];
+  requirementTerms: string[];
+  alternatives: OccupationSummary[];
+}
+
 export interface CareerPathStage {
   id: string;
   title: string;

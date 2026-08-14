@@ -723,6 +723,22 @@
       "tplUse": {
         "title": "Use Template",
         "description": "Pick a template to create a resume and enter the editor"
+      },
+      "careerAssessment": {
+        "title": "Understand yourself",
+        "description": "Explore interests, personality preferences, values, and learning. Results never alter evidence scores."
+      },
+      "careerGoal": {
+        "title": "Choose a career goal",
+        "description": "Select one current target from the reviewed Chinese occupation catalog."
+      },
+      "careerMatch": {
+        "title": "Review your match",
+        "description": "Compare occupation requirements, verified evidence, unknowns, and priority gaps."
+      },
+      "careerPath": {
+        "title": "Follow the growth path",
+        "description": "Turn gaps into tasks, submit outcomes, and review progress over time."
       }
     }
   },
@@ -741,6 +757,7 @@
       "title": "Understand your direction, prove your abilities, and take the next step",
       "subtitle": "Bring your major, resume, projects, interviews, and teacher guidance into one career record. Understand occupations through Chinese standards and explain matching through real evidence.",
       "cta": "Start career planning",
+      "ctaPending": "Opening career planning…",
       "secondaryCta": "Browse templates",
       "preview": {
         "title": "Your career development overview",
@@ -811,6 +828,7 @@
       "title": "Start career planning from a real target",
       "subtitle": "Create an account, complete your profile, and build your first growth path from occupation requirements and personal evidence.",
       "button": "Register and start planning"
+      ,"buttonPending": "Opening career planning…"
     },
     "footer": {
       "tagline": "Connect career profiles, occupation knowledge, person-job matching, growth paths, and teacher guidance.",
@@ -1893,10 +1911,26 @@
       "label": "Career development navigation",
       "overview": "Overview",
       "profile": "Career Profile",
+      "assessment": "Self-awareness",
       "goals": "Goals",
       "jobs": "Occupation Knowledge",
       "matching": "Job Match",
       "path": "Growth Path"
+    },
+    "journey": {
+      "progress": "Career planning step",
+      "help": "Guided tour",
+      "assessment": { "label": "Understand yourself", "description": "Interests, preferences, and values" },
+      "goal": { "label": "Choose a goal", "description": "Select a real target occupation" },
+      "match": { "label": "Review the match", "description": "Requirements, evidence, and gaps" },
+      "path": { "label": "Take action", "description": "Work through growth tasks" }
+    },
+    "assessment": {
+      "eyebrow": "Career exploration self-awareness",
+      "title": "Understand your preferences before judging a direction",
+      "description": "Build an updateable summary from career interests, four MBTI preference dimensions, work values, and learning preferences.",
+      "noticeTitle": "This is not a psychological diagnosis or official MBTI assessment",
+      "noticeDescription": "Results help you form exploration questions. They never change six-dimension ability scores and do not replace a teacher, qualified professional, or real work experience."
     },
     "common": {
       "notSet": "Not set",
@@ -2006,6 +2040,17 @@
       "goalFallback": "Explain why this occupation matters to you so the system and your teacher can provide better guidance.",
       "manageGoal": "Manage goal",
       "indicatorsLabel": "Career development indicators",
+      "resume": {
+        "eyebrow": "Continue where you left off",
+        "assessmentTitle": "Complete the self-awareness questionnaire",
+        "assessmentDescription": "Explore interests, personality preferences, values, and learning without changing ability scores.",
+        "goalTitle": "Next: choose a primary target occupation",
+        "goalDescription": "Choose your current direction from reviewed Chinese standard occupations.",
+        "taskTitle": "Continue your current growth task",
+        "matchTitle": "Review your latest occupation match",
+        "matchDescription": "Review evidence coverage, strengths, unknowns, and priority gaps.",
+        "action": "Continue"
+      },
       "noGoal": {
         "title": "Choose a primary goal to give your plan a direction",
         "description": "Select an occupation from the reviewed catalog to generate a match explanation, milestones, and growth tasks.",

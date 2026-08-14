@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Scale,
   UserRoundSearch,
+  ClipboardCheck,
 } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -14,6 +15,7 @@ import { cn } from '@/lib/utils';
 const icons = {
   overview: LayoutDashboard,
   profile: UserRoundSearch,
+  assessment: ClipboardCheck,
   goals: Crosshair,
   jobs: Compass,
   matching: Scale,
