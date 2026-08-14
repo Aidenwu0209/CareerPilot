@@ -723,6 +723,22 @@
       "tplUse": {
         "title": "使用模板",
         "description": "选中喜欢的模板，一键创建简历并进入编辑器"
+      },
+      "careerAssessment": {
+        "title": "先了解自己",
+        "description": "完成兴趣、性格偏好、价值观和学习方式问卷；结果只用于探索，不参与证据评分。"
+      },
+      "careerGoal": {
+        "title": "确定职业目标",
+        "description": "从已审核的中国标准岗位中选择一个当前主目标。"
+      },
+      "careerMatch": {
+        "title": "核对人岗匹配",
+        "description": "查看岗位要求、已核验证据、未知项和优先差距。"
+      },
+      "careerPath": {
+        "title": "执行成长路径",
+        "description": "把差距转成任务，完成并提交成果后持续复盘。"
       }
     }
   },
@@ -741,6 +757,7 @@
       "title": "看清方向，证明能力，走好职业发展的每一步",
       "subtitle": "把专业、简历、项目、面试和教师指导汇入同一份职业档案，用中国职业标准理解岗位，用真实证据解释匹配结果。",
       "cta": "开始职业规划",
+      "ctaPending": "正在进入职业规划…",
       "secondaryCta": "浏览精美模板",
       "preview": {
         "title": "你的职业发展总览",
@@ -811,6 +828,7 @@
       "title": "从真实目标开始你的职业规划",
       "subtitle": "创建账户，完善基础资料，再用岗位要求和个人证据形成第一条成长路径。",
       "button": "注册并开始规划"
+      ,"buttonPending": "正在进入职业规划…"
     },
     "footer": {
       "tagline": "连接职业画像、岗位知识、人岗匹配、成长路径与教师指导。",
@@ -1893,10 +1911,26 @@
       "label": "职业发展中心导航",
       "overview": "职业总览",
       "profile": "职业画像",
+      "assessment": "自我认知",
       "goals": "职业目标",
       "jobs": "岗位知识",
       "matching": "人岗匹配",
       "path": "成长路径"
+    },
+    "journey": {
+      "progress": "职业规划步骤",
+      "help": "新手引导",
+      "assessment": { "label": "了解自己", "description": "兴趣、偏好与价值观" },
+      "goal": { "label": "确定目标", "description": "选择真实目标岗位" },
+      "match": { "label": "核对匹配", "description": "要求、证据与差距" },
+      "path": { "label": "开始行动", "description": "按成长任务推进" }
+    },
+    "assessment": {
+      "eyebrow": "职业探索自我认知",
+      "title": "先理解自己的偏好，再判断适合的方向",
+      "description": "从职业兴趣、MBTI 四维偏好、工作价值观和学习方式形成一份可更新的自我认知摘要。",
+      "noticeTitle": "这不是心理诊断或官方 MBTI 测试",
+      "noticeDescription": "结果只用于帮助你提出探索问题，不会写入六维能力分，也不会替代教师、心理专业人员或真实职业体验。"
     },
     "common": {
       "notSet": "未设置",
@@ -2006,6 +2040,17 @@
       "goalFallback": "补充选择理由后，系统和教师可以给出更贴合你的成长建议。",
       "manageGoal": "管理目标",
       "indicatorsLabel": "职业发展核心指标",
+      "resume": {
+        "eyebrow": "继续上次进度",
+        "assessmentTitle": "先完成自我认知问卷",
+        "assessmentDescription": "了解兴趣、性格偏好、价值观与学习方式，结果不会参与能力评分。",
+        "goalTitle": "下一步：选择主目标岗位",
+        "goalDescription": "从已审核的中国标准岗位中确定当前探索方向。",
+        "taskTitle": "继续当前成长任务",
+        "matchTitle": "回看最新人岗匹配",
+        "matchDescription": "核对证据覆盖、优势、未知项与优先差距。",
+        "action": "继续"
+      },
       "noGoal": {
         "title": "先选一个主目标，规划才有方向",
         "description": "从人工审核的岗位知识中选择目标，系统会据此生成匹配解释、阶段里程碑和成长任务。",

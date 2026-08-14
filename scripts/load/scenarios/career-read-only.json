@@ -1,0 +1,10 @@
+{
+  "name": "career-read-only-baseline",
+  "requests": [
+    { "path": "/api/health", "method": "GET" },
+    { "path": "/api/career/overview", "method": "GET" },
+    { "path": "/api/career/path", "method": "GET" },
+    { "path": "/api/career/occupations?limit=24", "method": "GET" }
+  ],
+  "thresholds": { "maxErrorRate": 0.01, "maxP95Ms": 1500 }
+}

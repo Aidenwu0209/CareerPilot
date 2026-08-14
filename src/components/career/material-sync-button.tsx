@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
+import { fetchJson } from '@/lib/http/client';
 
 export function MaterialSyncButton({ variant = 'default' }: { variant?: 'default' | 'outline' }) {
   const t = useTranslations('career.materials');
@@ -15,11 +16,9 @@ export function MaterialSyncButton({ variant = 'default' }: { variant?: 'default
   async function sync() {
     setIsSyncing(true);
     try {
-      const response = await fetch('/api/career/profile/materials', { method: 'POST' });
-      if (!response.ok) throw new Error('sync_failed');
-      const body = await response.json() as {
+      const body = await fetchJson<{
         result?: { processedSources?: number; evidenceCreated?: number; warnings?: string[] };
-      };
+      }>('/api/career/profile/materials', { method: 'POST' });
       toast.success(t('success', {
         sources: body.result?.processedSources ?? 0,
         evidence: body.result?.evidenceCreated ?? 0,

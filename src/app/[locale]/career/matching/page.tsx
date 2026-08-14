@@ -26,6 +26,7 @@ import { MatchReviewFeedback } from '@/components/career/match-review-feedback';
 import { CareerEvidenceSubmissionForm } from '@/components/career/career-evidence-submission-form';
 import { MatchRecalculationButton } from '@/components/career/match-recalculation-button';
 import { Button } from '@/components/ui/button';
+import { JdMatchForm } from '@/components/career/jd-match-form';
 
 function formatDate(value: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(
@@ -265,6 +266,8 @@ export default async function CareerMatchingPage({
         <p className="font-semibold">{t('matching.disclaimer.title')}</p>
         <p className="mt-1">{t('matching.disclaimer.description')}</p>
       </div>
+
+      <JdMatchForm />
 
       <form method="get" className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 sm:p-5">
         <fieldset>

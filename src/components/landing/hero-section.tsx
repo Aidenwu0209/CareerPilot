@@ -52,7 +52,9 @@ export function HeroSection() {
             asChild
             className="h-12 w-full cursor-pointer rounded-xl bg-brand px-8 text-base font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-xl hover:shadow-brand/30 sm:h-11 sm:w-auto sm:px-6 sm:text-sm"
           >
-            <ProductEntryLink>{t('cta')}</ProductEntryLink>
+            <ProductEntryLink targetPath="/career" pendingLabel={t('ctaPending')}>
+              {t('cta')}
+            </ProductEntryLink>
           </Button>
           <Button
             asChild
