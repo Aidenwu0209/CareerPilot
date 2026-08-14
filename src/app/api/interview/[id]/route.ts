@@ -15,16 +15,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  const rounds = await interviewRepository.findRoundsBySessionId(id);
-  const report = await interviewRepository.findReportBySessionId(id);
-
-  // Include messages for each round (needed for resume/history)
-  const roundsWithMessages = await Promise.all(
-    rounds.map(async (round: any) => {
-      const messages = await interviewRepository.findMessagesByRoundId(round.id);
-      return { ...round, messages };
-    })
-  );
+  const [roundGroups, report] = await Promise.all([
+    interviewRepository.findAllMessagesBySessionId(id),
+    interviewRepository.findReportBySessionId(id),
+  ]);
+  const roundsWithMessages = roundGroups.map(({ round, messages }) => ({ ...round, messages }));
 
   return NextResponse.json({ session, rounds: roundsWithMessages, report });
 }
