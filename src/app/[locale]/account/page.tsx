@@ -90,7 +90,7 @@ export default async function AccountPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-background">
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-3xl px-4 py-8">
         {/* Page header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

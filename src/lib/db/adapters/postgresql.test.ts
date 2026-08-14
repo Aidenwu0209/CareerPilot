@@ -40,6 +40,7 @@ vi.mock('../seed-demo', () => ({
 
 // Import AFTER mocks are set up
 import { PostgreSQLAdapter } from './postgresql';
+import postgres from 'postgres';
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -192,5 +193,42 @@ describe('PostgreSQLAdapter.close', () => {
     const adapter = new PostgreSQLAdapter('postgresql://user:pass@localhost:5432/db');
     await adapter.close();
     expect(mocks.clientEndFn).toHaveBeenCalledOnce();
+  });
+});
+
+describe('PostgreSQLAdapter connection options', () => {
+  it('passes bounded pool and secure TLS options to postgres.js', () => {
+    setNodeEnv('production');
+    process.env.DATABASE_POOL_MAX = '24';
+    process.env.DATABASE_IDLE_TIMEOUT_SECONDS = '30';
+    process.env.DATABASE_CONNECT_TIMEOUT_SECONDS = '12';
+    process.env.DATABASE_MAX_LIFETIME_SECONDS = '900';
+    process.env.DATABASE_SSL_MODE = 'verify-full';
+
+    new PostgreSQLAdapter('postgresql://user:pass@example.com:5432/db');
+
+    expect(vi.mocked(postgres)).toHaveBeenCalledWith(
+      'postgresql://user:pass@example.com:5432/db',
+      expect.objectContaining({
+        max: 24,
+        idle_timeout: 30,
+        connect_timeout: 12,
+        max_lifetime: 900,
+        ssl: 'verify-full',
+      }),
+    );
+  });
+
+  it('falls back to safe values when numeric settings are invalid', () => {
+    setNodeEnv('development');
+    process.env.DATABASE_POOL_MAX = '2000';
+    process.env.DATABASE_SSL_MODE = 'disable';
+
+    new PostgreSQLAdapter('postgresql://user:pass@localhost:5432/db');
+
+    expect(vi.mocked(postgres)).toHaveBeenLastCalledWith(
+      'postgresql://user:pass@localhost:5432/db',
+      expect.objectContaining({ max: 10, ssl: false }),
+    );
   });
 });

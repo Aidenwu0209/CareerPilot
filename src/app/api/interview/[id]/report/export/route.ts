@@ -4,6 +4,7 @@ import { interviewRepository } from '@/lib/db/repositories/interview.repository'
 import { generatePdf } from '@/lib/pdf/generate-pdf';
 import { generateInterviewReportHtml } from './html';
 import { dbReady } from '@/lib/db';
+import { checkRateLimit, RATE_LIMIT_POLICIES, rateLimitKey, rateLimitedResponse } from '@/lib/rate-limit/rate-limit';
 
 export const maxDuration = 60;
 
@@ -14,6 +15,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const fingerprint = getUserIdFromRequest(request);
     const user = await resolveUser(fingerprint);
     if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+    const limit = await checkRateLimit(rateLimitKey('report-export', 'user', user.id), RATE_LIMIT_POLICIES.reportExport);
+    if (!limit.allowed) return rateLimitedResponse(limit.retryAfter);
 
     const session = await interviewRepository.findSession(sessionId);
     if (!session || session.userId !== user.id) {

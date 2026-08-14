@@ -19,6 +19,7 @@ import {
   majorOccupationEdges,
   occupationAliases,
 } from '@/lib/db/schema-career';
+import { careerKnowledgeProvider } from './knowledge-provider';
 
 type ReviewStatus = 'pending' | 'reviewed' | 'approved' | 'rejected' | string;
 
@@ -476,6 +477,7 @@ export async function applyCareerCatalog(version: string): Promise<void> {
     throw new Error(`Catalog ${version} cannot enable scoring before approval.`);
   }
   await runStatementsInTransaction((tx) => materializeStatements(tx, versionRow.id, version, grouped, scoringSafe));
+  careerKnowledgeProvider.invalidateCache();
 }
 
 export async function rollbackCareerCatalog(version: string): Promise<void> {

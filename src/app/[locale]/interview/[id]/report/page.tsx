@@ -8,12 +8,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useCredits } from '@/hooks/use-credits';
 import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewReport, InterviewSession } from '@/types/interview';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
 export default function ReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const t = useTranslations('interview.report');
+  const tLobby = useTranslations('interview.lobby');
   const [report, setReport] = useState<InterviewReport | null>(null);
   const [session, setSession] = useState<InterviewSession | null>(null);
   const [loading, setLoading] = useState(true);
@@ -80,5 +82,14 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
     return <div className="py-20 text-center text-zinc-500">Failed to load report</div>;
   }
 
-  return <InterviewReportView report={report} session={session} />;
+  return (
+    <div className="space-y-6">
+      <Breadcrumbs items={[
+        { label: tLobby('title'), href: '/interview' },
+        { label: session.jobTitle, href: `/interview/${id}` },
+        { label: t('title') },
+      ]} />
+      <InterviewReportView report={report} session={session} />
+    </div>
+  );
 }

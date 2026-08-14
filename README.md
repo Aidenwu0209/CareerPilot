@@ -21,6 +21,8 @@ Build professional resumes, practice mock interviews, generate professional phot
 
 CareerPilot covers the job-seeking workflow from resume creation and JD matching to mock interviews and professional photo generation. It supports self-hosted development with SQLite, production deployment with PostgreSQL, and an optional commercial layer for managed models, credits, plans, payments, refunds, reconciliation, and operational alerts.
 
+Product scope and implementation status are maintained in [docs/PRODUCT-OVERVIEW.md](docs/PRODUCT-OVERVIEW.md).
+
 > **Project status:** `main` is the stable branch. `develop/careerpilot` contains the latest development work. External AI, payment, email, storage, and monitoring services require your own credentials and configuration.
 
 ## Screenshots
@@ -160,6 +162,10 @@ The following resume sections support Markdown syntax:
 ## Getting Started
 
 ### Docker (Recommended)
+
+For the production Compose topology, health checks, Redis-backed rate limiting,
+connection-pool settings, upgrades, and rollback procedure, see
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ```bash
 # Generate a secret key first

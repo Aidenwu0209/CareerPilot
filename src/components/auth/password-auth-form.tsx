@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, Loader2, LockKeyhole, Mail, UserRound } from 'lucide-react';
@@ -18,6 +18,7 @@ type ErrorKind =
   | 'RATE_LIMITED'
   | 'PASSWORD_MISMATCH'
   | 'SERVER_ERROR';
+type FieldName = 'name' | 'email' | 'password' | 'confirmPassword';
 
 export function PasswordAuthForm() {
   const t = useTranslations('auth.password');
@@ -36,17 +37,64 @@ export function PasswordAuthForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<ErrorKind>(null);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldName, string>>>({});
+  const tabRefs = useRef<Record<Mode, HTMLButtonElement | null>>({ login: null, register: null });
+
+  const validateField = (field: FieldName, value: string): string | undefined => {
+    if (field === 'name' && mode === 'register' && value.trim().length < 2) return t('fieldErrors.name');
+    if (field === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return t('fieldErrors.email');
+    if (field === 'password' && mode === 'register' && !(value.length >= 10 && /[A-Za-z]/.test(value) && /[0-9]/.test(value))) {
+      return t('fieldErrors.password');
+    }
+    if (field === 'confirmPassword' && mode === 'register' && value !== password) return t('fieldErrors.confirmPassword');
+    return undefined;
+  };
+
+  const validateOnBlur = (field: FieldName, value: string) => {
+    setFieldErrors((current) => ({ ...current, [field]: validateField(field, value) }));
+  };
 
   const switchMode = (nextMode: Mode) => {
     setMode(nextMode);
     setPassword('');
     setConfirmPassword('');
     setError(null);
+    setFieldErrors({});
+  };
+
+  const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, currentMode: Mode) => {
+    const modes: Mode[] = ['login', 'register'];
+    let nextMode: Mode | undefined;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      nextMode = modes[(modes.indexOf(currentMode) + 1) % modes.length];
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      nextMode = modes[(modes.indexOf(currentMode) - 1 + modes.length) % modes.length];
+    } else if (event.key === 'Home') {
+      nextMode = modes[0];
+    } else if (event.key === 'End') {
+      nextMode = modes[modes.length - 1];
+    }
+    if (!nextMode) return;
+
+    event.preventDefault();
+    switchMode(nextMode);
+    requestAnimationFrame(() => tabRefs.current[nextMode]?.focus());
   };
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+
+    const nextFieldErrors: Partial<Record<FieldName, string>> = {
+      email: validateField('email', email),
+      password: validateField('password', password),
+      ...(mode === 'register' ? {
+        name: validateField('name', name),
+        confirmPassword: validateField('confirmPassword', confirmPassword),
+      } : {}),
+    };
+    setFieldErrors(nextFieldErrors);
+    if (Object.values(nextFieldErrors).some(Boolean)) return;
 
     if (mode === 'register' && password !== confirmPassword) {
       setError('PASSWORD_MISMATCH');
@@ -98,28 +146,36 @@ export function PasswordAuthForm() {
     <div>
       <div
         role="tablist"
+        aria-orientation="horizontal"
         aria-label={t('methodLabel')}
-        className="grid grid-cols-2 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800"
+        className="grid h-auto w-full grid-cols-2 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800"
       >
         {(['login', 'register'] as const).map((item) => (
           <button
             key={item}
+            ref={(element) => { tabRefs.current[item] = element; }}
+            id={`password-auth-tab-${item}`}
             type="button"
             role="tab"
             aria-selected={mode === item}
+            aria-controls="password-auth-tabpanel"
+            tabIndex={mode === item ? 0 : -1}
             onClick={() => switchMode(item)}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-              mode === item
-                ? 'bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-white'
-                : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100'
-            }`}
+            onKeyDown={(event) => handleTabKeyDown(event, item)}
+            className="h-9 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand aria-selected:bg-white aria-selected:text-zinc-900 aria-selected:shadow-sm dark:text-zinc-300 dark:hover:text-white dark:aria-selected:bg-zinc-700 dark:aria-selected:text-white"
           >
             {t(`tabs.${item}`)}
           </button>
         ))}
       </div>
 
-      <form onSubmit={submit} className="mt-5 space-y-4">
+      <div
+        id="password-auth-tabpanel"
+        role="tabpanel"
+        aria-labelledby={`password-auth-tab-${mode}`}
+        className="mt-5"
+      >
+      <form onSubmit={submit} className="space-y-4">
         {mode === 'register' && (
           <label className="block space-y-1.5">
             <span className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -128,16 +184,21 @@ export function PasswordAuthForm() {
             <span className="relative block">
               <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
               <Input
+                id="password-auth-name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 minLength={2}
                 maxLength={80}
                 autoComplete="name"
                 required
+                aria-invalid={Boolean(fieldErrors.name)}
+                aria-describedby={fieldErrors.name ? 'password-auth-name-error' : undefined}
+                onBlur={(event) => validateOnBlur('name', event.target.value)}
                 placeholder={t('namePlaceholder')}
                 className="h-11 rounded-xl pl-10"
               />
             </span>
+            {fieldErrors.name && <span id="password-auth-name-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</span>}
           </label>
         )}
 
@@ -148,15 +209,20 @@ export function PasswordAuthForm() {
           <span className="relative block">
             <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
             <Input
+              id="password-auth-email"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
               required
+              aria-invalid={Boolean(fieldErrors.email)}
+              aria-describedby={fieldErrors.email ? 'password-auth-email-error' : undefined}
+              onBlur={(event) => validateOnBlur('email', event.target.value)}
               placeholder="you@example.com"
               className="h-11 rounded-xl pl-10"
             />
           </span>
+          {fieldErrors.email && <span id="password-auth-email-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">{fieldErrors.email}</span>}
         </label>
 
         <label className="block space-y-1.5">
@@ -166,6 +232,7 @@ export function PasswordAuthForm() {
           <span className="relative block">
             <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
             <Input
+              id="password-auth-password"
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -173,6 +240,9 @@ export function PasswordAuthForm() {
               maxLength={128}
               autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
               required
+              aria-invalid={Boolean(fieldErrors.password)}
+              aria-describedby={fieldErrors.password ? 'password-auth-password-error' : undefined}
+              onBlur={(event) => validateOnBlur('password', event.target.value)}
               className="h-11 rounded-xl px-10"
             />
             <button
@@ -189,6 +259,7 @@ export function PasswordAuthForm() {
               {t('passwordHint')}
             </span>
           )}
+          {fieldErrors.password && <span id="password-auth-password-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">{fieldErrors.password}</span>}
         </label>
 
         {mode === 'register' && (
@@ -197,6 +268,7 @@ export function PasswordAuthForm() {
               {t('confirmPasswordLabel')}
             </span>
             <Input
+              id="password-auth-confirm-password"
               type={showPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
@@ -204,8 +276,12 @@ export function PasswordAuthForm() {
               maxLength={128}
               autoComplete="new-password"
               required
+              aria-invalid={Boolean(fieldErrors.confirmPassword)}
+              aria-describedby={fieldErrors.confirmPassword ? 'password-auth-confirm-error' : undefined}
+              onBlur={(event) => validateOnBlur('confirmPassword', event.target.value)}
               className="h-11 rounded-xl"
             />
+            {fieldErrors.confirmPassword && <span id="password-auth-confirm-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">{fieldErrors.confirmPassword}</span>}
           </label>
         )}
 
@@ -230,6 +306,7 @@ export function PasswordAuthForm() {
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t(`submit.${mode}`)}
         </Button>
       </form>
+      </div>
     </div>
   );
 }

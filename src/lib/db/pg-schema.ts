@@ -30,7 +30,10 @@ export const users = pgTable('users', {
   settings: text('settings').default('{}'),
   createdAt: integer('created_at').notNull().default(epochNow),
   updatedAt: integer('updated_at').notNull().default(epochNow),
-});
+}, (table) => ({
+  createdIdx: index('users_created_at_idx').on(table.createdAt),
+  statusIdx: index('users_status_idx').on(table.status),
+}));
 
 export const authAccounts = pgTable(
   'auth_accounts',
@@ -90,6 +93,7 @@ export const resumes = pgTable(
   },
   (table) => ({
     userIdx: index('resumes_user_id_idx').on(table.userId),
+    userUpdatedIdx: index('resumes_user_id_updated_at_idx').on(table.userId, table.updatedAt),
     shareTokenIdx: index('resumes_share_token_idx').on(table.shareToken),
   }),
 );
@@ -174,6 +178,7 @@ export const jdAnalyses = pgTable(
   },
   (table) => ({
     resumeIdx: index('jd_analyses_resume_id_idx').on(table.resumeId),
+    resumeCreatedIdx: index('jd_analyses_resume_id_created_at_idx').on(table.resumeId, table.createdAt),
   }),
 );
 
@@ -189,6 +194,7 @@ export const grammarChecks = pgTable(
   },
   (table) => ({
     resumeIdx: index('grammar_checks_resume_id_idx').on(table.resumeId),
+    resumeCreatedIdx: index('grammar_checks_resume_id_created_at_idx').on(table.resumeId, table.createdAt),
   }),
 );
 
@@ -210,6 +216,8 @@ export const interviewSessions = pgTable(
   },
   (table) => ({
     userIdx: index('interview_sessions_user_id_idx').on(table.userId),
+    userStatusIdx: index('interview_sessions_user_id_status_idx').on(table.userId, table.status),
+    userCreatedIdx: index('interview_sessions_user_id_created_at_idx').on(table.userId, table.createdAt),
     resumeIdx: index('interview_sessions_resume_id_idx').on(table.resumeId),
   }),
 );
@@ -246,6 +254,7 @@ export const interviewMessages = pgTable(
   },
   (table) => ({
     roundIdx: index('interview_messages_round_id_idx').on(table.roundId),
+    roundCreatedIdx: index('interview_messages_round_id_created_at_idx').on(table.roundId, table.createdAt),
   }),
 );
 

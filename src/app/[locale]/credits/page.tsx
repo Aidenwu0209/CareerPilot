@@ -164,7 +164,9 @@ export default function CreditsPage() {
         </div>
       </div>
 
-      <BillingPanel personalAccount={!isOrg} />
+      <div id="billing-options">
+        <BillingPanel personalAccount={!isOrg} />
+      </div>
 
       {/* Transactions */}
       <div className="rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -203,6 +205,14 @@ export default function CreditsPage() {
               <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
                 {t('empty')}
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={() => document.getElementById('billing-options')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                {t('viewPlans')}
+              </Button>
             </div>
           ) : (
             <>

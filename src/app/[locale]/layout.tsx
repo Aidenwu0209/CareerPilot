@@ -42,6 +42,12 @@ export default async function LocaleLayout({
             <TooltipProvider>
               <SettingsHydrator />
               <NetworkStatusBanner />
+              <a
+                href="#main-content"
+                className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:not-sr-only focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
+              >
+                {messages.common.skipToContent}
+              </a>
               {children}
               <Toaster />
             </TooltipProvider>

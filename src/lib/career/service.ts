@@ -39,6 +39,8 @@ import type {
   SubmittedCareerEvidence,
 } from '@/types/career';
 import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
+import { ABILITY_DIMENSION_ORDER, CAREER_MATCHING_CONFIG } from './matching-config';
+import { calculateCareerMatch } from './matching-engine';
 import { careerKnowledgeProvider } from './knowledge-provider';
 import { extractRequirementTerms, rankOccupationsFromJd } from './jd-matcher';
 import type { CareerJdMatchResult } from '@/types/career';
@@ -64,15 +66,6 @@ export class CareerGoalRequiredError extends Error {
     this.name = 'CareerGoalRequiredError';
   }
 }
-
-const DIMENSION_ORDER: AbilityDimensionCode[] = [
-  'domain_knowledge',
-  'professional_skills',
-  'project_practice',
-  'general_competencies',
-  'job_readiness',
-  'growth_potential',
-];
 
 async function ensureProfileRow(userId: string) {
   await dbReady;
@@ -124,13 +117,12 @@ function mapTask(row: typeof careerTasks.$inferSelect): CareerTask {
   };
 }
 
-async function mapGoal(row: typeof careerGoals.$inferSelect): Promise<CareerGoal> {
-  const occupation = await getOccupationByCode(row.occupationCode);
+function mapGoal(row: typeof careerGoals.$inferSelect, occupationName?: string | null): CareerGoal {
   return {
     id: row.id,
     userId: row.userId,
     occupationCode: row.occupationCode,
-    occupationName: occupation?.name ?? row.occupationCode,
+    occupationName: occupationName ?? row.occupationCode,
     isPrimary: row.isPrimary,
     status: row.status,
     targetDate: toNullableIso(row.targetDate),
@@ -193,7 +185,7 @@ export async function getCareerProfile(userId: string): Promise<CareerProfile> {
     ? clampScore((abilitiesWithVerifiedEvidence.length / knownAbilities.length) * 100)
     : 0;
 
-  const dimensions = DIMENSION_ORDER.map((dimensionCode) => {
+  const dimensions = ABILITY_DIMENSION_ORDER.map((dimensionCode) => {
     const dimensionAbilities = abilities.filter((ability) => ability.dimension === dimensionCode);
     const knownScores = dimensionAbilities.flatMap((ability) => ability.score == null ? [] : [ability.score]);
     return {
@@ -259,10 +251,12 @@ async function isActiveScorableOccupation(code: string): Promise<boolean> {
 
 export async function listCareerGoals(userId: string): Promise<CareerGoal[]> {
   await dbReady;
-  const rows = await db.select().from(careerGoals)
+  const rawRows = await db.select({ goal: careerGoals, occupationName: occupations.name }).from(careerGoals)
+    .leftJoin(occupations, eq(occupations.code, careerGoals.occupationCode))
     .where(and(eq(careerGoals.userId, userId), ne(careerGoals.status, 'archived')))
     .orderBy(desc(careerGoals.isPrimary), desc(careerGoals.updatedAt));
-  return Promise.all(rows.map(mapGoal));
+  const rows = rawRows as Array<{ goal: typeof careerGoals.$inferSelect; occupationName: string | null }>;
+  return rows.map((row) => mapGoal(row.goal, row.occupationName));
 }
 
 export async function listCareerTasks(userId: string): Promise<CareerTask[]> {
@@ -334,12 +328,6 @@ export async function submitCareerEvidence(
   return { ...mapEvidence(row[0]), occupationCode: input.occupationCode };
 }
 
-function taskAction(abilityName: string, state: 'met' | 'gap' | 'unknown', gap: number | null): string {
-  if (state === 'met') return `继续通过项目或面试材料巩固“${abilityName}”的证据。`;
-  if (state === 'unknown') return `先上传课程、项目或实践材料，确认“${abilityName}”的当前水平。`;
-  return `围绕“${abilityName}”制定练习任务，优先补齐约 ${gap ?? 0} 分差距。`;
-}
-
 export async function getCareerMatch(userId: string, occupationCode?: string): Promise<CareerMatchResult> {
   const goals = occupationCode ? [] : await listCareerGoals(userId);
   const code = occupationCode ?? goals.find((goal) => goal.isPrimary)?.occupationCode;
@@ -351,68 +339,23 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
   ]);
   if (!occupation) throw new CareerNotFoundError('Occupation not found.');
 
-  const abilityByCode = new Map(profile.dimensions.flatMap((dimension) => dimension.abilities).map((ability) => [ability.code, ability]));
-  const totalWeight = occupation.requirements.reduce((sum, requirement) => sum + requirement.weight, 0);
-  let knownWeight = 0;
-  let weightedAchievement = 0;
-  let evidencedWeight = 0;
-
-  const dimensionBreakdown = occupation.requirements.map((requirement) => {
-    const student = abilityByCode.get(requirement.abilityCode);
-    const studentScore = student?.score ?? null;
-    const state = studentScore == null
-      ? 'unknown' as const
-      : studentScore >= requirement.targetScore
-        ? 'met' as const
-        : 'gap' as const;
-    const gap = studentScore == null ? null : Math.max(0, requirement.targetScore - studentScore);
-    if (studentScore != null) {
-      knownWeight += requirement.weight;
-      weightedAchievement += Math.min(studentScore / requirement.targetScore, 1) * requirement.weight;
-    }
-    if (student?.evidence.some((item) => item.status === 'verified' && item.assessedScore != null)) {
-      evidencedWeight += requirement.weight;
-    }
-    return {
-      dimension: requirement.dimension,
-      abilityCode: requirement.abilityCode,
-      abilityName: requirement.abilityName,
-      requirement: {
-        targetScore: requirement.targetScore,
-        weight: requirement.weight,
-        required: requirement.required,
-        description: requirement.description,
-      },
-      studentScore,
-      studentEvidence: student?.evidence ?? [],
-      state,
-      gap,
-      action: taskAction(requirement.abilityName, state, gap),
-    };
-  });
-
-  const rawScore = knownWeight ? clampScore((weightedAchievement / knownWeight) * 100) : null;
-  const knownCoverage = totalWeight ? clampScore((knownWeight / totalWeight) * 100) : 0;
-  const evidenceCoverage = totalWeight ? clampScore((evidencedWeight / totalWeight) * 100) : 0;
-  const scoringStatus = occupation.scoringEligible === false || occupation.requirements.length === 0
-    ? 'not_eligible' as const
-    : knownCoverage >= 50 && evidenceCoverage >= 40
-      ? 'ready' as const
-      : 'insufficient_evidence' as const;
-  const score = scoringStatus === 'ready' ? rawScore : null;
-  const confidence = scoringStatus === 'ready'
-    ? clampScore((knownCoverage * 0.4) + (evidenceCoverage * 0.6))
-    : null;
-  const strengths = dimensionBreakdown
-    .filter((item) => item.state === 'met' && item.studentEvidence.some((evidence) => evidence.status === 'verified' && evidence.assessedScore != null))
-    .sort((a, b) => b.requirement.weight - a.requirement.weight)
-    .slice(0, 3);
-  const priorityGaps = dimensionBreakdown
-    .filter((item) => item.state !== 'met')
-    .sort((a, b) => Number(b.requirement.required) - Number(a.requirement.required)
-      || b.requirement.weight - a.requirement.weight
-      || (b.gap ?? -1) - (a.gap ?? -1))
-    .slice(0, 3);
+  const calculation = calculateCareerMatch(
+    occupation.requirements,
+    profile.dimensions.flatMap((dimension) => dimension.abilities),
+    occupation.scoringEligible !== false,
+  );
+  const {
+    score,
+    evidenceCoverage,
+    knownWeight,
+    totalWeight,
+    dimensionBreakdown,
+    scoringStatus,
+    confidence,
+    knownCoverage,
+    strengths,
+    priorityGaps,
+  } = calculation;
   const previousRows = await db.select({ score: careerMatches.score })
     .from(careerMatches)
     .where(and(eq(careerMatches.userId, userId), eq(careerMatches.occupationCode, code)))
@@ -444,7 +387,7 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     totalWeight,
     dimensionBreakdown,
     citations: occupation.citations,
-    algorithmVersion: 'career-match-v1',
+    algorithmVersion: CAREER_MATCHING_CONFIG.algorithmVersion,
     catalogVersion,
     scoringStatus,
     confidence,
@@ -686,7 +629,7 @@ export async function upsertCareerGoal(userId: string, input: CareerGoalInput): 
   }
   if (!row) throw new CareerNotFoundError('Goal could not be saved.');
   await db.update(careerProfiles).set({ stage: 'targeting', updatedAt: now }).where(eq(careerProfiles.userId, userId));
-  const goal = await mapGoal(row);
+  const goal = mapGoal(row, occupation.name);
   await createDefaultGoalTasks(userId, goal);
   return goal;
 }

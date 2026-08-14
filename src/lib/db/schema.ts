@@ -13,7 +13,10 @@ export const users = sqliteTable('users', {
   settings: text('settings', { mode: 'json' }).default('{}'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-});
+}, (table) => ({
+  createdIdx: index('users_created_at_idx').on(table.createdAt),
+  statusIdx: index('users_status_idx').on(table.status),
+}));
 
 export const authAccounts = sqliteTable('auth_accounts', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -63,6 +66,7 @@ export const resumes = sqliteTable('resumes', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({
   userIdx: index('resumes_user_id_idx').on(table.userId),
+  userUpdatedIdx: index('resumes_user_id_updated_at_idx').on(table.userId, table.updatedAt),
   shareTokenIdx: index('resumes_share_token_idx').on(table.shareToken),
 }));
 
@@ -127,6 +131,7 @@ export const jdAnalyses = sqliteTable('jd_analyses', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({
   resumeIdx: index('jd_analyses_resume_id_idx').on(table.resumeId),
+  resumeCreatedIdx: index('jd_analyses_resume_id_created_at_idx').on(table.resumeId, table.createdAt),
 }));
 
 export const grammarChecks = sqliteTable('grammar_checks', {
@@ -138,6 +143,7 @@ export const grammarChecks = sqliteTable('grammar_checks', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({
   resumeIdx: index('grammar_checks_resume_id_idx').on(table.resumeId),
+  resumeCreatedIdx: index('grammar_checks_resume_id_created_at_idx').on(table.resumeId, table.createdAt),
 }));
 
 export {

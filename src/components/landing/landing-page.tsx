@@ -11,7 +11,7 @@ export function LandingPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
       <LandingHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroSection />
         <FeaturesSection />
         <TemplateShowcaseSection />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
 import {
   Camera,
@@ -457,9 +458,12 @@ export default function LinkedInPhotoPage() {
                     )}
                   />
                   {capturedImage && (
-                    <img
+                    <NextImage
                       src={capturedImage}
                       alt="Captured selfie"
+                      width={1024}
+                      height={1024}
+                      unoptimized
                       className="w-full object-contain"
                     />
                   )}
@@ -516,9 +520,12 @@ export default function LinkedInPhotoPage() {
             ) : uploadedImage ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="relative overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700">
-                  <img
+                  <NextImage
                     src={uploadedImage}
                     alt="Selfie preview"
+                    width={1024}
+                    height={1024}
+                    unoptimized
                     className="max-h-64 w-auto object-contain"
                   />
                 </div>
@@ -703,9 +710,12 @@ export default function LinkedInPhotoPage() {
               ) : resultImage ? (
                 <div className="flex flex-col items-center gap-5">
                   <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700">
-                    <img
+                    <NextImage
                       src={resultImage}
                       alt="LinkedIn headshot"
+                      width={1024}
+                      height={1024}
+                      unoptimized
                       className="w-full max-w-md object-contain"
                     />
                   </div>

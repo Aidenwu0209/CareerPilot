@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray, like, or } from 'drizzle-orm';
 import { db, dbReady } from '@/lib/db';
 import {
   careerKnowledgeDocuments,
@@ -24,12 +24,15 @@ import { parseJson, toIso, toNullableIso } from './serialization';
 
 const DEFAULT_PAGE_SIZE = 24;
 const MAX_PAGE_SIZE = 100;
+const LIST_CACHE_TTL_MS = 60_000;
+const LIST_CACHE_MAX_ENTRIES = 64;
 
 export interface CareerKnowledgeProvider {
   listOccupations(filters?: OccupationListFilters): Promise<OccupationPage>;
   getOccupationByCode(code: string): Promise<OccupationDetail | null>;
   search(query: string, options?: { occupationCode?: string; limit?: number }): Promise<KnowledgeSearchResult[]>;
   getActiveCatalogVersion(): Promise<string | null>;
+  invalidateCache(): void;
 }
 
 function normalizeQuery(query?: string): string {
@@ -59,6 +62,30 @@ function uniqueSorted(values: Array<string | null | undefined>): string[] {
 }
 
 export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
+  private readonly listCache = new Map<string, { expiresAt: number; value: OccupationPage }>();
+
+  private listCacheKey(filters: OccupationListFilters): string {
+    return JSON.stringify([
+      filters.query ?? '', filters.collegeCode ?? '', filters.majorCode ?? '',
+      filters.relevanceType ?? '', filters.relationType ?? '', filters.jobFamily ?? '',
+      filters.industry ?? '', filters.city ?? '', filters.educationLevel ?? '',
+      filters.limit ?? DEFAULT_PAGE_SIZE, filters.offset ?? 0,
+    ]);
+  }
+
+  private cacheListResult(key: string, value: OccupationPage): OccupationPage {
+    if (this.listCache.size >= LIST_CACHE_MAX_ENTRIES) {
+      const oldestKey = this.listCache.keys().next().value;
+      if (oldestKey) this.listCache.delete(oldestKey);
+    }
+    this.listCache.set(key, { expiresAt: Date.now() + LIST_CACHE_TTL_MS, value });
+    return value;
+  }
+
+  invalidateCache(): void {
+    this.listCache.clear();
+  }
+
   async getActiveCatalogVersion(): Promise<string | null> {
     await dbReady;
     const rows = await db.select({ version: careerCatalogVersions.version })
@@ -70,6 +97,10 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
 
   async listOccupations(filters: OccupationListFilters = {}): Promise<OccupationPage> {
     await dbReady;
+    const cacheKey = this.listCacheKey(filters);
+    const cached = this.listCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) return cached.value;
+    if (cached) this.listCache.delete(cacheKey);
     const { limit, offset } = pageBounds(filters);
     const normalized = normalizeQuery(filters.query);
     const [rawOccupationRows, rawAliasRows, rawEdgeRows, rawMajorRows, rawCollegeRows, rawRequirementRows, rawRelationRows] = await Promise.all([
@@ -171,7 +202,7 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const collegeFacetCodes = new Set(facetOccupations('collegeCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.collegeCode) ?? []));
     const majorFacetCodes = new Set(facetOccupations('majorCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.majorCode) ?? []));
 
-    return {
+    return this.cacheListResult(cacheKey, {
       items: relationFiltered.slice(offset, offset + limit),
       pageInfo: {
         limit,
@@ -199,7 +230,7 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
         relevanceTypes: uniqueSorted(facetOccupations('relevanceType').flatMap((item) => item.majorMappings?.map((mapping) => mapping.relevanceType) ?? [])) as OccupationPage['filters']['relevanceTypes'],
         relationTypes: uniqueSorted(facetOccupations('relationType').flatMap((item) => (relationsByFromCode.get(item.code) ?? []).map((relation) => relation.relationType))) as OccupationPage['filters']['relationTypes'],
       },
-    };
+    });
   }
 
   async getOccupationByCode(code: string): Promise<OccupationDetail | null> {
@@ -209,27 +240,34 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const occupation = rows[0];
     if (!occupation) return null;
 
-    const [rawRequirements, rawRelations, rawDocuments, rawAliases, rawEdges, rawMajors, rawColleges] = await Promise.all([
+    const [rawRequirements, rawRelations, rawDocuments, rawAliases, rawEdges] = await Promise.all([
       db.select().from(occupationRequirements).where(eq(occupationRequirements.occupationCode, code)).orderBy(occupationRequirements.id),
       db.select().from(occupationRelations).where(eq(occupationRelations.fromCode, code)).orderBy(occupationRelations.id),
       db.select().from(careerKnowledgeDocuments).where(eq(careerKnowledgeDocuments.occupationCode, code)).orderBy(careerKnowledgeDocuments.id),
       db.select().from(occupationAliases).where(and(eq(occupationAliases.occupationCode, code), eq(occupationAliases.active, true))),
       db.select().from(majorOccupationEdges).where(and(eq(majorOccupationEdges.occupationCode, code), eq(majorOccupationEdges.active, true))),
-      db.select().from(careerMajors).where(eq(careerMajors.active, true)),
-      db.select().from(careerColleges).where(eq(careerColleges.active, true)),
     ]);
     const requirements = rawRequirements as Array<typeof occupationRequirements.$inferSelect>;
     const relations = rawRelations as Array<typeof occupationRelations.$inferSelect>;
     const documents = rawDocuments as Array<typeof careerKnowledgeDocuments.$inferSelect>;
     const aliases = rawAliases as Array<typeof occupationAliases.$inferSelect>;
     const edges = rawEdges as Array<typeof majorOccupationEdges.$inferSelect>;
-    const majors = rawMajors as Array<typeof careerMajors.$inferSelect>;
-    const colleges = rawColleges as Array<typeof careerColleges.$inferSelect>;
 
     const relatedCodes = relations.map((relation) => relation.toCode);
-    const relatedRows = relatedCodes.length
-      ? ((await db.select().from(occupations)) as Array<typeof occupations.$inferSelect>).filter((candidate) => relatedCodes.includes(candidate.code))
+    const rawRelatedRows = relatedCodes.length
+      ? await db.select().from(occupations).where(inArray(occupations.code, relatedCodes))
       : [];
+    const relatedRows = rawRelatedRows as Array<typeof occupations.$inferSelect>;
+    const majorCodes = [...new Set(edges.map((edge) => edge.majorCode))];
+    const rawMajors = majorCodes.length
+      ? await db.select().from(careerMajors).where(and(eq(careerMajors.active, true), inArray(careerMajors.code, majorCodes)))
+      : [];
+    const majors = rawMajors as Array<typeof careerMajors.$inferSelect>;
+    const collegeCodes = [...new Set(majors.map((major) => major.collegeCode))];
+    const rawColleges = collegeCodes.length
+      ? await db.select().from(careerColleges).where(and(eq(careerColleges.active, true), inArray(careerColleges.code, collegeCodes)))
+      : [];
+    const colleges = rawColleges as Array<typeof careerColleges.$inferSelect>;
     const relatedByCode = new Map(relatedRows.map((row) => [row.code, row]));
     const majorByCode = new Map(majors.map((row) => [row.code, row]));
     const collegeByCode = new Map(colleges.map((row) => [row.code, row]));
@@ -292,9 +330,18 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const normalized = normalizeQuery(query);
     if (!normalized) return [];
     const limit = Math.max(1, Math.min(options?.limit ?? 5, 20));
-    const rawRows = options?.occupationCode
-      ? await db.select().from(careerKnowledgeDocuments).where(eq(careerKnowledgeDocuments.occupationCode, options.occupationCode))
-      : await db.select().from(careerKnowledgeDocuments);
+    const tokens = normalized.split(/\s+/).filter(Boolean);
+    const tokenConditions = tokens.flatMap((token) => [
+      like(careerKnowledgeDocuments.title, `%${token}%`),
+      like(careerKnowledgeDocuments.content, `%${token}%`),
+    ]);
+    const textCondition = or(...tokenConditions);
+    const whereCondition = options?.occupationCode
+      ? and(eq(careerKnowledgeDocuments.occupationCode, options.occupationCode), textCondition)
+      : textCondition;
+    const rawRows = await db.select().from(careerKnowledgeDocuments)
+      .where(whereCondition)
+      .limit(Math.max(100, limit * 20));
     const rows = rawRows as Array<typeof careerKnowledgeDocuments.$inferSelect>;
 
     return rows

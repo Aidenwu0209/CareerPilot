@@ -1,0 +1,62 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?Set APP_URL}
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET}
+      AI_CREDENTIAL_MASTER_KEY: ${AI_CREDENTIAL_MASTER_KEY:?Set AI_CREDENTIAL_MASTER_KEY}
+      DB_TYPE: postgresql
+      DATABASE_URL: postgresql://careerpilot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/careerpilot
+      DATABASE_POOL_MAX: ${DATABASE_POOL_MAX:-10}
+      DATABASE_SSL_MODE: disable
+      REDIS_URL: redis://redis:6379
+      RATE_LIMIT_DISTRIBUTED_REQUIRED: "true"
+      BILLING_ENABLED: ${BILLING_ENABLED:-false}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: careerpilot
+      POSTGRES_USER: careerpilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U careerpilot -d careerpilot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:

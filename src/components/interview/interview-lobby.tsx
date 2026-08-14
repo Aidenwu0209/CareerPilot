@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Plus } from 'lucide-react';
+import { MessageSquarePlus, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -63,8 +63,12 @@ export function InterviewLobby() {
           ))}
         </div>
       ) : sessions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
+        <div className="flex flex-col items-center justify-center gap-4 py-20 text-zinc-600 dark:text-zinc-300">
+          <MessageSquarePlus className="size-10" aria-hidden="true" />
           <p>{t('noInterviews')}</p>
+          <Button asChild className="bg-brand hover:bg-brand-hover">
+            <Link href="/interview/new">{t('newInterview')}</Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

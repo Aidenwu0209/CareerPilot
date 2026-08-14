@@ -22,7 +22,7 @@ export default async function OnboardingPage({
   if (!user || !isOnboardingRequired(user.settings)) redirect(`/${locale}/dashboard`);
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 sm:py-12 dark:bg-zinc-950">
+    <main id="main-content" tabIndex={-1} className="min-h-dvh bg-zinc-50 px-4 py-8 sm:py-12 dark:bg-zinc-950">
       <div className="mx-auto max-w-2xl">
         <CareerPilotLogo preload />
         <section className="mt-8 rounded-lg border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">

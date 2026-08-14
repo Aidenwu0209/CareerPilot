@@ -164,7 +164,7 @@ export function EmailOtpLogin() {
             />
           </div>
           {error === 'INVALID_EMAIL' && (
-            <p className="text-xs text-red-500">{t('errors.invalidEmail')}</p>
+            <p className="text-xs text-red-600 dark:text-red-400">{t('errors.invalidEmail')}</p>
           )}
         </div>
 
@@ -177,10 +177,10 @@ export function EmailOtpLogin() {
         </Button>
 
         {error === 'RATE_LIMITED' && (
-          <p className="text-center text-xs text-red-500">{t('errors.rateLimited')}</p>
+          <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.rateLimited')}</p>
         )}
         {error === 'SERVER_ERROR' && (
-          <p className="text-center text-xs text-red-500">{t('errors.serverError')}</p>
+          <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.serverError')}</p>
         )}
       </div>
     );
@@ -235,22 +235,22 @@ export function EmailOtpLogin() {
 
       {/* Errors */}
       {error === 'INVALID_CODE' && (
-        <p className="text-center text-xs text-red-500">{t('errors.invalidCode')}</p>
+        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.invalidCode')}</p>
       )}
       {error === 'EXPIRED' && (
-        <p className="text-center text-xs text-red-500">{t('errors.expired')}</p>
+        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.expired')}</p>
       )}
       {error === 'USED' && (
-        <p className="text-center text-xs text-red-500">{t('errors.used')}</p>
+        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.used')}</p>
       )}
       {error === 'RATE_LIMITED' && (
-        <p className="text-center text-xs text-red-500">{t('errors.rateLimited')}</p>
+        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.rateLimited')}</p>
       )}
       {error === 'SERVER_ERROR' && (
-        <p className="text-center text-xs text-red-500">{t('errors.serverError')}</p>
+        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.serverError')}</p>
       )}
       {error === 'ACCOUNT_MIGRATION_REQUIRED' && (
-        <p className="text-center text-xs leading-5 text-red-500">{t('errors.accountMigrationRequired')}</p>
+        <p className="text-center text-xs leading-5 text-red-600 dark:text-red-400">{t('errors.accountMigrationRequired')}</p>
       )}
 
       {/* Resend */}
