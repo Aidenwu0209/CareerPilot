@@ -92,6 +92,8 @@ const SENSITIVE_PATTERNS: { pattern: RegExp; label: string }[] = [
   { pattern: /x-api-key\s*:\s*[A-Za-z0-9_\-]{10,}/i, label: 'x-api-key header' },
   // JWT tokens (three base64url segments)
   { pattern: /eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/, label: 'JWT token' },
+  // Password-like JSON/form fields. Audit summaries should only identify the action performed.
+  { pattern: /["']?(?:password|newPassword|confirmPassword)["']?\s*[:=]\s*["'][^"']+["']/i, label: 'password field' },
   // Common personal identifiers. Audit summaries should use record IDs or explicitly masked values.
   { pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i, label: 'email address' },
   { pattern: /(?<!\d)1[3-9]\d{9}(?!\d)/, label: 'phone number' },

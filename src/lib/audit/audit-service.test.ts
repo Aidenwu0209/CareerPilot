@@ -103,6 +103,7 @@ describe('US-024 AC2: Sanitization — rejects sensitive content', () => {
     });
 
     it.each([
+      ['password field', '{"newPassword":"NeverLogThis123"}'],
       ['email address', 'Changed email from student@example.com'],
       ['phone number', 'Verified phone 13800138000'],
       ['identity number', 'Reviewed identity 110101199001011234'],
