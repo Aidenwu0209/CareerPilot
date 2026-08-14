@@ -38,6 +38,7 @@ import {
   careerMatches,
   educationRoleAssignments,
   teacherStudentAssignments,
+  supportTickets,
 } from '@/lib/db/schema';
 import { creditAccounts } from '@/lib/db/schema-credits';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
@@ -231,6 +232,7 @@ export async function deleteUserData(userId: string): Promise<void> {
   await db.delete(careerAbilities).where(eq(careerAbilities.userId, userId));
   await db.delete(careerGoals).where(eq(careerGoals.userId, userId));
   await db.delete(careerProfiles).where(eq(careerProfiles.userId, userId));
+  await db.delete(supportTickets).where(eq(supportTickets.userId, userId));
 
   // Guidance may belong to the user as a student or have been authored by the
   // user as a teacher. Both directions contain user-linked private content.

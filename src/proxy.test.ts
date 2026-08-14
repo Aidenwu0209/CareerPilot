@@ -82,7 +82,7 @@ describe('product proxy', () => {
     }
   });
 
-  it.each(['/zh', '/zh/login', '/en/privacy', '/zh/terms']) (
+  it.each(['/zh', '/zh/login', '/zh/forgot-password', '/en/help', '/en/privacy', '/zh/terms']) (
     'allows public page %s',
     async (pathname) => {
       const { proxy } = await loadProxy();
@@ -120,8 +120,8 @@ describe('product proxy', () => {
     await expect(apiResponse.json()).resolves.toEqual({ error: 'ONBOARDING_REQUIRED' });
   });
 
-  it.each(['/zh/terms', '/en/privacy'])(
-    'allows onboarding users to read legal page %s',
+  it.each(['/zh/terms', '/en/privacy', '/zh/help', '/en/forgot-password'])(
+    'allows onboarding users to access recovery and support page %s',
     async (pathname) => {
       const { proxy } = await loadProxy();
       const response = await proxy(createRequest(pathname, {

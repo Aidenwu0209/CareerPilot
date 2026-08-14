@@ -1,20 +1,39 @@
 'use client';
 
-import { Download, FileText } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { ChevronDown, Download, FileText } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function CareerReportExport() {
   const locale = useLocale();
-  const zh = locale.startsWith('zh');
+  const t = useTranslations('career.reportExport');
+  const href = (format: 'markdown' | 'pdf' | 'docx') =>
+    `/api/career/report/export?format=${format}&locale=${encodeURIComponent(locale)}`;
   return (
-    <div className="flex w-full gap-2 sm:w-auto">
-      <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
-        <a href={`/api/career/report/export?format=markdown&locale=${encodeURIComponent(locale)}`} download><FileText className="h-4 w-4" />Markdown</a>
-      </Button>
-      <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
-        <a href={`/api/career/report/export?format=pdf&locale=${encodeURIComponent(locale)}`} download><Download className="h-4 w-4" />{zh ? '导出 PDF' : 'Export PDF'}</a>
-      </Button>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+          <Download className="h-4 w-4" />
+          {t('action')}
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-48">
+        {(['pdf', 'docx', 'markdown'] as const).map((format) => (
+          <DropdownMenuItem key={format} asChild>
+            <a href={href(format)} download>
+              <FileText className="h-4 w-4" />
+              {t(format)}
+            </a>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

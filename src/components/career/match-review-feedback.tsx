@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Flag, Mail, X } from 'lucide-react';
+import { Flag, LifeBuoy, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Link } from '@/i18n/routing';
 
 export function MatchReviewFeedback({ occupationCode, occupationName }: {
   occupationCode: string;
@@ -38,10 +39,10 @@ export function MatchReviewFeedback({ occupationCode, occupationName }: {
               {t('cancel')}
             </Button>
             <Button asChild className="bg-brand hover:bg-brand-hover">
-              <a href={`mailto:support@careerpilot.app?subject=${subject}&body=${body}`}>
-                <Mail className="h-4 w-4" aria-hidden="true" />
+              <Link href={`/help?category=career&subject=${subject}&description=${body}`}>
+                <LifeBuoy className="h-4 w-4" aria-hidden="true" />
                 {t('contact')}
-              </a>
+              </Link>
             </Button>
           </div>
         </DialogContent>

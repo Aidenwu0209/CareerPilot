@@ -399,6 +399,16 @@ export const RATE_LIMIT_POLICIES = {
     windowMs: 60 * 60 * 1000,
     failClosed: true,
   },
+  passwordResetIP: {
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+    failClosed: true,
+  },
+  passwordResetEmail: {
+    limit: 3,
+    windowMs: 60 * 60 * 1000,
+    failClosed: true,
+  },
   aiChat: {
     limit: 30,
     windowMs: 60 * 1000, // 1 minute

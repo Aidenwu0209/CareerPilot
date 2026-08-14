@@ -7,6 +7,7 @@ import { Eye, EyeOff, Loader2, LockKeyhole, Mail, UserRound } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { normalizeInternalCallbackUrl } from '@/lib/auth/login-redirect';
+import { Link } from '@/i18n/routing';
 
 type Mode = 'login' | 'register';
 type ErrorKind =
@@ -261,6 +262,17 @@ export function PasswordAuthForm() {
           )}
           {fieldErrors.password && <span id="password-auth-password-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">{fieldErrors.password}</span>}
         </label>
+
+        {mode === 'login' && (
+          <div className="-mt-2 text-right">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-brand hover:text-brand-hover hover:underline"
+            >
+              {t('forgotPassword')}
+            </Link>
+          </div>
+        )}
 
         {mode === 'register' && (
           <label className="block space-y-1.5">

@@ -42,7 +42,7 @@ export { clearRateLimits } from '@/lib/rate-limit/rate-limit';
 // ── Code generation & hashing ──
 
 /** Generate a cryptographically random numeric code. */
-function generateNumericCode(length: number): string {
+export function generateNumericCode(length: number): string {
   const bytes = randomBytes(length);
   let code = '';
   for (let i = 0; i < length; i++) {
@@ -52,7 +52,7 @@ function generateNumericCode(length: number): string {
 }
 
 /** Hash a code using SHA-256. Only the digest is stored. */
-function hashCode(code: string): string {
+export function hashCode(code: string): string {
   return createHash('sha256').update(code).digest('hex');
 }
 
@@ -128,6 +128,7 @@ export async function requestOtp(
   // Store hash (never the plaintext code)
   await db.insert(emailOtps).values({
     email: normalizedEmail,
+    purpose: 'login',
     codeHash,
     ipAddress: ipAddress || null,
     expiresAt,
@@ -135,7 +136,7 @@ export async function requestOtp(
 
   // Send email via adapter
   const mailer = getMailAdapter();
-  await mailer.sendOTP(normalizedEmail, code);
+  await mailer.sendOTP(normalizedEmail, code, 'login');
 
   return { success: true };
 }
@@ -165,6 +166,7 @@ export async function verifyOtp(
     .where(
       and(
         eq(emailOtps.email, normalizedEmail),
+        eq(emailOtps.purpose, 'login'),
         isNull(emailOtps.usedAt),
         gt(emailOtps.expiresAt, new Date()),
       ),

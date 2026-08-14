@@ -76,6 +76,7 @@
         "register": "Create account"
       },
       "useLogin": "Go to sign in",
+      "forgotPassword": "Forgot password?",
       "errors": {
         "INVALID_INPUT": "Check your name, email, and password format.",
         "INVALID_CREDENTIALS": "The email or password is incorrect.",
@@ -84,6 +85,33 @@
         "RATE_LIMITED": "Too many attempts. Try again later.",
         "PASSWORD_MISMATCH": "The passwords do not match.",
         "SERVER_ERROR": "We could not complete this request. Try again shortly."
+      }
+    },
+    "reset": {
+      "title": "Reset your password",
+      "requestDescription": "Enter your registered email and we will send a one-time code.",
+      "confirmDescription": "A code was sent to {email}. The same message is shown even if the address is not registered.",
+      "emailLabel": "Registered email",
+      "sendCode": "Send reset code",
+      "codeLabel": "6-digit code",
+      "newPasswordLabel": "New password",
+      "confirmPasswordLabel": "Confirm new password",
+      "passwordHint": "Use at least 10 characters with both a letter and a number.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "resetPassword": "Reset password",
+      "resend": "Resend code",
+      "resendIn": "Resend in {seconds}s",
+      "completeTitle": "Password reset",
+      "completeDescription": "Your new password is active. You can now return to sign in.",
+      "backToLogin": "Back to sign in",
+      "errors": {
+        "INVALID_EMAIL": "Enter a valid email address.",
+        "INVALID_INPUT": "Check the code and new password format.",
+        "INVALID_CODE": "The code is invalid, expired, or has too many failed attempts. Request a new one.",
+        "RATE_LIMITED": "Too many requests. Wait before trying again.",
+        "PASSWORD_MISMATCH": "The new passwords do not match.",
+        "SERVER_ERROR": "We could not complete this request. Try again later."
       }
     },
     "otp": {
@@ -107,6 +135,27 @@
     },
     "or": "or",
     "agreeTermsLinks": "Review our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy> before registering or signing in"
+  },
+  "help": {
+    "loading": "Loading account status",
+    "eyebrow": "Support and feedback",
+    "title": "Help Center",
+    "description": "Start with common questions. If you still need help, submit a ticket and track replies and status here.",
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": {
+        "account": { "question": "What if I cannot sign in or access my account?", "answer": "Password accounts can use the Forgot password flow. Submit an account ticket for suspended accounts or identity-linking problems." },
+        "credits": { "question": "Where can I check credits, plans, or payment records?", "answer": "The credits and plans pages show balances, transactions, orders, and access. For refunds or reconciliation, submit a billing ticket with the order ID." },
+        "career": { "question": "What if a career match looks inaccurate?", "answer": "First check that your target and evidence are complete. If occupation knowledge or the explanation is still wrong, submit a career ticket with the occupation name." },
+        "privacy": { "question": "What should I avoid sharing in a ticket?", "answer": "Never submit passwords, verification codes, API keys, or full identity documents. Provide only necessary steps and redacted screenshots." }
+      }
+    },
+    "auth": { "title": "Sign in to submit and track tickets", "description": "FAQs are public. Tickets are linked to your account to protect their privacy.", "action": "Sign in to continue" },
+    "form": { "title": "New support ticket", "description": "Include reproducible details. Support will reply inside the ticket.", "category": "Category", "subject": "Subject", "descriptionLabel": "Problem description", "submit": "Submit ticket" },
+    "categories": { "account": "Account and sign-in", "billing": "Billing and plans", "technical": "Technical issue", "career": "Career planning", "other": "Other" },
+    "statuses": { "open": "Open", "in_progress": "In progress", "replied": "Replied", "closed": "Closed" },
+    "tickets": { "title": "My tickets", "description": "View your 50 most recent tickets and platform replies.", "empty": "No support tickets yet.", "reply": "Support reply" },
+    "errors": { "load": "Tickets could not be loaded. Try again later.", "submit": "The ticket could not be submitted. Check the content and try again." }
   },
   "onboarding": {
     "title": "Complete your profile",
@@ -1264,7 +1313,28 @@
       "billing": {
         "title": "Billing & Plans",
         "description": "Manage credit packs, subscriptions, model access, refunds, and reconciliation"
+      },
+      "support": {
+        "title": "Support Tickets",
+        "description": "Filter, reply to, and track user support requests"
       }
+    },
+    "support": {
+      "refresh": "Refresh",
+      "empty": "No tickets match the current filter.",
+      "unknownUser": "Unknown user",
+      "review": "Review and reply",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {pageCount}",
+      "statusLabel": "Status",
+      "replyLabel": "Support reply",
+      "replyPlaceholder": "Write a reply for the user. Do not include internal credentials or sensitive data.",
+      "cancel": "Cancel",
+      "save": "Save response",
+      "filters": { "all": "All statuses" },
+      "statuses": { "open": "Open", "in_progress": "In progress", "replied": "Replied", "closed": "Closed" },
+      "errors": { "load": "Tickets could not be loaded.", "save": "The ticket could not be updated. Try again." }
     },
     "operations": {
       "title": "Operations & Alerts",
@@ -1951,6 +2021,12 @@
       "goal": { "label": "Choose a goal", "description": "Select a real target occupation" },
       "match": { "label": "Review the match", "description": "Requirements, evidence, and gaps" },
       "path": { "label": "Take action", "description": "Work through growth tasks" }
+    },
+    "reportExport": {
+      "action": "Export career report",
+      "pdf": "PDF document",
+      "docx": "Word document (DOCX)",
+      "markdown": "Markdown document"
     },
     "assessment": {
       "eyebrow": "Career exploration self-awareness",

@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { useTranslations } from 'next-intl';
-import { LogOut, User, UserCircle } from 'lucide-react';
+import { LifeBuoy, LogOut, User, UserCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -18,6 +18,7 @@ export function UserMenu() {
   const { user, signOut } = useAuth();
   const t = useTranslations('auth');
   const tNav = useTranslations('nav');
+  const tHelp = useTranslations('help');
   if (!user) return null;
 
   return (
@@ -45,6 +46,12 @@ export function UserMenu() {
           <Link href="/account" className="cursor-pointer">
             <UserCircle className="mr-2 h-4 w-4" />
             {tNav('account')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/help" className="cursor-pointer">
+            <LifeBuoy className="mr-2 h-4 w-4" />
+            {tHelp('title')}
           </Link>
         </DropdownMenuItem>
         <BrandSwitcher />

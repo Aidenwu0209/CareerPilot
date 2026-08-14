@@ -4,6 +4,7 @@ import { getCareerSelfAssessment } from '@/lib/career/self-assessment-service';
 import { buildCareerReportHtml, buildCareerReportMarkdown } from '@/lib/career/report';
 import { careerApiError, resolveCareerApiUser, unauthorizedCareerResponse } from '@/lib/career/http';
 import { generatePdf } from '@/lib/pdf/generate-pdf';
+import { buildCareerReportDocx } from '@/lib/career/report-docx';
 
 export const maxDuration = 60;
 
@@ -12,7 +13,10 @@ export async function GET(request: NextRequest) {
     const user = await resolveCareerApiUser(request);
     if (!user) return unauthorizedCareerResponse();
     const url = new URL(request.url);
-    const format = url.searchParams.get('format') === 'markdown' ? 'markdown' : 'pdf';
+    const format = url.searchParams.get('format') ?? 'pdf';
+    if (!['markdown', 'pdf', 'docx'].includes(format)) {
+      return NextResponse.json({ error: 'INVALID_FORMAT' }, { status: 400 });
+    }
     const locale = url.searchParams.get('locale')?.startsWith('zh') ? 'zh-CN' : 'en';
     const [overview, path, assessment] = await Promise.all([
       getCareerOverview(user.id), getCareerPath(user.id), getCareerSelfAssessment(user.id),
@@ -23,6 +27,15 @@ export async function GET(request: NextRequest) {
     if (format === 'markdown') {
       return new NextResponse(buildCareerReportMarkdown(data, locale), {
         headers: { 'content-type': 'text/markdown; charset=utf-8', 'content-disposition': `attachment; filename="${filename}.md"` },
+      });
+    }
+    if (format === 'docx') {
+      const docx = await buildCareerReportDocx(data, locale);
+      return new NextResponse(new Uint8Array(docx), {
+        headers: {
+          'content-type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'content-disposition': `attachment; filename="${filename}.docx"`,
+        },
       });
     }
     const pdf = await generatePdf(buildCareerReportHtml(data, locale));

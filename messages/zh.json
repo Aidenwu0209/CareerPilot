@@ -76,6 +76,7 @@
         "register": "创建账户"
       },
       "useLogin": "返回登录",
+      "forgotPassword": "忘记密码？",
       "errors": {
         "INVALID_INPUT": "请检查姓名、邮箱和密码格式。",
         "INVALID_CREDENTIALS": "邮箱或密码不正确。",
@@ -84,6 +85,33 @@
         "RATE_LIMITED": "尝试次数过多，请稍后再试。",
         "PASSWORD_MISMATCH": "两次输入的密码不一致。",
         "SERVER_ERROR": "暂时无法完成操作，请稍后重试。"
+      }
+    },
+    "reset": {
+      "title": "重置密码",
+      "requestDescription": "输入注册邮箱，我们会发送一次性验证码。",
+      "confirmDescription": "验证码已发送至 {email}。如果该邮箱未注册，页面也会保持相同提示。",
+      "emailLabel": "注册邮箱",
+      "sendCode": "发送验证码",
+      "codeLabel": "6 位验证码",
+      "newPasswordLabel": "新密码",
+      "confirmPasswordLabel": "确认新密码",
+      "passwordHint": "至少 10 位，并同时包含英文字母和数字。",
+      "showPassword": "显示密码",
+      "hidePassword": "隐藏密码",
+      "resetPassword": "确认重置密码",
+      "resend": "重新发送验证码",
+      "resendIn": "{seconds} 秒后可重新发送",
+      "completeTitle": "密码已重置",
+      "completeDescription": "新密码已经生效，你现在可以返回登录。",
+      "backToLogin": "返回登录",
+      "errors": {
+        "INVALID_EMAIL": "请输入有效的邮箱地址。",
+        "INVALID_INPUT": "请检查验证码和新密码格式。",
+        "INVALID_CODE": "验证码无效、已过期或尝试次数过多，请重新获取。",
+        "RATE_LIMITED": "请求过于频繁，请等待后再试。",
+        "PASSWORD_MISMATCH": "两次输入的新密码不一致。",
+        "SERVER_ERROR": "暂时无法完成操作，请稍后再试。"
       }
     },
     "otp": {
@@ -107,6 +135,27 @@
     },
     "or": "或",
     "agreeTermsLinks": "注册或登录前，请阅读<terms>服务条款</terms>和<privacy>隐私政策</privacy>"
+  },
+  "help": {
+    "loading": "正在加载账户状态",
+    "eyebrow": "支持与反馈",
+    "title": "帮助中心",
+    "description": "先查看常见问题；如仍需协助，可提交工单并在这里跟踪回复和处理状态。",
+    "faq": {
+      "title": "常见问题",
+      "items": {
+        "account": { "question": "登录或账户出现问题怎么办？", "answer": "密码账户可使用登录页的“忘记密码”流程；账户被冻结或身份关联异常时，请提交账户类工单。" },
+        "credits": { "question": "点数、套餐或支付记录在哪里查看？", "answer": "在点数与套餐页面查看余额、流水、订单和套餐权限。涉及退款或对账时，请提交支付类工单并注明订单号。" },
+        "career": { "question": "职业匹配结果不准确怎么办？", "answer": "先确认职业目标和证据材料是否完整。若岗位知识或匹配解释仍有问题，请提交职业规划类工单并注明岗位名称。" },
+        "privacy": { "question": "提交工单时应避免哪些信息？", "answer": "请勿提交密码、验证码、API 密钥或完整身份证件。描述问题时提供必要步骤和脱敏截图即可。" }
+      }
+    },
+    "auth": { "title": "登录后提交和跟踪工单", "description": "常见问题可直接查看；工单会绑定你的账户以保护隐私。", "action": "登录并继续" },
+    "form": { "title": "提交新工单", "description": "请提供可复现的信息，支持人员会在工单内回复。", "category": "问题类型", "subject": "主题", "descriptionLabel": "问题描述", "submit": "提交工单" },
+    "categories": { "account": "账户与登录", "billing": "支付与套餐", "technical": "技术问题", "career": "职业规划", "other": "其他" },
+    "statuses": { "open": "待处理", "in_progress": "处理中", "replied": "已回复", "closed": "已关闭" },
+    "tickets": { "title": "我的工单", "description": "查看最近 50 条工单及平台回复。", "empty": "暂时没有工单。", "reply": "平台回复" },
+    "errors": { "load": "工单加载失败，请稍后重试。", "submit": "工单提交失败，请检查内容后重试。" }
   },
   "onboarding": {
     "title": "完善基础资料",
@@ -1264,7 +1313,28 @@
       "billing": {
         "title": "支付与套餐",
         "description": "管理充值包、订阅等级、模型权限、退款和对账"
+      },
+      "support": {
+        "title": "用户工单",
+        "description": "筛选、回复并跟踪用户支持请求"
       }
+    },
+    "support": {
+      "refresh": "刷新",
+      "empty": "当前筛选条件下没有工单。",
+      "unknownUser": "未知用户",
+      "review": "查看与回复",
+      "previous": "上一页",
+      "next": "下一页",
+      "page": "第 {page} / {pageCount} 页",
+      "statusLabel": "处理状态",
+      "replyLabel": "平台回复",
+      "replyPlaceholder": "输入给用户的回复；请勿包含内部凭证或敏感数据。",
+      "cancel": "取消",
+      "save": "保存处理结果",
+      "filters": { "all": "全部状态" },
+      "statuses": { "open": "待处理", "in_progress": "处理中", "replied": "已回复", "closed": "已关闭" },
+      "errors": { "load": "工单列表加载失败。", "save": "工单更新失败，请重试。" }
     },
     "operations": {
       "title": "运营监控与告警",
@@ -1951,6 +2021,12 @@
       "goal": { "label": "确定目标", "description": "选择真实目标岗位" },
       "match": { "label": "核对匹配", "description": "要求、证据与差距" },
       "path": { "label": "开始行动", "description": "按成长任务推进" }
+    },
+    "reportExport": {
+      "action": "导出职业报告",
+      "pdf": "PDF 文档",
+      "docx": "Word 文档（DOCX）",
+      "markdown": "Markdown 文档"
     },
     "assessment": {
       "eyebrow": "职业探索自我认知",

@@ -35,6 +35,7 @@ import {
   careerGuidanceNotes,
   careerMatches,
   educationRoleAssignments,
+  supportTickets,
 } from '@/lib/db/schema';
 import {
   interviewSessions,
@@ -56,7 +57,7 @@ import { and, eq, inArray, desc } from 'drizzle-orm';
 
 // ── Types ──
 
-export const EXPORT_SCHEMA_VERSION = 2;
+export const EXPORT_SCHEMA_VERSION = 3;
 
 export interface UserDataExport {
   schemaVersion: number;
@@ -107,6 +108,7 @@ export interface UserDataExport {
   careerMatches: Array<Record<string, unknown>>;
   legalConsents: Array<Record<string, unknown>>;
   aiOperations: Array<Record<string, unknown>>;
+  supportTickets: Array<Record<string, unknown>>;
   errors: string[];
 }
 
@@ -390,6 +392,14 @@ export async function collectUserData(userId: string): Promise<UserDataExport> {
     return await db.select().from(aiOperations).where(eq(aiOperations.actorId, userId));
   }, errors);
 
+  // ── Support tickets (owned by this user; strip internal admin identity) ──
+  const supportTicketRows = await safeCollect('supportTickets', async () => {
+    const rows = await db.select().from(supportTickets).where(eq(supportTickets.userId, userId));
+    return rows.map((row: typeof supportTickets.$inferSelect) => (
+      stripOtherUserReferences(row, ['repliedByUserId'])
+    ));
+  }, errors);
+
   return {
     schemaVersion: EXPORT_SCHEMA_VERSION,
     generatedAt,
@@ -434,6 +444,7 @@ export async function collectUserData(userId: string): Promise<UserDataExport> {
         createdAt: op.createdAt.toISOString(),
         updatedAt: op.updatedAt.toISOString(),
       })),
+    supportTickets: supportTicketRows as UserDataExport['supportTickets'],
     errors,
   };
 }
