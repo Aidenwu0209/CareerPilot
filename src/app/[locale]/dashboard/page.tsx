@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { Plus, Search, LayoutGrid, List, Sparkles, Upload, Camera } from 'lucide-react';
+import { Plus, Search, LayoutGrid, List, Sparkles, Upload, Camera, FilePlus2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,6 +29,7 @@ import { useTourStore, hasCompletedTour } from '@/stores/tour-store';
 import { cn } from '@/lib/utils';
 import { useRouter } from '@/i18n/routing';
 import type { Resume } from '@/types/resume';
+import { useSession } from 'next-auth/react';
 
 type SortOption = 'lastEdited' | 'created' | 'nameAsc' | 'nameDesc';
 type ViewMode = 'grid' | 'list';
@@ -74,6 +75,7 @@ export default function DashboardPage() {
   const { openModal, activeModal, closeModal } = useUIStore();
   const { fingerprint, isLoading: fpLoading } = useFingerprint();
   const { demoMode } = useRuntimeConfig();
+  const { data: session } = useSession();
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
@@ -135,7 +137,9 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground">{t('title')}</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground">
+            {session?.user?.name ? t('greeting', { name: session.user.name }) : t('title')}
+          </h1>
           {hasResumes && (
             <p className="mt-1 text-sm text-zinc-500">
               {t('resumeCount', { count: resumes.length })}
@@ -256,12 +260,19 @@ export default function DashboardPage() {
           ))}
         </div>
       ) : !hasResumes ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 py-16">
-          <p className="text-zinc-500 dark:text-zinc-400">{t('noResumes')}</p>
+        <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-zinc-200 py-16 dark:border-zinc-700">
+          <FilePlus2 className="size-10 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />
+          <p className="text-zinc-600 dark:text-zinc-300">{t('noResumes')}</p>
+          <Button onClick={() => openModal('create-resume')} className="bg-brand hover:bg-brand-hover">
+            <Plus className="size-4" aria-hidden="true" />
+            {t('createResume')}
+          </Button>
         </div>
       ) : !hasResults ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-zinc-200 dark:border-zinc-700 py-16">
-          <p className="text-zinc-500 dark:text-zinc-400">{t('noSearchResults')}</p>
+        <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-zinc-200 py-16 dark:border-zinc-700">
+          <Search className="size-10 text-zinc-500 dark:text-zinc-400" aria-hidden="true" />
+          <p className="text-zinc-600 dark:text-zinc-300">{t('noSearchResults')}</p>
+          <Button variant="outline" onClick={() => setSearchQuery('')}>{t('clearSearch')}</Button>
         </div>
       ) : viewMode === 'grid' ? (
         <ResumeGrid

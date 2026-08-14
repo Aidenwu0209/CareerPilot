@@ -1,4 +1,4 @@
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, sql } from 'drizzle-orm';
 import { db } from '../index';
 import { interviewSessions, interviewRounds, interviewMessages, interviewReports } from '../schema';
 import type {
@@ -91,9 +91,10 @@ export const interviewRepository = {
   },
 
   async incrementQuestionCount(roundId: string) {
-    const rows = await db.select({ questionCount: interviewRounds.questionCount }).from(interviewRounds).where(eq(interviewRounds.id, roundId)).limit(1);
-    const current = rows[0]?.questionCount ?? 0;
-    await db.update(interviewRounds).set({ questionCount: current + 1, updatedAt: new Date() }).where(eq(interviewRounds.id, roundId));
+    await db.update(interviewRounds).set({
+      questionCount: sql`${interviewRounds.questionCount} + 1`,
+      updatedAt: new Date(),
+    }).where(eq(interviewRounds.id, roundId));
   },
 
   async setRoundSummary(roundId: string, summary: RoundSummary) {
@@ -129,16 +130,33 @@ export const interviewRepository = {
     return rows[0] ?? null;
   },
 
-  async findAllMessagesBySessionId(sessionId: string) {
-    const rounds = await db.select().from(interviewRounds).where(eq(interviewRounds.sessionId, sessionId)).orderBy(interviewRounds.sortOrder);
-    if (rounds.length === 0) return [];
-    const result = await Promise.all(
-      rounds.map(async (round: typeof rounds[number]) => {
-        const messages = await this.findMessagesByRoundId(round.id);
-        return { round, messages };
-      })
-    );
-    return result;
+  async findAllMessagesBySessionId(sessionId: string): Promise<Array<{
+    round: typeof interviewRounds.$inferSelect;
+    messages: Array<typeof interviewMessages.$inferSelect>;
+  }>> {
+    const rows = await db
+      .select({ round: interviewRounds, message: interviewMessages })
+      .from(interviewRounds)
+      .leftJoin(interviewMessages, eq(interviewMessages.roundId, interviewRounds.id))
+      .where(eq(interviewRounds.sessionId, sessionId))
+      .orderBy(interviewRounds.sortOrder, interviewMessages.createdAt);
+    const grouped = new Map<string, {
+      round: typeof interviewRounds.$inferSelect;
+      messages: Array<typeof interviewMessages.$inferSelect>;
+    }>();
+    for (const row of rows) {
+      let entry = grouped.get(row.round.id);
+      if (!entry) {
+        entry = {
+          round: row.round as typeof interviewRounds.$inferSelect,
+          messages: [],
+        };
+      }
+      const message = row.message as typeof interviewMessages.$inferSelect | null;
+      if (message) entry.messages.push(message);
+      grouped.set(row.round.id, entry);
+    }
+    return [...grouped.values()];
   },
 
   async updateMessageMetadata(messageId: string, metadata: InterviewMessageMetadata) {
@@ -173,19 +191,19 @@ export const interviewRepository = {
     return rows[0] ?? null;
   },
 
-  async findReportsByUserId(userId: string) {
-    const sessions = await db
-      .select()
+  async findReportsByUserId(userId: string): Promise<Array<{
+    report: typeof interviewReports.$inferSelect;
+    session: typeof interviewSessions.$inferSelect;
+  }>> {
+    const rows = await db
+      .select({ report: interviewReports, session: interviewSessions })
       .from(interviewSessions)
-      .where(and(eq(interviewSessions.userId, userId), eq(interviewSessions.status, 'completed')));
-    if (sessions.length === 0) return [];
-    const results = await Promise.all(
-      sessions.map(async (session: typeof sessions[number]) => {
-        const report = await this.findReportBySessionId(session.id);
-        if (!report) return null;
-        return { report, session };
-      })
-    );
-    return results.filter((r): r is NonNullable<typeof r> => r !== null);
+      .innerJoin(interviewReports, eq(interviewReports.sessionId, interviewSessions.id))
+      .where(and(eq(interviewSessions.userId, userId), eq(interviewSessions.status, 'completed')))
+      .orderBy(desc(interviewSessions.updatedAt));
+    return rows as Array<{
+      report: typeof interviewReports.$inferSelect;
+      session: typeof interviewSessions.$inferSelect;
+    }>;
   },
 };

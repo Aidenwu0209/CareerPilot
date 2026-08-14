@@ -48,10 +48,10 @@ export default async function OrgAdminLayout({ children }: { children: React.Rea
         {isOrgAdmin ? (
           <>
             <OrgAdminSidebar />
-            <main className="min-h-[calc(100vh-3.5rem)] flex-1 px-4 py-8">{children}</main>
+            <main id="main-content" tabIndex={-1} className="min-h-[calc(100vh-3.5rem)] flex-1 px-4 py-8">{children}</main>
           </>
         ) : (
-          <main className="mx-auto w-full max-w-2xl px-4 py-16">
+          <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-2xl px-4 py-16">
             <NoPermission title={t('noPermission.title')} description={t('noPermission.description')} />
           </main>
         )}

@@ -15,7 +15,23 @@
     "noData": "No data",
     "rename": "Rename",
     "moreActions": "More actions",
-    "menu": "Menu"
+    "menu": "Menu",
+    "skipToContent": "Skip to main content"
+  },
+  "errors": {
+    "invalidInput": "Check that every required field is complete and correctly formatted.",
+    "unauthorized": "Your session has expired. Sign in again.",
+    "forbidden": "You do not have permission to perform this action.",
+    "notFound": "This content could not be found and may have been deleted.",
+    "conflict": "The content changed. Refresh the page and try again.",
+    "tooLarge": "The submitted content is too large. Shorten it and try again.",
+    "rateLimited": "Too many attempts. Wait a moment and try again.",
+    "server": "The server encountered a temporary problem. Try again later.",
+    "unavailable": "The service is temporarily unavailable. Try again later.",
+    "invalidResponse": "The service returned an unreadable response. Try again later.",
+    "network": "The server could not be reached. Check your connection and try again.",
+    "offline": "You are offline. Reconnect before trying again.",
+    "unknown": "The operation failed. Try again later."
   },
   "auth": {
     "login": "Log in",
@@ -47,6 +63,12 @@
       "passwordLabel": "Password",
       "confirmPasswordLabel": "Confirm password",
       "passwordHint": "Use at least 10 characters with both a letter and a number.",
+      "fieldErrors": {
+        "name": "Your name must contain at least 2 characters.",
+        "email": "Enter a valid email address.",
+        "password": "Use at least 10 characters with both letters and numbers.",
+        "confirmPassword": "The passwords do not match."
+      },
       "showPassword": "Show password",
       "hidePassword": "Hide password",
       "submit": {
@@ -108,6 +130,7 @@
   "dashboard": {
     "nav": "Dashboard",
     "title": "My Resumes",
+    "greeting": "Welcome back, {name}",
     "createResume": "New Resume",
     "createResumeDescription": "Start from a blank template",
     "resumeCount": "{count} resumes",
@@ -116,6 +139,7 @@
     "duplicateSuccess": "Resume duplicated",
     "noResumes": "No resumes yet. Click the button above to create one.",
     "noSearchResults": "No resumes match your search.",
+    "clearSearch": "Clear search",
     "searchPlaceholder": "Search resumes...",
     "sortBy": "Sort by",
     "sortLastEdited": "Last edited",
@@ -950,6 +974,7 @@
       "titleLabel": "Interview Title",
       "titlePlaceholder": "e.g., Senior Frontend Engineer Interview",
       "startInterview": "Start Interview",
+      "draftRestored": "Your unfinished interview setup draft was restored.",
       "createFailed": "Failed to create the interview. Please try again.",
       "custom": {
         "title": "Custom Interviewer",
@@ -989,7 +1014,8 @@
       "rateLimited": "Too many requests, please try again later",
       "modelNotAllowed": "The selected model is disabled or not available",
       "accountSuspended": "Account suspended",
-      "chatError": "Failed to send interview message, please retry"
+      "chatError": "Failed to send interview message, please retry",
+      "encouragements": ["Strong answers so far—keep going!", "Your response structure is getting clearer.", "Good progress. Keep supporting your points with concrete examples.", "Nice persistence. Make the result and your contribution explicit."]
     },
     "report": {
       "title": "Interview Report",
@@ -1185,6 +1211,7 @@
     "colBalanceAfter": "Balance After",
     "colNote": "Note",
     "empty": "No transactions yet",
+    "viewPlans": "View top-ups and plans",
     "loadError": "Failed to load transactions. Please try again.",
     "retry": "Retry",
     "prev": "Previous",
@@ -2151,7 +2178,9 @@
         "industries": "Industries",
         "cities": "Cities",
         "organizationTypes": "Organization types",
-        "commaSeparated": "Separate multiple values with commas",
+          "commaSeparated": "Type a value and press Enter",
+          "removePreference": "Remove preference: {tag}",
+          "organizationTypeSuggestions": ["Company", "Startup", "Government", "Public institution", "Nonprofit"],
         "saving": "Saving…",
         "update": "Save changes",
         "create": "Create goal",
@@ -2355,7 +2384,12 @@
       "submit": "Submit for review",
       "submitting": "Submitting…",
       "success": "Ability evidence submitted for teacher review",
-      "error": "Unable to submit evidence. Check the target occupation and requirement, then try again."
+      "error": "Unable to submit evidence. Check the target occupation and requirement, then try again.",
+      "errors": {
+        "title": "The evidence title must contain at least 2 characters.",
+        "description": "The evidence description must contain at least 2 characters.",
+        "sourceUrl": "Enter a valid HTTPS link."
+      }
     },
     "path": {
       "eyebrow": "Growth path",

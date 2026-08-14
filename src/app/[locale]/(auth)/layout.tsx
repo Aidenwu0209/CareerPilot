@@ -39,11 +39,11 @@ export default function AuthLayout({
       </div>
 
       {/* Glass card */}
-      <div className="relative z-10 my-20 w-full max-w-[440px]">
+      <main id="main-content" tabIndex={-1} className="relative z-10 my-20 w-full max-w-[440px]">
         <div className="rounded-2xl border border-blue-100/80 bg-white/90 p-8 shadow-2xl shadow-blue-950/8 backdrop-blur-xl sm:p-10 dark:border-blue-950/70 dark:bg-zinc-900/90 dark:shadow-black/25">
           {children}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

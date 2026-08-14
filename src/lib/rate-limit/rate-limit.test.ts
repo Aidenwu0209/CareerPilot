@@ -329,6 +329,18 @@ describe('MemoryRateLimitAdapter', () => {
     expect(await adapter.isAvailable()).toBe(true);
   });
 
+  it('periodically removes expired buckets that are never accessed again', async () => {
+    const store = new Map<string, { count: number; windowStart: number; expiresAt?: number }>();
+    const adapter = new MemoryRateLimitAdapter(store, 1);
+    await adapter.increment('expired', 5);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    await adapter.increment('active', 60_000);
+
+    expect(store.has('expired')).toBe(false);
+    expect(store.has('active')).toBe(true);
+  });
+
   it('createIsolatedAdapter has independent store', async () => {
     const adapter1 = createIsolatedAdapter();
     const adapter2 = createIsolatedAdapter();

@@ -27,6 +27,7 @@ import { CareerEvidenceSubmissionForm } from '@/components/career/career-evidenc
 import { MatchRecalculationButton } from '@/components/career/match-recalculation-button';
 import { Button } from '@/components/ui/button';
 import { JdMatchForm } from '@/components/career/jd-match-form';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 function formatDate(value: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(
@@ -242,6 +243,10 @@ export default async function CareerMatchingPage({
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      <Breadcrumbs items={[
+        { label: t('subnav.overview'), href: '/career' },
+        { label: t('subnav.matching') },
+      ]} />
       <CareerPageHeader
         eyebrow={t('matching.eyebrow')}
         title={t('matching.title')}

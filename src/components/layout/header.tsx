@@ -62,11 +62,12 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
                   data-tour={'tourId' in item ? item.tourId : undefined}
                   className={cn(
                     'relative rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
                     isActive
-                      ? 'text-zinc-900 dark:text-zinc-100'
+                      ? 'bg-brand/10 text-brand dark:bg-brand/15'
                       : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
                   )}
                 >

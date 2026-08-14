@@ -15,6 +15,8 @@ export const interviewSessions = sqliteTable('interview_sessions', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({
   userIdx: index('interview_sessions_user_id_idx').on(table.userId),
+  userStatusIdx: index('interview_sessions_user_id_status_idx').on(table.userId, table.status),
+  userCreatedIdx: index('interview_sessions_user_id_created_at_idx').on(table.userId, table.createdAt),
   resumeIdx: index('interview_sessions_resume_id_idx').on(table.resumeId),
 }));
 
@@ -43,6 +45,7 @@ export const interviewMessages = sqliteTable('interview_messages', {
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ({
   roundIdx: index('interview_messages_round_id_idx').on(table.roundId),
+  roundCreatedIdx: index('interview_messages_round_id_created_at_idx').on(table.roundId, table.createdAt),
 }));
 
 export const interviewReports = sqliteTable('interview_reports', {

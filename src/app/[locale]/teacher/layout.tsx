@@ -23,10 +23,10 @@ export default async function TeacherLayout({ children }: { children: React.Reac
       {access.status === 'ready' ? (
         <div className="mx-auto flex max-w-7xl flex-col md:flex-row">
           <TeacherSidebar copy={navCopy} />
-          <main className="min-w-0 flex-1 px-4 py-7 sm:px-6 sm:py-8">{children}</main>
+          <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 px-4 py-7 sm:px-6 sm:py-8">{children}</main>
         </div>
       ) : (
-        <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+        <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
           <TeacherAccessState
             kind={access.status === 'unconfigured' ? 'unconfigured' : 'denied'}
             title={t(`access.${access.status}.title`)}

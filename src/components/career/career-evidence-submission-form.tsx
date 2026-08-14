@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { readOptionalJsonBody } from '@/lib/http/json-client';
 
 type EvidenceRequirement = {
   abilityCode: string;
@@ -46,6 +47,19 @@ export function CareerEvidenceSubmissionForm({
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [abilityCode, setAbilityCode] = useState(initialAbilityCode);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<'title' | 'description' | 'sourceUrl', string>>>({});
+
+  function validateField(field: 'title' | 'description' | 'sourceUrl', value: string): string | undefined {
+    const trimmed = value.trim();
+    if (field === 'title' && trimmed.length < 2) return t('errors.title');
+    if (field === 'description' && trimmed.length < 2) return t('errors.description');
+    if (field === 'sourceUrl' && trimmed) {
+      try {
+        if (new URL(trimmed).protocol !== 'https:') return t('errors.sourceUrl');
+      } catch { return t('errors.sourceUrl'); }
+    }
+    return undefined;
+  }
 
   if (requirements.length === 0) return null;
 
@@ -66,7 +80,21 @@ export function CareerEvidenceSubmissionForm({
           ...(sourceUrl ? { sourceUrl } : {}),
         }),
       });
-      if (!response.ok) throw new Error(`evidence_submit_${response.status}`);
+      if (!response.ok) {
+        const body = await readOptionalJsonBody<{
+          details?: { fieldErrors?: Record<string, string[]> };
+        }>(response);
+        const serverFields = body?.details?.fieldErrors;
+        if (serverFields) {
+          setFieldErrors((current) => ({
+            ...current,
+            ...(serverFields.title?.length ? { title: t('errors.title') } : {}),
+            ...(serverFields.description?.length ? { description: t('errors.description') } : {}),
+            ...(serverFields.sourceUrl?.length ? { sourceUrl: t('errors.sourceUrl') } : {}),
+          }));
+        }
+        throw new Error(`evidence_submit_${response.status}`);
+      }
       toast.success(t('success'));
       setOpen(false);
       router.refresh();
@@ -121,8 +149,12 @@ export function CareerEvidenceSubmissionForm({
               required
               minLength={2}
               maxLength={160}
+              aria-invalid={Boolean(fieldErrors.title)}
+              aria-describedby={fieldErrors.title ? `career-evidence-title-error-${occupationCode}` : undefined}
+              onBlur={(event) => setFieldErrors((current) => ({ ...current, title: validateField('title', event.target.value) }))}
               placeholder={t('titlePlaceholder')}
             />
+            {fieldErrors.title && <p id={`career-evidence-title-error-${occupationCode}`} role="alert" className="text-sm text-red-600 dark:text-red-400">{fieldErrors.title}</p>}
           </div>
 
           <div className="space-y-2">
@@ -133,9 +165,13 @@ export function CareerEvidenceSubmissionForm({
               required
               minLength={2}
               maxLength={2000}
+              aria-invalid={Boolean(fieldErrors.description)}
+              aria-describedby={fieldErrors.description ? `career-evidence-description-error-${occupationCode}` : undefined}
+              onBlur={(event) => setFieldErrors((current) => ({ ...current, description: validateField('description', event.target.value) }))}
               rows={5}
               placeholder={t('descriptionPlaceholder')}
             />
+            {fieldErrors.description && <p id={`career-evidence-description-error-${occupationCode}`} role="alert" className="text-sm text-red-600 dark:text-red-400">{fieldErrors.description}</p>}
           </div>
 
           <div className="space-y-2">
@@ -146,8 +182,12 @@ export function CareerEvidenceSubmissionForm({
               type="url"
               inputMode="url"
               maxLength={1000}
+              aria-invalid={Boolean(fieldErrors.sourceUrl)}
+              aria-describedby={fieldErrors.sourceUrl ? `career-evidence-source-error-${occupationCode}` : undefined}
+              onBlur={(event) => setFieldErrors((current) => ({ ...current, sourceUrl: validateField('sourceUrl', event.target.value) }))}
               placeholder={t('sourceUrlPlaceholder')}
             />
+            {fieldErrors.sourceUrl && <p id={`career-evidence-source-error-${occupationCode}`} role="alert" className="text-sm text-red-600 dark:text-red-400">{fieldErrors.sourceUrl}</p>}
             <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">{t('reviewNotice')}</p>
           </div>
 

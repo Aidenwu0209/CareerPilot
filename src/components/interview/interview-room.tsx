@@ -72,6 +72,16 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
     }
   }, [status, refreshBalance]);
 
+  const encouragedAtRef = useRef(0);
+  useEffect(() => {
+    if (isLoading || isViewingHistory) return;
+    const answerCount = messages.filter((message) => message.role === 'user').length;
+    if (answerCount < 3 || answerCount % 3 !== 0 || answerCount === encouragedAtRef.current) return;
+    encouragedAtRef.current = answerCount;
+    const encouragements = t.raw('encouragements') as string[];
+    toast.success(encouragements[(answerCount / 3 - 1) % encouragements.length]);
+  }, [isLoading, isViewingHistory, messages, t]);
+
   // Show toast when AI API call fails — map known gateway error codes to specific messages
   const lastErrorRef = useRef<Error | null>(null);
   useEffect(() => {

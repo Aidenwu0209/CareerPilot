@@ -2,13 +2,12 @@
  * Mail adapter abstraction for sending OTP emails.
  *
  * - TestMailAdapter: stores sent emails in memory for automated test retrieval.
- * - ConsoleMailAdapter: logs OTP to console (development).
  * - SmtpMailAdapter: production adapter configured by SMTP_* environment variables.
  *
  * The adapter is selected by environment:
  * - NODE_ENV=test → TestMailAdapter (singleton)
  * - NODE_ENV=development (no SMTP_HOST) → TestMailAdapter
- * - NODE_ENV=development (with SMTP_HOST) → ConsoleMailAdapter (or SmtpMailAdapter if configured)
+ * - NODE_ENV=development (with SMTP_HOST) → SmtpMailAdapter
  * - NODE_ENV=production → SmtpMailAdapter (requires SMTP_HOST)
  */
 
@@ -40,15 +39,6 @@ export class TestMailAdapter implements MailAdapter {
   /** Clear all stored emails (useful between tests). */
   clear(): void {
     this.sentEmails = [];
-  }
-}
-
-/**
- * Console adapter — logs the OTP to stdout. Useful for local development.
- */
-export class ConsoleMailAdapter implements MailAdapter {
-  async sendOTP(email: string, code: string): Promise<void> {
-    console.log(`[OTP Mail] To: ${email} | Code: ${code} | Expires in 10 minutes`);
   }
 }
 
@@ -144,8 +134,7 @@ export function getMailAdapter(): MailAdapter {
   if (isProduction) {
     _adapter = new SmtpMailAdapter();
   } else if (hasSmtp) {
-    // Dev with SMTP configured — still use console for simplicity
-    _adapter = new ConsoleMailAdapter();
+    _adapter = new SmtpMailAdapter();
   } else {
     // Dev/test without SMTP — use TestMailAdapter for easy code retrieval
     if (!_testAdapter) _testAdapter = new TestMailAdapter();

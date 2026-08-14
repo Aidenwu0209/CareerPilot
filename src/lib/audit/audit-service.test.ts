@@ -102,6 +102,16 @@ describe('US-024 AC2: Sanitization — rejects sensitive content', () => {
       expect(result).not.toContain(jwt);
     });
 
+    it.each([
+      ['email address', 'Changed email from student@example.com'],
+      ['phone number', 'Verified phone 13800138000'],
+      ['identity number', 'Reviewed identity 110101199001011234'],
+    ])('redacts %s values', (_label, summary) => {
+      const result = sanitizeSummary(summary);
+      expect(result).toContain('redacted');
+      expect(result).not.toBe(summary);
+    });
+
     it('redacts multi-line content resembling resume text', () => {
       const resumeText = `John Doe
 Software Engineer with 5 years experience in React and Node.js.

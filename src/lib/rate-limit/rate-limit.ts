@@ -19,6 +19,7 @@
 interface RateLimitEntry {
   count: number;
   windowStart: number;
+  expiresAt?: number;
 }
 
 export interface RateLimitAdapter {
@@ -62,14 +63,31 @@ export interface RateLimitPolicy {
  * In production, a Redis or database adapter would be used instead.
  */
 export class MemoryRateLimitAdapter implements RateLimitAdapter {
-  constructor(private readonly store: Map<string, RateLimitEntry> = new Map()) {}
+  private operations = 0;
+
+  constructor(
+    private readonly store: Map<string, RateLimitEntry> = new Map(),
+    private readonly sweepInterval = 256,
+  ) {}
+
+  private sweepExpired(now: number): void {
+    for (const [key, entry] of this.store) {
+      if (entry.expiresAt != null && entry.expiresAt <= now) {
+        this.store.delete(key);
+      }
+    }
+  }
 
   async increment(key: string, windowMs: number): Promise<RateLimitEntry> {
     const now = Date.now();
+    this.operations += 1;
+    if (this.operations % this.sweepInterval === 0) {
+      this.sweepExpired(now);
+    }
     const existing = this.store.get(key);
 
-    if (!existing || now - existing.windowStart > windowMs) {
-      const entry: RateLimitEntry = { count: 1, windowStart: now };
+    if (!existing || (existing.expiresAt ?? existing.windowStart + windowMs) <= now) {
+      const entry: RateLimitEntry = { count: 1, windowStart: now, expiresAt: now + windowMs };
       this.store.set(key, entry);
       return entry;
     }
@@ -89,6 +107,88 @@ export class MemoryRateLimitAdapter implements RateLimitAdapter {
 
   async isAvailable(): Promise<boolean> {
     return true;
+  }
+}
+
+// ─── Redis Adapter ───────────────────────────────────────────────────────────
+
+/**
+ * Redis-backed fixed-window limiter for multi-instance production deployments.
+ * The Lua script makes increment + expiry assignment atomic.
+ */
+export class RedisRateLimitAdapter implements RateLimitAdapter {
+  private clientPromise: Promise<import('redis').RedisClientType> | null = null;
+
+  constructor(
+    private readonly url: string,
+    private readonly keyPrefix = 'careerpilot:rate-limit:',
+  ) {}
+
+  private getClient(): Promise<import('redis').RedisClientType> {
+    if (!this.clientPromise) {
+      this.clientPromise = import('redis').then(async ({ createClient }) => {
+        const client = createClient({ url: this.url });
+        client.on('error', () => {
+          // Availability is reported through isAvailable/checkRateLimit.
+        });
+        await client.connect();
+        return client as import('redis').RedisClientType;
+      });
+    }
+    return this.clientPromise;
+  }
+
+  private redisKey(key: string): string {
+    return `${this.keyPrefix}${key}`;
+  }
+
+  async increment(key: string, windowMs: number): Promise<RateLimitEntry> {
+    const client = await this.getClient();
+    const result = await client.eval(
+      [
+        "local count = redis.call('INCR', KEYS[1])",
+        "local ttl = redis.call('PTTL', KEYS[1])",
+        "if count == 1 or ttl < 0 then",
+        "  redis.call('PEXPIRE', KEYS[1], ARGV[1])",
+        "  ttl = tonumber(ARGV[1])",
+        'end',
+        'return {count, ttl}',
+      ].join('\n'),
+      { keys: [this.redisKey(key)], arguments: [String(windowMs)] },
+    );
+    if (!Array.isArray(result) || result.length < 2) {
+      throw new Error('Unexpected Redis rate-limit response');
+    }
+    const count = Number(result[0]);
+    const ttl = Number(result[1]);
+    const now = Date.now();
+    return {
+      count,
+      windowStart: ttl >= 0 ? now - Math.max(0, windowMs - ttl) : now,
+      expiresAt: ttl >= 0 ? now + ttl : now + windowMs,
+    };
+  }
+
+  async reset(key: string): Promise<void> {
+    const client = await this.getClient();
+    await client.del(this.redisKey(key));
+  }
+
+  async clear(): Promise<void> {
+    const client = await this.getClient();
+    for await (const result of client.scanIterator({ MATCH: `${this.keyPrefix}*`, COUNT: 100 })) {
+      const keys = Array.isArray(result) ? result : [result];
+      if (keys.length > 0) await client.del(keys);
+    }
+  }
+
+  async isAvailable(): Promise<boolean> {
+    try {
+      const client = await this.getClient();
+      return client.isReady;
+    } catch {
+      return false;
+    }
   }
 }
 
@@ -129,7 +229,14 @@ let adapterInstance: RateLimitAdapter | null = null;
  */
 export function getRateLimitAdapter(): RateLimitAdapter {
   if (!adapterInstance) {
-    adapterInstance = new MemoryRateLimitAdapter(sharedStore);
+    const redisUrl = process.env.REDIS_URL?.trim();
+    if (redisUrl) {
+      adapterInstance = new RedisRateLimitAdapter(redisUrl);
+    } else if (process.env.NODE_ENV === 'production' && process.env.RATE_LIMIT_DISTRIBUTED_REQUIRED === 'true') {
+      adapterInstance = new UnavailableRateLimitAdapter();
+    } else {
+      adapterInstance = new MemoryRateLimitAdapter(sharedStore);
+    }
   }
   return adapterInstance;
 }
@@ -311,6 +418,21 @@ export const RATE_LIMIT_POLICIES = {
     limit: 10,
     windowMs: 60 * 1000,
     failClosed: true, // high-cost PDF processing
+  },
+  careerApi: {
+    limit: 120,
+    windowMs: 60 * 1000,
+    failClosed: true,
+  },
+  interviewApi: {
+    limit: 60,
+    windowMs: 60 * 1000,
+    failClosed: true,
+  },
+  reportExport: {
+    limit: 5,
+    windowMs: 60 * 1000,
+    failClosed: true,
   },
   sharePassword: {
     limit: 10,

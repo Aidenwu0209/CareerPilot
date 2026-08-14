@@ -34,7 +34,7 @@ export default async function CareerLayout({
       <Header />
       <CareerSubnav items={items} label={t('subnav.label')} />
       <CareerJourneyGuide items={journeyItems} helpLabel={t('journey.help')} progressLabel={t('journey.progress')} />
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:py-8">{children}</main>
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-7xl px-4 py-6 sm:py-8">{children}</main>
     </div>
   );
 }

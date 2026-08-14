@@ -18,6 +18,7 @@ import { getOccupationByCode } from '@/lib/career/service';
 import { Link } from '@/i18n/routing';
 import { CareerPageHeader, CareerSection, ScoreBar, StatusPill } from '@/components/career/career-shell';
 import { Button } from '@/components/ui/button';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -50,6 +51,11 @@ export default async function OccupationDetailPage({
 
   return (
     <div className="space-y-6 sm:space-y-8">
+      <Breadcrumbs items={[
+        { label: t('subnav.overview'), href: '/career' },
+        { label: t('subnav.jobs'), href: '/career/jobs' },
+        { label: occupation.name },
+      ]} />
       <Button asChild variant="ghost" size="sm" className="-ml-3 w-fit">
         <Link href="/career/jobs">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />

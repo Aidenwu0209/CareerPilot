@@ -9,12 +9,20 @@ import {
   MAX_SHORT_TEXT_LENGTH,
   sanitizedError,
 } from '@/lib/validation/input-limits';
+import { checkRateLimit, RATE_LIMIT_POLICIES, rateLimitKey, rateLimitedResponse } from '@/lib/rate-limit/rate-limit';
+
+async function interviewLimit(userId: string) {
+  const result = await checkRateLimit(rateLimitKey('interview-api', 'user', userId), RATE_LIMIT_POLICIES.interviewApi);
+  return result.allowed ? null : rateLimitedResponse(result.retryAfter);
+}
 
 export async function GET(request: NextRequest) {
   await dbReady;
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
   if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  const limited = await interviewLimit(user.id);
+  if (limited) return limited;
 
   const sessions = await interviewRepository.findSessionsByUserId(user.id);
   return NextResponse.json(sessions);
@@ -25,6 +33,8 @@ export async function POST(request: NextRequest) {
   const fingerprint = getUserIdFromRequest(request);
   const user = await resolveUser(fingerprint);
   if (!user) return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+  const limited = await interviewLimit(user.id);
+  if (limited) return limited;
 
   const body = await request.json();
   const { jobDescription, jobTitle, resumeId, interviewers } = body;

@@ -68,7 +68,7 @@ export default function LoginPage() {
       )}
 
       {/* Terms with clickable links */}
-      <p className="mt-6 text-center text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
+      <p className="mt-6 text-center text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
         {t.rich('agreeTermsLinks', {
           terms: (chunks) => (
             <Link href="/terms" className="underline hover:no-underline">
