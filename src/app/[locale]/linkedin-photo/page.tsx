@@ -125,8 +125,8 @@ export default function LinkedInPhotoPage() {
   );
 
   const handleModelChange = (modelId: string) => {
-    setSelectedModel(modelId);
-    useSettingsStore.getState().setAIModel(modelId);
+    setSelectedModel(modelId || undefined);
+    if (modelId) useSettingsStore.getState().setAIModel(modelId);
   };
 
   /** Map server error codes to localized user-facing messages. */
@@ -667,6 +667,7 @@ export default function LinkedInPhotoPage() {
               onModelChange={handleModelChange}
               capability="image_generation"
               size="default"
+              emptyMessage={t('noImageModels')}
             />
           </div>
 

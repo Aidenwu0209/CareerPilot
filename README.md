@@ -168,36 +168,19 @@ connection-pool settings, upgrades, and rollback procedure, see
 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ```bash
-# Generate a secret key first
-openssl rand -base64 32
+# Create an untracked deployment environment file and replace every placeholder.
+cp .env.example .env
 
-# Build the image locally, then run
-docker build -t careerpilot .
-docker run -d -p 3000:3000 \
-  -e AUTH_SECRET=<your-generated-secret> \
-  -v careerpilot-data:/app/data \
-  careerpilot
+# Edit .env: set APP_URL, AUTH_SECRET and AI_CREDENTIAL_MASTER_KEY, and add
+# POSTGRES_PASSWORD with a random value.
+# then start the supported PostgreSQL + Redis topology.
+docker compose up -d --build
+docker compose ps
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Database auto-migrates and seeds on first start.
+Open the configured `APP_URL`. The database migrates automatically, but provider credentials and AI models are intentionally **not** seeded. Never commit an API key or add a server-side `GEMINI_API_KEY` fallback.
 
-> **`AUTH_SECRET`** is required for session encryption. Generate one with `openssl rand -base64 32`.
-
-> **AI Configuration:** Provider credentials are configured by a super administrator and encrypted with `AI_CREDENTIAL_MASTER_KEY`. End users never enter or receive provider keys.
-
-<details>
-<summary>With PostgreSQL</summary>
-
-```bash
-docker build -t careerpilot .
-docker run -d -p 3000:3000 \
-  -e AUTH_SECRET=<your-generated-secret> \
-  -e DB_TYPE=postgresql \
-  -e DATABASE_URL=postgresql://user:pass@host:5432/careerpilot \
-  careerpilot
-```
-
-</details>
+> **AI Configuration:** Generate a dedicated `AI_CREDENTIAL_MASTER_KEY`, bootstrap a super administrator, configure a provider credential, test it, and then publish approved models. Image generation additionally requires upstream model entitlement and quota. Follow [Managed AI and image setup](docs/DEPLOYMENT.md#managed-ai-and-image-setup).
 
 <details>
 <summary>With Google OAuth</summary>
@@ -242,9 +225,13 @@ DB_TYPE=sqlite
 # Product mode is the default and supports password registration/login.
 # Configure SMTP_* only when email-code login is also required.
 DEMO_MODE=false
+
+# Required before an administrator saves any managed provider credential.
+# Use a different value from AUTH_SECRET and keep it stable.
+AI_CREDENTIAL_MASTER_KEY=<openssl-rand-base64-48-output>
 ```
 
-> **AI Configuration:** Configure providers and encrypted credentials in **Admin > AI Providers**, then publish approved models through the managed catalog.
+> **AI Configuration:** No provider key or model is bundled. Configure providers and encrypted credentials in **Admin > AI Providers**, then publish approved models through the managed catalog. For LinkedIn Photo, publish at least one public model with `image_generation` capability and verify that the upstream account includes that model and has quota.
 
 See `.env.example` for all available options (Google OAuth, PostgreSQL, etc.).
 
@@ -269,6 +256,8 @@ Open [http://localhost:3000](http://localhost:3000).
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `AUTH_SECRET` | Yes | — | Secret key for session encryption |
+| `AI_CREDENTIAL_MASTER_KEY` | Before saving AI credentials; always in production | — | Dedicated key for encrypting managed provider credentials; must differ from `AUTH_SECRET` |
+| `BOOTSTRAP_SUPER_ADMIN_EMAIL` | For first admin setup | — | Existing account promoted to `super_admin` on the next service start |
 | `DB_TYPE` | No | `sqlite` | Database type: `sqlite` or `postgresql` |
 | `DATABASE_URL` | When PostgreSQL | — | PostgreSQL connection string |
 | `SQLITE_PATH` | No | `./data/careerpilot.db` | SQLite database file path |
@@ -296,7 +285,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm db:generate:pg` | Generate Drizzle migrations (PostgreSQL) |
 | `pnpm db:migrate` | Execute database migrations |
 | `pnpm db:studio` | Open Drizzle Studio (database GUI) |
-| `pnpm db:seed` | Seed database with sample data |
+| `pnpm db:seed` | Seed demo student/teacher identities only; does not add provider credentials or AI models |
 
 ## Project Structure
 

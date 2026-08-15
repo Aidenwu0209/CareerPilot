@@ -194,6 +194,7 @@ describe('US-049: LinkedIn photo via gateway', () => {
       providerBody: '{"error":{"message":"model gemini-missing not found"}}',
       expectedCode: 'PROVIDER_MODEL_UNAVAILABLE',
       expectedStatus: 502,
+      expectedMessage: undefined,
     },
     {
       name: 'rejected credentials',
@@ -201,6 +202,7 @@ describe('US-049: LinkedIn photo via gateway', () => {
       providerBody: '{"error":{"message":"API key not valid"}}',
       expectedCode: 'PROVIDER_CREDENTIALS_REJECTED',
       expectedStatus: 502,
+      expectedMessage: undefined,
     },
     {
       name: 'exhausted quota',
@@ -208,12 +210,14 @@ describe('US-049: LinkedIn photo via gateway', () => {
       providerBody: '{"error":{"message":"RESOURCE_EXHAUSTED: quota exceeded"}}',
       expectedCode: 'PROVIDER_QUOTA_EXCEEDED',
       expectedStatus: 503,
+      expectedMessage: 'plan may not include this model',
     },
   ])('returns a safe error for $name without retrying', async ({
     status,
     providerBody,
     expectedCode,
     expectedStatus,
+    expectedMessage,
   }) => {
     setUser('u1');
     fetchSpy.mockResolvedValue(new Response(providerBody, { status }));
@@ -221,7 +225,9 @@ describe('US-049: LinkedIn photo via gateway', () => {
     const res = await POST(makeRequest(VALID_BODY));
 
     expect(res.status).toBe(expectedStatus);
-    expect(await res.json()).toMatchObject({ error: expectedCode });
+    const responseBody = await res.json();
+    expect(responseBody).toMatchObject({ error: expectedCode });
+    if (expectedMessage) expect(responseBody.message).toContain(expectedMessage);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 

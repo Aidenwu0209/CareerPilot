@@ -72,7 +72,7 @@ export async function managedProviderErrorFromResponse(
       'PROVIDER_QUOTA_EXCEEDED',
       503,
       false,
-      'The AI provider quota is exhausted. Please try again later.',
+      'The AI provider plan may not include this model, or its rate limit or quota has been reached.',
     );
   }
 

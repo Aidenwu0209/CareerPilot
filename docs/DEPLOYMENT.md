@@ -34,6 +34,18 @@ curl --fail http://127.0.0.1:3000/api/health
 
 The app container is considered healthy only when configuration, database connectivity and migrations are ready. PostgreSQL and Redis data live in named volumes.
 
+## Managed AI and image setup
+
+CareerPilot deliberately ships without provider credentials or AI model rows. Credentials are deployment secrets, while model identifiers, availability, entitlement and prices vary by provider account. Do not put provider keys in the repository, client settings or generic environment-variable fallbacks.
+
+1. Generate independent values for `AUTH_SECRET` and `AI_CREDENTIAL_MASTER_KEY` (for example, two separate `openssl rand -base64 48` results), then start or restart the service.
+2. Register the intended administrator account. Set `BOOTSTRAP_SUPER_ADMIN_EMAIL` to that exact email and restart the service once; the bootstrap is idempotent and only promotes an existing account.
+3. Open **Admin > AI Providers**, add the managed provider credential, and run the connection test. A successful test proves only that the credential and endpoint are reachable; it does not prove access or quota for every model.
+4. Open **Admin > Model Catalog**, create the exact model identifier enabled for that provider account, select its capability, set public visibility and pricing, and enable it. LinkedIn Photo requires `image_generation`.
+5. If plan/model access rules have been configured, grant the image model to the intended plan. Sign in as a normal user and confirm that `/api/ai/models` lists it before testing generation.
+
+Image-generation access is provider- and account-specific. Check the live provider pricing and quota pages before publishing a model. For example, Google's current [Gemini Developer API pricing](https://ai.google.dev/gemini-api/docs/pricing) marks the listed Gemini image-generation models as unavailable on the free tier. A provider connection test can therefore succeed while an image request correctly returns `PROVIDER_QUOTA_EXCEEDED`.
+
 ## Production checks
 
 - Terminate TLS at a reverse proxy and forward the original host/protocol headers.
