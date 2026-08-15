@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
-import { decryptCredential } from '@/lib/crypto/credential-crypto';
+import { CredentialCryptoError, decryptCredential } from '@/lib/crypto/credential-crypto';
 import { db } from '@/lib/db';
 import { aiProviders } from '@/lib/db/schema';
 import { SSRF_SAFE_FETCH_OPTIONS, validateUpstreamUrl } from '@/lib/security/ssrf-guard';
@@ -11,6 +11,8 @@ const DEFAULT_BASE_URLS: Record<string, string> = {
   openai: 'https://api.openai.com/v1',
   anthropic: 'https://api.anthropic.com/v1',
   google: 'https://generativelanguage.googleapis.com/v1beta',
+  ernie: 'https://qianfan.baidubce.com/v2',
+  qianfan: 'https://qianfan.baidubce.com/v2',
 };
 
 function buildConnectionRequest(
@@ -107,8 +109,8 @@ export async function POST(
         .set({ lastValidatedAt: new Date(), updatedAt: new Date() })
         .where(eq(aiProviders.id, id));
     }
-  } catch {
-    error = 'CONNECTION_ERROR';
+  } catch (caught) {
+    error = caught instanceof CredentialCryptoError ? caught.code : 'CONNECTION_ERROR';
   }
 
   await recordAuditEvent({

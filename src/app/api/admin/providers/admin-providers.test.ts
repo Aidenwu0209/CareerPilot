@@ -63,7 +63,7 @@ import { POST as testProvider } from './[id]/test/route';
 import { POST as rotateCredential } from './[id]/credentials/rotate/route';
 import { db } from '@/lib/db';
 import { users, aiProviders } from '@/lib/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 async function seedUser(id: string, email: string, role: 'user' | 'super_admin' = 'user') {
   await db.insert(users).values({ id, email, name: email.split('@')[0], authType: 'email', platformRole: role });
@@ -132,6 +132,25 @@ describe('AC1: Create and edit provider', () => {
     const body = await res.json();
     expect(body.provider.hasCredentials).toBe(false);
     expect(body.provider.maskedCredential).toBeNull();
+  });
+
+  it('returns a stable error without persisting credentials when the master key is missing', async () => {
+    vi.stubEnv('AI_CREDENTIAL_MASTER_KEY', '');
+    try {
+      const res = await createProvider(
+        new Request('http://localhost/api/admin/providers', {
+          method: 'POST',
+          body: JSON.stringify({ type: 'google', name: 'Google AI', credential: 'secret-key' }),
+          headers: { 'content-type': 'application/json' },
+        }),
+      );
+
+      expect(res.status).toBe(503);
+      expect(await res.json()).toEqual({ error: 'KEY_NOT_AVAILABLE' });
+      expect(await db.select().from(aiProviders)).toHaveLength(0);
+    } finally {
+      vi.stubEnv('AI_CREDENTIAL_MASTER_KEY', 'test-master-key-that-is-at-least-32-chars-long!');
+    }
   });
 
   it('rejects missing type', async () => {
@@ -328,6 +347,22 @@ describe('AC2: Connection test', () => {
     expect(body.httpStatus).toBe(200);
   });
 
+  it('uses the managed Qianfan endpoint for an ERNIE provider', async () => {
+    await seedProvider('p-ernie', 'ernie', 'ERNIE', { credential: 'qianfan-test-key' });
+    mockFetch.mockResolvedValueOnce(new Response('{"data":[]}', { status: 200 }));
+
+    const res = await testProvider(
+      new Request('http://localhost/api/admin/providers/p-ernie/test', { method: 'POST' }),
+      { params: Promise.resolve({ id: 'p-ernie' }) },
+    );
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ result: 'success', httpStatus: 200 });
+    expect(String(mockFetch.mock.calls[0][0])).toBe('https://qianfan.baidubce.com/v2/models');
+    expect((mockFetch.mock.calls[0][1].headers as Record<string, string>).Authorization)
+      .toBe('Bearer qianfan-test-key');
+  });
+
   it('returns failed on 401 response', async () => {
     mockFetch.mockResolvedValueOnce(new Response('Unauthorized', { status: 401 }));
 
@@ -356,6 +391,22 @@ describe('AC2: Connection test', () => {
     expect(body.error).toBe('CONNECTION_ERROR');
     // Should not leak internal error details
     expect(JSON.stringify(body)).not.toContain('ECONNREFUSED');
+  });
+
+  it('reports the missing credential master key before making a network request', async () => {
+    vi.stubEnv('AI_CREDENTIAL_MASTER_KEY', '');
+    try {
+      const res = await testProvider(
+        new Request('http://localhost/api/admin/providers/p1/test', { method: 'POST' }),
+        { params: Promise.resolve({ id: 'p1' }) },
+      );
+
+      expect(res.status).toBe(200);
+      expect(await res.json()).toMatchObject({ result: 'failed', error: 'KEY_NOT_AVAILABLE' });
+      expect(mockFetch).not.toHaveBeenCalled();
+    } finally {
+      vi.stubEnv('AI_CREDENTIAL_MASTER_KEY', 'test-master-key-that-is-at-least-32-chars-long!');
+    }
   });
 
   it('returns 404 for non-existent provider', async () => {

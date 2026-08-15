@@ -24,6 +24,8 @@ interface ModelSelectorProps {
   capability?: string;
   size?: 'sm' | 'default';
   className?: string;
+  /** Feature-specific guidance shown when no matching model is available. */
+  emptyMessage?: string;
 }
 
 export function ModelSelector({
@@ -32,6 +34,7 @@ export function ModelSelector({
   capability,
   size = 'sm',
   className,
+  emptyMessage,
 }: ModelSelectorProps) {
   const t = useTranslations('ai');
   const { models, loading, error } = useModelCatalog();
@@ -43,7 +46,7 @@ export function ModelSelector({
 
   // Detect if the currently selected model is no longer available
   const selectedUnavailable =
-    !!selectedModel && filtered.length > 0 && !filtered.some((m) => m.id === selectedModel);
+    !!selectedModel && !loading && !error && !filtered.some((m) => m.id === selectedModel);
   const prevUnavailable = useRef(false);
 
   // AC4: When the selected model becomes unavailable (disabled/removed),
@@ -58,6 +61,7 @@ export function ModelSelector({
           description: fallback.displayName,
         });
       } else {
+        onModelChange('');
         toast.warning(t('modelUnavailable'));
       }
     }
@@ -90,7 +94,7 @@ export function ModelSelector({
         title={error ? t('modelLoadError') : t('noModelsAvailable')}
       >
         <span className="inline-block h-1.5 w-1.5 rounded-full bg-zinc-300" />
-        {error ? t('modelLoadError') : t('noModelsAvailable')}
+        {error ? t('modelLoadError') : (emptyMessage ?? t('noModelsAvailable'))}
       </span>
     );
   }

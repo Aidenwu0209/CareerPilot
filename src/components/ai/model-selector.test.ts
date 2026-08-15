@@ -102,13 +102,19 @@ describe('ModelSelector data logic', () => {
   it('selected model can be checked against filtered list', () => {
     const textModels = mockModels.filter((m) => m.capabilities.includes('text'));
     const selectedId = 'deleted-model-id';
-    const isUnavailable =
-      textModels.length > 0 && !textModels.some((m) => m.id === selectedId);
+    const isUnavailable = !textModels.some((m) => m.id === selectedId);
     expect(isUnavailable).toBe(true);
 
     const validId = 'test-model-1';
     const isValid = textModels.some((m) => m.id === validId);
     expect(isValid).toBe(true);
+  });
+
+  it('treats a stale selection as unavailable when the filtered catalog is empty', () => {
+    const imageModels: CatalogModelInfo[] = [];
+    const selectedId = 'remembered-text-model';
+
+    expect(!imageModels.some((model) => model.id === selectedId)).toBe(true);
   });
 
   it('estimateCredits still works after fetch failure', () => {
@@ -136,8 +142,7 @@ describe('ModelSelector data logic', () => {
     toastSpy.mockClear();
     const textModels = mockModels.filter((m) => m.capabilities.includes('text'));
     const selectedId = 'deleted-model-id';
-    const isUnavailable =
-      textModels.length > 0 && !textModels.some((m) => m.id === selectedId);
+    const isUnavailable = !textModels.some((m) => m.id === selectedId);
 
     // Simulate the effect body that runs when selectedUnavailable transitions to true
     if (isUnavailable) {
@@ -160,8 +165,7 @@ describe('ModelSelector data logic', () => {
     toastSpy.mockClear();
     const textModels = mockModels.filter((m) => m.capabilities.includes('text'));
     const selectedId = 'test-model-1';
-    const isUnavailable =
-      textModels.length > 0 && !textModels.some((m) => m.id === selectedId);
+    const isUnavailable = !textModels.some((m) => m.id === selectedId);
 
     expect(isUnavailable).toBe(false);
     expect(toastSpy).not.toHaveBeenCalled();

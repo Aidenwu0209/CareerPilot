@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -86,6 +87,7 @@ const PROVIDER_TYPES = [
   { value: 'openai', label: 'OpenAI' },
   { value: 'anthropic', label: 'Anthropic' },
   { value: 'google', label: 'Google AI' },
+  { value: 'ernie', label: 'ERNIE / Qianfan' },
 ];
 
 const KNOWN_API_ERRORS = new Set([
@@ -98,6 +100,7 @@ const KNOWN_API_ERRORS = new Set([
   'NO_UPDATES',
   'INVALID_STATUS',
   'INVALID_BODY',
+  'KEY_NOT_AVAILABLE',
 ]);
 
 function providerTypeLabel(type: string): string {
@@ -217,6 +220,22 @@ export default function AdminAiProvidersPage() {
             <Plus className="h-4 w-4" />
             {t('add')}
           </Button>
+        </div>
+      </div>
+
+      <div
+        role="note"
+        className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-100"
+      >
+        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="space-y-1">
+          <p>{t('setupNotice')}</p>
+          <Link
+            href="/admin/ai/models"
+            className="inline-flex font-medium underline underline-offset-4 hover:no-underline"
+          >
+            {t('setupModelsLink')}
+          </Link>
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -129,6 +130,7 @@ export default function AdminAiModelsPage() {
 
   // Action loading
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
+  const hasActiveProviders = providers.some((provider) => provider.status === 'active');
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -211,7 +213,11 @@ export default function AdminAiModelsPage() {
             <RefreshCw className={cn('h-4 w-4', loading && 'animate-spin')} />
             {t('refresh')}
           </Button>
-          <Button size="sm" onClick={() => setAddOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => setAddOpen(true)}
+            disabled={!loading && !hasActiveProviders}
+          >
             <Plus className="h-4 w-4" />
             {t('add')}
           </Button>
@@ -236,7 +242,19 @@ export default function AdminAiModelsPage() {
       ) : models.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white py-12 dark:border-zinc-800 dark:bg-zinc-900">
           <Inbox className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">{t('empty')}</p>
+          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+            {hasActiveProviders ? t('empty') : t('emptyNoProviders')}
+          </p>
+          {hasActiveProviders ? (
+            <Button size="sm" className="mt-4" onClick={() => setAddOpen(true)}>
+              <Plus className="h-4 w-4" />
+              {t('add')}
+            </Button>
+          ) : (
+            <Button asChild size="sm" className="mt-4">
+              <Link href="/admin/ai-providers">{t('configureProvider')}</Link>
+            </Button>
+          )}
         </div>
       ) : (
         <div className="space-y-3">

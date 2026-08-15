@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
-import { encryptCredential, maskCredential, getProviderCredentialInfo } from '@/lib/crypto/credential-crypto';
+import {
+  CredentialCryptoError,
+  encryptCredential,
+  getProviderCredentialInfo,
+} from '@/lib/crypto/credential-crypto';
 import { validateUpstreamUrl } from '@/lib/security/ssrf-guard';
 import { db } from '@/lib/db';
 import { aiProviders } from '@/lib/db/schema';
@@ -90,7 +94,17 @@ export async function POST(request: Request) {
   // Encrypt credential if provided
   let encryptedCred: string | null = null;
   if (credential) {
-    encryptedCred = encryptCredential(credential);
+    try {
+      encryptedCred = encryptCredential(credential);
+    } catch (error) {
+      if (error instanceof CredentialCryptoError) {
+        return NextResponse.json(
+          { error: error.code },
+          { status: error.code === 'KEY_NOT_AVAILABLE' ? 503 : 400 },
+        );
+      }
+      throw error;
+    }
   }
 
   const providerId = crypto.randomUUID();
