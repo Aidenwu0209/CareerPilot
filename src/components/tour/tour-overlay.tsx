@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -92,17 +92,15 @@ function calcTooltipStyle(
 
 export function TourOverlay({ tourId, steps }: TourOverlayProps) {
   const t = useTranslations('tour');
-  const { isActive, activeTourId, currentStep, totalSteps, nextStep, prevStep, dismiss } = useTourStore();
+  const { isActive, activeTourId, currentStep, totalSteps, nextStep, prevStep, dismiss, dismissAll } = useTourStore();
   const [rect, setRect] = useState<Rect | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipSize, setTooltipSize] = useState({ w: 320, h: 160 });
-  const [mounted, setMounted] = useState(false);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descriptionId = useId();
 
   const isMyTour = isActive && activeTourId === tourId;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const updateRect = useCallback(() => {
     if (!isMyTour) return;
@@ -120,10 +118,11 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
       nextStep();
       return;
     }
-    updateRect();
+    const frame = window.requestAnimationFrame(updateRect);
     window.addEventListener('resize', updateRect);
     window.addEventListener('scroll', updateRect, true);
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener('resize', updateRect);
       window.removeEventListener('scroll', updateRect, true);
     };
@@ -136,6 +135,32 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
     }
   }, [currentStep, isMyTour, rect]);
 
+  useEffect(() => {
+    if (!isMyTour) return;
+    returnFocusRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') dismiss();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      const returnTarget = returnFocusRef.current;
+      if (returnTarget?.isConnected) returnTarget.focus({ preventScroll: true });
+      returnFocusRef.current = null;
+    };
+  }, [dismiss, isMyTour]);
+
+  const hasTargetRect = rect !== null;
+  useEffect(() => {
+    if (!isMyTour || !hasTargetRect) return;
+    const frame = window.requestAnimationFrame(() => {
+      tooltipRef.current?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [currentStep, hasTargetRect, isMyTour]);
+
   // Skip on mobile
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -145,7 +170,7 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  if (!mounted || !isMyTour || isMobile) return null;
+  if (!isMyTour || isMobile || typeof document === 'undefined') return null;
 
   const step = steps[currentStep];
   const isLast = currentStep === totalSteps - 1;
@@ -155,18 +180,18 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
     <>
       {/* Dark overlay with spotlight cutout */}
       <div
-        className="fixed inset-0 z-[9999] transition-all duration-300"
+        className="pointer-events-none fixed inset-0 z-[9999] transition-all duration-300 motion-reduce:transition-none"
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           clipPath: rect ? buildClipPath(rect) : undefined,
         }}
-        onClick={dismiss}
+        aria-hidden="true"
       />
 
       {/* Highlight ring around target */}
       {rect && (
         <div
-          className="fixed z-[9999] rounded-lg ring-2 ring-brand ring-offset-2 transition-all duration-300 pointer-events-none"
+          className="pointer-events-none fixed z-[9999] rounded-lg ring-2 ring-brand ring-offset-2 transition-all duration-300 motion-reduce:transition-none"
           style={{
             top: rect.top - PADDING,
             left: rect.left - PADDING,
@@ -180,21 +205,27 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
       {rect && (
         <div
           ref={tooltipRef}
-          className="fixed z-[10000] w-80 rounded-xl border border-zinc-200 bg-white p-4 shadow-2xl transition-all duration-300 dark:border-zinc-700 dark:bg-zinc-900"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+          tabIndex={-1}
+          className="fixed z-[10000] w-80 rounded-xl border border-zinc-200 bg-white p-4 shadow-2xl outline-none transition-all duration-300 motion-reduce:transition-none dark:border-zinc-700 dark:bg-zinc-900"
           style={calcTooltipStyle(rect, step.placement, tooltipSize.w, tooltipSize.h)}
         >
           <div className="mb-1 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 id={titleId} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
               {t(`steps.${step.i18nKey}.title`)}
             </h3>
             <button
               onClick={dismiss}
+              aria-label={t('close')}
               className="rounded p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
-          <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <p id={descriptionId} className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
             {t(`steps.${step.i18nKey}.description`)}
           </p>
           <div className="flex items-center justify-between">
@@ -223,6 +254,13 @@ export function TourOverlay({ tourId, steps }: TourOverlayProps) {
               </Button>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={dismissAll}
+            className="mt-3 w-full border-t border-zinc-100 pt-3 text-center text-xs text-zinc-400 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand dark:border-zinc-800 dark:hover:text-zinc-200"
+          >
+            {t('disableAll')}
+          </button>
         </div>
       )}
     </>

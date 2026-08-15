@@ -752,6 +752,8 @@
     "prev": "Back",
     "finish": "Finish",
     "skip": "Skip",
+    "close": "Close tour",
+    "disableAll": "Do not show any guided tours again",
     "steps": {
       "sidebar": {
         "title": "Resume Sections",

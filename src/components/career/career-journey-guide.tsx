@@ -19,10 +19,9 @@ export function CareerJourneyGuide({ items, helpLabel, progressLabel }: { items:
   const steps: TourStepConfig[] = items.map((item) => ({ target: item.tourKey, placement: 'bottom', i18nKey: item.tourKey }));
 
   useEffect(() => {
-    if (!hasCompletedTour(TOUR_ID)) {
-      const timeout = window.setTimeout(() => startTour(TOUR_ID, steps.length), 600);
-      return () => window.clearTimeout(timeout);
-    }
+    if (hasCompletedTour(TOUR_ID) || window.innerWidth < 768) return;
+    const frame = window.requestAnimationFrame(() => startTour(TOUR_ID, steps.length));
+    return () => window.cancelAnimationFrame(frame);
   }, [startTour, steps.length]);
 
   return (

@@ -752,6 +752,8 @@
     "prev": "上一步",
     "finish": "完成",
     "skip": "跳过",
+    "close": "关闭引导",
+    "disableAll": "不再显示任何引导",
     "steps": {
       "sidebar": {
         "title": "简历模块",

@@ -22,6 +22,21 @@ function sha256(raw: string): string {
   return createHash('sha256').update(raw).digest('hex');
 }
 
+function verifyCatalogContent(raw: string, expectedHash: string, filename: string): string {
+  if (sha256(raw) === expectedHash) return raw;
+
+  // Git may check text files out with CRLF when core.autocrlf=true. The
+  // published manifest is generated from canonical LF content, so accept the
+  // platform checkout only when LF normalization produces that exact hash.
+  // All other byte changes still fail closed.
+  const normalized = raw.replace(/\r\n/g, '\n');
+  if (normalized !== raw && sha256(normalized) === expectedHash) return normalized;
+
+  throw new Error(
+    `SHA-256 mismatch for ${filename}. The file content does not match the published catalog manifest.`,
+  );
+}
+
 /**
  * Load a Python-produced catalog directory and verify every declared byte hash
  * and item count before any database transaction is started.
@@ -40,8 +55,9 @@ export async function loadCareerCatalogDirectory(directory: string): Promise<Car
     if (!declaration) throw new Error(`Manifest is missing ${filename}.`);
     const raw = await readFile(resolve(root, filename), 'utf8');
     const expectedHash = declaration.sha256 ?? declaration.content_sha256;
-    if (!expectedHash || sha256(raw) !== expectedHash) throw new Error(`SHA-256 mismatch for ${filename}.`);
-    const envelope = JSON.parse(raw) as { items?: unknown[] };
+    if (!expectedHash) throw new Error(`Manifest is missing the SHA-256 hash for ${filename}.`);
+    const verifiedRaw = verifyCatalogContent(raw, expectedHash, filename);
+    const envelope = JSON.parse(verifiedRaw) as { items?: unknown[] };
     if (!Array.isArray(envelope.items)) throw new Error(`${filename} must contain an items array.`);
     if (envelope.items.length !== declaration.count) {
       throw new Error(`Item count mismatch for ${filename}: expected ${declaration.count}, got ${envelope.items.length}.`);
@@ -51,10 +67,14 @@ export async function loadCareerCatalogDirectory(directory: string): Promise<Car
   const coverageDeclaration = manifest.files['coverage_report.json'];
   if (!coverageDeclaration) throw new Error('Manifest is missing coverage_report.json.');
   const coverageRaw = await readFile(resolve(root, 'coverage_report.json'), 'utf8');
-  if (sha256(coverageRaw) !== (coverageDeclaration.sha256 ?? coverageDeclaration.content_sha256)) {
-    throw new Error('SHA-256 mismatch for coverage_report.json.');
-  }
-  const coverage = JSON.parse(coverageRaw) as { items?: unknown[] };
+  const expectedCoverageHash = coverageDeclaration.sha256 ?? coverageDeclaration.content_sha256;
+  if (!expectedCoverageHash) throw new Error('Manifest is missing the SHA-256 hash for coverage_report.json.');
+  const verifiedCoverageRaw = verifyCatalogContent(
+    coverageRaw,
+    expectedCoverageHash,
+    'coverage_report.json',
+  );
+  const coverage = JSON.parse(verifiedCoverageRaw) as { items?: unknown[] };
   if (!Array.isArray(coverage.items) || coverage.items.length !== coverageDeclaration.count) {
     throw new Error('Item count mismatch for coverage_report.json.');
   }

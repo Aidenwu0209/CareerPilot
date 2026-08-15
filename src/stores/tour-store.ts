@@ -4,6 +4,8 @@ function storageKey(tourId: string) {
   return `jade_tour_${tourId}_completed`;
 }
 
+const allToursDisabledKey = 'jade_tours_disabled';
+
 interface TourStore {
   isActive: boolean;
   activeTourId: string | null;
@@ -13,11 +15,17 @@ interface TourStore {
   nextStep: () => void;
   prevStep: () => void;
   dismiss: () => void;
+  dismissAll: () => void;
+}
+
+export function areToursDisabled(): boolean {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(allToursDisabledKey) === '1';
 }
 
 export function hasCompletedTour(tourId: string): boolean {
   if (typeof window === 'undefined') return true;
-  return localStorage.getItem(storageKey(tourId)) === '1';
+  return areToursDisabled() || localStorage.getItem(storageKey(tourId)) === '1';
 }
 
 export const useTourStore = create<TourStore>((set, get) => ({
@@ -46,6 +54,10 @@ export const useTourStore = create<TourStore>((set, get) => ({
   dismiss: () => {
     const { activeTourId } = get();
     if (activeTourId) localStorage.setItem(storageKey(activeTourId), '1');
+    set({ isActive: false, activeTourId: null, currentStep: 0, totalSteps: 0 });
+  },
+  dismissAll: () => {
+    localStorage.setItem(allToursDisabledKey, '1');
     set({ isActive: false, activeTourId: null, currentStep: 0, totalSteps: 0 });
   },
 }));
