@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ArrowLeft,
   CalendarClock,
   CheckCircle2,
   Circle,
@@ -12,9 +11,9 @@ import {
   Route,
   Sparkles,
 } from 'lucide-react';
-import { Link } from '@/i18n/routing';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EvidenceReviewForm } from './evidence-review-form';
@@ -31,6 +30,11 @@ import type {
 
 interface TeacherStudentDetailCopy {
   back: string;
+  breadcrumbs: {
+    label: string;
+    workspace: string;
+    students: string;
+  };
   noTarget: string;
   status: Record<TeacherStudentStatus, string>;
   metrics: {
@@ -69,6 +73,7 @@ interface TeacherStudentDetailCopy {
     evidenceDescription: string;
     noEvidenceTitle: string;
     noEvidenceDescription: string;
+    noEvidenceAction: string;
     ability: string;
     source: string;
     sourceTypes: Record<EvidenceSourceType, string>;
@@ -108,6 +113,7 @@ interface TeacherStudentDetailCopy {
     pathStatus: Record<TeacherPathStage['status'], string>;
     emptyTitle: string;
     emptyDescription: string;
+    emptyAction: string;
   };
   tasks: {
     title: string;
@@ -120,6 +126,7 @@ interface TeacherStudentDetailCopy {
     status: Record<TeacherGrowthTask['status'], string>;
     emptyTitle: string;
     emptyDescription: string;
+    emptyAction: string;
   };
   guidance: {
     title: string;
@@ -128,6 +135,7 @@ interface TeacherStudentDetailCopy {
     privateNote: string;
     emptyTitle: string;
     emptyDescription: string;
+    emptyAction: string;
   };
   actions: ActionFormCopy;
 }
@@ -157,13 +165,18 @@ function MetricCard({ label, value, suffix }: { label: string; value: number | n
   );
 }
 
-function EmptySection({ title, description }: { title: string; description: string }) {
+function EmptySection({ title, description, action }: { title: string; description: string; action?: string }) {
   return (
     <Card className="border-dashed shadow-none">
       <CardContent className="flex flex-col items-center px-6 py-10 text-center">
         <FileQuestion aria-hidden="true" className="size-8 text-zinc-400" />
         <h3 className="mt-4 font-semibold text-zinc-950 dark:text-zinc-50">{title}</h3>
         <p className="mt-1 max-w-md text-sm leading-6 text-zinc-600 dark:text-zinc-400">{description}</p>
+        {action ? (
+          <Button asChild size="sm" className="mt-4">
+            <a href="#teacher-student-actions">{action}</a>
+          </Button>
+        ) : null}
       </CardContent>
     </Card>
   );
@@ -277,7 +290,7 @@ function ProfileTab({ student, copy }: { student: TeacherStudentDetail; copy: Te
         <h2 id="evidence-heading" className="text-lg font-semibold">{copy.profile.evidenceTitle}</h2>
         <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{copy.profile.evidenceDescription}</p>
         {student.evidence.length === 0 ? (
-          <div className="mt-4"><EmptySection title={copy.profile.noEvidenceTitle} description={copy.profile.noEvidenceDescription} /></div>
+          <div className="mt-4"><EmptySection title={copy.profile.noEvidenceTitle} description={copy.profile.noEvidenceDescription} action={copy.profile.noEvidenceAction} /></div>
         ) : (
           <div className="mt-4 space-y-3">
             {student.evidence.map((evidence) => (
@@ -327,7 +340,7 @@ function GoalsTab({ student, copy }: { student: TeacherStudentDetail; copy: Teac
         <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{copy.goals.goalDescription}</p>
         <div className="mt-4 space-y-3">
           {student.goals.length === 0 ? (
-            <EmptySection title={copy.goals.emptyTitle} description={copy.goals.emptyDescription} />
+            <EmptySection title={copy.goals.emptyTitle} description={copy.goals.emptyDescription} action={copy.goals.emptyAction} />
           ) : student.goals.map((goal) => (
             <Card key={goal.id} className="gap-4 py-5 shadow-none">
               <CardHeader className="px-5">
@@ -354,7 +367,7 @@ function GoalsTab({ student, copy }: { student: TeacherStudentDetail; copy: Teac
         <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{copy.goals.pathDescription}</p>
         <ol className="mt-4 space-y-0">
           {student.path.length === 0 ? (
-            <EmptySection title={copy.goals.emptyTitle} description={copy.goals.emptyDescription} />
+            <EmptySection title={copy.goals.emptyTitle} description={copy.goals.emptyDescription} action={copy.goals.emptyAction} />
           ) : student.path.map((stage, index) => (
             <li key={stage.id} className="relative flex gap-4 pb-5 last:pb-0">
               {index < student.path.length - 1 && <span aria-hidden="true" className="absolute left-[0.6875rem] top-6 h-[calc(100%-1.25rem)] w-px bg-zinc-200 dark:bg-zinc-700" />}
@@ -385,7 +398,7 @@ function TasksTab({ student, copy }: { student: TeacherStudentDetail; copy: Teac
       <h2 id="tasks-heading" className="text-lg font-semibold">{copy.tasks.title}</h2>
       <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{copy.tasks.description}</p>
       {student.tasks.length === 0 ? (
-        <div className="mt-4"><EmptySection title={copy.tasks.emptyTitle} description={copy.tasks.emptyDescription} /></div>
+        <div className="mt-4"><EmptySection title={copy.tasks.emptyTitle} description={copy.tasks.emptyDescription} action={copy.tasks.emptyAction} /></div>
       ) : (
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {student.tasks.map((task) => (
@@ -416,7 +429,7 @@ function GuidanceTab({ student, copy }: { student: TeacherStudentDetail; copy: T
       <h2 id="guidance-heading" className="text-lg font-semibold">{copy.guidance.title}</h2>
       <p className="mt-1 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{copy.guidance.description}</p>
       {student.guidance.length === 0 ? (
-        <div className="mt-4"><EmptySection title={copy.guidance.emptyTitle} description={copy.guidance.emptyDescription} /></div>
+        <div className="mt-4"><EmptySection title={copy.guidance.emptyTitle} description={copy.guidance.emptyDescription} action={copy.guidance.emptyAction} /></div>
       ) : (
         <ol className="mt-4 space-y-3">
           {student.guidance.map((record) => (
@@ -447,12 +460,14 @@ function GuidanceTab({ student, copy }: { student: TeacherStudentDetail; copy: T
 export function TeacherStudentDetailView({ student, copy }: { student: TeacherStudentDetail; copy: TeacherStudentDetailCopy }) {
   return (
     <div className="min-w-0 space-y-6">
-      <Button asChild variant="ghost" size="sm" className="-ml-2">
-        <Link href="/teacher/students">
-          <ArrowLeft aria-hidden="true" className="size-4" />
-          {copy.back}
-        </Link>
-      </Button>
+      <Breadcrumbs
+        label={copy.breadcrumbs.label}
+        items={[
+          { label: copy.breadcrumbs.workspace, href: '/teacher' },
+          { label: copy.breadcrumbs.students, href: '/teacher/students' },
+          { label: student.name },
+        ]}
+      />
 
       <div className="flex min-w-0 flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
@@ -463,11 +478,13 @@ export function TeacherStudentDetailView({ student, copy }: { student: TeacherSt
           <p className="mt-2 break-words text-sm text-zinc-600 dark:text-zinc-400">{student.program} · {student.cohort}</p>
           <p className="mt-1 break-words text-sm font-medium text-zinc-900 dark:text-zinc-100">{student.targetJob ?? copy.noTarget}</p>
         </div>
-        <TeacherActionForms
-          studentId={student.id}
-          abilities={student.abilities.map(({ key, name }) => ({ key, name }))}
-          copy={copy.actions}
-        />
+        <div id="teacher-student-actions" className="scroll-mt-24">
+          <TeacherActionForms
+            studentId={student.id}
+            abilities={student.abilities.map(({ key, name }) => ({ key, name }))}
+            copy={copy.actions}
+          />
+        </div>
       </div>
 
       <Tabs defaultValue="overview" className="min-w-0">

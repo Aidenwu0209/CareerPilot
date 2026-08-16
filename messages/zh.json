@@ -126,6 +126,7 @@
       "errors": {
         "invalidEmail": "请输入有效的邮箱地址",
         "rateLimited": "请求过于频繁，请稍后再试",
+        "invalidCodeFormat": "请输入 6 位数字验证码",
         "invalidCode": "验证码错误",
         "expired": "验证码已过期，请重新获取",
         "used": "验证码已使用，请重新获取",
@@ -170,6 +171,10 @@
     "termsConsent": "我已阅读并同意<terms>服务条款</terms>",
     "privacyConsent": "我已阅读并同意<privacy>隐私政策</privacy>",
     "submit": "保存并进入工作台",
+    "fieldErrors": {
+      "required": "此项不能为空。",
+      "tooLong": "最多可输入 {max} 个字符。"
+    },
     "errors": {
       "consent": "请确认服务条款和隐私政策。",
       "profile": "请完整填写资料，并检查内容长度。",
@@ -824,14 +829,14 @@
       "interview": "模拟面试",
       "journey": "使用流程",
       "resumeTools": "简历工具",
-      "getStarted": "登录 / 注册",
+      "getStarted": "免费开始",
       "dashboard": "工作台"
     },
     "hero": {
       "eyebrow": "学生职业发展与就业指导平台",
       "title": "看清方向，证明能力，走好职业发展的每一步",
       "subtitle": "把专业、简历、项目、面试和教师指导汇入同一份职业档案，用中国职业标准理解岗位，用真实证据解释匹配结果。",
-      "cta": "开始职业规划",
+      "cta": "免费开始",
       "ctaPending": "正在进入职业规划…",
       "secondaryCta": "浏览精美模板",
       "preview": {
@@ -902,7 +907,7 @@
     "cta": {
       "title": "从真实目标开始你的职业规划",
       "subtitle": "创建账户，完善基础资料，再用岗位要求和个人证据形成第一条成长路径。",
-      "button": "注册并开始规划"
+      "button": "免费开始"
       ,"buttonPending": "正在进入职业规划…"
     },
     "footer": {
@@ -1830,6 +1835,8 @@
       "refresh": "刷新",
       "seatsFull": "席位已满，无法添加新成员",
       "empty": "暂无成员",
+      "emptyDescription": "添加首位成员后，即可分配机构席位和共享额度。",
+      "emptyAction": "添加首位成员",
       "loadError": "加载成员列表失败，请重试",
       "retry": "重试",
       "cancel": "取消",
@@ -2566,6 +2573,7 @@
     },
     "detail": {
       "back": "返回学生列表",
+      "breadcrumbs": { "label": "面包屑导航", "workspace": "教师工作台", "students": "学生列表" },
       "noTarget": "尚未设置目标岗位",
       "status": { "attention": "需要关注", "on_track": "进展正常", "progress": "近期进步" },
       "metrics": {
@@ -2598,6 +2606,7 @@
         "evidenceDescription": "核对来源、能力关联和状态后再确认，不允许无理由修改结果。",
         "noEvidenceTitle": "暂无能力证据",
         "noEvidenceDescription": "学生提交材料或任务成果后，待确认记录会出现在这里。",
+        "noEvidenceAction": "创建证据任务",
         "ability": "关联能力",
         "source": "证据来源",
         "sourceTypes": { "resume": "简历", "interview": "面试报告", "project": "项目实践", "certificate": "证书材料", "teacher": "教师意见", "student": "学生自述" },
@@ -2636,7 +2645,8 @@
         "milestone": "阶段里程碑",
         "pathStatus": { "completed": "已完成", "current": "当前阶段", "upcoming": "后续阶段" },
         "emptyTitle": "尚未形成目标路径",
-        "emptyDescription": "学生设置职业目标后，系统才能围绕岗位差距生成成长路径。"
+        "emptyDescription": "学生设置职业目标后，系统才能围绕岗位差距生成成长路径。",
+        "emptyAction": "添加指导意见"
       },
       "tasks": {
         "title": "成长任务",
@@ -2648,7 +2658,8 @@
         "assignedBy": "分派人",
         "status": { "todo": "待开始", "in_progress": "进行中", "submitted": "成果待确认", "completed": "已完成", "overdue": "已逾期" },
         "emptyTitle": "暂无成长任务",
-        "emptyDescription": "可从页面顶部创建与能力差距直接关联的任务。"
+        "emptyDescription": "可从页面顶部创建与能力差距直接关联的任务。",
+        "emptyAction": "创建成长任务"
       },
       "guidance": {
         "title": "指导记录",
@@ -2656,7 +2667,8 @@
         "studentVisible": "学生可见",
         "privateNote": "教师私有备注",
         "emptyTitle": "暂无指导记录",
-        "emptyDescription": "添加第一条公开指导或教师私有备注。"
+        "emptyDescription": "添加第一条公开指导或教师私有备注。",
+        "emptyAction": "添加首条指导"
       },
       "actions": {
         "guidance": {

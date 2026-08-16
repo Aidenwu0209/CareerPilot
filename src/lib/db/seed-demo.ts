@@ -20,6 +20,7 @@ import {
 } from './schema';
 import { and, eq } from 'drizzle-orm';
 import { DEMO_OCCUPATION_BY_CODE, DEMO_OCCUPATIONS } from '@/lib/career/catalog';
+import { logger } from '@/lib/observability/logger';
 
 export const DEMO_STUDENT_FINGERPRINT = 'demo-fingerprint';
 export const DEMO_TEACHER_FINGERPRINT = 'teacher-demo-fingerprint';
@@ -465,5 +466,5 @@ export async function seedDemoUser(db: any) {
     content: '你已形成一批与中国职业分类岗位要求对应的项目证据。下一步优先补齐尚未覆盖的程序开发与验证要求。',
   });
 
-  console.log('[DB] Auto-seed complete: demo student, career profile, and assigned teacher created');
+  logger.info('db.demo_seed_complete', { userId, teacherId });
 }

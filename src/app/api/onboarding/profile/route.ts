@@ -5,6 +5,7 @@ import {
   validateOnboardingProfile,
 } from '@/lib/auth/onboarding';
 import { createAuthSessionCookie } from '@/lib/auth/session-cookie';
+import { logger } from '@/lib/observability/logger';
 
 export async function POST(request: NextRequest) {
   const ctx = await resolveActiveContext();
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
         );
         return response;
       } catch (sessionError) {
-        console.error('Failed to refresh authentication session', sessionError);
+        logger.error('auth.onboarding_session_refresh_failed', { error: sessionError });
       }
     }
     return NextResponse.json({ error: 'ONBOARDING_FAILED' }, { status: 500 });

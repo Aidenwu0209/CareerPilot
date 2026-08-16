@@ -7,6 +7,7 @@ import {
   stageCareerCatalog,
   type CareerCatalogBundle,
 } from '@/lib/career/catalog-import';
+import { logger } from '@/lib/observability/logger';
 
 type CatalogAction =
   | { action: 'dry-run' | 'stage'; bundle: CareerCatalogBundle }
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ error: 'INVALID_ACTION' }, { status: 400 });
   } catch (error) {
-    console.error('POST /api/admin/career/catalog failed:', error);
+    logger.error('career.catalog_admin_action_failed', { error, actorId: context.context.actor.userId });
     return NextResponse.json({
       error: 'CATALOG_OPERATION_FAILED',
       message: error instanceof Error ? error.message : 'Catalog operation failed.',

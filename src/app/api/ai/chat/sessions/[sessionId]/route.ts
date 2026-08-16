@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { chatRepository } from '@/lib/db/repositories/chat.repository';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(
   request: NextRequest,
@@ -31,7 +32,7 @@ export async function GET(
 
     return NextResponse.json({ session, messages, hasMore, nextCursor });
   } catch (error) {
-    console.error('GET /api/ai/chat/sessions/[id] error:', error);
+    logger.error('ai.chat_session_get_failed', { error });
     return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }
@@ -59,7 +60,7 @@ export async function DELETE(
     await chatRepository.deleteSession(sessionId);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/ai/chat/sessions/[id] error:', error);
+    logger.error('ai.chat_session_delete_failed', { error });
     return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { DEFAULT_SECTIONS } from '@/lib/constants';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     const resumes = await resumeRepository.findAllByUserId(user.id);
     return NextResponse.json(resumes);
   } catch (error) {
-    console.error('GET /api/resume error:', error);
+    logger.error('resume.list_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -86,7 +87,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: 'Failed to create resume' }, { status: 500 });
   } catch (error) {
-    console.error('POST /api/resume error:', error);
+    logger.error('resume.create_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

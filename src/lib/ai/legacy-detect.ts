@@ -6,6 +6,7 @@
  */
 
 import type { NextRequest } from 'next/server';
+import { logger } from '@/lib/observability/logger';
 
 const LEGACY_HEADERS = ['x-api-key', 'x-provider', 'x-base-url', 'x-model'];
 const LEGACY_BODY_KEYS = ['apiKey', 'api_key', 'provider', 'baseURL', 'baseUrl'];
@@ -72,8 +73,6 @@ export async function warnLegacyByok(
   }
 
   if (warnings.length > 0) {
-    console.warn(
-      `[legacy-byok] Ignored deprecated client credentials: ${warnings.join(', ')}`,
-    );
+    logger.warn('legacy-byok.ignored', { fields: warnings });
   }
 }

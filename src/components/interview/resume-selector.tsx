@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Resume } from '@/types/resume';
+import { logger } from '@/lib/observability/logger';
 
 interface ResumeSelectorProps {
   value: string | undefined;
@@ -24,7 +25,7 @@ export function ResumeSelector({ value, onChange }: ResumeSelectorProps) {
     fetch('/api/resume')
       .then((r) => r.json())
       .then((data) => setResumes(Array.isArray(data) ? data : []))
-      .catch(console.error);
+      .catch((error) => logger.error('client.interview_resume_list_failed', { error }));
   }, []);
 
   return (

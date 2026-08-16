@@ -13,6 +13,7 @@ import { AlertCircle, Mic } from 'lucide-react';
 import { readJsonResponse } from '@/lib/http/json-client';
 import { getFriendlyApiErrorKey, type FriendlyApiErrorKey } from '@/lib/http/error-messages';
 import { useLocalStorageDraft } from '@/hooks/use-local-storage-draft';
+import { logger } from '@/lib/observability/logger';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 const DRAFT_KEY = 'careerpilot:interview-setup-draft';
@@ -71,7 +72,7 @@ export function InterviewSetup() {
       draft.clear();
       router.push(`/interview/${session.id}`);
     } catch (err) {
-      console.error('Failed to create interview:', err);
+      logger.error('client.interview_create_failed', { error: err });
       setCreateError(getFriendlyApiErrorKey(err, navigator.onLine));
     } finally {
       setIsCreating(false);

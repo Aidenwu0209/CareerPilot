@@ -8,6 +8,7 @@ import {
   rateLimitKey,
   RATE_LIMIT_POLICIES,
 } from '@/lib/rate-limit/rate-limit';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(
   _request: NextRequest,
@@ -114,7 +115,7 @@ async function serveSharedResume(token: string, password: string | null) {
     const { userId, sharePassword, ...publicResume } = resume;
     return NextResponse.json(publicResume, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch (error) {
-    console.error('/api/share/[token] error:', error);
+    logger.error('share.public_resume_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

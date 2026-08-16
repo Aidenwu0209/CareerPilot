@@ -8,6 +8,7 @@ import { extractJson } from '@/lib/ai/extract-json';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
 import { warnLegacyByok } from '@/lib/ai/legacy-detect';
+import { logger } from '@/lib/observability/logger';
 
 const JD_ANALYSIS_PROMPT = `You are an expert resume analyst and career coach. Analyze the match between the provided resume and job description.
 
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
     });
     historyId = saved?.id;
   } catch (e) {
-    console.error('Failed to save JD analysis history:', e);
+    logger.error('ai.jd_history_save_failed', { error: e, resumeId });
   }
 
   return NextResponse.json({ ...analysisData, historyId });

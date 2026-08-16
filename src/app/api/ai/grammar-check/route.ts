@@ -8,6 +8,7 @@ import { extractJson } from '@/lib/ai/extract-json';
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
 import { warnLegacyByok } from '@/lib/ai/legacy-detect';
+import { logger } from '@/lib/observability/logger';
 
 const GRAMMAR_CHECK_PROMPT = `You are an expert resume reviewer and writing coach. Analyze the provided resume sections for writing quality issues.
 
@@ -126,7 +127,7 @@ export async function POST(request: NextRequest) {
     });
     historyId = saved?.id;
   } catch (e) {
-    console.error('Failed to save grammar check history:', e);
+    logger.error('ai.grammar_history_save_failed', { error: e, resumeId });
   }
 
   return NextResponse.json({ ...checkResult, historyId });

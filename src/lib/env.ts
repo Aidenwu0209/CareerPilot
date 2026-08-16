@@ -7,6 +7,8 @@
  * In development, unsafe defaults are allowed with a console warning.
  */
 
+import { logger } from '@/lib/observability/logger';
+
 const PLACEHOLDER_AUTH_SECRETS = new Set([
   '',
   'your-auth-secret-key-change-me',
@@ -187,15 +189,14 @@ export function assertEnvOrExit(): void {
       `\n` +
       `Refusing to start in production with unsafe configuration.\n`;
 
-    console.error(msg);
+    logger.error('environment.production_configuration_invalid', {
+      issues: result.issues,
+      message: msg,
+    });
     // Use a non-zero exit code to prevent the process from starting.
     process.exit(1);
   } else {
     // Development: warn but continue.
-    console.warn(
-      '\n⚠️  Development environment has unsafe configuration:\n' +
-        messages.join('\n') +
-        '\n',
-    );
+    logger.warn('environment.development_configuration_unsafe', { issues: result.issues });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { chatRepository } from '@/lib/db/repositories/chat.repository';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     const sessions = await chatRepository.findSessionsByResumeId(resumeId);
     return NextResponse.json({ sessions });
   } catch (error) {
-    console.error('GET /api/ai/chat/sessions error:', error);
+    logger.error('ai.chat_sessions_list_failed', { error });
     return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     const session = await chatRepository.createSession({ resumeId });
     return NextResponse.json({ session });
   } catch (error) {
-    console.error('POST /api/ai/chat/sessions error:', error);
+    logger.error('ai.chat_session_create_failed', { error });
     return NextResponse.json({ error: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }

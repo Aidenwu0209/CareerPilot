@@ -3,6 +3,7 @@ import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { shareRepository } from '@/lib/db/repositories/share.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { hashPassword } from '@/lib/utils/share';
+import { logger } from '@/lib/observability/logger';
 
 export async function PATCH(
   request: NextRequest,
@@ -41,14 +42,14 @@ export async function PATCH(
     if (isActive !== undefined) updates.isActive = isActive;
 
     const updated = await shareRepository.update(shareId, updates);
-    console.log('[shares/PATCH] updated share:', shareId, 'isActive:', updated?.isActive, 'updates:', updates);
+    logger.info('resume.share_updated', { shareId, isActive: updated?.isActive, updatedFields: Object.keys(updates) });
     return NextResponse.json({
       ...updated,
       hasPassword: !!updated?.password,
       password: undefined,
     });
   } catch (error) {
-    console.error('PATCH /api/resume/[id]/shares/[shareId] error:', error);
+    logger.error('resume.share_update_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -78,7 +79,7 @@ export async function DELETE(
     await shareRepository.delete(shareId);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/resume/[id]/shares/[shareId] error:', error);
+    logger.error('resume.share_delete_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { useResumeStore } from '@/stores/resume-store';
 import { useEditorStore } from '@/stores/editor-store';
 import type { ResumeSection } from '@/types/resume';
+import { logger } from '@/lib/observability/logger';
 
 export function useEditor(resumeId: string) {
   const { setResume, sections, currentResume, updateSection, addSection, removeSection, reorderSections, reset: resetResume } = useResumeStore();
@@ -23,7 +24,7 @@ export function useEditor(resumeId: string) {
         });
       }
     } catch (error) {
-      console.error('Failed to load resume:', error);
+      logger.error('client.resume_editor_load_failed', { error, resumeId });
     }
   }, [resumeId, setResume]);
 

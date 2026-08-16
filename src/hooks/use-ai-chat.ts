@@ -5,6 +5,7 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useResumeStore } from '@/stores/resume-store';
+import { logger } from '@/lib/observability/logger';
 
 interface UseAIChatOptions {
   resumeId: string;
@@ -55,7 +56,7 @@ export function useAIChat({ resumeId, sessionId, initialMessages, selectedModel 
         useResumeStore.getState().setResume(resume);
       }
     } catch (err) {
-      console.error('Failed to reload resume after tool call:', err);
+      logger.error('client.ai_chat_resume_reload_failed', { error: err, resumeId });
     }
   }, [resumeId]);
 

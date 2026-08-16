@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { userRepository } from '@/lib/db/repositories/user.repository';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json(user);
   } catch (error) {
-    console.error('GET /api/user error:', error);
+    logger.error('api.user_get_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -34,7 +35,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error('PUT /api/user error:', error);
+    logger.error('api.user_update_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

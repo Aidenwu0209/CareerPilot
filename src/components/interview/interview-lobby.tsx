@@ -19,6 +19,7 @@ import { InterviewCard } from './interview-card';
 import { Link } from '@/i18n/routing';
 import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewSession } from '@/types/interview';
+import { logger } from '@/lib/observability/logger';
 
 export function InterviewLobby() {
   const t = useTranslations('interview.lobby');
@@ -31,7 +32,7 @@ export function InterviewLobby() {
     fetch('/api/interview')
       .then((response) => readJsonResponse<InterviewSession[]>(response))
       .then((data) => setSessions(data))
-      .catch(console.error)
+      .catch((error) => logger.error('client.interview_lobby_load_failed', { error }))
       .finally(() => setLoading(false));
   }, []);
 

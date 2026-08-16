@@ -14,6 +14,7 @@ import {
 import { RadarChart } from './radar-chart';
 import { readJsonResponse } from '@/lib/http/json-client';
 import type { HistoryStats, DimensionScore, InterviewReport } from '@/types/interview';
+import { logger } from '@/lib/observability/logger';
 
 interface HistoryComparisonProps {
   currentReport: InterviewReport;
@@ -27,7 +28,7 @@ export function HistoryComparison({ currentReport }: HistoryComparisonProps) {
     fetch('/api/interview/history/stats')
       .then((response) => readJsonResponse<HistoryStats>(response))
       .then(setStats)
-      .catch(console.error);
+      .catch((error) => logger.error('client.interview_history_load_failed', { error }));
   }, []);
 
   if (!stats || stats.sessions.length < 2) return null;

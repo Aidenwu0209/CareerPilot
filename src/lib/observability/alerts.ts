@@ -2,6 +2,7 @@ import { createHmac } from 'crypto';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { alertDeliveries, alertEvents } from '@/lib/db/schema';
+import { logger } from '@/lib/observability/logger';
 
 export type AlertSeverity = 'info' | 'warning' | 'critical';
 
@@ -46,7 +47,7 @@ export async function dispatchAlert(input: AlertInput) {
       await db.insert(alertEvents).values({ id: eventId, ...stored });
     }
   } catch (error) {
-    console.error('[Alert] Durable state unavailable', error);
+    logger.error('alerts.durable_state_unavailable', { error, fingerprint: input.fingerprint });
   }
   if (!shouldDeliver) return { eventId, delivered: false, deduplicated: true };
 

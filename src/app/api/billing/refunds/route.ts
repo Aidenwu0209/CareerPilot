@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { BillingError, requestRefund } from '@/lib/billing/service';
 import { CreditError } from '@/lib/credits/ledger';
+import { logger } from '@/lib/observability/logger';
 
 const schema = z.object({
   orderId: z.string().min(1),
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
     if (error instanceof BillingError || error instanceof CreditError) {
       return NextResponse.json({ error: error.code }, { status: error.code === 'ORDER_NOT_FOUND' ? 404 : 409 });
     }
-    console.error('[Billing] Refund failed', error);
+    logger.error('billing.refund_failed', { error, userId: ctx.context.actor.userId });
     return NextResponse.json({ error: 'REFUND_FAILED' }, { status: 502 });
   }
 }

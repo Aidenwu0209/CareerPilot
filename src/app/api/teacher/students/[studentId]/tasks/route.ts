@@ -7,6 +7,7 @@ import {
   authorizeTeacherStudentMutation,
   parseCalendarDate,
 } from '@/app/api/teacher/_shared';
+import { logger } from '@/lib/observability/logger';
 
 const taskSchema = z.object({
   title: z.string().trim().min(1).max(120),
@@ -93,7 +94,7 @@ export async function POST(
       },
     }, { status: 201 });
   } catch (error) {
-    console.error('[Teacher API] Task creation failed', error);
+    logger.error('teacher.task_creation_failed', { error });
     return NextResponse.json({ error: 'TASK_CREATE_FAILED' }, { status: 500 });
   }
 }

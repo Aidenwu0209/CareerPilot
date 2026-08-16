@@ -39,6 +39,9 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.5.4
         version: 0.5.4
+      '@opentelemetry/api':
+        specifier: 1.9.0
+        version: 1.9.0
       '@sparticuz/chromium-min':
         specifier: ^149.0.0
         version: 149.0.0

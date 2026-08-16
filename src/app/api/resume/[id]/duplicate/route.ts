@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { logger } from '@/lib/observability/logger';
 
 export async function POST(
   request: NextRequest,
@@ -25,7 +26,7 @@ export async function POST(
     const duplicated = await resumeRepository.duplicate(id, user.id);
     return NextResponse.json(duplicated, { status: 201 });
   } catch (error) {
-    console.error('POST /api/resume/[id]/duplicate error:', error);
+    logger.error('resume.duplicate_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

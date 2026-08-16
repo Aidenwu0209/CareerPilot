@@ -9,6 +9,7 @@ import { useCredits } from '@/hooks/use-credits';
 import { readJsonResponse } from '@/lib/http/json-client';
 import type { InterviewReport, InterviewSession } from '@/types/interview';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { logger } from '@/lib/observability/logger';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 
@@ -45,7 +46,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
               refreshBalance();
             })
             .catch((err) => {
-              console.error(err);
+              logger.error('client.interview_report_generation_failed', { error: err, sessionId: id });
               const msg = err.message || '';
               if (msg.includes('INSUFFICIENT_CREDITS')) {
                 toast.error(t('insufficientCredits'));
@@ -63,7 +64,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
         }
       })
       .catch((err) => {
-        console.error(err);
+        logger.error('client.interview_report_load_failed', { error: err, sessionId: id });
         setLoading(false);
       });
   }, [id, t, refreshBalance]);

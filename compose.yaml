@@ -1,3 +1,9 @@
+x-json-logging: &json-logging
+  driver: json-file
+  options:
+    max-size: "${LOG_MAX_SIZE:-10m}"
+    max-file: "${LOG_MAX_FILES:-3}"
+
 services:
   app:
     build: .
@@ -7,17 +13,53 @@ services:
     environment:
       NODE_ENV: production
       APP_URL: ${APP_URL:?Set APP_URL}
+      APP_NAME: ${APP_NAME:-CareerPilot}
       AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       AI_CREDENTIAL_MASTER_KEY: ${AI_CREDENTIAL_MASTER_KEY:?Set AI_CREDENTIAL_MASTER_KEY}
+      AI_UPSTREAM_ALLOWED_DOMAINS: ${AI_UPSTREAM_ALLOWED_DOMAINS:-}
       DB_TYPE: postgresql
       DATABASE_URL: postgresql://careerpilot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/careerpilot
       DATABASE_POOL_MAX: ${DATABASE_POOL_MAX:-10}
+      DATABASE_IDLE_TIMEOUT_SECONDS: ${DATABASE_IDLE_TIMEOUT_SECONDS:-20}
+      DATABASE_CONNECT_TIMEOUT_SECONDS: ${DATABASE_CONNECT_TIMEOUT_SECONDS:-10}
+      DATABASE_MAX_LIFETIME_SECONDS: ${DATABASE_MAX_LIFETIME_SECONDS:-1800}
       DATABASE_SSL_MODE: disable
       REDIS_URL: redis://redis:6379
       RATE_LIMIT_DISTRIBUTED_REQUIRED: "true"
       BILLING_ENABLED: ${BILLING_ENABLED:-false}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      IMAGE_4K_ENABLED: ${IMAGE_4K_ENABLED:-false}
+      IMAGE_UPSCALER_API_KEY: ${IMAGE_UPSCALER_API_KEY:-}
+      BOOTSTRAP_SUPER_ADMIN_EMAIL: ${BOOTSTRAP_SUPER_ADMIN_EMAIL:-}
+      BACKUP_ENABLED: ${BACKUP_ENABLED:-false}
+      BACKUP_DESTINATION: ${BACKUP_DESTINATION:-}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+      BACKUP_OWNER_EMAIL: ${BACKUP_OWNER_EMAIL:-}
+      BACKUP_ENCRYPTION_KEY: ${BACKUP_ENCRYPTION_KEY:-}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-daily}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      OPS_ALERT_FAILURE_RATE_PERCENT: ${OPS_ALERT_FAILURE_RATE_PERCENT:-10}
+      OPS_ALERT_DAILY_CREDITS: ${OPS_ALERT_DAILY_CREDITS:-10000}
+      AI_COST_PER_CREDIT: ${AI_COST_PER_CREDIT:-}
+      APM_ENABLED: ${APM_ENABLED:-false}
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-careerpilot-web}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_EXPORTER_OTLP_HEADERS: ${OTEL_EXPORTER_OTLP_HEADERS:-}
+      EXTERNAL_ALERTS_ENABLED: ${EXTERNAL_ALERTS_ENABLED:-false}
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
+      ALERT_WEBHOOK_SECRET: ${ALERT_WEBHOOK_SECRET:-}
+      ALERT_COOLDOWN_MS: ${ALERT_COOLDOWN_MS:-300000}
+      ONCALL_EMAILS: ${ONCALL_EMAILS:-}
+      CRON_SECRET: ${CRON_SECRET:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-zh}
     depends_on:
       postgres:
         condition: service_healthy
@@ -29,6 +71,7 @@ services:
       timeout: 5s
       start_period: 60s
       retries: 3
+    logging: *json-logging
 
   postgres:
     image: postgres:17-alpine
@@ -44,6 +87,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    logging: *json-logging
 
   redis:
     image: redis:8-alpine
@@ -56,6 +100,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    logging: *json-logging
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.158.0
+    profiles: ["observability"]
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./deploy/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "127.0.0.1:${OTEL_GRPC_PORT:-4317}:4317"
+      - "127.0.0.1:${OTEL_HTTP_PORT:-4318}:4318"
+      - "127.0.0.1:${OTEL_HEALTH_PORT:-13133}:13133"
+    logging: *json-logging
 
 volumes:
   postgres-data:

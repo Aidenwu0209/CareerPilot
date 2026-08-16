@@ -14,6 +14,7 @@
 import { db, dbReady } from '@/lib/db';
 import { users, auditEvents } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { logger } from '@/lib/observability/logger';
 
 export type BootstrapAction =
   | 'promoted'
@@ -54,10 +55,10 @@ export async function bootstrapSuperAdmin(): Promise<BootstrapResult> {
   // AC5: no bootstrap target configured
   if (!email) {
     if (isProduction) {
-      console.warn(
-        '[Bootstrap] BOOTSTRAP_SUPER_ADMIN_EMAIL is not configured. ' +
-        'No super admin will be granted. Set this env var to explicitly designate the first super admin.',
-      );
+      logger.warn('bootstrap.super_admin_not_configured', {
+        field: 'BOOTSTRAP_SUPER_ADMIN_EMAIL',
+        message: 'not configured',
+      });
     }
     return { action: 'not_configured' };
   }
@@ -79,10 +80,7 @@ export async function bootstrapSuperAdmin(): Promise<BootstrapResult> {
       summary: `Bootstrap target not found: ${redactEmail(email)}`,
     });
 
-    console.warn(
-      `[Bootstrap] Configured target ${redactEmail(email)} not found in database. ` +
-      'Bootstrap will retry on next startup once the user registers.',
-    );
+    logger.warn('bootstrap.super_admin_user_not_found', { email: redactEmail(email) });
     return { action: 'user_not_found', email };
   }
 
@@ -97,7 +95,7 @@ export async function bootstrapSuperAdmin(): Promise<BootstrapResult> {
       summary: `User already holds super_admin role (idempotent): ${redactEmail(email)}`,
     });
 
-    console.log(`[Bootstrap] ${redactEmail(email)} is already super_admin (no change).`);
+    logger.info('bootstrap.super_admin_already_granted', { email: redactEmail(email) });
     return { action: 'already_admin', email, userId: targetUser.id };
   }
 
@@ -117,6 +115,6 @@ export async function bootstrapSuperAdmin(): Promise<BootstrapResult> {
     summary: `Bootstrap granted super_admin to ${redactEmail(email)}`,
   });
 
-  console.log(`[Bootstrap] Granted super_admin to ${redactEmail(email)}.`);
+  logger.info('bootstrap.super_admin_granted', { email: redactEmail(email), userId: targetUser.id });
   return { action: 'promoted', email, userId: targetUser.id };
 }

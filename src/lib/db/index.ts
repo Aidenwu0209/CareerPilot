@@ -2,6 +2,7 @@ import { config } from '@/lib/config';
 import { SQLiteAdapter } from './adapters/sqlite';
 import { PostgreSQLAdapter } from './adapters/postgresql';
 import type { DatabaseAdapter } from './adapter';
+import { logger } from '@/lib/observability/logger';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isBuildPhase =
@@ -37,7 +38,7 @@ const _initPromise = isBuildPhase
   ? Promise.resolve()
   : isProduction
     ? adapter.initialize()
-    : adapter.initialize().catch((e) => console.error('[DB] Initialize failed:', e));
+    : adapter.initialize().catch((error) => logger.error('db.initialize_failed', { error }));
 
 /** Await this before any DB operation to ensure tables exist */
 export const dbReady = _initPromise;

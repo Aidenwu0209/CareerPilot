@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, Mail, ArrowLeft } from 'lucide-react';
 import { normalizeInternalCallbackUrl } from '@/lib/auth/login-redirect';
+import { isValidEmail, isValidOtpCode } from '@/lib/auth/form-validation';
 
 type Step = 'email' | 'code' | 'verifying';
-type ErrorKind = null | 'INVALID_EMAIL' | 'RATE_LIMITED' | 'INVALID_CODE' | 'SERVER_ERROR' | 'EXPIRED' | 'USED' | 'ACCOUNT_MIGRATION_REQUIRED';
+type ErrorKind = null | 'INVALID_EMAIL' | 'INVALID_CODE_FORMAT' | 'RATE_LIMITED' | 'INVALID_CODE' | 'SERVER_ERROR' | 'EXPIRED' | 'USED' | 'ACCOUNT_MIGRATION_REQUIRED';
 
 const RESEND_COOLDOWN = 60; // seconds
 
@@ -35,10 +36,6 @@ export function EmailOtpLogin() {
     const timer = setTimeout(() => setResendIn((s) => s - 1), 1000);
     return () => clearTimeout(timer);
   }, [resendIn]);
-
-  const isValidEmail = useCallback((value: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  }, []);
 
   const maskedEmail = useCallback((addr: string) => {
     const [local, domain] = addr.split('@');
@@ -85,6 +82,10 @@ export function EmailOtpLogin() {
 
   const handleVerifyOtp = async () => {
     setError(null);
+    if (!isValidOtpCode(code)) {
+      setError('INVALID_CODE_FORMAT');
+      return;
+    }
     setStep('verifying');
 
     try {
@@ -155,16 +156,20 @@ export function EmailOtpLogin() {
                 setEmail(e.target.value);
                 if (error) setError(null);
               }}
+              onBlur={() => {
+                if (email && !isValidEmail(email)) setError('INVALID_EMAIL');
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !loading) handleRequestOtp();
               }}
               className="h-11 rounded-xl pl-10"
               disabled={loading}
               aria-invalid={error === 'INVALID_EMAIL'}
+              aria-describedby={error === 'INVALID_EMAIL' ? 'email-error' : undefined}
             />
           </div>
           {error === 'INVALID_EMAIL' && (
-            <p className="text-xs text-red-600 dark:text-red-400">{t('errors.invalidEmail')}</p>
+            <p id="email-error" role="alert" className="text-xs text-red-600 dark:text-red-400">{t('errors.invalidEmail')}</p>
           )}
         </div>
 
@@ -216,13 +221,21 @@ export function EmailOtpLogin() {
             setCode(e.target.value.replace(/\D/g, '').slice(0, 6));
             if (error) setError(null);
           }}
+          onBlur={() => {
+            if (code && !isValidOtpCode(code)) setError('INVALID_CODE_FORMAT');
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && code.length === 6 && step !== 'verifying') handleVerifyOtp();
           }}
           className="h-11 rounded-xl text-center text-lg tracking-[0.5em]"
           disabled={step === 'verifying'}
           autoFocus
+          aria-invalid={error === 'INVALID_CODE_FORMAT' || error === 'INVALID_CODE'}
+          aria-describedby={error === 'INVALID_CODE_FORMAT' || error === 'INVALID_CODE' ? 'code-error' : undefined}
         />
+        {error === 'INVALID_CODE_FORMAT' && (
+          <p id="code-error" role="alert" className="text-xs text-red-600 dark:text-red-400">{t('errors.invalidCodeFormat')}</p>
+        )}
       </div>
 
       <Button
@@ -235,7 +248,7 @@ export function EmailOtpLogin() {
 
       {/* Errors */}
       {error === 'INVALID_CODE' && (
-        <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.invalidCode')}</p>
+        <p id="code-error" role="alert" className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.invalidCode')}</p>
       )}
       {error === 'EXPIRED' && (
         <p className="text-center text-xs text-red-600 dark:text-red-400">{t('errors.expired')}</p>

@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { Resume } from '@/types/resume';
+import { logger } from '@/lib/observability/logger';
 
 function getHeaders() {
   return { 'Content-Type': 'application/json' };
@@ -20,7 +21,7 @@ export function useResume() {
         setResumes(data);
       }
     } catch (error) {
-      console.error('Failed to fetch resumes:', error);
+      logger.error('client.resume_list_failed', { error });
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +40,7 @@ export function useResume() {
         return resume;
       }
     } catch (error) {
-      console.error('Failed to create resume:', error);
+      logger.error('client.resume_create_failed', { error });
     }
     return null;
   }, []);
@@ -55,7 +56,7 @@ export function useResume() {
         return true;
       }
     } catch (error) {
-      console.error('Failed to delete resume:', error);
+      logger.error('client.resume_delete_failed', { error, id });
     }
     return false;
   }, []);
@@ -72,7 +73,7 @@ export function useResume() {
         return true;
       }
     } catch (error) {
-      console.error('Failed to rename resume:', error);
+      logger.error('client.resume_rename_failed', { error, id });
     }
     return false;
   }, []);
@@ -89,7 +90,7 @@ export function useResume() {
         return resume;
       }
     } catch (error) {
-      console.error('Failed to duplicate resume:', error);
+      logger.error('client.resume_duplicate_failed', { error, id });
     }
     return null;
   }, []);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(
   request: NextRequest,
@@ -24,7 +25,7 @@ export async function GET(
 
     return NextResponse.json(resume);
   } catch (error) {
-    console.error('GET /api/resume/[id] error:', error);
+    logger.error('resume.get_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -101,7 +102,7 @@ export async function PUT(
     const updated = await resumeRepository.findById(id);
     return NextResponse.json(updated);
   } catch (error) {
-    console.error('PUT /api/resume/[id] error:', error);
+    logger.error('resume.update_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -129,7 +130,7 @@ export async function DELETE(
     await resumeRepository.delete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/resume/[id] error:', error);
+    logger.error('resume.delete_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
