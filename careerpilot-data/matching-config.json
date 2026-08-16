@@ -1,0 +1,27 @@
+{
+  "version": "career-match-v2",
+  "dimensions": [
+    { "code": "domain_knowledge", "name": "专业基础", "order": 1 },
+    { "code": "professional_skills", "name": "职业技能", "order": 2 },
+    { "code": "project_practice", "name": "项目与实践", "order": 3 },
+    { "code": "general_competencies", "name": "通用能力", "order": 4 },
+    { "code": "job_readiness", "name": "求职准备", "order": 5 },
+    { "code": "growth_potential", "name": "学习与发展潜力", "order": 6 }
+  ],
+  "scoring": {
+    "achievementCapRatio": 1,
+    "minKnownCoverageForReady": 50,
+    "minEvidenceCoverageForReady": 40,
+    "confidenceWeights": {
+      "knownCoverage": 0.4,
+      "evidenceCoverage": 0.6
+    }
+  },
+  "strengths": {
+    "maxItems": 3,
+    "requireVerified": true
+  },
+  "priorityGaps": {
+    "maxItems": 3
+  }
+}

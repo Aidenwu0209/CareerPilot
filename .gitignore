@@ -54,6 +54,7 @@ next-env.d.ts
 .claude
 
 careerpilot-data/*
+!careerpilot-data/matching-config.json
 !careerpilot-data/catalog/
 !careerpilot-data/catalog/*.json
 

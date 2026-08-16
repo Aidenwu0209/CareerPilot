@@ -1,13 +1,5 @@
-export const CAREER_DIMENSIONS = [
-  'domain_knowledge',
-  'professional_skills',
-  'project_practice',
-  'general_competencies',
-  'job_readiness',
-  'growth_potential',
-] as const;
-
-export type AbilityDimensionCode = (typeof CAREER_DIMENSIONS)[number];
+export { CAREER_DIMENSIONS, type AbilityDimensionCode } from '@/constants/career-dimensions';
+import type { AbilityDimensionCode } from '@/constants/career-dimensions';
 
 export type CareerStage = 'exploring' | 'targeting' | 'preparing' | 'applying';
 export type EvidenceStatus = 'pending' | 'verified' | 'rejected';

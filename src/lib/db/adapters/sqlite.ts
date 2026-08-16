@@ -6,6 +6,7 @@ import type { DatabaseAdapter } from '../adapter';
 import { mkdirSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { logger } from '@/lib/observability/logger';
+import { reconcileKnownLegacySQLiteMigration } from '../sqlite-migration-compat';
 
 export class SQLiteAdapter implements DatabaseAdapter {
   db;
@@ -21,11 +22,13 @@ export class SQLiteAdapter implements DatabaseAdapter {
     // Auto-run migrations (synchronous for SQLite).
     // In production, migration failures must propagate (fail-closed).
     const isProduction = process.env.NODE_ENV === 'production';
+    const migrationsFolder = resolve(process.cwd(), 'drizzle/migrations');
     if (isProduction) {
-      migrate(this.db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
+      migrate(this.db, { migrationsFolder });
     } else {
       try {
-        migrate(this.db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
+        reconcileKnownLegacySQLiteMigration(this.sqlite, migrationsFolder);
+        migrate(this.db, { migrationsFolder });
       } catch (e) {
         logger.error('db.sqlite_migration_failed', { error: e });
       }

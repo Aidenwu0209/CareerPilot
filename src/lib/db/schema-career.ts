@@ -3,6 +3,16 @@ import { check, index, integer, sqliteTable, text, unique } from 'drizzle-orm/sq
 import { organizations, users } from './schema';
 
 const now = sql`(unixepoch())`;
+// Kept local to avoid extending the existing schema module cycle at runtime.
+// matching-config.test.ts guards this database enum against the canonical JSON dimensions.
+export const CAREER_DIMENSION_ENUM = [
+  'domain_knowledge',
+  'professional_skills',
+  'project_practice',
+  'general_competencies',
+  'job_readiness',
+  'growth_potential',
+] as const;
 
 export const careerProfiles = sqliteTable('career_profiles', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
@@ -24,7 +34,7 @@ export const careerAbilities = sqliteTable('career_abilities', {
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   code: text('code').notNull(),
   name: text('name').notNull(),
-  dimension: text('dimension', { enum: ['domain_knowledge', 'professional_skills', 'project_practice', 'general_competencies', 'job_readiness', 'growth_potential'] }).notNull(),
+  dimension: text('dimension', { enum: CAREER_DIMENSION_ENUM }).notNull(),
   score: integer('score'),
   confidence: integer('confidence'),
   evidenceCount: integer('evidence_count').notNull().default(0),
@@ -203,7 +213,7 @@ export const occupationRequirements = sqliteTable('occupation_requirements', {
   occupationCode: text('occupation_code').notNull().references(() => occupations.code, { onDelete: 'cascade' }),
   abilityCode: text('ability_code').notNull(),
   abilityName: text('ability_name').notNull(),
-  dimension: text('dimension', { enum: ['domain_knowledge', 'professional_skills', 'project_practice', 'general_competencies', 'job_readiness', 'growth_potential'] }).notNull(),
+  dimension: text('dimension', { enum: CAREER_DIMENSION_ENUM }).notNull(),
   targetScore: integer('target_score').notNull(),
   weight: integer('weight').notNull().default(1),
   required: integer('required', { mode: 'boolean' }).notNull().default(true),

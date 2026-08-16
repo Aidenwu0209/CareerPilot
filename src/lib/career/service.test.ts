@@ -46,11 +46,14 @@ import {
   updateCareerTaskStatus,
   upsertCareerGoal,
 } from './service';
+import { careerKnowledgeProvider } from './knowledge-provider';
+import { reviewAndAggregateCareerEvidence } from './evidence-assessment';
 
 const ALICE_ID = 'career-alice';
 const BOB_ID = 'career-bob';
 
 beforeEach(async () => {
+  await careerKnowledgeProvider.invalidateCache();
   await db.delete(careerMatches);
   await db.delete(careerGuidanceNotes);
   await db.delete(careerProfileSnapshots);
@@ -167,6 +170,34 @@ describe('deterministic occupation matching', () => {
     const match = await getCareerMatch(ALICE_ID, 'J-FE-001');
     expect(match).toMatchObject({ scoringStatus: 'insufficient_evidence', score: null, evidenceCoverage: 0 });
     expect(match.strengths).toEqual([]);
+  });
+});
+
+describe('career evidence assessment transaction', () => {
+  it('atomically reviews evidence, aggregates the ability, writes the audit note and snapshots SQLite state', async () => {
+    await db.insert(careerEvidence).values({
+      id: 'pending-evidence',
+      userId: ALICE_ID,
+      abilityCode: 'web_frontend',
+      sourceType: 'manual',
+      sourceId: 'manual-evidence',
+      title: '前端课程项目',
+      status: 'pending',
+    });
+    const result = await reviewAndAggregateCareerEvidence({
+      studentId: ALICE_ID,
+      actorUserId: BOB_ID,
+      evidenceId: 'pending-evidence',
+      evidenceTitle: '前端课程项目',
+      abilityCode: 'web_frontend',
+      decision: 'confirmed',
+      reason: '代码与演示均可复核',
+      score: 80,
+    });
+    expect(result).toMatchObject({ score: 80, evidenceCount: 1, confidence: 60 });
+    expect(await db.select().from(careerGuidanceNotes)).toHaveLength(1);
+    expect(await db.select().from(careerProfileSnapshots)).toHaveLength(1);
+    expect((await db.select().from(careerEvidence))[0].status).toBe('verified');
   });
 });
 

@@ -1,5 +1,6 @@
-import { and, eq, inArray, like, or } from 'drizzle-orm';
+import { and, count, eq, inArray, like, or, sql, type SQL, type SQLWrapper } from 'drizzle-orm';
 import { db, dbReady } from '@/lib/db';
+import { careerCatalogCache, type CareerCatalogCache } from '@/lib/cache/career-catalog-cache';
 import {
   careerKnowledgeDocuments,
   occupationRelations,
@@ -24,15 +25,21 @@ import { parseJson, toIso, toNullableIso } from './serialization';
 
 const DEFAULT_PAGE_SIZE = 24;
 const MAX_PAGE_SIZE = 100;
-const LIST_CACHE_TTL_MS = 60_000;
-const LIST_CACHE_MAX_ENTRIES = 64;
+
+function boundedTtl(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value ?? '', 10);
+  return Number.isFinite(parsed) && parsed >= 60 && parsed <= 86_400 ? parsed : fallback;
+}
+
+const LIST_CACHE_TTL_SECONDS = boundedTtl(process.env.CACHE_TTL_OCCUPATIONS, 600);
+const DETAIL_CACHE_TTL_SECONDS = boundedTtl(process.env.CACHE_TTL_OCCUPATION_DETAIL, 900);
 
 export interface CareerKnowledgeProvider {
   listOccupations(filters?: OccupationListFilters): Promise<OccupationPage>;
   getOccupationByCode(code: string): Promise<OccupationDetail | null>;
   search(query: string, options?: { occupationCode?: string; limit?: number }): Promise<KnowledgeSearchResult[]>;
   getActiveCatalogVersion(): Promise<string | null>;
-  invalidateCache(): void;
+  invalidateCache(): Promise<void>;
 }
 
 function normalizeQuery(query?: string): string {
@@ -41,12 +48,6 @@ function normalizeQuery(query?: string): string {
 
 function stringList(value: unknown): string[] {
   return parseJson<string[]>(value, []).filter((item): item is string => typeof item === 'string');
-}
-
-function includesValue(values: string[], expected?: string): boolean {
-  if (!expected) return true;
-  const normalized = normalizeQuery(expected);
-  return values.some((value) => normalizeQuery(value) === normalized);
 }
 
 function pageBounds(filters: OccupationListFilters) {
@@ -61,8 +62,17 @@ function uniqueSorted(values: Array<string | null | undefined>): string[] {
     .sort((a, b) => a.localeCompare(b, 'zh-CN'));
 }
 
+function normalizedLike(column: SQLWrapper, value: string): SQL {
+  return sql`lower(${column}) like ${`%${normalizeQuery(value)}%`}`;
+}
+
+function intersectCodeSet(current: Set<string> | null, values: Iterable<string>): Set<string> {
+  const next = new Set(values);
+  return current == null ? next : new Set([...current].filter((code) => next.has(code)));
+}
+
 export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
-  private readonly listCache = new Map<string, { expiresAt: number; value: OccupationPage }>();
+  constructor(private readonly cache: CareerCatalogCache = careerCatalogCache) {}
 
   private listCacheKey(filters: OccupationListFilters): string {
     return JSON.stringify([
@@ -73,17 +83,8 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     ]);
   }
 
-  private cacheListResult(key: string, value: OccupationPage): OccupationPage {
-    if (this.listCache.size >= LIST_CACHE_MAX_ENTRIES) {
-      const oldestKey = this.listCache.keys().next().value;
-      if (oldestKey) this.listCache.delete(oldestKey);
-    }
-    this.listCache.set(key, { expiresAt: Date.now() + LIST_CACHE_TTL_MS, value });
-    return value;
-  }
-
-  invalidateCache(): void {
-    this.listCache.clear();
+  async invalidateCache(): Promise<void> {
+    await this.cache.invalidate();
   }
 
   async getActiveCatalogVersion(): Promise<string | null> {
@@ -97,144 +98,219 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
 
   async listOccupations(filters: OccupationListFilters = {}): Promise<OccupationPage> {
     await dbReady;
-    const cacheKey = this.listCacheKey(filters);
-    const cached = this.listCache.get(cacheKey);
-    if (cached && cached.expiresAt > Date.now()) return cached.value;
-    if (cached) this.listCache.delete(cacheKey);
     const { limit, offset } = pageBounds(filters);
+    const normalizedFilters = { ...filters, limit, offset };
+    const cacheKey = `list:${this.listCacheKey(normalizedFilters)}`;
+    const cached = await this.cache.get<OccupationPage>(cacheKey);
+    if (cached) return cached;
+
     const normalized = normalizeQuery(filters.query);
-    const [rawOccupationRows, rawAliasRows, rawEdgeRows, rawMajorRows, rawCollegeRows, rawRequirementRows, rawRelationRows] = await Promise.all([
-      db.select().from(occupations).where(eq(occupations.active, true)).orderBy(occupations.code),
-      db.select().from(occupationAliases).where(eq(occupationAliases.active, true)),
-      db.select().from(majorOccupationEdges).where(eq(majorOccupationEdges.active, true)),
-      db.select().from(careerMajors).where(eq(careerMajors.active, true)),
-      db.select().from(careerColleges).where(eq(careerColleges.active, true)),
-      db.select({ occupationCode: occupationRequirements.occupationCode }).from(occupationRequirements),
-      db.select().from(occupationRelations),
+    let candidateCodes: Set<string> | null = null;
+
+    for (const token of normalized.split(/\s+/).filter(Boolean)) {
+      const [directMatches, aliasMatches] = await Promise.all([
+        db.select({ code: occupations.code }).from(occupations).where(and(
+          eq(occupations.active, true),
+          or(
+            normalizedLike(occupations.name, token),
+            normalizedLike(occupations.category, token),
+            normalizedLike(occupations.summary, token),
+            normalizedLike(occupations.jobFamily, token),
+            normalizedLike(occupations.industry, token),
+          ),
+        )),
+        db.select({ code: occupationAliases.occupationCode }).from(occupationAliases)
+          .innerJoin(occupations, eq(occupations.code, occupationAliases.occupationCode))
+          .where(and(
+            eq(occupationAliases.active, true),
+            eq(occupations.active, true),
+            normalizedLike(occupationAliases.alias, token),
+          )),
+      ]);
+      candidateCodes = intersectCodeSet(candidateCodes, [
+        ...directMatches.map((row: { code: string }) => row.code),
+        ...aliasMatches.map((row: { code: string }) => row.code),
+      ]);
+    }
+
+    if (filters.collegeCode || filters.majorCode || filters.relevanceType) {
+      const mappingConditions: SQL[] = [
+        eq(majorOccupationEdges.active, true),
+        eq(careerMajors.active, true),
+        eq(careerColleges.active, true),
+        eq(occupations.active, true),
+      ];
+      if (filters.collegeCode) mappingConditions.push(eq(careerColleges.code, filters.collegeCode));
+      if (filters.majorCode) mappingConditions.push(eq(careerMajors.code, filters.majorCode));
+      if (filters.relevanceType) mappingConditions.push(eq(majorOccupationEdges.relationType, filters.relevanceType));
+      const matchingMappings = await db.selectDistinct({ code: majorOccupationEdges.occupationCode })
+        .from(majorOccupationEdges)
+        .innerJoin(careerMajors, eq(careerMajors.code, majorOccupationEdges.majorCode))
+        .innerJoin(careerColleges, eq(careerColleges.code, careerMajors.collegeCode))
+        .innerJoin(occupations, eq(occupations.code, majorOccupationEdges.occupationCode))
+        .where(and(...mappingConditions));
+      candidateCodes = intersectCodeSet(
+        candidateCodes,
+        matchingMappings.flatMap((row: { code: string | null }) => row.code ? [row.code] : []),
+      );
+    }
+
+    if (filters.relationType) {
+      const relationMatches = await db.selectDistinct({ code: occupationRelations.fromCode })
+        .from(occupationRelations)
+        .innerJoin(occupations, eq(occupations.code, occupationRelations.fromCode))
+        .where(and(eq(occupations.active, true), eq(occupationRelations.relationType, filters.relationType)));
+      candidateCodes = intersectCodeSet(candidateCodes, relationMatches.map((row: { code: string }) => row.code));
+    }
+
+    const conditions: SQL[] = [eq(occupations.active, true)];
+    if (filters.jobFamily) conditions.push(sql`lower(${occupations.jobFamily}) = ${normalizeQuery(filters.jobFamily)}`);
+    if (filters.industry) conditions.push(sql`lower(${occupations.industry}) = ${normalizeQuery(filters.industry)}`);
+    if (filters.city) conditions.push(like(occupations.cities, `%${JSON.stringify(filters.city)}%`));
+    if (filters.educationLevel) conditions.push(like(occupations.educationLevels, `%${JSON.stringify(filters.educationLevel)}%`));
+    if (candidateCodes) {
+      conditions.push(candidateCodes.size > 0 ? inArray(occupations.code, [...candidateCodes]) : sql`1 = 0`);
+    }
+    const where = and(...conditions);
+
+    const [countRows, occupationRows] = await Promise.all([
+      db.select({ total: count() }).from(occupations).where(where),
+      db.select().from(occupations).where(where).orderBy(occupations.code).limit(limit).offset(offset),
     ]);
-    const occupationRows = rawOccupationRows as Array<typeof occupations.$inferSelect>;
-    const aliasRows = rawAliasRows as Array<typeof occupationAliases.$inferSelect>;
-    const edgeRows = rawEdgeRows as Array<typeof majorOccupationEdges.$inferSelect>;
-    const majorRows = rawMajorRows as Array<typeof careerMajors.$inferSelect>;
-    const collegeRows = rawCollegeRows as Array<typeof careerColleges.$inferSelect>;
-    const requirementRows = rawRequirementRows as Array<{ occupationCode: string }>;
-    const relationRows = rawRelationRows as Array<typeof occupationRelations.$inferSelect>;
-    const activeOccupationCodes = new Set(occupationRows.map((row) => row.code));
-    const connectedEdgeRows = edgeRows.filter((row) => row.occupationCode && activeOccupationCodes.has(row.occupationCode));
-    const connectedMajorCodes = new Set(connectedEdgeRows.map((row) => row.majorCode));
-    const connectedMajorRows = majorRows.filter((row) => connectedMajorCodes.has(row.code));
-    const connectedCollegeCodes = new Set(connectedMajorRows.map((row) => row.collegeCode));
-    const connectedCollegeRows = collegeRows.filter((row) => connectedCollegeCodes.has(row.code));
-    const activeRelationRows = relationRows.filter((row) => activeOccupationCodes.has(row.fromCode) && activeOccupationCodes.has(row.toCode));
-    const occupationsWithRequirements = new Set(requirementRows.map((row) => row.occupationCode));
+    const total = Number(countRows[0]?.total ?? 0);
+    const pageCodes = occupationRows.map((row: typeof occupations.$inferSelect) => row.code);
+
+    const [aliasRows, mappingRows, requirementRows, facetOccupationRows, facetMappingRows, facetRelationRows] = await Promise.all([
+      pageCodes.length
+        ? db.select().from(occupationAliases).where(and(eq(occupationAliases.active, true), inArray(occupationAliases.occupationCode, pageCodes)))
+        : Promise.resolve([]),
+      pageCodes.length
+        ? db.select({
+            occupationCode: majorOccupationEdges.occupationCode,
+            majorCode: careerMajors.code,
+            majorName: careerMajors.name,
+            collegeCode: careerColleges.code,
+            collegeName: careerColleges.name,
+            relevanceType: majorOccupationEdges.relationType,
+          }).from(majorOccupationEdges)
+            .innerJoin(careerMajors, eq(careerMajors.code, majorOccupationEdges.majorCode))
+            .innerJoin(careerColleges, eq(careerColleges.code, careerMajors.collegeCode))
+            .where(and(
+              eq(majorOccupationEdges.active, true),
+              eq(careerMajors.active, true),
+              eq(careerColleges.active, true),
+              inArray(majorOccupationEdges.occupationCode, pageCodes),
+            ))
+        : Promise.resolve([]),
+      pageCodes.length
+        ? db.selectDistinct({ occupationCode: occupationRequirements.occupationCode })
+            .from(occupationRequirements).where(inArray(occupationRequirements.occupationCode, pageCodes))
+        : Promise.resolve([]),
+      db.select({
+        jobFamily: occupations.jobFamily,
+        industry: occupations.industry,
+        cities: occupations.cities,
+        educationLevels: occupations.educationLevels,
+      }).from(occupations).where(eq(occupations.active, true)),
+      db.selectDistinct({
+        majorCode: careerMajors.code,
+        majorName: careerMajors.name,
+        collegeCode: careerColleges.code,
+        collegeName: careerColleges.name,
+        relevanceType: majorOccupationEdges.relationType,
+      }).from(majorOccupationEdges)
+        .innerJoin(careerMajors, eq(careerMajors.code, majorOccupationEdges.majorCode))
+        .innerJoin(careerColleges, eq(careerColleges.code, careerMajors.collegeCode))
+        .innerJoin(occupations, eq(occupations.code, majorOccupationEdges.occupationCode))
+        .where(and(
+          eq(majorOccupationEdges.active, true),
+          eq(careerMajors.active, true),
+          eq(careerColleges.active, true),
+          eq(occupations.active, true),
+        )),
+      db.selectDistinct({ relationType: occupationRelations.relationType })
+        .from(occupationRelations)
+        .innerJoin(occupations, eq(occupations.code, occupationRelations.fromCode))
+        .where(eq(occupations.active, true)),
+    ]);
 
     const aliasesByOccupation = new Map<string, string[]>();
     for (const row of aliasRows) {
-      const current = aliasesByOccupation.get(row.occupationCode) ?? [];
-      current.push(row.alias);
-      aliasesByOccupation.set(row.occupationCode, current);
+      const aliases = aliasesByOccupation.get(row.occupationCode) ?? [];
+      aliases.push(row.alias);
+      aliasesByOccupation.set(row.occupationCode, aliases);
     }
-    const majorByCode = new Map(majorRows.map((row) => [row.code, row]));
-    const collegeByCode = new Map(collegeRows.map((row) => [row.code, row]));
-    const edgesByOccupation = new Map<string, typeof edgeRows>();
-    for (const row of connectedEdgeRows) {
+    const mappingsByOccupation = new Map<string, OccupationSummary['majorMappings']>();
+    for (const row of mappingRows) {
       if (!row.occupationCode) continue;
-      const current = edgesByOccupation.get(row.occupationCode) ?? [];
-      current.push(row);
-      edgesByOccupation.set(row.occupationCode, current);
-    }
-
-    const mapped: OccupationSummary[] = occupationRows.map((occupation) => {
-      const aliases = aliasesByOccupation.get(occupation.code) ?? [];
-      const mappings = (edgesByOccupation.get(occupation.code) ?? []).flatMap((edge) => {
-        const major = majorByCode.get(edge.majorCode);
-        const college = major ? collegeByCode.get(major.collegeCode) : undefined;
-        if (!major || !college) return [];
-        return [{
-          majorCode: major.code,
-          majorName: major.name,
-          collegeCode: college.code,
-          collegeName: college.name,
-          relevanceType: edge.relationType,
-        }];
+      const mappings = mappingsByOccupation.get(row.occupationCode) ?? [];
+      mappings.push({
+        majorCode: row.majorCode,
+        majorName: row.majorName,
+        collegeCode: row.collegeCode,
+        collegeName: row.collegeName,
+        relevanceType: row.relevanceType,
       });
-      return {
-        code: occupation.code,
-        name: occupation.name,
-        category: occupation.category,
-        summary: occupation.summary,
-        matchScore: null,
-        jobFamily: occupation.jobFamily,
-        industry: occupation.industry,
-        cities: stringList(occupation.cities),
-        educationLevels: stringList(occupation.educationLevels),
-        catalogVersion: occupation.catalogVersion,
-        aliases,
-        majorMappings: mappings,
-        canonicalType: occupation.canonicalType,
-        reviewStatus: occupation.reviewStatus,
-        scoringEligible: occupation.scoringEligible && occupationsWithRequirements.has(occupation.code),
-      };
-    });
-
-    type FacetKey = 'collegeCode' | 'majorCode' | 'relevanceType' | 'relationType' | 'jobFamily' | 'industry' | 'city' | 'educationLevel';
-    const relationsByFromCode = new Map<string, typeof activeRelationRows>();
-    for (const relation of activeRelationRows) {
-      const current = relationsByFromCode.get(relation.fromCode) ?? [];
-      current.push(relation);
-      relationsByFromCode.set(relation.fromCode, current);
+      mappingsByOccupation.set(row.occupationCode, mappings);
     }
-    const matchesFilters = (occupation: OccupationSummary, omit?: FacetKey) => {
-      const mappings = occupation.majorMappings ?? [];
-      const haystack = `${occupation.name} ${occupation.category} ${occupation.summary} ${occupation.jobFamily ?? ''} ${occupation.industry ?? ''} ${(occupation.aliases ?? []).join(' ')}`.toLocaleLowerCase('zh-CN');
-      return (!normalized || normalized.split(/\s+/).every((token) => haystack.includes(token)))
-        && (omit === 'collegeCode' || !filters.collegeCode || mappings.some((item) => item.collegeCode === filters.collegeCode))
-        && (omit === 'majorCode' || !filters.majorCode || mappings.some((item) => item.majorCode === filters.majorCode))
-        && (omit === 'relevanceType' || !filters.relevanceType || mappings.some((item) => item.relevanceType === filters.relevanceType))
-        && (omit === 'jobFamily' || !filters.jobFamily || normalizeQuery(occupation.jobFamily) === normalizeQuery(filters.jobFamily))
-        && (omit === 'industry' || !filters.industry || normalizeQuery(occupation.industry) === normalizeQuery(filters.industry))
-        && (omit === 'city' || includesValue(occupation.cities ?? [], filters.city))
-        && (omit === 'educationLevel' || includesValue(occupation.educationLevels ?? [], filters.educationLevel))
-        && (omit === 'relationType' || !filters.relationType || (relationsByFromCode.get(occupation.code) ?? []).some((item) => item.relationType === filters.relationType));
-    };
-    const relationFiltered = mapped.filter((occupation) => matchesFilters(occupation));
-    const facetOccupations = (omit: FacetKey) => mapped.filter((occupation) => matchesFilters(occupation, omit));
-    const collegeFacetCodes = new Set(facetOccupations('collegeCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.collegeCode) ?? []));
-    const majorFacetCodes = new Set(facetOccupations('majorCode').flatMap((item) => item.majorMappings?.map((mapping) => mapping.majorCode) ?? []));
+    const occupationsWithRequirements = new Set(requirementRows.map((row: { occupationCode: string }) => row.occupationCode));
+    const items: OccupationSummary[] = occupationRows.map((occupation: typeof occupations.$inferSelect) => ({
+      code: occupation.code,
+      name: occupation.name,
+      category: occupation.category,
+      summary: occupation.summary,
+      matchScore: null,
+      jobFamily: occupation.jobFamily,
+      industry: occupation.industry,
+      cities: stringList(occupation.cities),
+      educationLevels: stringList(occupation.educationLevels),
+      catalogVersion: occupation.catalogVersion,
+      aliases: aliasesByOccupation.get(occupation.code) ?? [],
+      majorMappings: mappingsByOccupation.get(occupation.code) ?? [],
+      canonicalType: occupation.canonicalType,
+      reviewStatus: occupation.reviewStatus,
+      scoringEligible: Boolean(occupation.scoringEligible) && occupationsWithRequirements.has(occupation.code),
+    }));
+    const collegeOptions = new Map<string, string>();
+    const majorOptions = new Map<string, string>();
+    for (const row of facetMappingRows) {
+      collegeOptions.set(row.collegeCode, row.collegeName);
+      majorOptions.set(row.majorCode, `${row.majorName} · ${row.collegeName}`);
+    }
 
-    return this.cacheListResult(cacheKey, {
-      items: relationFiltered.slice(offset, offset + limit),
+    const result: OccupationPage = {
+      items,
       pageInfo: {
         limit,
         offset,
-        total: relationFiltered.length,
-        hasMore: offset + limit < relationFiltered.length,
+        total,
+        hasMore: offset + limit < total,
       },
       filters: {
         ...filters,
         limit,
         offset,
-        colleges: connectedCollegeRows.filter((item) => collegeFacetCodes.has(item.code))
-          .map((item) => ({ value: item.code, label: item.name }))
+        colleges: [...collegeOptions].map(([value, label]) => ({ value, label }))
           .sort((a, b) => a.label.localeCompare(b.label, 'zh-CN')),
-        majors: connectedMajorRows.filter((item) => majorFacetCodes.has(item.code))
-          .map((item) => ({
-            value: item.code,
-            label: `${item.name} · ${collegeByCode.get(item.collegeCode)?.name ?? item.collegeCode}`,
-          }))
+        majors: [...majorOptions].map(([value, label]) => ({ value, label }))
           .sort((a, b) => a.label.localeCompare(b.label, 'zh-CN')),
-        jobFamilies: uniqueSorted(facetOccupations('jobFamily').map((item) => item.jobFamily)),
-        industries: uniqueSorted(facetOccupations('industry').map((item) => item.industry)),
-        cities: uniqueSorted(facetOccupations('city').flatMap((item) => item.cities ?? [])),
-        educationLevels: uniqueSorted(facetOccupations('educationLevel').flatMap((item) => item.educationLevels ?? [])),
-        relevanceTypes: uniqueSorted(facetOccupations('relevanceType').flatMap((item) => item.majorMappings?.map((mapping) => mapping.relevanceType) ?? [])) as OccupationPage['filters']['relevanceTypes'],
-        relationTypes: uniqueSorted(facetOccupations('relationType').flatMap((item) => (relationsByFromCode.get(item.code) ?? []).map((relation) => relation.relationType))) as OccupationPage['filters']['relationTypes'],
+        jobFamilies: uniqueSorted(facetOccupationRows.map((row: { jobFamily: string }) => row.jobFamily)),
+        industries: uniqueSorted(facetOccupationRows.map((row: { industry: string }) => row.industry)),
+        cities: uniqueSorted(facetOccupationRows.flatMap((row: { cities: unknown }) => stringList(row.cities))),
+        educationLevels: uniqueSorted(facetOccupationRows.flatMap((row: { educationLevels: unknown }) => stringList(row.educationLevels))),
+        relevanceTypes: uniqueSorted(facetMappingRows.map((row: { relevanceType: string }) => row.relevanceType)) as OccupationPage['filters']['relevanceTypes'],
+        relationTypes: uniqueSorted(facetRelationRows.map((row: { relationType: string }) => row.relationType)) as OccupationPage['filters']['relationTypes'],
       },
-    });
+    };
+    await this.cache.set(cacheKey, result, LIST_CACHE_TTL_SECONDS);
+    return result;
   }
 
   async getOccupationByCode(code: string): Promise<OccupationDetail | null> {
     await dbReady;
+    const cacheKey = `detail:${code}`;
+    const cached = await this.cache.get<OccupationDetail>(cacheKey);
+    if (cached) return cached;
     // Direct lookup intentionally includes inactive rows so legacy J-* goals remain readable.
     const rows = await db.select().from(occupations).where(eq(occupations.code, code)).limit(1);
     const occupation = rows[0];
@@ -272,7 +348,7 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     const majorByCode = new Map(majors.map((row) => [row.code, row]));
     const collegeByCode = new Map(colleges.map((row) => [row.code, row]));
 
-    return {
+    const result: OccupationDetail = {
       code: occupation.code,
       name: occupation.name,
       category: occupation.category,
@@ -323,6 +399,8 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
         verifiedAt: toIso(document.verifiedAt),
       })),
     };
+    await this.cache.set(cacheKey, result, DETAIL_CACHE_TTL_SECONDS);
+    return result;
   }
 
   async search(query: string, options?: { occupationCode?: string; limit?: number }): Promise<KnowledgeSearchResult[]> {
@@ -331,17 +409,16 @@ export class SqlCareerKnowledgeProvider implements CareerKnowledgeProvider {
     if (!normalized) return [];
     const limit = Math.max(1, Math.min(options?.limit ?? 5, 20));
     const tokens = normalized.split(/\s+/).filter(Boolean);
-    const tokenConditions = tokens.flatMap((token) => [
-      like(careerKnowledgeDocuments.title, `%${token}%`),
-      like(careerKnowledgeDocuments.content, `%${token}%`),
-    ]);
-    const textCondition = or(...tokenConditions);
+    const textCondition = and(...tokens.map((token) => or(
+      normalizedLike(careerKnowledgeDocuments.title, token),
+      normalizedLike(careerKnowledgeDocuments.content, token),
+    )));
     const whereCondition = options?.occupationCode
       ? and(eq(careerKnowledgeDocuments.occupationCode, options.occupationCode), textCondition)
       : textCondition;
     const rawRows = await db.select().from(careerKnowledgeDocuments)
       .where(whereCondition)
-      .limit(Math.max(100, limit * 20));
+      .limit(limit * 4);
     const rows = rawRows as Array<typeof careerKnowledgeDocuments.$inferSelect>;
 
     return rows
