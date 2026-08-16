@@ -3,6 +3,7 @@ import type { Resume, ResumeSection, SectionContent } from '@/types/resume';
 import { AUTOSAVE_DELAY } from '@/lib/constants';
 import { useSettingsStore } from '@/stores/settings-store';
 import { normalizeSectionContent } from '@/lib/resume/normalize-content';
+import { logger } from '@/lib/observability/logger';
 
 interface ResumeStore {
   currentResume: Resume | null;
@@ -175,7 +176,7 @@ export const useResumeStore = create<ResumeStore>((set, get) => ({
 
       set({ isDirty: false });
     } catch (error) {
-      console.error('Failed to save resume:', error);
+      logger.error('client.resume_save_failed', { error });
     } finally {
       set({ isSaving: false });
     }

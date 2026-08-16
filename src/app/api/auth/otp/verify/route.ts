@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyOtp } from '@/lib/auth/email-otp';
 import { createAuthSessionCookie } from '@/lib/auth/session-cookie';
+import { logger } from '@/lib/observability/logger';
 
 /**
  * POST /api/auth/otp/verify
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
     );
     return response;
   } catch (error) {
-    console.error('Failed to create authentication session', error);
+    logger.error('auth.otp_session_creation_failed', { error });
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }

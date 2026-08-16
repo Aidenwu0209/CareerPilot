@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, type ReactNode } from 'react';
+import { logger } from '@/lib/observability/logger';
 
 interface Props {
   children: ReactNode;
@@ -27,7 +28,7 @@ export class PreviewErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: unknown) {
-    console.error('Resume preview failed to render:', error);
+    logger.error('client.resume_preview_render_failed', { error });
   }
 
   componentDidUpdate(prevProps: Props) {

@@ -16,6 +16,14 @@ const eslintConfig = defineConfig([
       "react-hooks/refs": "warn",
     },
   },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/lib/observability/logger.ts", "src/**/*.test.{ts,tsx}"],
+    rules: {
+      // Production paths must emit queryable JSON through the shared logger.
+      "no-console": "error",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

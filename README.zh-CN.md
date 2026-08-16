@@ -161,41 +161,22 @@ CareerPilot 覆盖从简历制作、JD 匹配到模拟面试与职业照生成�
 
 ### Docker 部署（推荐）
 
-```bash
-# 先生成一个密钥
-openssl rand -base64 32
+生产环境使用 PostgreSQL、Redis、健康检查、日志轮转和可选 OTLP Collector。完整变量说明、上线检查、Trace 验证与故障排查见 [部署指南](docs/DEPLOYMENT.md) 和 [环境变量参考](docs/ENVIRONMENT.md)。
 
-# 本地构建镜像后运行
-docker build -t careerpilot .
-docker run -d -p 3000:3000 \
-  -e AUTH_SECRET=<你生成的密钥> \
-  -e SMTP_HOST=smtp.example.com \
-  -e SMTP_USER=<smtp-user> \
-  -e SMTP_PASS=<smtp-password> \
-  -e SMTP_FROM=noreply@example.com \
-  -v careerpilot-data:/app/data \
-  careerpilot
+```bash
+cp .env.example .env
+# 编辑 .env，至少设置 APP_URL、AUTH_SECRET、AI_CREDENTIAL_MASTER_KEY，
+# 并新增随机的 POSTGRES_PASSWORD。
+docker compose up -d --build
+docker compose ps
+curl --fail http://127.0.0.1:3000/api/health
 ```
 
-打开 [http://localhost:3000](http://localhost:3000)。首次启动自动完成数据库迁移和数据初始化。
+打开 `APP_URL`。首次启动自动完成数据库迁移；供应商凭证和模型不会自动写入。
 
-> **`AUTH_SECRET`** 为必填项，用于会话加密。通过 `openssl rand -base64 32` 生成。
+> **密钥隔离：** `AUTH_SECRET` 与 `AI_CREDENTIAL_MASTER_KEY` 都至少 32 位，且必须使用两个不同的随机值。
 
 > **AI 配置：** 供应商凭证由超级管理员统一配置，并使用 `AI_CREDENTIAL_MASTER_KEY` 加密。终端用户不会填写或获得供应商密钥。
-
-<details>
-<summary>使用 PostgreSQL</summary>
-
-```bash
-docker build -t careerpilot .
-docker run -d -p 3000:3000 \
-  -e AUTH_SECRET=<你生成的密钥> \
-  -e DB_TYPE=postgresql \
-  -e DATABASE_URL=postgresql://user:pass@host:5432/careerpilot \
-  careerpilot
-```
-
-</details>
 
 <details>
 <summary>使用 Google OAuth 登录</summary>

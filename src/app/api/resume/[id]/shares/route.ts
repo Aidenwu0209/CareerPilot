@@ -3,6 +3,7 @@ import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { shareRepository } from '@/lib/db/repositories/share.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { generateShareToken, getShareUrl, hashPassword } from '@/lib/utils/share';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(
   request: NextRequest,
@@ -34,7 +35,7 @@ export async function GET(
 
     return NextResponse.json(sharesWithUrl);
   } catch (error) {
-    console.error('GET /api/resume/[id]/shares error:', error);
+    logger.error('resume.shares_list_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -79,7 +80,7 @@ export async function POST(
       password: undefined,
     }, { status: 201 });
   } catch (error) {
-    console.error('POST /api/resume/[id]/shares error:', error);
+    logger.error('resume.share_create_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { logger } from '@/lib/observability/logger';
 
 export function usePdfExport() {
   const [isExporting, setIsExporting] = useState(false);
@@ -25,7 +26,7 @@ export function usePdfExport() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export PDF:', error);
+      logger.error('client.resume_pdf_export_failed', { error, resumeId });
       throw error;
     } finally {
       setIsExporting(false);

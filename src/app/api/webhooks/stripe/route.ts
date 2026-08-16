@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { constructStripeEvent } from '@/lib/billing/stripe-provider';
 import { processStripeEvent } from '@/lib/billing/service';
+import { logger } from '@/lib/observability/logger';
 
 export const runtime = 'nodejs';
 
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     const result = await processStripeEvent(event, payload);
     return NextResponse.json({ received: true, ...result });
   } catch (error) {
-    console.error('[Billing] Stripe webhook failed', error);
+    logger.error('billing.stripe_webhook_failed', { error });
     return NextResponse.json({ error: 'WEBHOOK_REJECTED' }, { status: 400 });
   }
 }

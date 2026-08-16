@@ -72,6 +72,21 @@ describe('product proxy', () => {
     expect(response.status).toBe(401);
   });
 
+  it('preserves a valid request ID and generates one for unsafe input', async () => {
+    const { proxy } = await loadProxy();
+    const preserved = await proxy(createRequest('/api/health', {
+      headers: { 'x-request-id': 'edge:req-42' },
+    }));
+    const generated = await proxy(createRequest('/api/health', {
+      headers: { 'x-request-id': 'unsafe request id' },
+    }));
+
+    expect(preserved.headers.get('x-request-id')).toBe('edge:req-42');
+    expect(generated.headers.get('x-request-id')).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+  });
+
   it('allows a private API with either Auth.js session cookie name', async () => {
     const { proxy } = await loadProxy();
     for (const name of ['authjs.session-token', '__Secure-authjs.session-token']) {

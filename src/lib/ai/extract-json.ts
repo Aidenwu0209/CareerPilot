@@ -1,4 +1,5 @@
 import { jsonrepair } from 'jsonrepair';
+import { logger } from '@/lib/observability/logger';
 import type { ZodType } from 'zod/v4';
 
 /**
@@ -188,6 +189,6 @@ export function extractJson<T>(text: string, schema: ZodType<T>): T {
     } catch {}
   }
 
-  console.error('[extractJson] FULL failed text:\n', cleaned);
+  logger.error('ai.json_extraction_failed', { responseLength: text.length });
   throw new Error(`Failed to extract valid JSON from AI response (length=${text.length})`);
 }

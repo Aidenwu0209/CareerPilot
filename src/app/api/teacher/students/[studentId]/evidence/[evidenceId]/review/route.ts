@@ -8,6 +8,7 @@ import {
   EvidenceReviewConflictError,
   reviewAndAggregateCareerEvidence,
 } from '@/lib/career/evidence-assessment';
+import { logger } from '@/lib/observability/logger';
 
 const reasonSchema = z.string().trim().min(2).max(1000);
 const reviewSchema = z.discriminatedUnion('decision', [
@@ -85,7 +86,7 @@ export async function POST(
     if (error instanceof EvidenceReviewConflictError) {
       return NextResponse.json({ error: error.message }, { status: 409 });
     }
-    console.error('[Teacher API] Evidence review failed', error);
+    logger.error('teacher.evidence_review_failed', { error });
     return NextResponse.json({ error: 'EVIDENCE_REVIEW_FAILED' }, { status: 500 });
   }
 }

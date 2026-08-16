@@ -14,6 +14,7 @@ import { aiOperations, aiProviderAttempts, aiProviders } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { checkRateLimit, RATE_LIMIT_POLICIES, rateLimitKey } from '@/lib/rate-limit/rate-limit';
 import { z } from 'zod/v4';
+import { logger } from '@/lib/observability/logger';
 
 const LANGUAGE_NAMES: Record<string, string> = {
   zh: 'Simplified Chinese',
@@ -421,12 +422,13 @@ export async function POST(request: NextRequest) {
         );
 
         if (failedCount > 0) {
-          console.error(
-            'Some sections failed to translate:',
-            results
-              .filter((r) => r.status === 'rejected')
-              .map((f) => (f as PromiseRejectedResult).reason)
-          );
+          logger.error('ai.translation_sections_failed', {
+            operationId,
+            failedCount,
+            errors: results
+              .filter((result) => result.status === 'rejected')
+              .map((result) => (result as PromiseRejectedResult).reason),
+          });
         }
 
         // AC3: Settlement based on actual usage
@@ -455,7 +457,7 @@ export async function POST(request: NextRequest) {
         // Update resume language
         await resumeRepository.update(targetResumeId, { language: targetLanguage });
       } catch (err) {
-        console.error('Unexpected error during translation:', err);
+        logger.error('ai.translation_unexpected_error', { error: err, operationId });
         // Release hold on unexpected error
         try {
           await releaseHold({ holdId, reason: 'provider_failure' });
@@ -482,7 +484,7 @@ export async function POST(request: NextRequest) {
           ...(newResumeId ? { newResumeId } : {}),
         });
       } catch (err) {
-        console.error('Error fetching final data:', err);
+        logger.error('ai.translation_final_data_failed', { error: err, operationId });
         send({ type: 'done', resumeId: targetResumeId, language: targetLanguage, sections: [], failedCount, ...(newResumeId ? { newResumeId } : {}) });
       }
 

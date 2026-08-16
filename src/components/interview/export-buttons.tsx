@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { FileText, FileDown, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { InterviewReport, InterviewSession, RoundEvaluation } from '@/types/interview';
+import { logger } from '@/lib/observability/logger';
 
 interface ExportButtonsProps {
   report: InterviewReport;
@@ -44,7 +45,7 @@ export function ExportButtons({ report, session }: ExportButtonsProps) {
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('PDF export failed:', err);
+      logger.error('client.interview_pdf_export_failed', { error: err, sessionId: session.id });
     } finally {
       setPdfLoading(false);
     }

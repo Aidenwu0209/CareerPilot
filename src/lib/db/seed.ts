@@ -6,9 +6,10 @@ import {
   ensureDemoTeacherWorkspace,
   seedDemoUser,
 } from './seed-demo';
+import { logger } from '@/lib/observability/logger';
 
 async function seed() {
-  console.log('Seeding database...');
+  logger.info('db.seed_started');
   await dbReady;
 
   const [student] = await db
@@ -23,12 +24,12 @@ async function seed() {
     await ensureDemoTeacherWorkspace(db, student.id);
   }
 
-  console.log('Seed complete! Student and teacher demo identities are ready.');
+  logger.info('db.seed_complete');
 }
 
 seed()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error(error);
+    logger.error('db.seed_failed', { error });
     process.exit(1);
   });

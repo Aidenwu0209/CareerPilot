@@ -5,6 +5,7 @@ import { generatePdf } from '@/lib/pdf/generate-pdf';
 import { generateInterviewReportHtml } from './html';
 import { dbReady } from '@/lib/db';
 import { checkRateLimit, RATE_LIMIT_POLICIES, rateLimitKey, rateLimitedResponse } from '@/lib/rate-limit/rate-limit';
+import { logger } from '@/lib/observability/logger';
 
 export const maxDuration = 60;
 
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
   } catch (error) {
-    console.error('GET /api/interview/[id]/report/export error:', error);
+    logger.error('interview.report_export_failed', { error });
     return new Response('Internal server error', { status: 500 });
   }
 }

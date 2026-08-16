@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { BillingError, createCheckout } from '@/lib/billing/service';
+import { logger } from '@/lib/observability/logger';
 
 const schema = z.object({
   planId: z.string().min(1),
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     if (error instanceof BillingError) return NextResponse.json({ error: error.code }, { status: 400 });
-    console.error('[Billing] Checkout failed', error);
+    logger.error('billing.checkout_failed', { error, userId: ctx.context.actor.userId });
     return NextResponse.json({ error: 'CHECKOUT_FAILED' }, { status: 502 });
   }
 }

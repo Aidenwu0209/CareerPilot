@@ -8,8 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from '@/i18n/routing';
 import { normalizeInternalCallbackUrl } from '@/lib/auth/login-redirect';
-
-const FIELDS = ['name', 'school', 'major', 'academicStage', 'careerDirection'] as const;
+import {
+  ONBOARDING_FIELDS,
+  ONBOARDING_FIELD_LIMITS,
+  type FieldValidationError,
+  type OnboardingField,
+  validateOnboardingField,
+  validateOnboardingProfile,
+} from '@/lib/auth/form-validation';
 
 export function OnboardingForm({ defaultName = '' }: { defaultName?: string }) {
   const t = useTranslations('onboarding');
@@ -20,7 +26,7 @@ export function OnboardingForm({ defaultName = '' }: { defaultName?: string }) {
     searchParams.get('callbackUrl'),
     `/${locale}/dashboard`,
   );
-  const [values, setValues] = useState<Record<(typeof FIELDS)[number], string>>({
+  const [values, setValues] = useState<Record<OnboardingField, string>>({
     name: defaultName,
     school: '',
     major: '',
@@ -31,10 +37,17 @@ export function OnboardingForm({ defaultName = '' }: { defaultName?: string }) {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<OnboardingField, FieldValidationError>>>({});
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    const validationErrors = validateOnboardingProfile(values);
+    setFieldErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      setError('profile');
+      return;
+    }
     setSubmitting(true);
     try {
       const response = await fetch('/api/onboarding/profile', {
@@ -43,7 +56,14 @@ export function OnboardingForm({ defaultName = '' }: { defaultName?: string }) {
         body: JSON.stringify({ ...values, termsAccepted, privacyAccepted }),
       });
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
+        const body = await response.json().catch(() => ({})) as { error?: string; fields?: string[] };
+        if (body.error === 'INVALID_PROFILE' && Array.isArray(body.fields)) {
+          setFieldErrors(Object.fromEntries(
+            body.fields
+              .filter((field): field is OnboardingField => ONBOARDING_FIELDS.includes(field as OnboardingField))
+              .map((field) => [field, validateOnboardingField(field, values[field]) ?? 'required']),
+          ));
+        }
         setError(body.error === 'CONSENT_REQUIRED' ? 'consent' : 'profile');
         return;
       }
@@ -59,20 +79,41 @@ export function OnboardingForm({ defaultName = '' }: { defaultName?: string }) {
   return (
     <form onSubmit={submit} className="mt-8 space-y-5">
       <div className="grid gap-4 sm:grid-cols-2">
-        {FIELDS.map((field) => (
+        {ONBOARDING_FIELDS.map((field) => {
+          const fieldError = fieldErrors[field];
+          const errorId = `${field}-error`;
+          return (
           <label key={field} className={field === 'careerDirection' ? 'sm:col-span-2' : ''}>
             <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
               {t(`fields.${field}`)}
             </span>
             <Input
               value={values[field]}
-              onChange={(event) => setValues((current) => ({ ...current, [field]: event.target.value }))}
-              maxLength={field === 'careerDirection' ? 240 : field === 'name' ? 80 : 160}
+              onChange={(event) => {
+                const value = event.target.value;
+                setValues((current) => ({ ...current, [field]: value }));
+                if (fieldErrors[field]) {
+                  setFieldErrors((current) => ({ ...current, [field]: undefined }));
+                }
+              }}
+              onBlur={() => {
+                const fieldError = validateOnboardingField(field, values[field]);
+                setFieldErrors((current) => ({ ...current, [field]: fieldError ?? undefined }));
+              }}
+              maxLength={ONBOARDING_FIELD_LIMITS[field]}
               autoComplete={field === 'name' ? 'name' : 'off'}
               required
+              aria-invalid={Boolean(fieldError)}
+              aria-describedby={fieldError ? errorId : undefined}
             />
+            {fieldError && (
+              <span id={errorId} role="alert" className="mt-1 block text-xs text-red-600 dark:text-red-400">
+                {t(`fieldErrors.${fieldError}`, { max: ONBOARDING_FIELD_LIMITS[field] })}
+              </span>
+            )}
           </label>
-        ))}
+          );
+        })}
       </div>
 
       <div className="space-y-3 border-t border-zinc-200 pt-5 text-sm dark:border-zinc-800">

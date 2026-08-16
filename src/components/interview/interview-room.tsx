@@ -21,6 +21,7 @@ import { useInterviewControls } from './control-bar';
 import { RoundTransition } from './round-transition';
 import { ThinkingIndicator } from './thinking-indicator';
 import type { InterviewerConfig } from '@/types/interview';
+import { logger } from '@/lib/observability/logger';
 
 /** Convert DB messages to UIMessage format */
 function dbMessagesToUIMessages(dbMessages: any[]): UIMessage[] {
@@ -173,7 +174,7 @@ export function InterviewRoom({ sessionId, initialMessages }: InterviewRoomProps
         setMessages([]);
       }
     } catch (err) {
-      console.error('Failed to load round messages:', err);
+      logger.error('client.interview_round_messages_load_failed', { error: err, sessionId });
       setMessages([]);
     }
 

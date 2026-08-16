@@ -5,6 +5,7 @@ import { config as appConfig } from './lib/config';
 import { isDemoFingerprint } from './lib/auth/demo-mode';
 import { FINGERPRINT_COOKIE_NAME } from './lib/auth/providers/fingerprint';
 import { decode } from 'next-auth/jwt';
+import { REQUEST_ID_HEADER, resolveRequestId } from './lib/http/request-id';
 
 const intlProxy = createMiddleware(routing);
 
@@ -94,25 +95,40 @@ function getLocalizedCallback(request: NextRequest, locale: string): string {
   return `${localizedPath}${search}`;
 }
 
+function correlatedResponse(response: NextResponse, requestId: string): NextResponse {
+  response.headers.set(REQUEST_ID_HEADER, requestId);
+  return response;
+}
+
+function nextResponse(request: NextRequest, requestId: string): NextResponse {
+  return correlatedResponse(NextResponse.next({
+    request: { headers: request.headers },
+  }), requestId);
+}
+
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const session = await getSessionState(request);
-  const hasIdentity = session.authenticated || hasDemoIdentity(request);
+  const requestId = resolveRequestId(request.headers.get(REQUEST_ID_HEADER));
+  const correlatedHeaders = new Headers(request.headers);
+  correlatedHeaders.set(REQUEST_ID_HEADER, requestId);
+  const correlatedRequest = new NextRequest(request, { headers: correlatedHeaders });
+  const { pathname } = correlatedRequest.nextUrl;
+  const session = await getSessionState(correlatedRequest);
+  const hasIdentity = session.authenticated || hasDemoIdentity(correlatedRequest);
 
   if (pathname.startsWith('/api/')) {
-    if (isPublicApiPath(pathname)) return NextResponse.next();
+    if (isPublicApiPath(pathname)) return nextResponse(correlatedRequest, requestId);
     if (session.onboardingRequired && !pathname.startsWith('/api/onboarding/')) {
-      return NextResponse.json({ error: 'ONBOARDING_REQUIRED' }, { status: 403 });
+      return correlatedResponse(NextResponse.json({ error: 'ONBOARDING_REQUIRED' }, { status: 403 }), requestId);
     }
-    if (hasIdentity) return NextResponse.next();
-    return NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 });
+    if (hasIdentity) return nextResponse(correlatedRequest, requestId);
+    return correlatedResponse(NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 }), requestId);
   }
 
   if (!isPublicPagePath(pathname) && !hasIdentity) {
     const locale = getLocale(pathname);
-    const loginUrl = new URL(`/${locale}/login`, request.url);
-    loginUrl.searchParams.set('callbackUrl', getLocalizedCallback(request, locale));
-    return NextResponse.redirect(loginUrl);
+    const loginUrl = new URL(`/${locale}/login`, correlatedRequest.url);
+    loginUrl.searchParams.set('callbackUrl', getLocalizedCallback(correlatedRequest, locale));
+    return correlatedResponse(NextResponse.redirect(loginUrl), requestId);
   }
 
   if (
@@ -120,12 +136,12 @@ export async function proxy(request: NextRequest) {
     !isOnboardingAllowedPage(pathname)
   ) {
     const locale = getLocale(pathname);
-    const onboardingUrl = new URL(`/${locale}/onboarding`, request.url);
-    onboardingUrl.searchParams.set('callbackUrl', getLocalizedCallback(request, locale));
-    return NextResponse.redirect(onboardingUrl);
+    const onboardingUrl = new URL(`/${locale}/onboarding`, correlatedRequest.url);
+    onboardingUrl.searchParams.set('callbackUrl', getLocalizedCallback(correlatedRequest, locale));
+    return correlatedResponse(NextResponse.redirect(onboardingUrl), requestId);
   }
 
-  return intlProxy(request);
+  return correlatedResponse(intlProxy(correlatedRequest), requestId);
 }
 
 export const config = {

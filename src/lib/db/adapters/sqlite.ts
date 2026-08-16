@@ -5,6 +5,7 @@ import * as schema from '../schema';
 import type { DatabaseAdapter } from '../adapter';
 import { mkdirSync } from 'fs';
 import { dirname, resolve } from 'path';
+import { logger } from '@/lib/observability/logger';
 
 export class SQLiteAdapter implements DatabaseAdapter {
   db;
@@ -26,7 +27,7 @@ export class SQLiteAdapter implements DatabaseAdapter {
       try {
         migrate(this.db, { migrationsFolder: resolve(process.cwd(), 'drizzle/migrations') });
       } catch (e) {
-        console.error('[DB] SQLite migration failed:', e);
+        logger.error('db.sqlite_migration_failed', { error: e });
       }
     }
   }
@@ -42,10 +43,10 @@ export class SQLiteAdapter implements DatabaseAdapter {
       if (row?.count === 0) {
         const { seedDemoUser } = await import('../seed-demo');
         await seedDemoUser(this.db);
-        console.log('[DB] SQLite auto-seed complete');
+        logger.info('db.sqlite_auto_seed_complete');
       }
     } catch (e) {
-      console.error('[DB] SQLite auto-seed failed:', e);
+      logger.error('db.sqlite_auto_seed_failed', { error: e });
     }
   }
 

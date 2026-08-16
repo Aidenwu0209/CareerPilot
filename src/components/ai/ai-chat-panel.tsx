@@ -15,6 +15,7 @@ import { useCredits } from '@/hooks/use-credits';
 import { readJsonResponse } from '@/lib/http/json-client';
 import { AIMessage } from './ai-message';
 import { AIInput } from './ai-input';
+import { logger } from '@/lib/observability/logger';
 
 interface ChatSession {
   id: string;
@@ -128,7 +129,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
         }
       }
     } catch (err) {
-      console.error('Failed to create session:', err);
+      logger.error('client.ai_chat_session_create_failed', { error: err, resumeId });
     }
   }, [resumeId, resetPagination]);
 
@@ -148,7 +149,7 @@ export function AIChatContent({ resumeId, hideTitle }: AIChatContentProps) {
       });
       await readJsonResponse<{ success: boolean }>(response);
     } catch (err) {
-      console.error('Failed to delete session:', err);
+      logger.error('client.ai_chat_session_delete_failed', { error: err, sessionId });
       return;
     }
 

@@ -287,7 +287,17 @@ export function MembersManager({
           {activeMembers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Inbox className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">{t('empty')}</p>
+              <p className="mt-3 text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('empty')}</p>
+              <p className="mt-1 max-w-md text-center text-sm text-zinc-500 dark:text-zinc-400">{t('emptyDescription')}</p>
+              <Button
+                size="sm"
+                className="mt-4 gap-1.5"
+                onClick={() => setAddOpen(true)}
+                disabled={seatsFull}
+              >
+                <UserPlus className="h-3.5 w-3.5" />
+                {t('emptyAction')}
+              </Button>
             </div>
           ) : (
             <div className="divide-y divide-zinc-100 dark:divide-zinc-800">

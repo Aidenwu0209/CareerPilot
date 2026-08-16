@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { billingPlans, planModelAccess } from '@/lib/db/schema';
 import { recordAuditEvent } from '@/lib/audit/audit-service';
 import { config } from '@/lib/config';
+import { logger } from '@/lib/observability/logger';
 
 const planSchema = z.object({
   code: z.string().regex(/^[a-z0-9_-]{2,50}$/),
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
       });
     }
   } catch (error) {
-    console.error('[Billing Admin] Plan creation failed', error);
+    logger.error('billing.admin_plan_creation_failed', { error, actorId: auth.context.actor.userId });
     return NextResponse.json({ error: 'PLAN_CREATE_FAILED' }, { status: 409 });
   }
   await recordAuditEvent({ actorId: auth.context.actor.userId, action: 'billing.plan.create', targetType: 'billing_plan', targetId: id, result: 'success', summary: `Created billing plan ${values.code}` });

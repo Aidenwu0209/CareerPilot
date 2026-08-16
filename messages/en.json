@@ -126,6 +126,7 @@
       "errors": {
         "invalidEmail": "Please enter a valid email address",
         "rateLimited": "Too many requests, please try again later",
+        "invalidCodeFormat": "Enter the six-digit verification code",
         "invalidCode": "Incorrect verification code",
         "expired": "Code has expired, please request a new one",
         "used": "Code has already been used, please request a new one",
@@ -170,6 +171,10 @@
     "termsConsent": "I have read and agree to the <terms>Terms of Service</terms>",
     "privacyConsent": "I have read and agree to the <privacy>Privacy Policy</privacy>",
     "submit": "Save and enter workspace",
+    "fieldErrors": {
+      "required": "This field is required.",
+      "tooLong": "Enter no more than {max} characters."
+    },
     "errors": {
       "consent": "Confirm both the Terms of Service and Privacy Policy.",
       "profile": "Complete every field and check the allowed lengths.",
@@ -824,14 +829,14 @@
       "interview": "Mock Interview",
       "journey": "How it works",
       "resumeTools": "Resume tools",
-      "getStarted": "Sign in / Register",
+      "getStarted": "Start free",
       "dashboard": "Dashboard"
     },
     "hero": {
       "eyebrow": "Student career development and guidance platform",
       "title": "Understand your direction, prove your abilities, and take the next step",
       "subtitle": "Bring your major, resume, projects, interviews, and teacher guidance into one career record. Understand occupations through Chinese standards and explain matching through real evidence.",
-      "cta": "Start career planning",
+      "cta": "Start free",
       "ctaPending": "Opening career planning…",
       "secondaryCta": "Browse templates",
       "preview": {
@@ -902,7 +907,7 @@
     "cta": {
       "title": "Start career planning from a real target",
       "subtitle": "Create an account, complete your profile, and build your first growth path from occupation requirements and personal evidence.",
-      "button": "Register and start planning"
+      "button": "Start free"
       ,"buttonPending": "Opening career planning…"
     },
     "footer": {
@@ -1830,6 +1835,8 @@
       "refresh": "Refresh",
       "seatsFull": "Seat limit reached, cannot add more members",
       "empty": "No members yet",
+      "emptyDescription": "Add the first member to assign an organization seat and shared credits.",
+      "emptyAction": "Add first member",
       "loadError": "Failed to load members, please try again",
       "retry": "Retry",
       "cancel": "Cancel",
@@ -2568,6 +2575,7 @@
     },
     "detail": {
       "back": "Back to students",
+      "breadcrumbs": { "label": "Breadcrumb", "workspace": "Teacher workspace", "students": "Students" },
       "noTarget": "No target occupation",
       "status": { "attention": "Needs attention", "on_track": "On track", "progress": "Recent progress" },
       "metrics": {
@@ -2600,6 +2608,7 @@
         "evidenceDescription": "Verify source, ability link, and status before confirmation. Results require a reason.",
         "noEvidenceTitle": "No ability evidence",
         "noEvidenceDescription": "Pending evidence appears after students submit materials or task results.",
+        "noEvidenceAction": "Create evidence task",
         "ability": "Related ability",
         "source": "Evidence source",
         "sourceTypes": { "resume": "Resume", "interview": "Interview report", "project": "Project", "certificate": "Certificate", "teacher": "Teacher input", "student": "Student self-report" },
@@ -2638,7 +2647,8 @@
         "milestone": "Stage milestone",
         "pathStatus": { "completed": "Completed", "current": "Current stage", "upcoming": "Upcoming" },
         "emptyTitle": "No goal path yet",
-        "emptyDescription": "A student must choose a career goal before the system can generate a gap-based growth path."
+        "emptyDescription": "A student must choose a career goal before the system can generate a gap-based growth path.",
+        "emptyAction": "Add guidance"
       },
       "tasks": {
         "title": "Growth tasks",
@@ -2650,7 +2660,8 @@
         "assignedBy": "Assigned by",
         "status": { "todo": "To do", "in_progress": "In progress", "submitted": "Awaiting review", "completed": "Completed", "overdue": "Overdue" },
         "emptyTitle": "No growth tasks",
-        "emptyDescription": "Create a task above that maps directly to an ability gap."
+        "emptyDescription": "Create a task above that maps directly to an ability gap.",
+        "emptyAction": "Create growth task"
       },
       "guidance": {
         "title": "Guidance history",
@@ -2658,7 +2669,8 @@
         "studentVisible": "Visible to student",
         "privateNote": "Private teacher note",
         "emptyTitle": "No guidance history",
-        "emptyDescription": "Add the first public guidance item or private teacher note."
+        "emptyDescription": "Add the first public guidance item or private teacher note.",
+        "emptyAction": "Add first guidance"
       },
       "actions": {
         "guidance": {

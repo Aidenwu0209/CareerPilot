@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { generateShareToken, getShareUrl, hashPassword } from '@/lib/utils/share';
+import { logger } from '@/lib/observability/logger';
 
 export async function POST(
   request: NextRequest,
@@ -42,7 +43,7 @@ export async function POST(
       isPublic: true,
     });
   } catch (error) {
-    console.error('POST /api/resume/[id]/share error:', error);
+    logger.error('resume.legacy_share_create_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -75,7 +76,7 @@ export async function GET(
       hasPassword: !!resume.sharePassword,
     });
   } catch (error) {
-    console.error('GET /api/resume/[id]/share error:', error);
+    logger.error('resume.legacy_share_get_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -108,7 +109,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/resume/[id]/share error:', error);
+    logger.error('resume.legacy_share_delete_failed', { error });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

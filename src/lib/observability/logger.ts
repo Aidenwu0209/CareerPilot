@@ -1,3 +1,5 @@
+import { trace } from '@opentelemetry/api';
+
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 const PRIORITY: Record<LogLevel, number> = { debug: 10, info: 20, warn: 30, error: 40 };
@@ -18,10 +20,13 @@ function sanitizeContext(context: Record<string, unknown>): Record<string, unkno
 
 export function log(level: LogLevel, event: string, context: Record<string, unknown> = {}): void {
   if (PRIORITY[level] < PRIORITY[configuredLevel()]) return;
+  const spanContext = trace.getActiveSpan()?.spanContext();
   const line = JSON.stringify({
     timestamp: new Date().toISOString(),
     level,
     event,
+    ...(spanContext?.traceId ? { traceId: spanContext.traceId } : {}),
+    ...(spanContext?.spanId ? { spanId: spanContext.spanId } : {}),
     ...sanitizeContext(context),
   });
   if (level === 'error') console.error(line);

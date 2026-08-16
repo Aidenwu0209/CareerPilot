@@ -4,6 +4,7 @@ import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
 import type { DatabaseAdapter } from '../adapter';
 import { resolve } from 'path';
+import { logger } from '@/lib/observability/logger';
 
 function readBoundedInteger(
   value: string | undefined,
@@ -57,14 +58,14 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
         sql`SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') AS ok`
       );
       if (!check[0]?.ok) {
-        console.warn('[DB] Migration tracking is stale — resetting and re-running');
+        logger.warn('db.postgresql_migration_tracking_stale');
         await this.db.execute(sql`DROP SCHEMA IF EXISTS drizzle CASCADE`);
         await migrate(this.db, {
           migrationsFolder: resolve(process.cwd(), 'drizzle/pg-migrations'),
         });
       }
 
-      console.log('[DB] PostgreSQL migrations applied');
+      logger.info('db.postgresql_migrations_applied');
     } else {
       try {
         await migrate(this.db, {
@@ -75,16 +76,16 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
           sql`SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users') AS ok`
         );
         if (!check[0]?.ok) {
-          console.warn('[DB] Migration tracking is stale — resetting and re-running');
+          logger.warn('db.postgresql_migration_tracking_stale');
           await this.db.execute(sql`DROP SCHEMA IF EXISTS drizzle CASCADE`);
           await migrate(this.db, {
             migrationsFolder: resolve(process.cwd(), 'drizzle/pg-migrations'),
           });
         }
 
-        console.log('[DB] PostgreSQL migrations applied');
+        logger.info('db.postgresql_migrations_applied');
       } catch (e) {
-        console.error('[DB] PostgreSQL migration failed:', e);
+        logger.error('db.postgresql_migration_failed', { error: e });
       }
     }
 
@@ -100,10 +101,10 @@ export class PostgreSQLAdapter implements DatabaseAdapter {
       if (count === 0) {
         const { seedDemoUser } = await import('../seed-demo');
         await seedDemoUser(this.db);
-        console.log('[DB] PostgreSQL auto-seed complete');
+        logger.info('db.postgresql_auto_seed_complete');
       }
     } catch (e) {
-      console.error('[DB] PostgreSQL auto-seed failed:', e);
+      logger.error('db.postgresql_auto_seed_failed', { error: e });
     }
   }
 

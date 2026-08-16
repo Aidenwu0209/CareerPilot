@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { resolveUser, getUserIdFromRequest } from '@/lib/auth/helpers';
 import { resumeRepository } from '@/lib/db/repositories/resume.repository';
 import { analysisRepository } from '@/lib/db/repositories/analysis.repository';
+import { logger } from '@/lib/observability/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(list);
   } catch (error) {
-    console.error('GET /api/ai/grammar-check/history error:', error);
+    logger.error('ai.grammar_history_get_failed', { error });
     return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 });
   }
 }
@@ -75,7 +76,7 @@ export async function DELETE(request: NextRequest) {
     await analysisRepository.deleteGrammarCheck(id);
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/ai/grammar-check/history error:', error);
+    logger.error('ai.grammar_history_delete_failed', { error });
     return NextResponse.json({ error: 'Failed to delete' }, { status: 500 });
   }
 }

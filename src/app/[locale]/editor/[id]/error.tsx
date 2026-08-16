@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
+import { logger } from '@/lib/observability/logger';
 
 export default function EditorError({
   error,
@@ -11,7 +12,7 @@ export default function EditorError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Editor error:', error);
+    logger.error('client.editor_error_boundary', { error, digest: error.digest });
   }, [error]);
 
   return (

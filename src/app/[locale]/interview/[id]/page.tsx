@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { readJsonResponse } from '@/lib/http/json-client';
 import type { UIMessage } from 'ai';
 import type { InterviewRound, InterviewSession } from '@/types/interview';
+import { logger } from '@/lib/observability/logger';
 
 /** Convert DB interview messages to UIMessage format for useChat */
 function dbMessagesToUIMessages(dbMessages: any[]): UIMessage[] {
@@ -44,7 +45,7 @@ export default function InterviewRoomPage({ params }: { params: Promise<{ id: st
           setInitialMessages(dbMessagesToUIMessages(currentMessages));
         }
       })
-      .catch(console.error)
+      .catch((error) => logger.error('client.interview_room_load_failed', { error, sessionId: id }))
       .finally(() => setLoading(false));
   }, [id, setSession, setStatus]);
 

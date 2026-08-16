@@ -14,6 +14,7 @@ import {
 import { executeAiOperation } from '@/lib/ai/gateway';
 import { buildModel, getJsonOptions } from '@/lib/ai/model-builder';
 import { warnLegacyByok } from '@/lib/ai/legacy-detect';
+import { logger } from '@/lib/observability/logger';
 
 const SYSTEM_PROMPT = `You are a resume parser. Extract ALL information from the resume into the EXACT JSON schema below.
 
@@ -82,16 +83,16 @@ export async function POST(request: NextRequest) {
       if (pdfText.length > MAX_PROMPT_LENGTH * 5) {
         return sanitizedError(`Extracted text too long (${pdfText.length} chars, max ${MAX_PROMPT_LENGTH * 5})`);
       }
-      console.log('[parse] PDF text extraction: %d chars', pdfText.length);
+      logger.info('resume.parse_pdf_text_extracted', { characters: pdfText.length });
       messages.push({
         role: 'user',
         content: `Below is the full text extracted from a resume PDF. Extract all resume information using the EXACT JSON schema from the system prompt.\n\n---\n${pdfText}\n---`,
       });
     } else {
       // Scanned/image-based PDF — convert each page to an image
-      console.log('[parse] PDF has little text (%d chars), converting pages to images', pdfText.length);
+      logger.info('resume.parse_pdf_image_fallback', { characters: pdfText.length });
       const pageImages = await pdfPagesToImages(buffer);
-      console.log('[parse] Converted %d PDF pages to images', pageImages.length);
+      logger.info('resume.parse_pdf_pages_rendered', { pages: pageImages.length });
       const contentParts: Array<{ type: 'image'; image: string } | { type: 'text'; text: string }> = [];
       for (const png of pageImages) {
         contentParts.push({ type: 'image', image: `data:image/png;base64,${Buffer.from(png).toString('base64')}` });
@@ -142,7 +143,7 @@ export async function POST(request: NextRequest) {
   // Parse JSON from response
   const raw = parseJsonFromText(result.data.text);
   if (!raw || typeof raw !== 'object') {
-    console.error('[parse] Failed to parse JSON. Raw text:', result.data.text.slice(0, 500));
+    logger.error('resume.parse_ai_json_failed', { responseLength: result.data.text.length });
     return NextResponse.json({ error: 'Failed to extract resume data' }, { status: 500 });
   }
 
@@ -194,7 +195,7 @@ function extractPdfText(buffer: Buffer): Promise<string> {
     }
     return parts.join('\n').trim();
   }).catch((e) => {
-    console.warn('[parse] mupdf text extraction failed:', (e as Error).message);
+    logger.warn('resume.parse_mupdf_text_failed', { error: e });
     return '';
   });
 }
@@ -246,7 +247,7 @@ function parseJsonFromText(text: string): unknown | null {
     } catch (e) {
       // Log first attempt error for diagnostics
       if (c === candidates[0]) {
-        console.warn('[parse] JSON.parse error:', (e as Error).message?.slice(0, 100));
+        logger.warn('resume.parse_json_candidate_failed', { error: e });
       }
       // Try repair for truncated JSON
       const repaired = repairTruncatedJson(c);

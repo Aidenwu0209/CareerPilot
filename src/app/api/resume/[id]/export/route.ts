@@ -5,6 +5,7 @@ import { generatePdf } from '@/lib/pdf/generate-pdf';
 import { generateHtml } from './builders';
 import { generatePlainText } from './plain-text';
 import { generateDocxBuffer } from './docx';
+import { logger } from '@/lib/observability/logger';
 
 // Chromium download + PDF render needs more time on Vercel serverless
 export const maxDuration = 60;
@@ -92,7 +93,7 @@ export async function GET(
       }
     }
   } catch (error) {
-    console.error('GET /api/resume/[id]/export error:', error);
+    logger.error('resume.export_failed', { error });
     // Surface the real reason (e.g. "No Chrome/Chromium found ...") so PDF export
     // failures are diagnosable instead of a generic 500 (issue #85).
     const detail = error instanceof Error && error.message ? error.message : '';

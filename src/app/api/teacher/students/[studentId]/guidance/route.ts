@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { careerGuidanceNotes } from '@/lib/db/schema';
 import { authorizeTeacherStudentMutation } from '@/app/api/teacher/_shared';
+import { logger } from '@/lib/observability/logger';
 
 const guidanceSchema = z.object({
   visibility: z.enum(['student', 'private']),
@@ -41,7 +42,7 @@ export async function POST(
       },
     }, { status: 201 });
   } catch (error) {
-    console.error('[Teacher API] Guidance creation failed', error);
+    logger.error('teacher.guidance_creation_failed', { error });
     return NextResponse.json({ error: 'GUIDANCE_CREATE_FAILED' }, { status: 500 });
   }
 }

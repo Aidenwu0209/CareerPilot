@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { resolveActiveContext } from '@/lib/auth/guards';
 import { reconcileStripe } from '@/lib/billing/service';
+import { logger } from '@/lib/observability/logger';
 
 export async function POST() {
   const ctx = await resolveActiveContext();
@@ -10,7 +11,7 @@ export async function POST() {
   try {
     return NextResponse.json(await reconcileStripe(ctx.context.actor.userId));
   } catch (error) {
-    console.error('[Billing] Reconciliation failed', error);
+    logger.error('billing.reconciliation_failed', { error, actorId: ctx.context.actor.userId });
     return NextResponse.json({ error: 'RECONCILIATION_FAILED' }, { status: 502 });
   }
 }
