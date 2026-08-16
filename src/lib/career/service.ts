@@ -1,20 +1,5 @@
 import 'server-only';
 
-import { and, asc, desc, eq, ne } from 'drizzle-orm';
-import { db, dbReady } from '@/lib/db';
-import {
-  careerAbilities,
-  careerEvidence,
-  careerGoals,
-  careerGuidanceNotes,
-  careerMatches,
-  careerProfiles,
-  careerProfileSnapshots,
-  careerTasks,
-  occupationRequirements,
-  occupations,
-  users,
-} from '@/lib/db/schema';
 import type {
   AbilityChange,
   AbilityDimensionCode,
@@ -38,13 +23,19 @@ import type {
   OccupationSummary,
   SubmittedCareerEvidence,
 } from '@/types/career';
-import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
-import { ABILITY_DIMENSION_ORDER, CAREER_MATCHING_CONFIG } from './matching-config';
+import { ABILITY_CATALOG } from './catalog';
+import { ABILITY_DIMENSION_ORDER, CAREER_MATCHING_CONFIG, DIMENSION_NAMES } from './matching-config';
 import { calculateCareerMatch } from './matching-engine';
 import { careerKnowledgeProvider } from './knowledge-provider';
 import { extractRequirementTerms, rankOccupationsFromJd } from './jd-matcher';
 import type { CareerJdMatchResult } from '@/types/career';
 import { clampScore, parseJson, toIso, toNullableIso } from './serialization';
+import {
+  careerRepository,
+  type CareerEvidenceRow,
+  type CareerGoalRow,
+  type CareerTaskRow,
+} from './career.repository';
 
 export class CareerNotFoundError extends Error {
   constructor(message: string) {
@@ -68,17 +59,12 @@ export class CareerGoalRequiredError extends Error {
 }
 
 async function ensureProfileRow(userId: string) {
-  await dbReady;
-  const existing = await db.select().from(careerProfiles).where(eq(careerProfiles.userId, userId)).limit(1);
-  if (existing[0]) return existing[0];
-
-  await db.insert(careerProfiles).values({ userId } as never).onConflictDoNothing();
-  const created = await db.select().from(careerProfiles).where(eq(careerProfiles.userId, userId)).limit(1);
-  if (!created[0]) throw new CareerNotFoundError('Career profile could not be created for this user.');
-  return created[0];
+  const profile = await careerRepository.ensureProfile(userId);
+  if (!profile) throw new CareerNotFoundError('Career profile could not be created for this user.');
+  return profile;
 }
 
-function mapEvidence(row: typeof careerEvidence.$inferSelect): CareerEvidence {
+function mapEvidence(row: CareerEvidenceRow): CareerEvidence {
   return {
     id: row.id,
     abilityCode: row.abilityCode,
@@ -96,7 +82,7 @@ function mapEvidence(row: typeof careerEvidence.$inferSelect): CareerEvidence {
   };
 }
 
-function mapTask(row: typeof careerTasks.$inferSelect): CareerTask {
+function mapTask(row: CareerTaskRow): CareerTask {
   return {
     id: row.id,
     userId: row.userId,
@@ -117,7 +103,7 @@ function mapTask(row: typeof careerTasks.$inferSelect): CareerTask {
   };
 }
 
-function mapGoal(row: typeof careerGoals.$inferSelect, occupationName?: string | null): CareerGoal {
+function mapGoal(row: CareerGoalRow, occupationName?: string | null): CareerGoal {
   return {
     id: row.id,
     userId: row.userId,
@@ -136,12 +122,7 @@ function mapGoal(row: typeof careerGoals.$inferSelect, occupationName?: string |
 
 export async function getCareerProfile(userId: string): Promise<CareerProfile> {
   const profileRow = await ensureProfileRow(userId);
-  const [rawAbilityRows, rawEvidenceRows] = await Promise.all([
-    db.select().from(careerAbilities).where(eq(careerAbilities.userId, userId)).orderBy(asc(careerAbilities.code)),
-    db.select().from(careerEvidence).where(eq(careerEvidence.userId, userId)).orderBy(desc(careerEvidence.createdAt)),
-  ]);
-  const abilityRows = rawAbilityRows as Array<typeof careerAbilities.$inferSelect>;
-  const evidenceRows = rawEvidenceRows as Array<typeof careerEvidence.$inferSelect>;
+  const { abilities: abilityRows, evidence: evidenceRows } = await careerRepository.findProfileData(userId);
 
   const evidenceByAbility = new Map<string, CareerEvidence[]>();
   for (const row of evidenceRows) {
@@ -241,29 +222,13 @@ export async function matchJobDescription(userId: string, jd: string): Promise<C
   };
 }
 
-async function isActiveScorableOccupation(code: string): Promise<boolean> {
-  const rows = await db.select({ code: occupations.code }).from(occupations)
-    .innerJoin(occupationRequirements, eq(occupationRequirements.occupationCode, occupations.code))
-    .where(and(eq(occupations.code, code), eq(occupations.active, true), eq(occupations.scoringEligible, true)))
-    .limit(1);
-  return Boolean(rows[0]);
-}
-
 export async function listCareerGoals(userId: string): Promise<CareerGoal[]> {
-  await dbReady;
-  const rawRows = await db.select({ goal: careerGoals, occupationName: occupations.name }).from(careerGoals)
-    .leftJoin(occupations, eq(occupations.code, careerGoals.occupationCode))
-    .where(and(eq(careerGoals.userId, userId), ne(careerGoals.status, 'archived')))
-    .orderBy(desc(careerGoals.isPrimary), desc(careerGoals.updatedAt));
-  const rows = rawRows as Array<{ goal: typeof careerGoals.$inferSelect; occupationName: string | null }>;
+  const rows = await careerRepository.findGoals(userId);
   return rows.map((row) => mapGoal(row.goal, row.occupationName));
 }
 
 export async function listCareerTasks(userId: string): Promise<CareerTask[]> {
-  await dbReady;
-  const rows = await db.select().from(careerTasks)
-    .where(eq(careerTasks.userId, userId))
-    .orderBy(asc(careerTasks.dueAt), desc(careerTasks.updatedAt));
+  const rows = await careerRepository.findTasks(userId);
   return rows.map(mapTask);
 }
 
@@ -273,59 +238,30 @@ export async function submitCareerEvidence(
   input: CareerEvidenceSubmission,
 ): Promise<SubmittedCareerEvidence> {
   await ensureProfileRow(userId);
-  const goalRows = await db.select({ id: careerGoals.id }).from(careerGoals).where(and(
-    eq(careerGoals.userId, userId),
-    eq(careerGoals.occupationCode, input.occupationCode),
-    ne(careerGoals.status, 'archived'),
-  )).limit(1);
-  if (!goalRows[0]) throw new CareerValidationError('Evidence can only be submitted for an active career goal.');
-
-  const requirementRows = await db.select({
-    abilityName: occupationRequirements.abilityName,
-    dimension: occupationRequirements.dimension,
-  }).from(occupationRequirements)
-    .innerJoin(occupations, and(
-      eq(occupations.code, occupationRequirements.occupationCode),
-      eq(occupations.active, true),
-    ))
-    .where(and(
-      eq(occupationRequirements.occupationCode, input.occupationCode),
-      eq(occupationRequirements.abilityCode, input.abilityCode),
-    ))
-    .limit(1);
-  const requirement = requirementRows[0];
+  if (!(await careerRepository.hasActiveGoal(userId, input.occupationCode))) {
+    throw new CareerValidationError('Evidence can only be submitted for an active career goal.');
+  }
+  const requirement = await careerRepository.findActiveRequirement(input.occupationCode, input.abilityCode);
   if (!requirement) throw new CareerValidationError('Ability is not a requirement of the active goal occupation.');
 
   const id = crypto.randomUUID();
-  await db.insert(careerAbilities).values({
+  await careerRepository.upsertAbilityDefinition({
     userId,
     code: input.abilityCode,
     name: requirement.abilityName,
     dimension: requirement.dimension,
-    score: null,
-    confidence: null,
-  } as never).onConflictDoUpdate({
-    target: [careerAbilities.userId, careerAbilities.code],
-    set: { name: requirement.abilityName, dimension: requirement.dimension, updatedAt: new Date() },
   });
-  await db.insert(careerEvidence).values({
+  const row = await careerRepository.createManualEvidence({
     id,
     userId,
+    occupationCode: input.occupationCode,
     abilityCode: input.abilityCode,
-    sourceType: 'manual',
-    sourceId: `manual:${input.occupationCode}:${id}`,
     title: input.title.trim(),
-    excerpt: input.description.trim(),
+    description: input.description.trim(),
     sourceUrl: input.sourceUrl?.trim() || null,
-    status: 'pending',
-    assessedScore: null,
   });
-  const row = await db.select().from(careerEvidence).where(and(
-    eq(careerEvidence.id, id),
-    eq(careerEvidence.userId, userId),
-  )).limit(1);
-  if (!row[0]) throw new CareerNotFoundError('Evidence could not be created.');
-  return { ...mapEvidence(row[0]), occupationCode: input.occupationCode };
+  if (!row) throw new CareerNotFoundError('Evidence could not be created.');
+  return { ...mapEvidence(row), occupationCode: input.occupationCode };
 }
 
 export async function getCareerMatch(userId: string, occupationCode?: string): Promise<CareerMatchResult> {
@@ -356,13 +292,9 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     strengths,
     priorityGaps,
   } = calculation;
-  const previousRows = await db.select({ score: careerMatches.score })
-    .from(careerMatches)
-    .where(and(eq(careerMatches.userId, userId), eq(careerMatches.occupationCode, code)))
-    .orderBy(desc(careerMatches.createdAt))
-    .limit(1);
-  const previousScore = previousRows[0]?.score ?? null;
-  const changeSummary = previousRows[0]
+  const previousMatch = await careerRepository.findPreviousMatchScore(userId, code);
+  const previousScore = previousMatch?.score ?? null;
+  const changeSummary = previousMatch
     ? {
         previousScore,
         currentScore: score,
@@ -387,7 +319,7 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     totalWeight,
     dimensionBreakdown,
     citations: occupation.citations,
-    algorithmVersion: CAREER_MATCHING_CONFIG.algorithmVersion,
+    algorithmVersion: CAREER_MATCHING_CONFIG.version,
     catalogVersion,
     scoringStatus,
     confidence,
@@ -404,29 +336,12 @@ export async function calculateAndPersistCareerMatch(userId: string, occupationC
   const result = await getCareerMatch(userId, occupationCode);
   const goals = await listCareerGoals(userId);
   const goalId = goals.find((goal) => goal.occupationCode === result.occupation.code)?.id ?? null;
-  await db.insert(careerMatches).values({
-    userId,
-    goalId,
-    occupationCode: result.occupation.code,
-    score: result.score,
-    evidenceCoverage: result.evidenceCoverage,
-    knownWeight: result.knownWeight,
-    totalWeight: result.totalWeight,
-    breakdown: result.dimensionBreakdown,
-    citations: result.citations,
-    algorithmVersion: result.algorithmVersion,
-    catalogVersion: result.catalogVersion,
-    confidence: result.confidence,
-    knownCoverage: result.knownCoverage,
-  } as never);
+  await careerRepository.insertMatch(userId, goalId, result);
   return result;
 }
 
 async function getLatestAbilityChanges(userId: string): Promise<AbilityChange[]> {
-  const snapshots = await db.select().from(careerProfileSnapshots)
-    .where(eq(careerProfileSnapshots.userId, userId))
-    .orderBy(desc(careerProfileSnapshots.version))
-    .limit(2);
+  const snapshots = await careerRepository.findLatestAbilitySnapshots(userId);
   if (snapshots.length < 2) return [];
 
   type SnapshotAbility = { code: string; name: string; dimension: AbilityDimensionCode; score: number | null };
@@ -449,25 +364,7 @@ async function getLatestAbilityChanges(userId: string): Promise<AbilityChange[]>
 }
 
 async function getLatestGuidance(userId: string): Promise<GuidanceNote[]> {
-  const rows = await db.select({
-    id: careerGuidanceNotes.id,
-    teacherId: careerGuidanceNotes.teacherId,
-    teacherName: users.name,
-    visibility: careerGuidanceNotes.visibility,
-    content: careerGuidanceNotes.content,
-    createdAt: careerGuidanceNotes.createdAt,
-  }).from(careerGuidanceNotes)
-    .innerJoin(users, eq(users.id, careerGuidanceNotes.teacherId))
-    .where(and(eq(careerGuidanceNotes.userId, userId), eq(careerGuidanceNotes.visibility, 'student')))
-    .orderBy(desc(careerGuidanceNotes.createdAt))
-    .limit(5) as Array<{
-      id: string;
-      teacherId: string;
-      teacherName: string | null;
-      visibility: 'student' | 'teacher_private' | 'management';
-      content: string;
-      createdAt: Date;
-    }>;
+  const rows = await careerRepository.findLatestStudentGuidance(userId);
 
   return rows.map((row) => ({
     id: row.id,
@@ -572,8 +469,7 @@ function parseOptionalDate(value: string | null | undefined, fieldName: string):
 }
 
 async function createDefaultGoalTasks(userId: string, goal: CareerGoal): Promise<void> {
-  const existing = await db.select({ id: careerTasks.id }).from(careerTasks).where(eq(careerTasks.goalId, goal.id)).limit(1);
-  if (existing[0]) return;
+  if (await careerRepository.hasTasksForGoal(goal.id)) return;
   const defaults: CareerTaskInput[] = [
     { goalId: goal.id, occupationCode: goal.occupationCode, abilityCode: 'career_exploration', title: `阅读“${goal.occupationName}”岗位画像`, description: '查看能力要求与引用来源，记录仍不确定的问题。', reason: '先明确岗位边界，避免在目标不清晰时盲目补技能。', completionCriteria: '至少记录 3 项岗位要求和 2 个待确认问题。', category: 'explore' },
     { goalId: goal.id, occupationCode: goal.occupationCode, abilityCode: 'continuous_learning', title: '补充一项能力证据', description: '提交课程、项目、证书或实践材料，避免把未知能力误判为零分。', reason: '提升画像可信度与证据覆盖率。', completionCriteria: '提交一项可复核材料并关联到具体能力。', category: 'learn' },
@@ -587,119 +483,41 @@ async function createDefaultGoalTasks(userId: string, goal: CareerGoal): Promise
 export async function upsertCareerGoal(userId: string, input: CareerGoalInput): Promise<CareerGoal> {
   await ensureProfileRow(userId);
   const occupation = await getOccupationByCode(input.occupationCode);
-  if (!occupation || !(await isActiveScorableOccupation(input.occupationCode))) {
+  if (!occupation || !(await careerRepository.isActiveScorableOccupation(input.occupationCode))) {
     throw new CareerValidationError('Career goals require an active, scoring-eligible occupation with requirements.');
   }
-  const isPrimary = input.isPrimary ?? true;
   const now = new Date();
-  if (isPrimary) {
-    await db.update(careerGoals).set({ isPrimary: false, updatedAt: now })
-      .where(and(eq(careerGoals.userId, userId), eq(careerGoals.isPrimary, true)));
-  }
-
-  const existing = await db.select().from(careerGoals)
-    .where(and(eq(careerGoals.userId, userId), eq(careerGoals.occupationCode, input.occupationCode), ne(careerGoals.status, 'archived')))
-    .limit(1);
-  let row: typeof careerGoals.$inferSelect | undefined;
-  if (existing[0]) {
-    await db.update(careerGoals).set({
-      isPrimary,
-      status: 'active',
-      targetDate: parseOptionalDate(input.targetDate, 'targetDate'),
-      rationale: input.rationale?.trim() ?? existing[0].rationale,
-      preferences: input.preferences ?? parseJson(existing[0].preferences, {}),
-      teacherConfirmationStatus: 'unreviewed',
-      updatedAt: now,
-    }).where(and(eq(careerGoals.id, existing[0].id), eq(careerGoals.userId, userId)));
-    row = (await db.select().from(careerGoals).where(and(eq(careerGoals.id, existing[0].id), eq(careerGoals.userId, userId))).limit(1))[0];
-  } else {
-    const id = crypto.randomUUID();
-    await db.insert(careerGoals).values({
-      id,
-      userId,
-      occupationCode: input.occupationCode,
-      isPrimary,
-      status: 'active',
-      targetDate: parseOptionalDate(input.targetDate, 'targetDate'),
-      rationale: input.rationale?.trim() ?? '',
-      preferences: input.preferences ?? {},
-      teacherConfirmationStatus: 'unreviewed',
-    } as never);
-    row = (await db.select().from(careerGoals).where(and(eq(careerGoals.id, id), eq(careerGoals.userId, userId))).limit(1))[0];
-  }
+  const row = await careerRepository.saveGoal(
+    userId,
+    input,
+    parseOptionalDate(input.targetDate, 'targetDate'),
+    now,
+  );
   if (!row) throw new CareerNotFoundError('Goal could not be saved.');
-  await db.update(careerProfiles).set({ stage: 'targeting', updatedAt: now }).where(eq(careerProfiles.userId, userId));
   const goal = mapGoal(row, occupation.name);
   await createDefaultGoalTasks(userId, goal);
   return goal;
 }
 
 export async function createCareerTask(userId: string, input: CareerTaskInput): Promise<CareerTask> {
-  await dbReady;
   await ensureProfileRow(userId);
   const title = input.title.trim();
   if (!title) throw new CareerValidationError('Task title is required.');
   if (input.goalId) {
-    const goal = await db.select({ id: careerGoals.id }).from(careerGoals)
-      .where(and(eq(careerGoals.id, input.goalId), eq(careerGoals.userId, userId)))
-      .limit(1);
-    if (!goal[0]) throw new CareerNotFoundError('Goal not found.');
+    if (!(await careerRepository.findGoalById(userId, input.goalId))) throw new CareerNotFoundError('Goal not found.');
   }
-  if (input.occupationCode && !(await isActiveScorableOccupation(input.occupationCode))) {
-    const legacyGoal = await db.select({ id: careerGoals.id }).from(careerGoals).where(and(
-      eq(careerGoals.userId, userId),
-      eq(careerGoals.occupationCode, input.occupationCode),
-      ne(careerGoals.status, 'archived'),
-    )).limit(1);
-    if (!legacyGoal[0]) throw new CareerValidationError('Task occupation must be active or belong to an existing legacy goal.');
+  if (input.occupationCode && !(await careerRepository.isActiveScorableOccupation(input.occupationCode))) {
+    if (!(await careerRepository.hasLegacyGoal(userId, input.occupationCode))) {
+      throw new CareerValidationError('Task occupation must be active or belong to an existing legacy goal.');
+    }
   }
 
-  const id = crypto.randomUUID();
-  await db.insert(careerTasks).values({
-    id,
-    userId,
-    goalId: input.goalId ?? null,
-    occupationCode: input.occupationCode ?? null,
-    abilityCode: input.abilityCode ?? null,
-    title,
-    description: input.description?.trim() ?? '',
-    reason: input.reason?.trim() ?? '',
-    completionCriteria: input.completionCriteria?.trim() ?? '',
-    category: input.category ?? 'learn',
-    dueAt: parseOptionalDate(input.dueAt, 'dueAt'),
-    assignedBy: input.assignedBy ?? null,
-  } as never);
-  const row = await db.select().from(careerTasks).where(and(eq(careerTasks.id, id), eq(careerTasks.userId, userId))).limit(1);
-  if (!row[0]) throw new CareerNotFoundError('Task could not be created.');
-  return mapTask(row[0]);
+  const row = await careerRepository.createTask(userId, input, title, parseOptionalDate(input.dueAt, 'dueAt'));
+  if (!row) throw new CareerNotFoundError('Task could not be created.');
+  return mapTask(row);
 }
 
 export async function updateCareerTaskStatus(userId: string, taskId: string, status: CareerTaskStatus): Promise<CareerTask | null> {
-  const existing = await db.select().from(careerTasks)
-    .where(and(eq(careerTasks.id, taskId), eq(careerTasks.userId, userId)))
-    .limit(1);
-  if (!existing[0]) return null;
-  const now = new Date();
-  await db.update(careerTasks).set({
-    status,
-    completedAt: status === 'completed' ? now : null,
-    updatedAt: now,
-  }).where(and(eq(careerTasks.id, taskId), eq(careerTasks.userId, userId)));
-  if (existing[0].status !== 'completed' && status === 'completed' && existing[0].abilityCode) {
-    await db.insert(careerEvidence).values({
-      id: `task-evidence:${existing[0].id}:${existing[0].abilityCode}`,
-      userId,
-      abilityCode: existing[0].abilityCode,
-      sourceType: 'task',
-      sourceId: existing[0].id,
-      title: existing[0].title,
-      excerpt: existing[0].completionCriteria || existing[0].description,
-      status: 'pending',
-      occurredAt: now,
-    } as never).onConflictDoNothing();
-  }
-  const updated = await db.select().from(careerTasks)
-    .where(and(eq(careerTasks.id, taskId), eq(careerTasks.userId, userId)))
-    .limit(1);
-  return updated[0] ? mapTask(updated[0]) : null;
+  const updated = await careerRepository.updateTaskStatus(userId, taskId, status);
+  return updated ? mapTask(updated) : null;
 }

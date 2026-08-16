@@ -7,6 +7,7 @@ import type {
   OccupationDetail,
   OccupationRelationType,
 } from '@/types/career';
+import { DIMENSION_NAMES } from './matching-config';
 
 export interface AbilityDefinition {
   code: string;
@@ -14,14 +15,7 @@ export interface AbilityDefinition {
   dimension: AbilityDimensionCode;
 }
 
-export const DIMENSION_NAMES: Record<AbilityDimensionCode, string> = {
-  domain_knowledge: '专业基础',
-  professional_skills: '职业技能',
-  project_practice: '项目与实践',
-  general_competencies: '通用能力',
-  job_readiness: '求职准备',
-  growth_potential: '学习与发展潜力',
-};
+export { DIMENSION_NAMES };
 
 // General profile abilities remain useful before a student selects a target.
 // Occupation-specific abilities are loaded from the active Chinese catalog.

@@ -48,7 +48,10 @@ export function calculateCareerMatch(
     const gap = studentScore == null ? null : Math.max(0, requirement.targetScore - studentScore);
     if (studentScore != null) {
       knownWeight += requirement.weight;
-      weightedAchievement += Math.min(studentScore / requirement.targetScore, 1) * requirement.weight;
+      weightedAchievement += Math.min(
+        studentScore / requirement.targetScore,
+        config.scoring.achievementCapRatio,
+      ) * requirement.weight;
     }
     if (student?.evidence.some((item) => item.status === 'verified' && item.assessedScore != null)) {
       evidencedWeight += requirement.weight;
@@ -76,27 +79,30 @@ export function calculateCareerMatch(
   const evidenceCoverage = totalWeight ? clampScore((evidencedWeight / totalWeight) * 100) : 0;
   const scoringStatus = !scoringEligible || requirements.length === 0
     ? 'not_eligible' as const
-    : knownCoverage >= config.readiness.minimumKnownCoverage
-        && evidenceCoverage >= config.readiness.minimumEvidenceCoverage
+    : knownCoverage >= config.scoring.minKnownCoverageForReady
+        && evidenceCoverage >= config.scoring.minEvidenceCoverageForReady
       ? 'ready' as const
       : 'insufficient_evidence' as const;
   const score = scoringStatus === 'ready' ? rawScore : null;
   const confidence = scoringStatus === 'ready'
     ? clampScore(
-        (knownCoverage * config.confidenceWeights.knownCoverage)
-        + (evidenceCoverage * config.confidenceWeights.evidenceCoverage),
+        (knownCoverage * config.scoring.confidenceWeights.knownCoverage)
+        + (evidenceCoverage * config.scoring.confidenceWeights.evidenceCoverage),
       )
     : null;
   const strengths = dimensionBreakdown
-    .filter((item) => item.state === 'met' && item.studentEvidence.some((evidence) => evidence.status === 'verified' && evidence.assessedScore != null))
+    .filter((item) => item.state === 'met' && (
+      !config.strengths.requireVerified
+      || item.studentEvidence.some((evidence) => evidence.status === 'verified' && evidence.assessedScore != null)
+    ))
     .sort((a, b) => b.requirement.weight - a.requirement.weight)
-    .slice(0, config.maximumHighlights);
+    .slice(0, config.strengths.maxItems);
   const priorityGaps = dimensionBreakdown
     .filter((item) => item.state !== 'met')
     .sort((a, b) => Number(b.requirement.required) - Number(a.requirement.required)
       || b.requirement.weight - a.requirement.weight
       || (b.gap ?? -1) - (a.gap ?? -1))
-    .slice(0, config.maximumHighlights);
+    .slice(0, config.priorityGaps.maxItems);
 
   return {
     score,

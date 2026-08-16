@@ -17,7 +17,9 @@ import { resolve } from 'path';
  * Uses PGlite (real PostgreSQL WASM) for source and target databases.
  */
 
-vi.setConfig({ testTimeout: 60000 });
+// PGlite startup/migrations also happen in hooks and can exceed Vitest's
+// 10-second hook default when PostgreSQL integration files run in parallel.
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 const MIGRATIONS_FOLDER = resolve(process.cwd(), 'drizzle/pg-migrations');
 const TEST_ENCRYPTION_KEY = 'a-very-strong-backup-encryption-key-32+chars!';

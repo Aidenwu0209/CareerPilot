@@ -1,5 +1,4 @@
 import { and, count, desc, eq, isNotNull, sql } from 'drizzle-orm';
-import { config } from '@/lib/config';
 import { db, dbReady } from '@/lib/db';
 import {
   careerAbilities,
@@ -134,6 +133,90 @@ function reviewValues(input: EvidenceReviewInput) {
   };
 }
 
+type MaybePromise<T> = T | Promise<T>;
+
+function isPromiseLike<T>(value: MaybePromise<T>): value is Promise<T> {
+  return typeof (value as Promise<T>)?.then === 'function';
+}
+
+function thenValue<T, U>(value: MaybePromise<T>, next: (resolved: T) => MaybePromise<U>): MaybePromise<U> {
+  return isPromiseLike(value) ? value.then(next) : next(value);
+}
+
+export interface EvidenceReviewOperations {
+  review(): MaybePromise<Array<{ id: string }>>;
+  insertAuditNote(): MaybePromise<unknown>;
+  aggregate(): MaybePromise<{ score: number | null; evidenceCount: number }>;
+  upsertAbility(result: AssessedAbilityResult): MaybePromise<unknown>;
+  listAbilities(): MaybePromise<Array<{ code: string; name: string; dimension: AbilityDimensionCode; score: number | null }>>;
+  latestSnapshotVersion(): MaybePromise<number>;
+  insertSnapshot(
+    abilities: Array<{ code: string; name: string; dimension: AbilityDimensionCode; score: number | null }>,
+    version: number,
+  ): MaybePromise<unknown>;
+}
+
+function createReviewOperations(
+  tx: any,
+  input: EvidenceReviewInput,
+  note: { id: string; userId: string; teacherId: string; visibility: 'management'; content: string },
+  reviewWhere: ReturnType<typeof and>,
+): EvidenceReviewOperations {
+  const isSynchronous = tx.session?.constructor?.name === 'BetterSQLiteSession';
+  const rows = <T>(query: any): MaybePromise<T[]> => isSynchronous ? query.all() as T[] : query as Promise<T[]>;
+  const run = (query: any): MaybePromise<unknown> => isSynchronous ? query.run() : query;
+
+  return {
+    review: () => rows<{ id: string }>(
+      tx.update(careerEvidence).set(reviewValues(input)).where(reviewWhere).returning({ id: careerEvidence.id }),
+    ),
+    insertAuditNote: () => run(tx.insert(careerGuidanceNotes).values(note)),
+    aggregate: () => thenValue(
+      rows<{ score: number | null; evidenceCount: number }>(aggregateSelection(tx, input.studentId, input.abilityCode)),
+      (result) => result[0] ?? { score: null, evidenceCount: 0 },
+    ),
+    upsertAbility: (result) => run(tx.insert(careerAbilities).values({
+      userId: input.studentId,
+      ...result,
+      updatedAt: new Date(),
+    }).onConflictDoUpdate({
+      target: [careerAbilities.userId, careerAbilities.code],
+      set: { ...result, updatedAt: new Date() },
+    })),
+    listAbilities: () => rows(snapshotSelection(tx, input.studentId)),
+    latestSnapshotVersion: () => thenValue(
+      rows<{ version: number }>(latestSnapshotSelection(tx, input.studentId)),
+      (result) => result[0]?.version ?? 0,
+    ),
+    insertSnapshot: (abilities, version) => run(tx.insert(careerProfileSnapshots).values({
+      id: crypto.randomUUID(),
+      userId: input.studentId,
+      version,
+      abilities: isSynchronous ? abilities : JSON.stringify(abilities),
+      trigger: `evidence_review:${input.decision}:${input.evidenceId}`,
+    })),
+  };
+}
+
+/** One transaction-neutral workflow shared by synchronous SQLite and asynchronous PostgreSQL drivers. */
+export function executeEvidenceReviewWorkflow(
+  operations: EvidenceReviewOperations,
+  input: EvidenceReviewInput,
+  definition: { name: string; dimension: AbilityDimensionCode },
+): MaybePromise<AssessedAbilityResult> {
+  return thenValue(operations.review(), (updated) => {
+    if (updated.length !== 1) throw new EvidenceReviewConflictError();
+    return thenValue(operations.insertAuditNote(), () => thenValue(operations.aggregate(), (aggregate) => {
+      const result = abilityValues(input, definition, aggregate);
+      return thenValue(operations.upsertAbility(result), () => thenValue(operations.listAbilities(), (abilities) => (
+        thenValue(operations.latestSnapshotVersion(), (latestVersion) => (
+          thenValue(operations.insertSnapshot(abilities, latestVersion + 1), () => result)
+        ))
+      )));
+    }));
+  });
+}
+
 /**
  * Confirm/reject evidence, aggregate all scored verified evidence for the
  * affected ability, and snapshot the resulting profile in one transaction.
@@ -153,68 +236,12 @@ export async function reviewAndAggregateCareerEvidence(input: EvidenceReviewInpu
     eq(careerEvidence.userId, input.studentId),
     eq(careerEvidence.status, 'pending'),
   );
-  let result: AssessedAbilityResult | null = null;
-
-  if (config.db.type === 'sqlite' || db.session?.constructor?.name === 'BetterSQLiteSession') {
-    db.transaction((tx: any) => {
-      const updated = tx.update(careerEvidence).set(reviewValues(input)).where(reviewWhere)
-        .returning({ id: careerEvidence.id }).all();
-      if (updated.length !== 1) throw new EvidenceReviewConflictError();
-      tx.insert(careerGuidanceNotes).values(note).run();
-      const aggregate = aggregateSelection(tx, input.studentId, input.abilityCode).all()[0] as {
-        score: number | null;
-        evidenceCount: number;
-      };
-      result = abilityValues(input, definition, aggregate);
-      tx.insert(careerAbilities).values({
-        userId: input.studentId,
-        ...result,
-        updatedAt: new Date(),
-      }).onConflictDoUpdate({
-        target: [careerAbilities.userId, careerAbilities.code],
-        set: { ...result, updatedAt: new Date() },
-      }).run();
-      const abilities = snapshotSelection(tx, input.studentId).all();
-      const latest = latestSnapshotSelection(tx, input.studentId).all()[0];
-      tx.insert(careerProfileSnapshots).values({
-        id: crypto.randomUUID(),
-        userId: input.studentId,
-        version: (latest?.version ?? 0) + 1,
-        abilities,
-        trigger: `evidence_review:${input.decision}:${input.evidenceId}`,
-      }).run();
-    });
-  } else {
-    await db.transaction(async (tx: any) => {
-      const updated = await tx.update(careerEvidence).set(reviewValues(input)).where(reviewWhere)
-        .returning({ id: careerEvidence.id });
-      if (updated.length !== 1) throw new EvidenceReviewConflictError();
-      await tx.insert(careerGuidanceNotes).values(note);
-      const aggregate = (await aggregateSelection(tx, input.studentId, input.abilityCode))[0] as {
-        score: number | null;
-        evidenceCount: number;
-      };
-      result = abilityValues(input, definition, aggregate);
-      await tx.insert(careerAbilities).values({
-        userId: input.studentId,
-        ...result,
-        updatedAt: new Date(),
-      }).onConflictDoUpdate({
-        target: [careerAbilities.userId, careerAbilities.code],
-        set: { ...result, updatedAt: new Date() },
-      });
-      const abilities = await snapshotSelection(tx, input.studentId);
-      const latest = (await latestSnapshotSelection(tx, input.studentId))[0];
-      await tx.insert(careerProfileSnapshots).values({
-        id: crypto.randomUUID(),
-        userId: input.studentId,
-        version: (latest?.version ?? 0) + 1,
-        abilities: JSON.stringify(abilities),
-        trigger: `evidence_review:${input.decision}:${input.evidenceId}`,
-      });
-    });
-  }
-
-  if (!result) throw new Error('Evidence review transaction did not produce an ability result.');
-  return result;
+  const transaction = db.transaction.bind(db) as unknown as (
+    callback: (tx: any) => MaybePromise<AssessedAbilityResult>,
+  ) => MaybePromise<AssessedAbilityResult>;
+  return Promise.resolve(transaction((tx) => executeEvidenceReviewWorkflow(
+    createReviewOperations(tx, input, note, reviewWhere),
+    input,
+    definition,
+  )));
 }

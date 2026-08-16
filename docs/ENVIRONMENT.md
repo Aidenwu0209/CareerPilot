@@ -32,8 +32,12 @@ CareerPilot reads server configuration at process startup. Keep production value
 | `DATABASE_MAX_LIFETIME_SECONDS` | `1800` | PostgreSQL | Maximum pooled-connection lifetime. |
 | `DATABASE_SSL_MODE` | `prefer` | PostgreSQL | `prefer`, `require`, `verify-full`, or `disable`. Use `verify-full` for remote production databases. |
 | `SQLITE_PATH` | `./data/careerpilot.db` | SQLite | Local development database file. |
-| `REDIS_URL` | — | Multi-instance production | Shared Redis endpoint for distributed rate limits. |
+| `REDIS_URL` | — | Multi-instance production | Shared Redis endpoint for distributed rate limits and career-catalog caching. |
 | `RATE_LIMIT_DISTRIBUTED_REQUIRED` | `false` | Production Compose: `true` | Fails route policy instead of silently using in-process counters when Redis is unavailable. |
+| `CACHE_TTL_OCCUPATIONS` | `600` | Optional | Career list-cache TTL in seconds (allowed range: 60–86400). |
+| `CACHE_TTL_OCCUPATION_DETAIL` | `900` | Optional | Career detail-cache TTL in seconds (allowed range: 60–86400). |
+
+Career-catalog cache keys include a shared generation. A successful catalog import or rollback increments that generation, so every app instance stops serving the prior list/detail entries without an expensive Redis key scan. Redis cache failures degrade to bounded in-process caching and database reads; they do not make read-only career routes unavailable.
 
 ## AI, billing and image delivery
 

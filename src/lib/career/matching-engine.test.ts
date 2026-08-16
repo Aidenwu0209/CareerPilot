@@ -46,8 +46,23 @@ describe('calculateCareerMatch', () => {
   it('honors an injected versioned configuration', () => {
     const result = calculateCareerMatch(requirements, [ability('a', 80, true)], true, {
       ...CAREER_MATCHING_CONFIG,
-      readiness: { minimumKnownCoverage: 80, minimumEvidenceCoverage: 80 },
+      scoring: {
+        ...CAREER_MATCHING_CONFIG.scoring,
+        minKnownCoverageForReady: 80,
+        minEvidenceCoverageForReady: 80,
+      },
     });
     expect(result.scoringStatus).toBe('insufficient_evidence');
+  });
+
+  it('uses the configured achievement cap and independent highlight limits', () => {
+    const result = calculateCareerMatch(requirements, [ability('a', 100, true), ability('b', 100, true)], true, {
+      ...CAREER_MATCHING_CONFIG,
+      scoring: { ...CAREER_MATCHING_CONFIG.scoring, achievementCapRatio: 0.8 },
+      strengths: { maxItems: 1, requireVerified: true },
+      priorityGaps: { maxItems: 2 },
+    });
+    expect(result.rawScore).toBe(80);
+    expect(result.strengths).toHaveLength(1);
   });
 });
