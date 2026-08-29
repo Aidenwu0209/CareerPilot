@@ -105,6 +105,14 @@ describe('product proxy', () => {
     },
   );
 
+  it('serves the locale-neutral API docs page without auth or locale rewriting', async () => {
+    const { proxy } = await loadProxy();
+    const response = await proxy(createRequest('/api-docs'));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+  });
+
   it('redirects /zh/dashboard to localized login with the full callback URL', async () => {
     const { proxy } = await loadProxy();
     const response = await proxy(createRequest('/zh/dashboard?view=list'));

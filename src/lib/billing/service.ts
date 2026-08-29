@@ -16,6 +16,7 @@ import { getOrCreateAccount } from '@/lib/credits/ledger';
 import { creditAccountPortable, debitAccountPortable } from '@/lib/credits/portable-ledger';
 import { getPaymentProvider } from './provider';
 import { getStripeClient } from './stripe-provider';
+import { getSchoolDiscount } from '@/lib/organizations/school-service';
 
 export class BillingError extends Error {
   constructor(public code: string, message = code) {
@@ -24,11 +25,25 @@ export class BillingError extends Error {
   }
 }
 
-export async function listActivePlans() {
+export async function listActivePlans(userId?: string) {
   const plans = await db.select().from(billingPlans)
     .where(eq(billingPlans.active, true))
     .orderBy(billingPlans.sortOrder, billingPlans.priceMinor);
-  return plans.filter((plan: typeof billingPlans.$inferSelect) => plan.priceMinor > 0 && plan.credits > 0);
+  const sellable = plans.filter((plan: typeof billingPlans.$inferSelect) => plan.priceMinor > 0 && plan.credits > 0);
+  return Promise.all(sellable.map(async (plan: typeof billingPlans.$inferSelect) => {
+    const schoolDiscount = userId ? await getSchoolDiscount(userId, plan.code) : null;
+    const effectivePriceMinor = schoolDiscount
+      ? Math.max(1, Math.round(plan.priceMinor * (100 - schoolDiscount.percentOff) / 100))
+      : plan.priceMinor;
+    return {
+      ...plan,
+      effectivePriceMinor,
+      schoolDiscount: schoolDiscount ? {
+        percentOff: schoolDiscount.percentOff,
+        organizationId: schoolDiscount.organizationId,
+      } : null,
+    };
+  }));
 }
 
 export async function listUserOrders(userId: string, limit = 50) {
@@ -77,6 +92,10 @@ export async function createCheckout(params: {
   if (plan.kind === 'subscription' && !plan.billingInterval) {
     throw new BillingError('PLAN_INTERVAL_REQUIRED');
   }
+  const schoolDiscount = await getSchoolDiscount(params.userId, plan.code);
+  const discountedAmount = schoolDiscount
+    ? Math.max(1, Math.round(plan.priceMinor * (100 - schoolDiscount.percentOff) / 100))
+    : plan.priceMinor;
 
   const account = await getOrCreateAccount('user', params.userId);
   if (account.status !== 'active') throw new BillingError('ACCOUNT_FROZEN');
@@ -100,11 +119,16 @@ export async function createCheckout(params: {
       accountId: account.id,
       planId: plan.id,
       provider: 'stripe',
-      amountMinor: plan.priceMinor,
+      amountMinor: discountedAmount,
       currency: plan.currency.toLowerCase(),
       credits: plan.credits,
       idempotencyKey: stableKey,
-      metadata: { planCode: plan.code, userLevel: plan.userLevel },
+      metadata: {
+        planCode: plan.code,
+        userLevel: plan.userLevel,
+        originalAmountMinor: plan.priceMinor,
+        schoolDiscount: schoolDiscount ? { organizationId: schoolDiscount.organizationId, percentOff: schoolDiscount.percentOff } : null,
+      },
     });
   }
 
@@ -116,7 +140,7 @@ export async function createCheckout(params: {
       planId: plan.id,
       planName: plan.name,
       kind: plan.kind,
-      amountMinor: plan.priceMinor,
+      amountMinor: existing?.amountMinor ?? discountedAmount,
       currency: plan.currency.toLowerCase(),
       interval: plan.billingInterval,
       customerEmail: user?.email,

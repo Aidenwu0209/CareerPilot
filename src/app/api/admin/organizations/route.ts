@@ -34,6 +34,7 @@ export async function GET(request: Request) {
       id: organizations.id,
       slug: organizations.slug,
       name: organizations.name,
+      kind: organizations.kind,
       status: organizations.status,
       seatLimit: organizations.seatLimit,
       createdBy: organizations.createdBy,
@@ -119,14 +120,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 });
   }
 
-  let body: { name?: string; slug?: string; seatLimit?: number; status?: string; initialQuota?: number };
+  let body: { name?: string; slug?: string; kind?: string; seatLimit?: number; status?: string; initialQuota?: number };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: 'INVALID_BODY' }, { status: 400 });
   }
 
-  const { name, slug, seatLimit, status, initialQuota } = body;
+  const { name, slug, kind, seatLimit, status, initialQuota } = body;
 
   // AC2: Validate name — non-empty
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
@@ -153,6 +154,9 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+  if (kind && !['employer', 'school'].includes(kind)) {
+    return NextResponse.json({ error: 'INVALID_KIND' }, { status: 400 });
+  }
 
   // Validate initialQuota — non-negative integer
   if (initialQuota !== undefined && (!Number.isInteger(initialQuota) || initialQuota < 0)) {
@@ -176,6 +180,7 @@ export async function POST(request: Request) {
     id: orgId,
     name: name.trim(),
     slug: slug.trim(),
+    kind: (kind ?? 'employer') as 'employer' | 'school',
     seatLimit,
     status: (status ?? 'active') as 'active' | 'suspended',
     createdBy: adminId,

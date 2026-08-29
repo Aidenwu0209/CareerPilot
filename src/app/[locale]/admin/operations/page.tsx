@@ -1,6 +1,7 @@
 import { AlertTriangle, Clock3, Coins, Gauge, ShieldCheck, Workflow } from 'lucide-react';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { getOperationsDashboard } from '@/lib/admin/operations-dashboard';
+import { OperationsTrendChart } from '@/components/admin/operations-trend-chart';
 
 export default async function AdminOperationsPage() {
   const [dashboard, t, locale] = await Promise.all([
@@ -50,6 +51,8 @@ export default async function AdminOperationsPage() {
           {t('estimatedCost', { cost: dashboard.summary.estimatedCost30d })}
         </div>
       )}
+
+      <OperationsTrendChart data={dashboard.trends} locale={locale} />
 
       <div className="grid gap-6 xl:grid-cols-2">
         <DataTable title={t('topModels')} headers={[t('model'), t('calls'), t('failures')]}

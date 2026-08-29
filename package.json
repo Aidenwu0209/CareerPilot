@@ -19,6 +19,9 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/lib/db/seed.ts",
     "career:catalog": "tsx scripts/import-career-catalog.ts",
+    "career:jobs": "tsx scripts/import-job-postings.ts",
+    "openapi:generate": "tsx scripts/generate-openapi.ts",
+    "openapi:check": "tsx scripts/verify-openapi.ts",
     "test:load:career": "node scripts/load/career-api-load.mjs",
     "test:otel:collector": "node scripts/observability/otlp-smoke-server.mjs"
   },

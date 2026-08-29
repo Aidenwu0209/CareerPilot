@@ -8,7 +8,7 @@ import { CreditCard, Loader2, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { readOptionalJsonBody } from '@/lib/http/json-client';
 
-interface Plan { id: string; name: string; description: string; kind: 'credit_pack' | 'subscription'; userLevel: string; priceMinor: number; currency: string; credits: number; billingInterval: 'month' | 'year' | null }
+interface Plan { id: string; name: string; description: string; kind: 'credit_pack' | 'subscription'; userLevel: string; priceMinor: number; effectivePriceMinor: number; schoolDiscount: { percentOff: number; organizationId: string } | null; currency: string; credits: number; billingInterval: 'month' | 'year' | null }
 interface OrderRow { order: { id: string; status: string; amountMinor: number; currency: string; credits: number; paidAt: string | null; createdAt: string }; planName: string; planCode: string }
 interface Subscription { entitlement: { status: string; currentPeriodEnd: string | null; cancelAtPeriodEnd: boolean }; plan: { name: string; userLevel: string } }
 
@@ -87,7 +87,12 @@ export function BillingPanel({ personalAccount }: { personalAccount: boolean }) 
         <article key={plan.id} className="rounded-xl border p-4">
           <div className="flex items-start justify-between gap-2"><h3 className="font-medium">{plan.name}</h3><Badge variant="secondary">{plan.userLevel}</Badge></div>
           <p className="mt-2 min-h-10 text-xs text-muted-foreground">{plan.description}</p>
-          <div className="mt-4 text-2xl font-semibold">{money(plan.priceMinor, plan.currency)}{plan.kind === 'subscription' && <span className="text-xs font-normal text-muted-foreground">/{plan.billingInterval === 'year' ? (zh ? '年' : 'year') : (zh ? '月' : 'month')}</span>}</div>
+          <div className="mt-4 text-2xl font-semibold">
+            {plan.schoolDiscount && <span className="mr-2 text-sm font-normal text-muted-foreground line-through">{money(plan.priceMinor, plan.currency)}</span>}
+            {money(plan.effectivePriceMinor ?? plan.priceMinor, plan.currency)}
+            {plan.kind === 'subscription' && <span className="text-xs font-normal text-muted-foreground">/{plan.billingInterval === 'year' ? (zh ? '年' : 'year') : (zh ? '月' : 'month')}</span>}
+          </div>
+          {plan.schoolDiscount && <div className="mt-1 text-xs font-medium text-emerald-600">{zh ? `学校专享 ${plan.schoolDiscount.percentOff}% 优惠` : `${plan.schoolDiscount.percentOff}% school discount`}</div>}
           <p className="mt-1 text-sm text-muted-foreground">{plan.credits.toLocaleString()} {zh ? '点数' : 'credits'}</p>
           <Button className="mt-4 w-full" onClick={() => void checkout(plan.id)} disabled={working !== null}><CreditCard className="mr-2 h-4 w-4" />{working === plan.id ? (zh ? '正在跳转…' : 'Redirecting…') : (zh ? '购买' : 'Buy')}</Button>
         </article>

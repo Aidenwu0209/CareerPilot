@@ -3,6 +3,7 @@ import 'server-only';
 import { userRepository } from '@/lib/db/repositories/user.repository';
 import { isAssessmentComplete, scoreSelfAssessment, type CareerSelfAssessment } from './self-assessment';
 import { CareerValidationError } from './service';
+import { persistAssessmentResults } from './assessment-results';
 
 const SETTINGS_KEY = 'careerSelfAssessment';
 
@@ -33,5 +34,6 @@ export async function saveCareerSelfAssessment(
     results: scoreSelfAssessment(sanitized),
   };
   await userRepository.updateSettings(userId, { [SETTINGS_KEY]: assessment });
+  if (complete) await persistAssessmentResults(userId, sanitized);
   return assessment;
 }

@@ -1755,6 +1755,9 @@
       "fieldSlug": "唯一标识",
       "fieldSlugPlaceholder": "如：hangzhou-tech",
       "fieldSlugHint": "仅限字母、数字和连字符，创建后不可更改",
+      "fieldKind": "机构类型",
+      "kindEmployer": "企业",
+      "kindSchool": "学校",
       "fieldSeats": "席位上限",
       "fieldQuota": "初始额度",
       "fieldQuotaHint": "创建时一次性分配的点数，留空或 0 表示不分配",
@@ -1811,6 +1814,10 @@
       "branding": {
         "title": "机构品牌",
         "description": "配置机构名称、Logo 与产品主色"
+      },
+      "school": {
+        "title": "学校合作",
+        "description": "管理学校域名、邀请码和套餐优惠"
       }
     },
     "branding": {
@@ -2027,7 +2034,8 @@
       "goals": "职业目标",
       "jobs": "岗位知识",
       "matching": "人岗匹配",
-      "path": "成长路径"
+      "path": "成长路径",
+      "report": "AI 职业报告"
     },
     "journey": {
       "progress": "职业规划步骤",
@@ -2544,7 +2552,8 @@
           "goal_change": { "title": "目标变更", "description": "检查目标调整与成长路径影响" },
           "overdue_task": { "title": "逾期任务", "description": "跟进超过截止日期的成长任务" },
           "match_decline": { "title": "匹配下降", "description": "定位匹配分下降的证据与差距" },
-          "recent_progress": { "title": "近期进步", "description": "查看新证据带来的能力变化" }
+          "recent_progress": { "title": "近期进步", "description": "查看新证据带来的能力变化" },
+          "follow_up": { "title": "待跟进", "description": "处理未完成的指导点评和预约日期" }
         }
       }
     },
@@ -2678,6 +2687,11 @@
           "visibilityLabel": "可见范围",
           "studentVisible": "学生可见指导",
           "privateNote": "教师私有备注",
+          "priorityLabel": "优先级",
+          "priority": { "low": "低", "normal": "普通", "high": "高", "urgent": "紧急" },
+          "followUpStatusLabel": "跟进状态",
+          "followUpStatus": { "new": "待联系", "contacted": "已联系", "waiting_student": "等待学生", "waiting_teacher": "等待教师", "scheduled": "已预约", "resolved": "已完成", "on_hold": "暂缓" },
+          "nextFollowUpLabel": "下次跟进日期",
           "contentLabel": "指导内容",
           "contentPlaceholder": "写明观察、判断依据和建议的下一步行动",
           "submit": "保存指导"

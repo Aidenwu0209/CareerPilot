@@ -50,6 +50,11 @@ export function reconcileKnownLegacySQLiteMigration(
   sqlite: Database.Database,
   migrationsFolder: string,
 ): boolean {
+  const migrationTable = sqlite.prepare(
+    "SELECT 1 AS present FROM sqlite_master WHERE type = 'table' AND name = '__drizzle_migrations' LIMIT 1",
+  ).get() as { present: number } | undefined;
+  // A fresh database has no journal yet; the normal Drizzle migrator creates it.
+  if (!migrationTable) return false;
   const latest = sqlite.prepare(
     'SELECT hash, created_at AS createdAt FROM __drizzle_migrations ORDER BY created_at DESC LIMIT 1',
   ).get() as { hash?: string; createdAt?: number } | undefined;

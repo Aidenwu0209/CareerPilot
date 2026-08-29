@@ -1,4 +1,4 @@
-import { desc } from 'drizzle-orm';
+import { desc, gte } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import {
   aiModels,
@@ -53,14 +53,16 @@ export interface OperationsDashboard {
     summary: string;
     createdAt: string;
   }>;
+  trends: Array<{ date: string; operations: number; modelCalls: number; credits: number }>;
 }
 
 export async function getOperationsDashboard(): Promise<OperationsDashboard> {
   const now = new Date();
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const [operations, attempts, transactions, models, userRows, holds, audits] = await Promise.all([
-    db.select().from(aiOperations).orderBy(desc(aiOperations.createdAt)).limit(2_000),
-    db.select().from(aiProviderAttempts).orderBy(desc(aiProviderAttempts.createdAt)).limit(4_000),
-    db.select().from(creditTransactions).orderBy(desc(creditTransactions.createdAt)).limit(4_000),
+    db.select().from(aiOperations).where(gte(aiOperations.createdAt, thirtyDaysAgo)).orderBy(desc(aiOperations.createdAt)),
+    db.select().from(aiProviderAttempts).where(gte(aiProviderAttempts.createdAt, thirtyDaysAgo)).orderBy(desc(aiProviderAttempts.createdAt)),
+    db.select().from(creditTransactions).where(gte(creditTransactions.createdAt, thirtyDaysAgo)).orderBy(desc(creditTransactions.createdAt)),
     db.select({ id: aiModels.id, name: aiModels.displayName }).from(aiModels),
     db.select({ id: users.id, email: users.email, name: users.name }).from(users),
     db.select({ status: creditHolds.status, expiresAt: creditHolds.expiresAt }).from(creditHolds),
@@ -147,6 +149,19 @@ export function buildOperationsDashboard(input: {
     alerts.push({ severity: 'warning', code: 'STALE_CREDIT_HOLDS', message: `${input.staleHolds} expired credit hold(s) still require settlement or release.` });
   }
 
+  const dayKey = (date: Date) => date.toISOString().slice(0, 10);
+  const trends = Array.from({ length: 30 }, (_, index) => {
+    const date = new Date(Date.UTC(input.now.getUTCFullYear(), input.now.getUTCMonth(), input.now.getUTCDate() - (29 - index)));
+    const key = dayKey(date);
+    const dayTransactions = input.transactions.filter((row) => dayKey(row.createdAt) === key && row.businessRefId && ['consumption', 'refund'].includes(row.reason));
+    return {
+      date: key,
+      operations: input.operations.filter((row) => dayKey(row.createdAt) === key).length,
+      modelCalls: input.attempts.filter((row) => dayKey(row.createdAt) === key).length,
+      credits: Math.max(0, -dayTransactions.reduce((sum, row) => sum + row.delta, 0)),
+    };
+  });
+
   return {
     generatedAt: input.now.toISOString(),
     summary: {
@@ -173,6 +188,7 @@ export function buildOperationsDashboard(input: {
       summary: event.summary,
       createdAt: event.createdAt.toISOString(),
     })),
+    trends,
   };
 }
 

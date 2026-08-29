@@ -27,6 +27,7 @@ import { ABILITY_CATALOG } from './catalog';
 import { ABILITY_DIMENSION_ORDER, CAREER_MATCHING_CONFIG, DIMENSION_NAMES } from './matching-config';
 import { calculateCareerMatch } from './matching-engine';
 import { careerKnowledgeProvider } from './knowledge-provider';
+import { getOccupationAssessmentAlignment } from './assessment-results';
 import { extractRequirementTerms, rankOccupationsFromJd } from './jd-matcher';
 import type { CareerJdMatchResult } from '@/types/career';
 import { clampScore, parseJson, toIso, toNullableIso } from './serialization';
@@ -281,7 +282,7 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     occupation.scoringEligible !== false,
   );
   const {
-    score,
+    score: abilityScore,
     evidenceCoverage,
     knownWeight,
     totalWeight,
@@ -292,6 +293,10 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     strengths,
     priorityGaps,
   } = calculation;
+  const assessmentAlignment = await getOccupationAssessmentAlignment(userId, occupation);
+  const score = abilityScore == null
+    ? null
+    : clampScore(abilityScore * 0.8 + (assessmentAlignment?.score ?? abilityScore) * 0.2);
   const previousMatch = await careerRepository.findPreviousMatchScore(userId, code);
   const previousScore = previousMatch?.score ?? null;
   const changeSummary = previousMatch
@@ -319,13 +324,20 @@ export async function getCareerMatch(userId: string, occupationCode?: string): P
     totalWeight,
     dimensionBreakdown,
     citations: occupation.citations,
-    algorithmVersion: CAREER_MATCHING_CONFIG.version,
+    algorithmVersion: assessmentAlignment ? `${CAREER_MATCHING_CONFIG.version}+assessment-v1` : CAREER_MATCHING_CONFIG.version,
     catalogVersion,
     scoringStatus,
     confidence,
     knownCoverage,
     strengths,
     priorityGaps,
+    assessmentAlignment: assessmentAlignment ? {
+      interest: assessmentAlignment.interest,
+      personality: assessmentAlignment.personality,
+      values: assessmentAlignment.values,
+      score: assessmentAlignment.score,
+      resultCodes: assessmentAlignment.resultCodes,
+    } : null,
     changeSummary,
     generatedAt: new Date().toISOString(),
   };

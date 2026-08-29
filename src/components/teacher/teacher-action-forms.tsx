@@ -19,6 +19,11 @@ interface ActionFormCopy {
     visibilityLabel: string;
     studentVisible: string;
     privateNote: string;
+    priorityLabel: string;
+    priority: Record<'low' | 'normal' | 'high' | 'urgent', string>;
+    followUpStatusLabel: string;
+    followUpStatus: Record<'new' | 'contacted' | 'waiting_student' | 'waiting_teacher' | 'scheduled' | 'resolved' | 'on_hold', string>;
+    nextFollowUpLabel: string;
     contentLabel: string;
     contentPlaceholder: string;
     submit: string;
@@ -42,7 +47,7 @@ interface ActionFormCopy {
   error: string;
 }
 
-async function submitJson(url: string, body: Record<string, string>) {
+async function submitJson(url: string, body: Record<string, string | null>) {
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -73,6 +78,9 @@ export function TeacherActionForms({
     try {
       await submitJson(`/api/teacher/students/${encodeURIComponent(studentId)}/guidance`, {
         visibility: String(form.get('visibility') ?? 'student'),
+        priority: String(form.get('priority') ?? 'normal'),
+        followUpStatus: String(form.get('followUpStatus') ?? 'new'),
+        nextFollowUpAt: String(form.get('nextFollowUpAt') || '') || null,
         content: String(form.get('content') ?? ''),
       });
       toast.success(copy.success);
@@ -134,6 +142,11 @@ export function TeacherActionForms({
                 </SelectContent>
               </Select>
             </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2"><Label htmlFor="guidance-priority">{copy.guidance.priorityLabel}</Label><Select name="priority" defaultValue="normal"><SelectTrigger id="guidance-priority" className="w-full"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(copy.guidance.priority).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
+              <div className="space-y-2"><Label htmlFor="guidance-status">{copy.guidance.followUpStatusLabel}</Label><Select name="followUpStatus" defaultValue="new"><SelectTrigger id="guidance-status" className="w-full"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(copy.guidance.followUpStatus).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
+            </div>
+            <div className="space-y-2"><Label htmlFor="guidance-next-date">{copy.guidance.nextFollowUpLabel}</Label><Input id="guidance-next-date" name="nextFollowUpAt" type="date" /></div>
             <div className="space-y-2">
               <Label htmlFor="guidance-content">{copy.guidance.contentLabel}</Label>
               <Textarea
@@ -210,6 +223,34 @@ export function TeacherActionForms({
       </Dialog>
     </div>
   );
+}
+
+export function GuidanceFollowUpForm({ studentId, record, copy }: {
+  studentId: string;
+  record: { id: string; priority: keyof ActionFormCopy['guidance']['priority']; followUpStatus: keyof ActionFormCopy['guidance']['followUpStatus']; nextFollowUpAt: string | null };
+  copy: ActionFormCopy['guidance'];
+}) {
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setSubmitting(true);
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch(`/api/teacher/students/${encodeURIComponent(studentId)}/guidance`, {
+        method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({
+          guidanceId: record.id, priority: String(form.get('priority')), followUpStatus: String(form.get('followUpStatus')), nextFollowUpAt: String(form.get('nextFollowUpAt') || '') || null,
+        }),
+      });
+      if (!response.ok) throw new Error('update failed');
+      toast.success(copy.submit); router.refresh();
+    } catch { toast.error('Unable to update follow-up.'); } finally { setSubmitting(false); }
+  }
+  return <form onSubmit={submit} className="grid gap-2 border-t pt-3 sm:grid-cols-[1fr_1fr_10rem_auto]">
+    <Select name="priority" defaultValue={record.priority}><SelectTrigger aria-label={copy.priorityLabel}><SelectValue /></SelectTrigger><SelectContent>{Object.entries(copy.priority).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select>
+    <Select name="followUpStatus" defaultValue={record.followUpStatus}><SelectTrigger aria-label={copy.followUpStatusLabel}><SelectValue /></SelectTrigger><SelectContent>{Object.entries(copy.followUpStatus).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select>
+    <Input aria-label={copy.nextFollowUpLabel} name="nextFollowUpAt" type="date" defaultValue={record.nextFollowUpAt?.slice(0, 10) ?? ''} />
+    <Button type="submit" variant="outline" size="sm" disabled={submitting}>{submitting ? '…' : copy.submit}</Button>
+  </form>;
 }
 
 export type { ActionFormCopy };

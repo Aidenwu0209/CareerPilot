@@ -7,6 +7,7 @@ import {
   Goal,
   ListTodo,
   TrendingUp,
+  CalendarClock,
 } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { Badge } from '@/components/ui/badge';
@@ -40,6 +41,7 @@ const QUEUE_META = {
   overdue_task: { icon: AlertTriangle, tone: 'text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300' },
   match_decline: { icon: ArrowDownRight, tone: 'text-rose-600 bg-rose-50 dark:bg-rose-950/40 dark:text-rose-300' },
   recent_progress: { icon: TrendingUp, tone: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300' },
+  follow_up: { icon: CalendarClock, tone: 'text-orange-600 bg-orange-50 dark:bg-orange-950/40 dark:text-orange-300' },
 } satisfies Record<TeacherQueueKind, { icon: typeof FileCheck2; tone: string }>;
 
 export function TeacherWorkQueue({ workspace, copy }: TeacherWorkQueueProps) {
@@ -74,7 +76,7 @@ export function TeacherWorkQueue({ workspace, copy }: TeacherWorkQueueProps) {
             </CardContent>
           </Card>
         ) : (
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
             {workspace.queue.map((item) => {
               const meta = QUEUE_META[item.kind];
               const Icon = meta.icon;

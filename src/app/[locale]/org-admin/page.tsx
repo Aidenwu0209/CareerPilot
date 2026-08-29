@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { organizations, organizationMemberships, creditAccounts, creditTransactions } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { Link } from '@/i18n/routing';
-import { Users, BarChart3, Palette } from 'lucide-react';
+import { Users, BarChart3, GraduationCap, Palette } from 'lucide-react';
 
 export default async function OrgAdminPage() {
   const t = await getTranslations('orgAdmin');
@@ -18,6 +18,7 @@ export default async function OrgAdminPage() {
       orgName: organizations.name,
       orgStatus: organizations.status,
       seatLimit: organizations.seatLimit,
+      kind: organizations.kind,
     })
     .from(organizationMemberships)
     .innerJoin(organizations, eq(organizations.id, organizationMemberships.organizationId))
@@ -85,6 +86,7 @@ export default async function OrgAdminPage() {
     { href: '/org-admin/members', icon: Users, title: t('sections.members.title'), description: t('sections.members.description') },
     { href: '/org-admin/usage', icon: BarChart3, title: t('sections.usage.title'), description: t('sections.usage.description') },
     { href: '/org-admin/branding', icon: Palette, title: t('sections.branding.title'), description: t('sections.branding.description') },
+    ...(org.kind === 'school' ? [{ href: '/org-admin/school' as const, icon: GraduationCap, title: t('sections.school.title'), description: t('sections.school.description') }] : []),
   ] as const;
 
   return (
