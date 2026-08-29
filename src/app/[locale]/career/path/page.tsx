@@ -9,6 +9,8 @@ import { TaskStatusButton } from '@/components/career/task-status-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { getCareerAccess } from '@/lib/career/growth-service';
+import { CareerFeatureUnlock } from '@/components/career/career-feature-unlock';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -30,7 +32,9 @@ export default async function CareerPathPage({
   const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/path');
 
-  const path = await getCareerPath(context.actor.userId);
+  const [path, access] = await Promise.all([getCareerPath(context.actor.userId), getCareerAccess(context.actor.userId)]);
+  const fullPathUnlocked = access.features.full_path.unlocked;
+  const visibleStages = fullPathUnlocked ? path.stages : path.stages.slice(0, 1);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -82,7 +86,7 @@ export default async function CareerPathPage({
           </Card>
 
           <section aria-label={t('path.timelineLabel')} className="space-y-4">
-            {path.stages.map((stage, index) => {
+            {visibleStages.map((stage, index) => {
               const StageIcon = stage.status === 'completed' ? CheckCircle2 : stage.status === 'locked' ? LockKeyhole : CircleDashed;
               return (
                 <article key={stage.id} className="relative grid gap-4 sm:grid-cols-[3rem_minmax(0,1fr)]">
@@ -179,6 +183,12 @@ export default async function CareerPathPage({
               );
             })}
           </section>
+          {!fullPathUnlocked && path.stages.length > 1 ? <CareerFeatureUnlock
+            feature="full_path"
+            priceCredits={access.features.full_path.priceCredits}
+            title={locale === 'zh' ? `解锁后续 ${path.stages.length - 1} 个成长阶段` : `Unlock ${path.stages.length - 1} more growth stages`}
+            description={locale === 'zh' ? '首阶段可免费执行；一次解锁完整时间线、阶段任务和持续进度。订阅用户自动解锁。' : 'The first stage is free. Unlock the complete timeline, tasks, and ongoing progress. Subscribers are unlocked automatically.'}
+          /> : null}
         </>
       )}
     </div>

@@ -15,7 +15,7 @@ export const emailOtps = sqliteTable(
   {
     id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
     email: text('email').notNull(),
-    purpose: text('purpose', { enum: ['login', 'password_reset'] }).notNull().default('login'),
+    purpose: text('purpose', { enum: ['login', 'password_reset', 'school_verify'] }).notNull().default('login'),
     codeHash: text('code_hash').notNull(),
     ipAddress: text('ip_address'),
     expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),

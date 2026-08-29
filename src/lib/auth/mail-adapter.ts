@@ -12,7 +12,7 @@
  */
 
 export interface MailAdapter {
-  sendOTP(email: string, code: string, purpose?: 'login' | 'password_reset'): Promise<void>;
+  sendOTP(email: string, code: string, purpose?: 'login' | 'password_reset' | 'school_verify'): Promise<void>;
 }
 
 /**
@@ -73,7 +73,7 @@ export class SmtpMailAdapter implements MailAdapter {
     return { host, port, user, pass, from };
   }
 
-  async sendOTP(email: string, code: string, purpose: 'login' | 'password_reset' = 'login'): Promise<void> {
+  async sendOTP(email: string, code: string, purpose: 'login' | 'password_reset' | 'school_verify' = 'login'): Promise<void> {
     const cfg = this.getConfig();
 
     // Load the SMTP client only when an email is actually sent.
@@ -94,17 +94,18 @@ export class SmtpMailAdapter implements MailAdapter {
     });
 
     const isPasswordReset = purpose === 'password_reset';
+    const isSchoolVerification = purpose === 'school_verify';
     await transporter.sendMail({
       from: cfg.from,
       to: email,
       subject: isPasswordReset
         ? 'Reset your CareerPilot password'
-        : 'Your CareerPilot Verification Code',
-      text: `${isPasswordReset ? 'Your password reset code' : 'Your verification code'} is: ${code}\n\nThis code expires in 10 minutes.`,
+        : isSchoolVerification ? 'Verify your school email for CareerPilot' : 'Your CareerPilot Verification Code',
+      text: `${isPasswordReset ? 'Your password reset code' : isSchoolVerification ? 'Your school email verification code' : 'Your verification code'} is: ${code}\n\nThis code expires in 10 minutes.`,
       html: `
         <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-          <h2>${isPasswordReset ? 'Reset your CareerPilot password' : 'CareerPilot Verification Code'}</h2>
-          <p>${isPasswordReset ? 'Your password reset code is:' : 'Your verification code is:'}</p>
+          <h2>${isPasswordReset ? 'Reset your CareerPilot password' : isSchoolVerification ? 'Verify your school email' : 'CareerPilot Verification Code'}</h2>
+          <p>${isPasswordReset ? 'Your password reset code is:' : isSchoolVerification ? 'Your school email verification code is:' : 'Your verification code is:'}</p>
           <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #2563eb;">${code}</p>
           <p style="color: #6b7280;">This code expires in 10 minutes. If you did not request this code, please ignore this email.</p>
         </div>

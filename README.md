@@ -251,6 +251,17 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### API Reference
+
+The checked-in OpenAPI 3.1 contract is available at [`public/openapi.json`](public/openapi.json) and is rendered by the application at [`/api-docs`](http://localhost:3000/api-docs). Keep it synchronized with Route Handlers by running:
+
+```bash
+pnpm openapi:generate
+pnpm openapi:check
+```
+
+The coverage check fails when an implemented API operation is missing from the contract, when a stale operation remains, or when a path parameter is not declared.
+
 ## Environment Variables
 
 | Variable | Required | Default | Description |

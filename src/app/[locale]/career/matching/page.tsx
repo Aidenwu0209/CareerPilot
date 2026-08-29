@@ -28,6 +28,8 @@ import { MatchRecalculationButton } from '@/components/career/match-recalculatio
 import { Button } from '@/components/ui/button';
 import { JdMatchForm } from '@/components/career/jd-match-form';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { getCareerAccess } from '@/lib/career/growth-service';
+import { CareerFeatureUnlock } from '@/components/career/career-feature-unlock';
 
 function formatDate(value: string, locale: string) {
   return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(
@@ -211,10 +213,12 @@ export default async function CareerMatchingPage({
   const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/matching');
 
-  const [overview, occupations] = await Promise.all([
+  const [overview, occupations, access] = await Promise.all([
     getCareerOverview(context.actor.userId),
     listOccupations(),
+    getCareerAccess(context.actor.userId),
   ]);
+  const heatmapUnlocked = access.features.match_heatmap.unlocked;
   const explicitCode = queryValue(query.occupationCode);
   const selectedCode = explicitCode ?? overview.primaryGoal?.occupationCode;
   const requestedComparison = queryValues(query.compare);
@@ -418,7 +422,23 @@ export default async function CareerMatchingPage({
             />
           </section>
 
-          {matches.length >= 2 ? (
+          {!heatmapUnlocked ? <CareerFeatureUnlock
+            feature="match_heatmap"
+            priceCredits={access.features.match_heatmap.priceCredits}
+            title={locale === 'zh' ? '解锁完整人岗匹配热力图' : 'Unlock the complete job-match heatmap'}
+            description={locale === 'zh' ? '查看逐能力强项、差距、证据解释、岗位对比和行动建议；订阅用户自动解锁。' : 'See per-ability strengths, gaps, evidence, comparisons, and actions. Subscribers are unlocked automatically.'}
+          /> : null}
+
+          {!heatmapUnlocked && !isNotEligible(match) ? <section aria-label={t('matching.summary.label')} className="grid gap-4 sm:grid-cols-2">
+            <CareerSection title={t('matching.summary.strengths')} description={locale === 'zh' ? '免费预览前三项，解锁后查看证据与分值。' : 'Preview the top three; unlock for evidence and scores.'}>
+              <ol className="space-y-2">{topStrengths(match).map((item, index) => <li key={item.abilityCode} className="flex gap-2 text-sm"><span className="font-semibold text-emerald-600">{index + 1}</span>{item.abilityName}</li>)}</ol>
+            </CareerSection>
+            <CareerSection title={t('matching.summary.gaps')} description={locale === 'zh' ? '免费预览前三项，解锁后查看差距与行动。' : 'Preview the top three; unlock for gaps and actions.'}>
+              <ol className="space-y-2">{topGaps(match).map((item, index) => <li key={item.abilityCode} className="flex gap-2 text-sm"><span className="font-semibold text-amber-600">{index + 1}</span>{item.abilityName}</li>)}</ol>
+            </CareerSection>
+          </section> : null}
+
+          {heatmapUnlocked && matches.length >= 2 ? (
             <CareerSection title={t('matching.comparisonTable.title')} description={t('matching.comparisonTable.description')}>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[44rem] border-separate border-spacing-0 text-left text-sm">
@@ -456,7 +476,7 @@ export default async function CareerMatchingPage({
             </CareerSection>
           ) : null}
 
-          {!isNotEligible(match) ? <section aria-label={t('matching.summary.label')} className="grid gap-4 lg:grid-cols-3">
+          {heatmapUnlocked && !isNotEligible(match) ? <section aria-label={t('matching.summary.label')} className="grid gap-4 lg:grid-cols-3">
             <CareerSection title={t('matching.summary.strengths')} description={t('matching.summary.strengthsDescription')}>
               {topStrengths(match).length ? (
                 <ol className="space-y-3">
@@ -504,7 +524,7 @@ export default async function CareerMatchingPage({
             </div>
           ) : null}
 
-          {!isNotEligible(match) ? <CareerSection title={t('matching.breakdown.title')} description={t('matching.breakdown.description')}>
+          {heatmapUnlocked && !isNotEligible(match) ? <CareerSection title={t('matching.breakdown.title')} description={t('matching.breakdown.description')}>
             <div className="space-y-6">
               {(['required', 'preferred'] as const).map((group) => {
                 const items = match.dimensionBreakdown.filter((item) => item.requirement.required === (group === 'required'));

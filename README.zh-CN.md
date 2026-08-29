@@ -243,6 +243,17 @@ pnpm dev
 
 打开 [http://localhost:3000](http://localhost:3000)。
 
+### API 文档
+
+仓库内的 OpenAPI 3.1 契约位于 [`public/openapi.json`](public/openapi.json)，应用启动后可在 [`/api-docs`](http://localhost:3000/api-docs) 浏览。新增或修改 Route Handler 后请运行：
+
+```bash
+pnpm openapi:generate
+pnpm openapi:check
+```
+
+覆盖校验会拦截漏写、过期的接口操作，以及未声明的路径参数。
+
 ## 环境变量
 
 | 变量 | 必填 | 默认值 | 说明 |

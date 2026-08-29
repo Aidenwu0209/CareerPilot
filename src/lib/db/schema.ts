@@ -156,6 +156,9 @@ export {
 export {
   organizations,
   organizationMemberships,
+  organizationDomains,
+  organizationInvites,
+  organizationDiscounts,
 } from './schema-commercial';
 
 export {
@@ -226,4 +229,13 @@ export {
   careerMatches,
   educationRoleAssignments,
   teacherStudentAssignments,
+  careerAssessmentResults,
+  careerCheckIns,
+  careerStreakStats,
+  jobSubscriptions,
+  careerFeatureUnlocks,
+  careerReportVersions,
+  analysisRuns,
+  companies,
+  jobPostings,
 } from './schema-career';

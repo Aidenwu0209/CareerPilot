@@ -43,3 +43,18 @@ When using tools:
 ${sectionList ? `\nThe resume currently has these sections (you MUST fill ALL of them):\n${sectionList}\n` : ''}
 ${resumeContext ? `## Current Resume Data\n${resumeContext}` : 'No resume context provided.'}`;
 }
+
+export function getCareerReportSystemPrompt(locale: string): string {
+  const zh = locale.startsWith('zh');
+  return zh
+    ? '你是严谨的职业规划顾问。只基于给定事实写作，不虚构经历、资格或岗位承诺。输出单个 JSON 对象，不要使用代码围栏。'
+    : 'You are a rigorous career-planning advisor. Use only the supplied facts and never invent experience, qualifications, or hiring promises. Return one JSON object without code fences.';
+}
+
+export function getCareerReportPrompt(sourceMarkdown: string, locale: string, mode: 'generate' | 'polish'): string {
+  const zh = locale.startsWith('zh');
+  const instruction = mode === 'polish'
+    ? (zh ? '润色这份报告，保留事实和所有章节，提升清晰度与行动性。' : 'Polish this report while preserving every fact and section; improve clarity and actionability.')
+    : (zh ? '将资料重组为结构化职业规划报告。' : 'Restructure the material into a career-planning report.');
+  return `${instruction}\n\nReturn JSON with exactly: {"title": string, "summary": string, "sections": [{"heading": string, "markdown": string}]}. Required sections: goal, indicators, self-awareness, growth path, match explanation, next actions.\n\nSOURCE:\n${sourceMarkdown.slice(0, 24000)}`;
+}

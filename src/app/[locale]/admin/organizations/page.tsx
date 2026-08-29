@@ -42,6 +42,7 @@ interface OrgInfo {
   id: string;
   slug: string;
   name: string;
+  kind: 'employer' | 'school';
   status: 'active' | 'suspended';
   seatLimit: number;
   createdBy: string;
@@ -83,6 +84,7 @@ export default function AdminOrganizationsPage() {
   const [form, setForm] = useState({
     name: '',
     slug: '',
+    kind: 'employer' as 'employer' | 'school',
     seatLimit: '',
     initialQuota: '',
   });
@@ -153,6 +155,7 @@ export default function AdminOrganizationsPage() {
       const body: Record<string, unknown> = {
         name: form.name.trim(),
         slug: form.slug.trim(),
+        kind: form.kind,
         seatLimit: parseInt(form.seatLimit, 10),
       };
       if (form.initialQuota !== '') {
@@ -176,7 +179,7 @@ export default function AdminOrganizationsPage() {
 
       toast.success(t('createSuccess'));
       setCreateOpen(false);
-      setForm({ name: '', slug: '', seatLimit: '', initialQuota: '' });
+      setForm({ name: '', slug: '', kind: 'employer', seatLimit: '', initialQuota: '' });
       setFormErrors({});
       fetchOrgs(submittedQuery);
     } catch {
@@ -382,6 +385,14 @@ export default function AdminOrganizationsPage() {
                 <p className="text-xs text-red-500">{formErrors.slug}</p>
               )}
               <p className="text-xs text-zinc-400">{t('fieldSlugHint')}</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="org-kind">{t('fieldKind')}</Label>
+              <select id="org-kind" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm" value={form.kind} onChange={(event) => setForm({ ...form, kind: event.target.value as 'employer' | 'school' })}>
+                <option value="employer">{t('kindEmployer')}</option>
+                <option value="school">{t('kindSchool')}</option>
+              </select>
             </div>
 
             {/* Seat Limit */}

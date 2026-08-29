@@ -124,6 +124,12 @@ export async function proxy(request: NextRequest) {
     return correlatedResponse(NextResponse.json({ error: 'AUTH_REQUIRED' }, { status: 401 }), requestId);
   }
 
+  // API reference is intentionally locale-neutral and must bypass next-intl
+  // rewriting so /api-docs resolves to its root App Router page.
+  if (pathname === '/api-docs' || pathname.startsWith('/api-docs/')) {
+    return nextResponse(correlatedRequest, requestId);
+  }
+
   if (!isPublicPagePath(pathname) && !hasIdentity) {
     const locale = getLocale(pathname);
     const loginUrl = new URL(`/${locale}/login`, correlatedRequest.url);

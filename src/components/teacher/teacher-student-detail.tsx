@@ -17,7 +17,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EvidenceReviewForm } from './evidence-review-form';
-import { TeacherActionForms, type ActionFormCopy } from './teacher-action-forms';
+import { GuidanceFollowUpForm, TeacherActionForms, type ActionFormCopy } from './teacher-action-forms';
 import type {
   EvidenceSourceType,
   EvidenceStatus,
@@ -447,6 +447,8 @@ function GuidanceTab({ student, copy }: { student: TeacherStudentDetail; copy: T
                 <CardContent className="space-y-3 px-5">
                   <p className="whitespace-pre-wrap break-words text-sm leading-6 text-zinc-800 dark:text-zinc-200">{record.content}</p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">{record.authorName}</p>
+                  <div className="flex flex-wrap gap-2 text-xs"><Badge variant="outline">{copy.actions.guidance.priority[record.priority]}</Badge><Badge variant="secondary">{copy.actions.guidance.followUpStatus[record.followUpStatus]}</Badge>{record.nextFollowUpAt ? <span className="text-muted-foreground">{copy.actions.guidance.nextFollowUpLabel}: {record.nextFollowUpAt.slice(0, 10)}</span> : null}</div>
+                  <GuidanceFollowUpForm studentId={student.id} record={record} copy={copy.actions.guidance} />
                 </CardContent>
               </Card>
             </li>

@@ -298,6 +298,7 @@ export const organizations = pgTable(
     id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
     slug: text('slug').notNull().unique(),
     name: text('name').notNull(),
+    kind: text('kind').notNull().default('employer'),
     status: text('status').notNull().default('active'),
     seatLimit: integer('seat_limit').notNull().default(0),
     branding: text('branding').notNull().default('{}'),
@@ -334,6 +335,48 @@ export const organizationMemberships = pgTable(
     roleIdx: index('organization_memberships_role_idx').on(table.role),
   }),
 );
+
+export const organizationDomains = pgTable('organization_domains', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  domain: text('domain').notNull().unique(),
+  verified: integer('verified').notNull().default(0),
+  createdBy: text('created_by').notNull().references(() => users.id, { onDelete: 'restrict' }),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  orgIdx: index('organization_domains_organization_id_idx').on(table.organizationId),
+}));
+
+export const organizationInvites = pgTable('organization_invites', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  codeHash: text('code_hash').notNull().unique(),
+  codePrefix: text('code_prefix').notNull(),
+  maxUses: integer('max_uses'),
+  useCount: integer('use_count').notNull().default(0),
+  expiresAt: integer('expires_at'),
+  active: integer('active').notNull().default(1),
+  createdBy: text('created_by').notNull().references(() => users.id, { onDelete: 'restrict' }),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  orgActiveIdx: index('organization_invites_org_active_idx').on(table.organizationId, table.active),
+}));
+
+export const organizationDiscounts = pgTable('organization_discounts', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  planCode: text('plan_code').notNull().default('*'),
+  percentOff: integer('percent_off').notNull(),
+  active: integer('active').notNull().default(1),
+  startsAt: integer('starts_at'),
+  endsAt: integer('ends_at'),
+  createdBy: text('created_by').notNull().references(() => users.id, { onDelete: 'restrict' }),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  orgPlanUnique: unique('organization_discounts_org_plan_unique').on(table.organizationId, table.planCode),
+  orgActiveIdx: index('organization_discounts_org_active_idx').on(table.organizationId, table.active),
+}));
 
 // ── Credits: accounts, transactions (immutable ledger), and rules ──
 
@@ -1085,11 +1128,16 @@ export const careerGuidanceNotes = pgTable('career_guidance_notes', {
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   teacherId: text('teacher_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   visibility: text('visibility').notNull().default('student'),
+  priority: text('priority').notNull().default('normal'),
+  followUpStatus: text('follow_up_status').notNull().default('new'),
+  nextFollowUpAt: integer('next_follow_up_at'),
   content: text('content').notNull(),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
   createdAt: integer('created_at').notNull().default(epochNow),
 }, (table) => ({
   userCreatedIdx: index('career_guidance_notes_user_id_created_at_idx').on(table.userId, table.createdAt),
   teacherIdx: index('career_guidance_notes_teacher_id_idx').on(table.teacherId),
+  followUpIdx: index('career_guidance_notes_teacher_follow_up_idx').on(table.teacherId, table.followUpStatus, table.nextFollowUpAt),
 }));
 
 export const careerMatches = pgTable('career_matches', {
@@ -1141,4 +1189,141 @@ export const teacherStudentAssignments = pgTable('teacher_student_assignments', 
   teacherStatusIdx: index('teacher_student_assignments_teacher_user_id_status_idx').on(table.teacherUserId, table.status),
   studentStatusIdx: index('teacher_student_assignments_student_user_id_status_idx').on(table.studentUserId, table.status),
   orgStatusIdx: index('teacher_student_assignments_organization_id_status_idx').on(table.organizationId, table.status),
+}));
+
+export const careerAssessmentResults = pgTable('career_assessment_results', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  assessmentType: text('assessment_type').notNull(),
+  resultCode: text('result_code').notNull(),
+  answers: text('answers').notNull().default('{}'),
+  dimensionScores: text('dimension_scores').notNull().default('{}'),
+  matchedOccupationCodes: text('matched_occupation_codes').notNull().default('[]'),
+  isLatest: integer('is_latest').notNull().default(1),
+  completedAt: integer('completed_at').notNull().default(epochNow),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userTypeCreatedIdx: index('career_assessment_results_user_type_created_idx').on(table.userId, table.assessmentType, table.createdAt),
+  userLatestIdx: index('career_assessment_results_user_latest_idx').on(table.userId, table.isLatest),
+}));
+
+export const careerCheckIns = pgTable('career_check_ins', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  checkInDate: text('check_in_date').notNull(),
+  streakCount: integer('streak_count').notNull(),
+  taskIdsCompleted: text('task_ids_completed').notNull().default('[]'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userDateUnique: unique('career_check_ins_user_date_unique').on(table.userId, table.checkInDate),
+  userCreatedIdx: index('career_check_ins_user_created_idx').on(table.userId, table.createdAt),
+}));
+
+export const careerStreakStats = pgTable('career_streak_stats', {
+  userId: text('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  currentStreak: integer('current_streak').notNull().default(0),
+  longestStreak: integer('longest_streak').notNull().default(0),
+  totalCheckIns: integer('total_check_ins').notNull().default(0),
+  lastCheckInDate: text('last_check_in_date'),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+});
+
+export const jobSubscriptions = pgTable('job_subscriptions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  keywords: text('keywords').notNull(),
+  city: text('city').notNull().default(''),
+  frequency: text('frequency').notNull().default('weekly'),
+  active: integer('active').notNull().default(1),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  userFilterUnique: unique('job_subscriptions_user_filter_unique').on(table.userId, table.keywords, table.city, table.frequency),
+  userActiveIdx: index('job_subscriptions_user_active_idx').on(table.userId, table.active),
+}));
+
+export const careerFeatureUnlocks = pgTable('career_feature_unlocks', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  feature: text('feature').notNull(),
+  source: text('source').notNull(),
+  businessRefId: text('business_ref_id').notNull(),
+  expiresAt: integer('expires_at'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userFeatureRefUnique: unique('career_feature_unlocks_user_feature_ref_unique').on(table.userId, table.feature, table.businessRefId),
+  userFeatureIdx: index('career_feature_unlocks_user_feature_idx').on(table.userId, table.feature, table.expiresAt),
+}));
+
+export const careerReportVersions = pgTable('career_report_versions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  title: text('title').notNull(),
+  markdown: text('markdown').notNull(),
+  status: text('status').notNull().default('complete'),
+  completeness: text('completeness').notNull().default('{}'),
+  sourceVersionId: text('source_version_id'),
+  aiOperationId: text('ai_operation_id'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userVersionUnique: unique('career_report_versions_user_version_unique').on(table.userId, table.version),
+  userCreatedIdx: index('career_report_versions_user_created_idx').on(table.userId, table.createdAt),
+}));
+
+export const analysisRuns = pgTable('analysis_runs', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  status: text('status').notNull().default('pending'),
+  currentStep: text('current_step').notNull().default('uploaded'),
+  steps: text('steps').notNull().default('[]'),
+  input: text('input').notNull().default('{}'),
+  result: text('result').notNull().default('{}'),
+  errorCode: text('error_code'),
+  retryCount: integer('retry_count').notNull().default(0),
+  expiresAt: integer('expires_at').notNull(),
+  startedAt: integer('started_at'),
+  completedAt: integer('completed_at'),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+  createdAt: integer('created_at').notNull().default(epochNow),
+}, (table) => ({
+  userCreatedIdx: index('analysis_runs_user_created_idx').on(table.userId, table.createdAt),
+  statusExpiryIdx: index('analysis_runs_status_expiry_idx').on(table.status, table.expiresAt),
+}));
+
+export const companies = pgTable('companies', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  normalizedName: text('normalized_name').notNull().unique(),
+  name: text('name').notNull(),
+  industry: text('industry').notNull().default(''),
+  website: text('website'),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+});
+
+export const jobPostings = pgTable('job_postings', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  externalId: text('external_id').notNull(),
+  source: text('source').notNull(),
+  companyId: text('company_id').notNull().references(() => companies.id, { onDelete: 'cascade' }),
+  occupationCode: text('occupation_code').references(() => occupations.code, { onDelete: 'set null' }),
+  title: text('title').notNull(),
+  city: text('city').notNull().default(''),
+  industry: text('industry').notNull().default(''),
+  description: text('description').notNull().default(''),
+  skills: text('skills').notNull().default('[]'),
+  salaryMinMonthly: integer('salary_min_monthly'),
+  salaryMaxMonthly: integer('salary_max_monthly'),
+  salaryMonths: integer('salary_months').notNull().default(12),
+  sourceUrl: text('source_url'),
+  publishedAt: integer('published_at'),
+  expiresAt: integer('expires_at'),
+  active: integer('active').notNull().default(1),
+  createdAt: integer('created_at').notNull().default(epochNow),
+  updatedAt: integer('updated_at').notNull().default(epochNow),
+}, (table) => ({
+  sourceExternalUnique: unique('job_postings_source_external_unique').on(table.source, table.externalId),
+  activeIndustryIdx: index('job_postings_active_industry_idx').on(table.active, table.industry),
+  occupationIdx: index('job_postings_occupation_code_idx').on(table.occupationCode),
+  salaryIdx: index('job_postings_salary_idx').on(table.salaryMinMonthly, table.salaryMaxMonthly),
 }));

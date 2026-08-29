@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { resolve } from 'path';
 
+vi.mock('server-only', () => ({}));
+
 const provider = vi.hoisted(() => ({
   createCheckout: vi.fn(),
   createRefund: vi.fn(),
@@ -22,7 +24,7 @@ vi.mock('@/lib/db', async () => {
 });
 
 import { db } from '@/lib/db';
-import { billingPlans, creditAccounts, creditTransactions, paymentOrders, paymentRefunds, users } from '@/lib/db/schema';
+import { billingPlans, creditAccounts, creditTransactions, educationRoleAssignments, organizationDiscounts, organizationMemberships, organizations, paymentOrders, paymentRefunds, users } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { createCheckout, fulfillCreditOrder, requestRefund } from './service';
 
@@ -39,6 +41,10 @@ beforeEach(async () => {
   db.run(sql`DROP TRIGGER IF EXISTS credit_transactions_no_delete`);
   await db.delete(paymentRefunds);
   await db.delete(paymentOrders);
+  await db.delete(educationRoleAssignments);
+  await db.delete(organizationMemberships);
+  await db.delete(organizationDiscounts);
+  await db.delete(organizations);
   await db.delete(creditTransactions);
   await db.delete(billingPlans);
   await db.delete(creditAccounts);
@@ -59,6 +65,18 @@ describe('ToC billing service', () => {
     expect(orders).toHaveLength(1);
     expect(orders[0].amountMinor).toBe(1900);
     expect(orders[0].credits).toBe(100);
+  });
+
+  it('charges the server-calculated school price and records the pricing snapshot', async () => {
+    await db.insert(organizations).values({ id: 'school-1', slug: 'school-1', name: 'School One', kind: 'school', seatLimit: 10, createdBy: 'user-1' });
+    await db.insert(organizationMemberships).values({ id: 'membership-1', organizationId: 'school-1', userId: 'user-1', role: 'member' });
+    await db.insert(educationRoleAssignments).values({ id: 'student-role-1', organizationId: 'school-1', userId: 'user-1', role: 'student' });
+    await db.insert(organizationDiscounts).values({ id: 'discount-1', organizationId: 'school-1', planCode: 'starter', percentOff: 20, createdBy: 'user-1' });
+    await createCheckout({ userId: 'user-1', planId: 'plan-1', idempotencyKey: 'school-price', origin: 'https://app.example.com', locale: 'zh' });
+    const [order] = await db.select().from(paymentOrders);
+    expect(order.amountMinor).toBe(1520);
+    expect(provider.createCheckout).toHaveBeenCalledWith(expect.objectContaining({ amountMinor: 1520 }));
+    expect(order.metadata).toMatchObject({ originalAmountMinor: 1900, schoolDiscount: { organizationId: 'school-1', percentOff: 20 } });
   });
 
   it('fulfills a paid order exactly once even when the webhook is replayed', async () => {

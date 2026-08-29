@@ -28,6 +28,12 @@ function legacyDatabase(hash = '64bf8eb0bbf045905e84b2bbfbb528610bb0df2c72e010a8
 }
 
 describe('known SQLite migration compatibility alias', () => {
+  it('leaves a fresh database for the normal migrator', () => {
+    const sqlite = new Database(':memory:');
+    expect(reconcileKnownLegacySQLiteMigration(sqlite, resolve('drizzle/migrations'))).toBe(false);
+    sqlite.close();
+  });
+
   it('records the committed 0016 identity only after the exact legacy hash and schema signature match', () => {
     const sqlite = legacyDatabase();
     expect(reconcileKnownLegacySQLiteMigration(sqlite, resolve('drizzle/migrations'))).toBe(true);

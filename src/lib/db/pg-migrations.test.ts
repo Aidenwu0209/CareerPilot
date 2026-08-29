@@ -130,7 +130,7 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
       expect(rows[0].cnt).toBe(getAllMigrationTags().length);
     });
 
-    it('should create all 59 expected tables in public schema', async () => {
+    it('should create all 71 expected tables in public schema', async () => {
       pg = await createPglite();
       const db = drizzle(pg);
 
@@ -144,18 +144,18 @@ describe('US-010: PostgreSQL Migration — Full Install & Upgrade', () => {
 
       const expectedTables = [
         'ai_models', 'ai_operations', 'ai_provider_attempts', 'ai_providers',
-        'alert_deliveries', 'alert_events', 'audit_events', 'auth_accounts',
-        'billing_plans', 'career_abilities', 'career_catalog_entries', 'career_catalog_versions',
-        'career_colleges', 'career_evidence', 'career_goals',
+        'alert_deliveries', 'alert_events', 'analysis_runs', 'audit_events', 'auth_accounts',
+        'billing_plans', 'career_abilities', 'career_assessment_results', 'career_catalog_entries', 'career_catalog_versions',
+        'career_check_ins', 'career_colleges', 'career_evidence', 'career_feature_unlocks', 'career_goals',
         'career_guidance_notes', 'career_knowledge_documents', 'career_matches',
-        'career_majors', 'career_profile_snapshots', 'career_profiles', 'career_source_snapshots', 'career_tasks',
-        'chat_messages', 'chat_sessions',
+        'career_majors', 'career_profile_snapshots', 'career_profiles', 'career_report_versions', 'career_source_snapshots', 'career_streak_stats', 'career_tasks',
+        'chat_messages', 'chat_sessions', 'companies',
         'credit_accounts', 'credit_holds', 'credit_rules', 'credit_transactions',
         'education_role_assignments', 'email_otps', 'grammar_checks',
         'interview_messages', 'interview_reports',
-        'interview_rounds', 'interview_sessions', 'jd_analyses',
+        'interview_rounds', 'interview_sessions', 'jd_analyses', 'job_postings', 'job_subscriptions',
         'legal_consents', 'major_occupation_edges', 'occupation_aliases', 'occupation_relations', 'occupation_requirements',
-        'occupations', 'organization_memberships', 'organizations',
+        'occupations', 'organization_discounts', 'organization_domains', 'organization_invites', 'organization_memberships', 'organizations',
         'password_credentials',
         'payment_orders', 'payment_refunds', 'payment_webhook_events',
         'plan_model_access', 'reconciliation_items', 'reconciliation_runs',

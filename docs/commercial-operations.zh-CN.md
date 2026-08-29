@@ -54,3 +54,46 @@ OpenAI 接口原生输出 4K。
 
 对账会比较本地订单的支付状态、金额和币种与 Stripe Checkout Session；差异保存到 reconciliation 表并通过
 外部 webhook/值班邮件发送 critical 告警。
+
+## 职业发展单次解锁
+
+职业测评深度报告、人岗匹配热力图和完整成长路径既支持订阅权益，也支持个人点数的一次性解锁。可通过以下环境变量调整点数价格：
+
+- `CAREER_UNLOCK_ASSESSMENT_CREDITS`（默认 80）
+- `CAREER_UNLOCK_MATCH_CREDITS`（默认 120）
+- `CAREER_UNLOCK_PATH_CREDITS`（默认 160）
+
+解锁使用不可变点数流水和稳定业务引用，重复请求不会重复扣费。未订阅、未解锁时，接口只返回免费预览，不返回受保护的详细维度。
+
+## 学校合作配置
+
+1. 超级管理员创建机构时把类型选择为“学校”，并任命机构管理员。
+2. 机构管理员在“机构管理 → 学校合作”添加学校域名、生成邀请码并配置 `*` 或指定套餐代码的折扣。
+3. 新域名默认待认证；超级管理员通过 `PATCH /api/organizations/{orgId}/school-settings` 审核域名后，学生才能向该域名邮箱发送验证码。
+4. 学生在账号页通过一次性邀请码或学校邮箱验证码绑定。邀请码数据库只保存 SHA-256 摘要，明文只在创建时返回一次。
+5. 绑定后的用户在充值页看到原价、学校折扣和实际结算价；支付订单保存原价与折扣快照，Stripe 使用服务端计算后的金额。
+
+## 授权招聘数据导入
+
+导入器不会携带或抓取第三方招聘数据。使用前需准备已获授权的 UTF-8 CSV 和许可证清单：
+
+```json
+{
+  "source": "licensed-campus-feed",
+  "license": "Internal licensed use",
+  "obtainedAt": "2026-08-30",
+  "termsUrl": "https://provider.example/terms"
+}
+```
+
+CSV 支持列：`external_id,company,industry,title,city,description,skills,salary,occupation_code,source_url,published_at,expires_at`。执行：
+
+```bash
+pnpm career:jobs -- --file /absolute/path/jobs.csv --manifest /absolute/path/jobs.manifest.json
+```
+
+`source + external_id` 是幂等键；重复导入会更新岗位而不是创建重复记录。页面只展示仍有效且标记为启用的岗位，并支持匹配度、薪资、技能排序和行业筛选。
+
+## OpenAPI 契约
+
+`pnpm openapi:generate` 从当前 Route Handler 生成 `public/openapi.json`，`pnpm openapi:check` 校验接口覆盖、过期操作、重复 `operationId` 与路径参数声明。生产部署后可在 `/api-docs` 浏览完整契约。

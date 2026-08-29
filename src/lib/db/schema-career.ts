@@ -319,11 +319,16 @@ export const careerGuidanceNotes = sqliteTable('career_guidance_notes', {
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   teacherId: text('teacher_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   visibility: text('visibility', { enum: ['student', 'teacher_private', 'management'] }).notNull().default('student'),
+  priority: text('priority', { enum: ['low', 'normal', 'high', 'urgent'] }).notNull().default('normal'),
+  followUpStatus: text('follow_up_status', { enum: ['new', 'contacted', 'waiting_student', 'waiting_teacher', 'scheduled', 'resolved', 'on_hold'] }).notNull().default('new'),
+  nextFollowUpAt: integer('next_follow_up_at', { mode: 'timestamp' }),
   content: text('content').notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
 }, (table) => ({
   userCreatedIdx: index('career_guidance_notes_user_id_created_at_idx').on(table.userId, table.createdAt),
   teacherIdx: index('career_guidance_notes_teacher_id_idx').on(table.teacherId),
+  followUpIdx: index('career_guidance_notes_teacher_follow_up_idx').on(table.teacherId, table.followUpStatus, table.nextFollowUpAt),
 }));
 
 export const careerMatches = sqliteTable('career_matches', {
@@ -375,4 +380,141 @@ export const teacherStudentAssignments = sqliteTable('teacher_student_assignment
   teacherStatusIdx: index('teacher_student_assignments_teacher_user_id_status_idx').on(table.teacherUserId, table.status),
   studentStatusIdx: index('teacher_student_assignments_student_user_id_status_idx').on(table.studentUserId, table.status),
   orgStatusIdx: index('teacher_student_assignments_organization_id_status_idx').on(table.organizationId, table.status),
+}));
+
+export const careerAssessmentResults = sqliteTable('career_assessment_results', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  assessmentType: text('assessment_type', { enum: ['holland', 'mbti', 'work_values'] }).notNull(),
+  resultCode: text('result_code').notNull(),
+  answers: text('answers', { mode: 'json' }).notNull().default('{}'),
+  dimensionScores: text('dimension_scores', { mode: 'json' }).notNull().default('{}'),
+  matchedOccupationCodes: text('matched_occupation_codes', { mode: 'json' }).notNull().default('[]'),
+  isLatest: integer('is_latest', { mode: 'boolean' }).notNull().default(true),
+  completedAt: integer('completed_at', { mode: 'timestamp' }).notNull().default(now),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userTypeCreatedIdx: index('career_assessment_results_user_type_created_idx').on(table.userId, table.assessmentType, table.createdAt),
+  userLatestIdx: index('career_assessment_results_user_latest_idx').on(table.userId, table.isLatest),
+}));
+
+export const careerCheckIns = sqliteTable('career_check_ins', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  checkInDate: text('check_in_date').notNull(),
+  streakCount: integer('streak_count').notNull(),
+  taskIdsCompleted: text('task_ids_completed', { mode: 'json' }).notNull().default('[]'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userDateUnique: unique('career_check_ins_user_date_unique').on(table.userId, table.checkInDate),
+  userCreatedIdx: index('career_check_ins_user_created_idx').on(table.userId, table.createdAt),
+}));
+
+export const careerStreakStats = sqliteTable('career_streak_stats', {
+  userId: text('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  currentStreak: integer('current_streak').notNull().default(0),
+  longestStreak: integer('longest_streak').notNull().default(0),
+  totalCheckIns: integer('total_check_ins').notNull().default(0),
+  lastCheckInDate: text('last_check_in_date'),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
+});
+
+export const jobSubscriptions = sqliteTable('job_subscriptions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  keywords: text('keywords').notNull(),
+  city: text('city').notNull().default(''),
+  frequency: text('frequency', { enum: ['daily', 'weekly'] }).notNull().default('weekly'),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userFilterUnique: unique('job_subscriptions_user_filter_unique').on(table.userId, table.keywords, table.city, table.frequency),
+  userActiveIdx: index('job_subscriptions_user_active_idx').on(table.userId, table.active),
+}));
+
+export const careerFeatureUnlocks = sqliteTable('career_feature_unlocks', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  feature: text('feature', { enum: ['assessment_report', 'match_heatmap', 'full_path'] }).notNull(),
+  source: text('source', { enum: ['credits', 'subscription', 'admin'] }).notNull(),
+  businessRefId: text('business_ref_id').notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userFeatureRefUnique: unique('career_feature_unlocks_user_feature_ref_unique').on(table.userId, table.feature, table.businessRefId),
+  userFeatureIdx: index('career_feature_unlocks_user_feature_idx').on(table.userId, table.feature, table.expiresAt),
+}));
+
+export const careerReportVersions = sqliteTable('career_report_versions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  version: integer('version').notNull(),
+  title: text('title').notNull(),
+  markdown: text('markdown').notNull(),
+  status: text('status', { enum: ['draft', 'complete'] }).notNull().default('complete'),
+  completeness: text('completeness', { mode: 'json' }).notNull().default('{}'),
+  sourceVersionId: text('source_version_id'),
+  aiOperationId: text('ai_operation_id'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userVersionUnique: unique('career_report_versions_user_version_unique').on(table.userId, table.version),
+  userCreatedIdx: index('career_report_versions_user_created_idx').on(table.userId, table.createdAt),
+}));
+
+export const analysisRuns = sqliteTable('analysis_runs', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  status: text('status', { enum: ['pending', 'running', 'failed', 'completed', 'cancelled'] }).notNull().default('pending'),
+  currentStep: text('current_step', { enum: ['uploaded', 'parsed', 'profiled', 'matched', 'pathed', 'reported'] }).notNull().default('uploaded'),
+  steps: text('steps', { mode: 'json' }).notNull().default('[]'),
+  input: text('input', { mode: 'json' }).notNull().default('{}'),
+  result: text('result', { mode: 'json' }).notNull().default('{}'),
+  errorCode: text('error_code'),
+  retryCount: integer('retry_count').notNull().default(0),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  startedAt: integer('started_at', { mode: 'timestamp' }),
+  completedAt: integer('completed_at', { mode: 'timestamp' }),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  userCreatedIdx: index('analysis_runs_user_created_idx').on(table.userId, table.createdAt),
+  statusExpiryIdx: index('analysis_runs_status_expiry_idx').on(table.status, table.expiresAt),
+}));
+
+export const companies = sqliteTable('companies', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  normalizedName: text('normalized_name').notNull().unique(),
+  name: text('name').notNull(),
+  industry: text('industry').notNull().default(''),
+  website: text('website'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
+});
+
+export const jobPostings = sqliteTable('job_postings', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  externalId: text('external_id').notNull(),
+  source: text('source').notNull(),
+  companyId: text('company_id').notNull().references(() => companies.id, { onDelete: 'cascade' }),
+  occupationCode: text('occupation_code').references(() => occupations.code, { onDelete: 'set null' }),
+  title: text('title').notNull(),
+  city: text('city').notNull().default(''),
+  industry: text('industry').notNull().default(''),
+  description: text('description').notNull().default(''),
+  skills: text('skills', { mode: 'json' }).notNull().default('[]'),
+  salaryMinMonthly: integer('salary_min_monthly'),
+  salaryMaxMonthly: integer('salary_max_monthly'),
+  salaryMonths: integer('salary_months').notNull().default(12),
+  sourceUrl: text('source_url'),
+  publishedAt: integer('published_at', { mode: 'timestamp' }),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  active: integer('active', { mode: 'boolean' }).notNull().default(true),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(now),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(now),
+}, (table) => ({
+  sourceExternalUnique: unique('job_postings_source_external_unique').on(table.source, table.externalId),
+  activeIndustryIdx: index('job_postings_active_industry_idx').on(table.active, table.industry),
+  occupationIdx: index('job_postings_occupation_code_idx').on(table.occupationCode),
+  salaryIdx: index('job_postings_salary_idx').on(table.salaryMinMonthly, table.salaryMaxMonthly),
 }));

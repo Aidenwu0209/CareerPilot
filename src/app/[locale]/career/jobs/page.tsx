@@ -4,6 +4,8 @@ import { resolveServerContext } from '@/lib/auth/server-context';
 import { listOccupations } from '@/lib/career/service';
 import { CareerPageHeader } from '@/components/career/career-shell';
 import { OccupationBrowser, type CatalogOccupation } from '@/components/career/occupation-browser';
+import { JobPostingBrowser } from '@/components/career/job-posting-browser';
+import { listJobRecommendations } from '@/lib/career/job-posting-service';
 
 export default async function CareerJobsPage({
   params,
@@ -15,7 +17,7 @@ export default async function CareerJobsPage({
   const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career/jobs');
 
-  const occupations = await listOccupations();
+  const [occupations, jobs] = await Promise.all([listOccupations(), listJobRecommendations(context.actor.userId)]);
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -25,7 +27,8 @@ export default async function CareerJobsPage({
         description={t('jobs.description')}
       />
 
-      <OccupationBrowser initialItems={occupations as CatalogOccupation[]} />
+      <JobPostingBrowser initialJobs={jobs} locale={locale} />
+      <div className="border-t pt-8"><OccupationBrowser initialItems={occupations as CatalogOccupation[]} /></div>
     </div>
   );
 }

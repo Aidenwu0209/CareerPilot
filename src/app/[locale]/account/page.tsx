@@ -18,6 +18,8 @@ import { Building2, Shield, User, Calendar, FileText, AlertTriangle, CheckCircle
 import { getTranslations } from 'next-intl/server';
 import { getAllCurrentVersions, getUserConsents, checkAllCurrentConsents } from '@/lib/legal/consent-service';
 import { Link } from '@/i18n/routing';
+import { getSchoolMembership } from '@/lib/organizations/school-service';
+import { SchoolMembershipCard } from '@/components/account/school-membership-card';
 
 export default async function AccountPage() {
   const t = await getTranslations('account');
@@ -76,6 +78,7 @@ export default async function AccountPage() {
   const currentVersions = getAllCurrentVersions();
   const userConsents = await getUserConsents(userId);
   const consentStatus = await checkAllCurrentConsents(userId);
+  const schoolMembership = await getSchoolMembership(userId);
 
   const formatDate = (date: Date | string | null) => {
     if (!date) return '—';
@@ -212,6 +215,8 @@ export default async function AccountPage() {
             </div>
           </div>
         )}
+
+        <SchoolMembershipCard initialMembership={schoolMembership} />
 
         {/* Data export section */}
         <div className="mt-6 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

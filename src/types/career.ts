@@ -324,6 +324,13 @@ export interface CareerMatchResult {
   knownCoverage: number;
   strengths: CareerMatchBreakdownItem[];
   priorityGaps: CareerMatchBreakdownItem[];
+  assessmentAlignment: {
+    interest: number;
+    personality: number;
+    values: number;
+    score: number;
+    resultCodes: Record<string, string>;
+  } | null;
   changeSummary: {
     previousScore: number | null;
     currentScore: number | null;

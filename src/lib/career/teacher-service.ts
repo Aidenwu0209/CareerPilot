@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { cache } from 'react';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, ne, sql } from 'drizzle-orm';
 import { db, dbReady } from '@/lib/db';
 import {
   careerGuidanceNotes,
@@ -30,7 +30,7 @@ import {
   listCareerTasks,
 } from './service';
 import { ABILITY_CATALOG, DIMENSION_NAMES } from './catalog';
-import { parseJson, toIso } from './serialization';
+import { parseJson, toIso, toNullableIso } from './serialization';
 
 export type TeacherWorkspaceResolution =
   | { status: 'ready'; organizationId: string; view: TeacherWorkspaceView }
@@ -58,17 +58,23 @@ type TeacherStudentSummaryWithMetrics = TeacherStudentSummary & {
     overdueTaskCount: number;
     matchDeclined: boolean;
     recentProgress: boolean;
+    followUpCount: number;
   };
 };
 
-async function buildStudentSummary(studentId: string): Promise<TeacherStudentSummaryWithMetrics | null> {
+async function buildStudentSummary(teacherUserId: string, studentId: string): Promise<TeacherStudentSummaryWithMetrics | null> {
   const studentRows = await db.select().from(users).where(eq(users.id, studentId)).limit(1);
   const student = studentRows[0];
   if (!student) return null;
-  const [profile, goals, tasks] = await Promise.all([
+  const [profile, goals, tasks, followUpRows] = await Promise.all([
     getCareerProfile(studentId),
     listCareerGoals(studentId),
     listCareerTasks(studentId),
+    db.select({ count: sql<number>`count(*)` }).from(careerGuidanceNotes).where(and(
+      eq(careerGuidanceNotes.teacherId, teacherUserId),
+      eq(careerGuidanceNotes.userId, studentId),
+      ne(careerGuidanceNotes.followUpStatus, 'resolved'),
+    )),
   ]);
   const primaryGoal = goals.find((goal) => goal.isPrimary) ?? goals[0] ?? null;
   const match = primaryGoal ? await getCareerMatch(studentId, primaryGoal.occupationCode) : null;
@@ -79,7 +85,8 @@ async function buildStudentSummary(studentId: string): Promise<TeacherStudentSum
     .filter((evidence) => evidence.status === 'pending').length;
   const overdueTasks = tasks.filter((task) => task.dueAt && task.status !== 'completed' && task.status !== 'cancelled' && new Date(task.dueAt) < new Date()).length;
   const pendingGoals = goals.filter((goal) => goal.teacherConfirmationStatus === 'unreviewed').length;
-  const pendingItemCount = pendingEvidence + overdueTasks + pendingGoals;
+  const followUpCount = Number(followUpRows[0]?.count ?? 0);
+  const pendingItemCount = pendingEvidence + overdueTasks + pendingGoals + followUpCount;
   const recentThreshold = Date.now() - 14 * 24 * 60 * 60 * 1000;
   const recentProgress = tasks.some((task) => task.status === 'completed' && new Date(task.updatedAt).getTime() >= recentThreshold);
   const metadata = studentMetadata(student.settings);
@@ -104,6 +111,7 @@ async function buildStudentSummary(studentId: string): Promise<TeacherStudentSum
       overdueTaskCount: overdueTasks,
       matchDeclined: false,
       recentProgress,
+      followUpCount,
     },
   };
 }
@@ -132,7 +140,7 @@ async function resolveAssignedStudentScopeUncached(teacherUserId: string): Promi
     for (const studentId of studentIds) {
       const access = await resolveTeacherStudentAccess(teacherUserId, studentId, 'view');
       if (!access || access.organizationId !== context.organizationId) continue;
-      const summary = await buildStudentSummary(studentId);
+      const summary = await buildStudentSummary(teacherUserId, studentId);
       if (summary) summaries.push(summary);
     }
     if (summaries.length > 0) {
@@ -160,6 +168,7 @@ function buildWorkspaceView(students: TeacherStudentSummary[]): TeacherWorkspace
       { kind: 'overdue_task', count: records.reduce((sum, student) => sum + student.queueMetrics.overdueTaskCount, 0) },
       { kind: 'match_decline', count: records.filter((student) => student.queueMetrics.matchDeclined).length },
       { kind: 'recent_progress', count: records.filter((student) => student.queueMetrics.recentProgress).length },
+      { kind: 'follow_up', count: records.reduce((sum, student) => sum + student.queueMetrics.followUpCount, 0) },
     ],
     recentStudents: students.slice(0, 12),
   };
@@ -227,6 +236,9 @@ export async function getAssignedStudentDetail(teacherUserId: string, studentId:
       id: careerGuidanceNotes.id,
       content: careerGuidanceNotes.content,
       visibility: careerGuidanceNotes.visibility,
+      priority: careerGuidanceNotes.priority,
+      followUpStatus: careerGuidanceNotes.followUpStatus,
+      nextFollowUpAt: careerGuidanceNotes.nextFollowUpAt,
       authorName: users.name,
       createdAt: careerGuidanceNotes.createdAt,
     }).from(careerGuidanceNotes)
@@ -238,6 +250,9 @@ export async function getAssignedStudentDetail(teacherUserId: string, studentId:
     id: string;
     content: string;
     visibility: 'student' | 'teacher_private' | 'management';
+    priority: 'low' | 'normal' | 'high' | 'urgent';
+    followUpStatus: 'new' | 'contacted' | 'waiting_student' | 'waiting_teacher' | 'scheduled' | 'resolved' | 'on_hold';
+    nextFollowUpAt: Date | null;
     authorName: string | null;
     createdAt: Date;
   }>;
@@ -283,6 +298,9 @@ export async function getAssignedStudentDetail(teacherUserId: string, studentId:
       id: row.id,
       content: row.content,
       visibility: row.visibility === 'teacher_private' ? 'private' : 'student',
+      priority: row.priority,
+      followUpStatus: row.followUpStatus,
+      nextFollowUpAt: toNullableIso(row.nextFollowUpAt),
       authorName: row.authorName ?? '指导教师',
       createdAt: toIso(row.createdAt),
     }));

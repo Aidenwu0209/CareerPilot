@@ -8,6 +8,7 @@ import {
   Scale,
   UserRoundSearch,
   ClipboardCheck,
+  FileText,
 } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,7 @@ const icons = {
   jobs: Compass,
   matching: Scale,
   path: GitBranch,
+  report: FileText,
 } as const;
 
 export type CareerNavItem = {

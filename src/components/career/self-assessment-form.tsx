@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { CheckCircle2, Loader2, Save } from 'lucide-react';
+import { CheckCircle2, LockKeyhole, Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from '@/i18n/routing';
 import { fetchJson } from '@/lib/http/client';
@@ -23,7 +23,12 @@ const sectionCopy = {
   learning: { zh: ['学习偏好', '帮助你更高效成长的方式'], en: ['Learning preferences', 'Ways that help you learn effectively'] },
 } as const;
 
-export function SelfAssessmentForm({ initial, locale }: { initial: CareerSelfAssessment | null; locale: string }) {
+type AssessmentAccess = {
+  freeAssessmentQuestionLimit: number;
+  features: { assessment_report: { unlocked: boolean; priceCredits: number } };
+};
+
+export function SelfAssessmentForm({ initial, locale, access }: { initial: CareerSelfAssessment | null; locale: string; access: AssessmentAccess }) {
   const lang: AssessmentLocale = locale.startsWith('zh') ? 'zh' : 'en';
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, number>>(initial?.answers ?? {});
@@ -31,6 +36,23 @@ export function SelfAssessmentForm({ initial, locale }: { initial: CareerSelfAss
   const completed = isAssessmentComplete(answers);
   const results = useMemo(() => scoreSelfAssessment(answers), [answers]);
   const zh = lang === 'zh';
+  const unlocked = access.features.assessment_report.unlocked;
+  const [unlocking, setUnlocking] = useState(false);
+
+  async function unlock() {
+    setUnlocking(true);
+    try {
+      await fetchJson('/api/career/access', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ feature: 'assessment_report' }), retry: 0,
+      });
+      toast.success(zh ? '深度测评已解锁' : 'Full assessment unlocked');
+      router.refresh();
+    } catch {
+      toast.error(zh ? '积分不足，请先充值或选择订阅套餐。' : 'Insufficient credits. Top up or choose a subscription.');
+    } finally {
+      setUnlocking(false);
+    }
+  }
 
   async function save(complete: boolean) {
     if (complete && !completed) {
@@ -65,7 +87,10 @@ export function SelfAssessmentForm({ initial, locale }: { initial: CareerSelfAss
               <h2 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{title}</h2>
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
               <div className="mt-5 space-y-6">
-                {questions.map((question, index) => (
+                {questions.map((question, index) => {
+                  const globalIndex = CAREER_ASSESSMENT_QUESTIONS.findIndex((item) => item.id === question.id);
+                  if (!unlocked && globalIndex >= access.freeAssessmentQuestionLimit) return null;
+                  return (
                   <fieldset key={question.id} className="space-y-3">
                     <legend className="text-sm font-medium leading-6 text-zinc-800 dark:text-zinc-200">
                       {index + 1}. {question.prompt[lang]}
@@ -95,14 +120,29 @@ export function SelfAssessmentForm({ initial, locale }: { initial: CareerSelfAss
                       </div>
                     )}
                   </fieldset>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
         );
       })}
 
-      {initial?.completedAt && completed ? (
+      {!unlocked ? (
+        <Card className="border-brand/25 bg-brand/5 shadow-none">
+          <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand"><LockKeyhole className="h-5 w-5" /></span>
+              <div><p className="font-semibold">{zh ? '继续完整测评并生成深度报告' : 'Continue the full assessment and generate your report'}</p><p className="mt-1 text-sm text-muted-foreground">{zh ? `前 ${access.freeAssessmentQuestionLimit} 题免费；解锁将扣除 ${access.features.assessment_report.priceCredits} 积分。订阅用户无需单独解锁。` : `The first ${access.freeAssessmentQuestionLimit} questions are free. Unlocking costs ${access.features.assessment_report.priceCredits} credits; subscriptions include access.`}</p></div>
+            </div>
+            <Button type="button" onClick={unlock} disabled={unlocking} className="shrink-0">
+              {unlocking ? <Loader2 className="h-4 w-4 animate-spin" /> : <LockKeyhole className="h-4 w-4" />}{zh ? '一键解锁' : 'Unlock'}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {initial?.completedAt ? (
         <Card className="border-emerald-200 bg-emerald-50/60 shadow-none dark:border-emerald-900 dark:bg-emerald-950/20">
           <CardContent>
             <div className="flex items-center gap-2 font-semibold text-emerald-800 dark:text-emerald-200"><CheckCircle2 className="h-5 w-5" />{zh ? '你的自我认知摘要' : 'Your self-awareness summary'}</div>
@@ -121,7 +161,7 @@ export function SelfAssessmentForm({ initial, locale }: { initial: CareerSelfAss
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {zh ? '保存进度' : 'Save progress'}
         </Button>
-        <Button type="button" disabled={saving || !completed} onClick={() => save(true)} className="bg-brand hover:bg-brand-hover">
+        <Button type="button" disabled={saving || !completed || !unlocked} onClick={() => save(true)} className="bg-brand hover:bg-brand-hover">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
           {initial?.completedAt ? (zh ? '更新测评结果' : 'Update results') : (zh ? '完成并生成结果' : 'Complete and view results')}
         </Button>

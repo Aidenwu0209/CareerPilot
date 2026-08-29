@@ -21,6 +21,7 @@ export default async function CareerLayout({
     { key: 'jobs', href: '/career/jobs', label: t('subnav.jobs') },
     { key: 'matching', href: '/career/matching', label: t('subnav.matching') },
     { key: 'path', href: '/career/path', label: t('subnav.path') },
+    { key: 'report', href: '/career/report', label: t('subnav.report') },
   ];
   const journeyItems: CareerJourneyItem[] = [
     { href: '/career/assessment', label: t('journey.assessment.label'), description: t('journey.assessment.description'), tourKey: 'careerAssessment' },

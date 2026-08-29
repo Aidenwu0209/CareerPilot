@@ -29,6 +29,10 @@ import {
   StatusPill,
 } from '@/components/career/career-shell';
 import { CareerReportExport } from '@/components/career/career-report-export';
+import { CareerGrowthProgress } from '@/components/career/career-growth-progress';
+import { getGrowthProgress } from '@/lib/career/growth-service';
+import { getLatestAnalysisRun } from '@/lib/career/analysis-pipeline';
+import { AnalysisPipelineCard } from '@/components/career/analysis-pipeline-card';
 
 function formatDate(value: string | null, locale: string, fallback: string) {
   if (!value) return fallback;
@@ -50,10 +54,12 @@ export default async function CareerOverviewPage({
   const t = await getTranslations({ locale, namespace: 'career' });
   if (!context) return redirectToLogin('/career');
 
-  const [overview, path, assessment] = await Promise.all([
+  const [overview, path, assessment, growth, latestRun] = await Promise.all([
     getCareerOverview(context.actor.userId),
     getCareerPath(context.actor.userId),
     getCareerSelfAssessment(context.actor.userId),
+    getGrowthProgress(context.actor.userId),
+    getLatestAnalysisRun(context.actor.userId),
   ]);
   const currentStage = path.stages[path.currentStageIndex] ?? null;
   const knownDimensions = overview.profile.dimensions.filter((dimension) => dimension.score !== null);
@@ -173,6 +179,10 @@ export default async function CareerOverviewPage({
           icon={FileCheck2}
         />
       </section>
+
+      <CareerGrowthProgress initial={growth} locale={locale} />
+
+      <AnalysisPipelineCard initialRun={latestRun} locale={locale} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.75fr)]">
         <CareerSection

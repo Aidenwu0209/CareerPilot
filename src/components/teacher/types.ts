@@ -3,7 +3,8 @@ export type TeacherQueueKind =
   | 'goal_change'
   | 'overdue_task'
   | 'match_decline'
-  | 'recent_progress';
+  | 'recent_progress'
+  | 'follow_up';
 
 export type TeacherStudentStatus = 'attention' | 'on_track' | 'progress';
 
@@ -88,6 +89,9 @@ export interface TeacherGuidanceRecord {
   id: string;
   content: string;
   visibility: 'student' | 'private';
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  followUpStatus: 'new' | 'contacted' | 'waiting_student' | 'waiting_teacher' | 'scheduled' | 'resolved' | 'on_hold';
+  nextFollowUpAt: string | null;
   authorName: string;
   createdAt: string;
 }

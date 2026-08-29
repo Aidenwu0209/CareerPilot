@@ -1755,6 +1755,9 @@
       "fieldSlug": "Unique Slug",
       "fieldSlugPlaceholder": "e.g., acme-corp",
       "fieldSlugHint": "Letters, numbers, and hyphens only. Cannot be changed after creation.",
+      "fieldKind": "Organization type",
+      "kindEmployer": "Employer",
+      "kindSchool": "School",
       "fieldSeats": "Seat Limit",
       "fieldQuota": "Initial Quota",
       "fieldQuotaHint": "One-time credits allocated at creation. Leave empty or 0 for none.",
@@ -1811,6 +1814,10 @@
       "branding": {
         "title": "Branding",
         "description": "Configure your organization name, logo, and product color"
+      },
+      "school": {
+        "title": "School partnership",
+        "description": "Manage school domains, invites, and plan discounts"
       }
     },
     "branding": {
@@ -2027,7 +2034,8 @@
       "goals": "Goals",
       "jobs": "Occupation Knowledge",
       "matching": "Job Match",
-      "path": "Growth Path"
+      "path": "Growth Path",
+      "report": "AI Career Report"
     },
     "journey": {
       "progress": "Career planning step",
@@ -2546,7 +2554,8 @@
           "goal_change": { "title": "Goal changed", "description": "Review how a goal adjustment affects the growth path" },
           "overdue_task": { "title": "Overdue tasks", "description": "Follow up on growth tasks past their due date" },
           "match_decline": { "title": "Match declined", "description": "Locate the evidence and gaps behind a lower match score" },
-          "recent_progress": { "title": "Recent progress", "description": "Review ability changes supported by new evidence" }
+          "recent_progress": { "title": "Recent progress", "description": "Review ability changes supported by new evidence" },
+          "follow_up": { "title": "Follow-ups", "description": "Handle unresolved guidance and scheduled follow-up dates" }
         }
       }
     },
@@ -2680,6 +2689,11 @@
           "visibilityLabel": "Visibility",
           "studentVisible": "Student-visible guidance",
           "privateNote": "Private teacher note",
+          "priorityLabel": "Priority",
+          "priority": { "low": "Low", "normal": "Normal", "high": "High", "urgent": "Urgent" },
+          "followUpStatusLabel": "Follow-up status",
+          "followUpStatus": { "new": "New", "contacted": "Contacted", "waiting_student": "Waiting for student", "waiting_teacher": "Waiting for teacher", "scheduled": "Scheduled", "resolved": "Resolved", "on_hold": "On hold" },
+          "nextFollowUpLabel": "Next follow-up date",
           "contentLabel": "Guidance",
           "contentPlaceholder": "Describe the observation, supporting basis, and recommended next action",
           "submit": "Save guidance"
